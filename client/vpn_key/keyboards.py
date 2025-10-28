@@ -31,6 +31,7 @@ def servers_kb(servers, page: int = 0):
     if nav_buttons:
         builder.row(*nav_buttons)
 
+    builder.row(InlineKeyboardButton(text="⬅️ К ключам", callback_data="my_keys"))
     builder.row(InlineKeyboardButton(text="🪐 В главное меню", callback_data="main_menu"))
 
     return builder.as_markup()

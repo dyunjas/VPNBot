@@ -9,7 +9,8 @@ from client.navigation.purchase import purchase
 from client.vpn_key import create_vpn_key
 from client.vpn_key import show_vpn_key
 from client.vpn_key import delete_vpn_key
-from client.payments import pally_payment, add_funds
+from client.payments import add_funds, platega_payment
+from client.navigation.additional_menu.transaction import transaction
 
 router = Router()
 
@@ -23,4 +24,5 @@ router.include_router(show_vpn_key.router)
 router.include_router(delete_vpn_key.router)
 router.include_router(promocode.router)
 router.include_router(add_funds.router)
-router.include_router(pally_payment.router)
+router.include_router(platega_payment.router)
+router.include_router(transaction.router)

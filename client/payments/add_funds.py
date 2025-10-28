@@ -9,17 +9,9 @@ from client.payments.keyboards import back_profile_kb, payment_choice_kb
 from server.states import PaymentStates
 
 
-
 router = Router()
 
 @router.callback_query(F.data == "add_funds")
-async def topup_balance_clb(callback: CallbackQuery):
-    await callback.answer(
-        text="Пока недоступно",
-        show_alert=True
-    )
-
-@router.callback_query(F.data == "add_fundss")
 async def topup_balance_clb(callback: CallbackQuery, state: FSMContext):
 
     text = "Введите сумму пополнения (RUB):"

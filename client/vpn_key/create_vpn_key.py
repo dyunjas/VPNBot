@@ -77,7 +77,7 @@ async def confirm_server(callback: CallbackQuery, server_repo: ServerRepository)
     text = (
         f"<b>🌎 Сервер:</b> {server.country}\n"
         f"<b>🌐 Хост:</b> {server.public_host}\n"
-        f"<b>🕓 Создан:</b> {server.created_at.strftime('%d.%m.%Y %H:%M')}\n\n"
+        f"<b>📅 Добавлен:</b> {server.created_at.strftime('%d.%m.%Y %H:%M')}\n\n"
         f"{server.note}"
     )
     media = InputMediaPhoto(
@@ -128,6 +128,16 @@ async def create_key_clb(
         )
         await callback.answer()
         return
+    
+    existing = await key_repo.get_user_key_on_server(
+    user.id, server_id, [KeyStatus.active, KeyStatus.deleted]
+)
+    if existing:
+        await callback.answer(
+            text="⚠️ У вас уже есть ключ на этом сервере. Сначала удалите его, чтобы создать новый.",
+            show_alert=True
+        )
+        return
 
     server = await server_repo.get_server_by_id(server_id)
     if not server:
@@ -156,8 +166,14 @@ async def create_key_clb(
         f"<b>📑 ID ключа:</b> <code>{key.uuid}</code>\n"
         f"<b>🌎 Сервер:</b> {server.country if server else '❓'}\n"
         f"<b>🕓 Создан:</b> {key.created_at.strftime('%d.%m.%Y %H:%M')}\n"
-        f"<b>📅 Истекает:</b> {key.expires_at.strftime('%d.%m.%Y %H:%M') if key.expires_at else '∞'}\n\n"
-        f"<b>🔑 Ключ:</b> <code>{key.uri}</code>"
+        f"<b>📅 Истекает:</b> {key.expires_at.strftime('%d.%m.%Y %H:%M') if key.expires_at else '∞'}\n"
+        f"<b>🔑 Ключ:</b> <code>{key.uri}</code>\n\n"
+        f"<b>📝 Инструкция по подключению:\n</b>"
+        f"Скачайте приложение для своей платформы:\n"
+        f'<a href="https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x86.exe">Windows</a> | <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android">Android</a> | <a href="https://apps.apple.com/ru/app/v2raytun/id6476628951">macOS/iOS</a> | <a href="https://github.com/Happ-proxy/happ-desktop/releases/download/alpha_0.5.0/Happ.linux.x86.AppImage">Linux</a>\n\n'
+        "1️⃣ Скопируйте ваш ключ доступа\n"
+        "2️⃣ Откройте скаченное приложение\n"
+        "3️⃣ Вставьте ключ и нажмите <b>Подключиться</b>"
     )
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,

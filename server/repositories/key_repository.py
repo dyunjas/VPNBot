@@ -183,3 +183,12 @@ class KeyRepository:
                 logger.error(f"[revoke_keys_for_user] failed key_id={key.id}: {e}")
 
         return deleted
+    
+    async def get_user_key_on_server(self, user_id: int, server_id: int, statuses: list[KeyStatus]):
+        return await self.session.scalar(
+            select(Key).where(
+                Key.user_id == user_id,
+                Key.server_id == server_id,
+                Key.status.in_(statuses)
+            ).limit(1)
+        )

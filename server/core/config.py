@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
-    PALLY_API_TOKEN: str
-    PALLY_SHOP_ID: str
     XRAY_AUTH: str
+    PLATEGA_SECRET: str
+    PLATEGA_MERCHANT_ID: str
 
     class Config:
         env_file = ".env"
