@@ -10,6 +10,9 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.orm import joinedload
 
+class NotEnoughBalanceError(Exception):
+    pass
+
 class SubscriptionRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -29,8 +32,17 @@ class SubscriptionRepository:
             select(User).where(User.tg_id == tg_id)
         )
         user = user_result.scalar_one_or_none()
+        if not user:
+            raise ValueError("User not found")
 
         plan = await self.session.get(SubscriptionPlan, plan_id)
+        if not plan:
+            raise ValueError("Plan not found")
+
+        if user.balance < plan.price:
+            raise NotEnoughBalanceError("Not enough balance")
+
+        user.balance -= plan.price
 
         now = datetime.now()
         period = timedelta(days=plan.period_days)
@@ -48,7 +60,7 @@ class SubscriptionRepository:
                 auto_renew=True,
                 current_period_start=now,
                 current_period_end=now + period,
-                next_renewal_at=now + period
+                next_renewal_at=now + period,
             )
             self.session.add(subscription)
         else:
@@ -67,17 +79,6 @@ class SubscriptionRepository:
         await self.session.refresh(subscription)
         return subscription
     
-    async def get_user_subscription_by_tg_id(self, tg_id: int):
-        result = await self.session.execute(
-            select(Subscription)
-            .join(User)
-            .options(joinedload(Subscription.plan))
-            .where(User.tg_id == tg_id, Subscription.status == SubStatus.active)
-            .order_by(Subscription.current_period_end.desc())
-            .limit(1)
-        )
-        return result.scalar_one_or_none()
-    
     async def get_active_subscription_with_plan_by_tg(self, tg_id: int) -> Subscription | None:
         result = await self.session.execute(
             select(Subscription)
@@ -88,6 +89,17 @@ class SubscriptionRepository:
                 Subscription.status == SubStatus.active,
                 Subscription.current_period_end > datetime.now()
             )
+            .order_by(Subscription.current_period_end.desc())
+            .limit(1)
+        )
+        return result.scalar_one_or_none()
+    
+    async def get_user_subscription_by_tg_id(self, tg_id: int):
+        result = await self.session.execute(
+            select(Subscription)
+            .join(User)
+            .options(joinedload(Subscription.plan))
+            .where(User.tg_id == tg_id, Subscription.status == SubStatus.active)
             .order_by(Subscription.current_period_end.desc())
             .limit(1)
         )

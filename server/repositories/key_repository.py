@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from server.database.models import Key, KeyStatus, Server
-
 from server.core.logger_config import logger
 
 
@@ -23,7 +22,6 @@ class KeyRepository:
         return int(res.scalar() or 0)
 
     def _normalize_agent_base(self, grpc_endpoint: str) -> str:
-
         if not grpc_endpoint:
             raise Exception("У сервера не задан grpc_endpoint")
         parsed = urlparse(grpc_endpoint)
@@ -37,13 +35,8 @@ class KeyRepository:
         server: Server,
         auth_token: str,
         *,
-        max_keys_per_user: int = 2,
         label: str | None = None,
     ) -> Key:
-
-        active = await self._count_active_keys(user_id)
-        if active >= max_keys_per_user:
-            raise Exception(f"У пользователя уже {active} активных ключ(а), лимит = {max_keys_per_user}")
 
         agent_base = self._normalize_agent_base(server.grpc_endpoint)
 
@@ -68,18 +61,29 @@ class KeyRepository:
         user_uuid = data["uuid"]
 
         params = [
-            "encryption=none",
-            "type=tcp",
+            "type=grpc",
             "security=reality",
+            "encryption=none",
             f"pbk={server.pbk}",
             f"sni={server.sni}",
             f"fp={server.fp}",
         ]
+
         if server.short_id:
             params.append(f"sid={server.short_id}")
 
-        label = server.country
-        uri = f"vless://{user_uuid}@{server.public_host}:{server.port}?{'&'.join(params)}#LunetVPN | {label}"
+        params.append("serviceName=grpc")
+
+        params.append(f"authority={server.sni}")
+
+        params.append("spx=%2F")
+
+        label = label or server.country
+
+        uri = (
+            f"vless://{user_uuid}@{server.public_host}:{server.port}"
+            f"?{'&'.join(params)}#LunetVPN | {label}"
+        )
 
         key = Key(
             user_id=user_id,
@@ -153,7 +157,7 @@ class KeyRepository:
         for k in keys:
             k.status = KeyStatus.deleted
         await self.session.commit()
-        return len(keys) 
+        return len(keys)
 
     async def get_key_by_id(self, key_id: int) -> Key | None:
         q = (
@@ -163,7 +167,7 @@ class KeyRepository:
         )
         result = await self.session.execute(q)
         return result.scalar_one_or_none()
-    
+
     async def delete_all_keys_for_user(self, user_id: int, auth_token: str) -> int:
         q = (
             select(Key)
@@ -183,8 +187,13 @@ class KeyRepository:
                 logger.error(f"[revoke_keys_for_user] failed key_id={key.id}: {e}")
 
         return deleted
-    
-    async def get_user_key_on_server(self, user_id: int, server_id: int, statuses: list[KeyStatus]):
+
+    async def get_user_key_on_server(
+        self,
+        user_id: int,
+        server_id: int,
+        statuses: list[KeyStatus],
+    ):
         return await self.session.scalar(
             select(Key).where(
                 Key.user_id == user_id,

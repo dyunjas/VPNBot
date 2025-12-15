@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     XRAY_AUTH: str
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_NOREPLY_USER: str
+    SMTP_NOREPLY_PASS: str
+    OTP_SECRET: str
 
     class Config:
         env_file = ".env"

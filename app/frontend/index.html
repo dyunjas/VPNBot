@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lunet VPN панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css?=v2" />
+</head>
+<body>
+  <div id="outside-stub" class="outside-stub">
+    <h1>🌙 Lunet VPN</h1>
+    <p>Это приложение работает только внутри Telegram.</p>
+    <p>
+      Откройте бота
+      <a href="https://t.me/LunetVPNBot" target="_blank">@LunetVPNBot</a>
+      и нажмите кнопку <b>«Открыть приложение»</b>.
+    </p>
+  </div>
+
+  <div class="app" id="app-root">
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand-left">
+          <div class="brand-title">LUNET VPN</div>
+        </div>
+
+        <div class="brand-status">
+          <div class="brand-status-dot"></div>
+          <span id="user-info" class="subtitle"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="pages">
+      <section class="page page-active" data-page="tariffs">
+        <div class="card card-status">
+          <h2>Статус</h2>
+          <div id="status-text" class="muted status-text">Загружаю...</div>
+          <div class="hint">
+            Подписка и лимиты подтягиваются из вашего аккаунта Lunet.
+          </div>
+        </div>
+
+        <div class="card" id="plans-card">
+          <h2>Тарифы</h2>
+          <div id="plans-list" class="muted">Загружаю тарифы...</div>
+          <div class="hint">
+            Можно продлить или сменить тариф прямо здесь.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="servers">
+        <div class="card" id="servers-card">
+          <h2>Серверы</h2>
+          <div id="servers-list" class="muted">Загружаю список серверов...</div>
+          <div class="hint">
+            Выберите сервер, чтобы создать новый ключ.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="keys">
+        <div class="card">
+          <h2>Мои ключи</h2>
+          <div id="keys-list" class="muted">Загружаю ключи...</div>
+          <div class="actions-row">
+            <button class="secondary" id="btn-refresh-keys">🔄 Обновить</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Инструкция</h2>
+          <div class="muted">
+            1️⃣ Скопируйте ваш VLESS-ключ.<br />
+            2️⃣ Откройте приложение Happ или другой клиент.<br />
+            3️⃣ Вставьте ключ и нажмите <b>Подключиться</b>.<br /><br />
+            Happ:<br />
+            <a
+              href="https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x86.exe"
+              target="_blank"
+            >
+              Windows
+            </a>
+            |
+            <a
+              href="https://play.google.com/store/apps/details?id=com.happproxy"
+              target="_blank"
+            >
+              Android
+            </a>
+            |
+            <a
+              href="https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973"
+              target="_blank"
+            >
+              macOS / iOS
+            </a>
+            |
+            <a
+              href="https://github.com/Happ-proxy/happ-desktop/releases/download/alpha_0.5.0/Happ.linux.x86.AppImage"
+              target="_blank"
+            >
+              Linux
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="profile">
+        <div class="card">
+          <h2>Профиль</h2>
+
+          <div class="profile-header">
+            <div class="profile-avatar-wrap">
+              <img id="profile-avatar" class="profile-avatar" alt="avatar" />
+            </div>
+            <div class="profile-text">
+              <div id="profile-name" class="profile-name">Загрузка...</div>
+              <div id="profile-username" class="profile-username muted"></div>
+            </div>
+          </div>
+
+          <div class="profile-balance-row">
+            <div>Баланс: <span id="profile-balance">—</span> ₽</div>
+            <div class="profile-balance-buttons">
+              <button id="btn-topup" class="secondary small">Пополнить</button>
+              <button id="btn-check-payment" class="secondary small">
+                Проверить платёж
+              </button>
+            </div>
+          </div>
+
+          <div class="hint">
+            Подписка, ключи и баланс доступны в вашем аккаунте Lunet.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Транзакции</h2>
+          <div id="profile-tx-list" class="muted">
+            Загрузка истории...
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab-button active" data-target="tariffs">Тарифы</button>
+      <button class="tab-button" data-target="servers">Серверы</button>
+      <button class="tab-button" data-target="keys">Ключи</button>
+      <button class="tab-button" data-target="profile">Профиль</button>
+    </nav>
+
+    <div id="message" class="message"></div>
+  </div>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>

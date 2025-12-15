@@ -11,6 +11,8 @@ from client.vpn_key import show_vpn_key
 from client.vpn_key import delete_vpn_key
 from client.payments import add_funds, platega_payment
 from client.navigation.additional_menu.transaction import transaction
+from client.navigation.additional_menu.email import email
+from client.navigation.additional_menu.referral import referral
 
 router = Router()
 
@@ -26,3 +28,5 @@ router.include_router(promocode.router)
 router.include_router(add_funds.router)
 router.include_router(platega_payment.router)
 router.include_router(transaction.router)
+router.include_router(email.router)
+router.include_router(referral.router)

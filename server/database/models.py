@@ -45,7 +45,14 @@ class User(Base):
     tg_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     username: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
+    referrer_id: Mapped[int | None] = mapped_column(
+        ForeignKey("vpn_users.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+
     balance: Mapped[int] = mapped_column(default=0)
+    email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
@@ -171,3 +178,14 @@ class PromocodeActivation(Base):
     promocode: Mapped[Promocode] = relationship(back_populates="activations")
 
     __table_args__ = (UniqueConstraint("promocode_id", "user_id", name="uq_vpn_promocode_user"),)
+
+class EmailVerification(Base):
+    __tablename__ = "vpn_email_verifications"
+
+    tg_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    code_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(nullable=False)
+    attempts: Mapped[int] = mapped_column(default=0)
+    last_sent_at: Mapped[datetime] = mapped_column(default=datetime.now)
+

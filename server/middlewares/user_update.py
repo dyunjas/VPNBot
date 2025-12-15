@@ -37,3 +37,4 @@ class UserUpdateMiddleware(BaseMiddleware):
                 tg_id=tg_user.id,
                 username=tg_user.username
             )
+            await user_repo.session.flush() 

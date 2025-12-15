@@ -3337,3 +3337,592 @@ client_session: <aiohttp.client.ClientSession object at 0x000001DA484D0E10>
 [2025-10-28 23:31:01] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2025-10-28 23:31:02] [INFO] root: Bot stopped
 [2025-10-28 23:31:02] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2025-12-03 14:21:06] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:24:10] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:27:56] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:30:31] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:30:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:30:32] [INFO] root: Database tables initialized
+[2025-12-03 14:30:32] [INFO] root: Database connection successful
+[2025-12-03 14:33:46] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:33:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:33:46] [INFO] root: Database tables initialized
+[2025-12-03 14:33:46] [INFO] root: Database connection successful
+[2025-12-03 14:35:48] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:35:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:35:49] [INFO] root: Database tables initialized
+[2025-12-03 14:35:49] [INFO] root: Database connection successful
+[2025-12-03 14:38:25] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:38:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:38:26] [INFO] root: Database tables initialized
+[2025-12-03 14:38:26] [INFO] root: Database connection successful
+[2025-12-03 14:42:47] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:42:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:42:48] [INFO] root: Database tables initialized
+[2025-12-03 14:42:48] [INFO] root: Database connection successful
+[2025-12-03 14:47:20] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 14:47:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 14:47:21] [INFO] root: Database tables initialized
+[2025-12-03 14:47:21] [INFO] root: Database connection successful
+[2025-12-03 15:00:16] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:00:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:00:17] [INFO] root: Database tables initialized
+[2025-12-03 15:00:17] [INFO] root: Database connection successful
+[2025-12-03 15:03:13] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:03:13] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:03:13] [INFO] root: Database tables initialized
+[2025-12-03 15:03:13] [INFO] root: Database connection successful
+[2025-12-03 15:11:05] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:11:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:11:06] [INFO] root: Database tables initialized
+[2025-12-03 15:11:06] [INFO] root: Database connection successful
+[2025-12-03 15:28:06] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:28:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:28:07] [INFO] root: Database tables initialized
+[2025-12-03 15:28:07] [INFO] root: Database connection successful
+[2025-12-03 15:28:31] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001B6ABC78C20>
+[2025-12-03 15:28:31] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001B6ABDA61B0>, 20022.3681112)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001B6ABC78050>
+[2025-12-03 15:28:54] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001B6ABD90410>
+[2025-12-03 15:28:54] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001B6ABDA61B0>, 20059.3675986)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001B6ABD91310>
+[2025-12-03 15:32:04] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001B6ABD90410>
+[2025-12-03 15:32:16] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:32:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:32:17] [INFO] root: Database tables initialized
+[2025-12-03 15:32:17] [INFO] root: Database connection successful
+[2025-12-03 15:37:23] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:37:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:37:24] [INFO] root: Database tables initialized
+[2025-12-03 15:37:24] [INFO] root: Database connection successful
+[2025-12-03 15:37:24] [INFO] root: Bot started
+[2025-12-03 15:37:24] [INFO] aiogram.dispatcher: Start polling
+[2025-12-03 15:37:24] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2025-12-03 15:37:35] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-03 15:37:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-03 15:37:35] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2025-12-03 15:37:35] [INFO] root: Bot stopped
+[2025-12-03 15:37:35] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2025-12-03 15:37:35] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001B11E797C50>
+[2025-12-03 15:37:35] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001B11E8A12B0>, 20569.9248319)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001B11E7974D0>
+[2025-12-03 15:37:46] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:37:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:37:47] [INFO] root: Database tables initialized
+[2025-12-03 15:37:47] [INFO] root: Database connection successful
+[2025-12-03 15:43:16] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000251741357F0>
+[2025-12-03 15:43:26] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:43:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:43:26] [INFO] root: Database tables initialized
+[2025-12-03 15:43:26] [INFO] root: Database connection successful
+[2025-12-03 15:50:38] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000026044330590>
+[2025-12-03 15:59:25] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 15:59:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 15:59:25] [INFO] root: Database tables initialized
+[2025-12-03 15:59:25] [INFO] root: Database connection successful
+[2025-12-03 16:19:45] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:19:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:19:50] [INFO] root: Database tables initialized
+[2025-12-03 16:19:52] [INFO] root: Database connection successful
+[2025-12-03 16:22:10] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:22:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:22:14] [INFO] root: Database tables initialized
+[2025-12-03 16:22:16] [INFO] root: Database connection successful
+[2025-12-03 16:22:56] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:22:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:23:01] [INFO] root: Database tables initialized
+[2025-12-03 16:23:03] [INFO] root: Database connection successful
+[2025-12-03 16:23:03] [INFO] root: Bot started
+[2025-12-03 16:23:03] [INFO] aiogram.dispatcher: Start polling
+[2025-12-03 16:23:04] [INFO] aiogram.dispatcher: Run polling for bot @LunetVpnBot id=8491345946 - 'Lunet VPN'
+[2025-12-03 16:23:06] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-03 16:23:06] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-03 16:23:06] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8491345946)
+[2025-12-03 16:23:06] [INFO] root: Bot stopped
+[2025-12-03 16:23:06] [INFO] aiogram.dispatcher: Polling stopped for bot @LunetVpnBot id=8491345946 - 'Lunet VPN'
+[2025-12-03 16:23:38] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:23:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:23:42] [INFO] root: Database tables initialized
+[2025-12-03 16:23:44] [INFO] root: Database connection successful
+[2025-12-03 16:27:21] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:27:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:27:25] [INFO] root: Database tables initialized
+[2025-12-03 16:27:28] [INFO] root: Database connection successful
+[2025-12-03 16:43:05] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:43:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:43:10] [INFO] root: Database tables initialized
+[2025-12-03 16:43:12] [INFO] root: Database connection successful
+[2025-12-03 16:47:08] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:47:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:47:13] [INFO] root: Database tables initialized
+[2025-12-03 16:47:15] [INFO] root: Database connection successful
+[2025-12-03 16:54:36] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 16:54:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 16:54:41] [INFO] root: Database tables initialized
+[2025-12-03 16:54:43] [INFO] root: Database connection successful
+[2025-12-03 17:00:05] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 17:00:05] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 17:00:09] [INFO] root: Database tables initialized
+[2025-12-03 17:00:12] [INFO] root: Database connection successful
+[2025-12-03 17:12:46] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 17:12:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 17:12:51] [INFO] root: Database tables initialized
+[2025-12-03 17:12:53] [INFO] root: Database connection successful
+[2025-12-03 18:02:27] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001F7DB148050>
+[2025-12-03 18:02:39] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 18:02:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 18:02:44] [INFO] root: Database tables initialized
+[2025-12-03 18:02:46] [INFO] root: Database connection successful
+[2025-12-03 19:04:36] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002E654C497F0>
+[2025-12-03 20:12:34] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 20:12:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 20:12:50] [INFO] root: Database tables initialized
+[2025-12-03 20:12:52] [INFO] root: Database connection successful
+[2025-12-03 20:16:34] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 20:16:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 20:16:38] [INFO] root: Database tables initialized
+[2025-12-03 20:16:40] [INFO] root: Database connection successful
+[2025-12-03 20:24:55] [INFO] root: Settings successfully loaded from .env
+[2025-12-03 20:24:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-03 20:25:00] [INFO] root: Database tables initialized
+[2025-12-03 20:25:02] [INFO] root: Database connection successful
+[2025-12-04 00:23:56] [INFO] root: Settings successfully loaded from .env
+[2025-12-04 00:23:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-04 00:24:01] [INFO] root: Database tables initialized
+[2025-12-04 00:24:03] [INFO] root: Database connection successful
+[2025-12-11 23:22:30] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:22:36] [INFO] root: Database tables initialized
+[2025-12-11 23:22:38] [INFO] root: Database connection successful
+[2025-12-11 23:27:33] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001527351C6E0>
+[2025-12-11 23:27:43] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:27:48] [INFO] root: Database tables initialized
+[2025-12-11 23:27:50] [INFO] root: Database connection successful
+[2025-12-11 23:33:45] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:33:50] [INFO] root: Database tables initialized
+[2025-12-11 23:33:53] [INFO] root: Database connection successful
+[2025-12-11 23:41:42] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:41:46] [INFO] root: Database tables initialized
+[2025-12-11 23:41:48] [INFO] root: Database connection successful
+[2025-12-11 23:50:26] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:50:31] [INFO] root: Database tables initialized
+[2025-12-11 23:50:33] [INFO] root: Database connection successful
+[2025-12-11 23:58:01] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000021532A238C0>
+[2025-12-11 23:58:08] [INFO] root: Settings successfully loaded from .env
+[2025-12-11 23:58:14] [INFO] root: Database tables initialized
+[2025-12-11 23:58:16] [INFO] root: Database connection successful
+[2025-12-12 00:09:02] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000025710B21E80>
+[2025-12-12 00:09:18] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:09:24] [INFO] root: Database tables initialized
+[2025-12-12 00:09:27] [INFO] root: Database connection successful
+[2025-12-12 00:10:51] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:10:56] [INFO] root: Database tables initialized
+[2025-12-12 00:10:58] [INFO] root: Database connection successful
+[2025-12-12 00:11:40] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:11:45] [INFO] root: Database tables initialized
+[2025-12-12 00:11:47] [INFO] root: Database connection successful
+[2025-12-12 00:17:55] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:17:59] [INFO] root: Database tables initialized
+[2025-12-12 00:18:02] [INFO] root: Database connection successful
+[2025-12-12 00:20:05] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:20:10] [INFO] root: Database tables initialized
+[2025-12-12 00:20:12] [INFO] root: Database connection successful
+[2025-12-12 00:23:57] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:24:02] [INFO] root: Database tables initialized
+[2025-12-12 00:24:04] [INFO] root: Database connection successful
+[2025-12-12 00:52:58] [INFO] root: Settings successfully loaded from .env
+[2025-12-12 00:53:03] [INFO] root: Database tables initialized
+[2025-12-12 00:53:05] [INFO] root: Database connection successful
+[2025-12-14 13:32:53] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 13:32:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 13:32:55] [INFO] root: Database tables initialized
+[2025-12-14 13:32:55] [INFO] root: Database connection successful
+[2025-12-14 13:32:55] [INFO] root: Bot started
+[2025-12-14 13:32:55] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 13:32:56] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 13:33:26] [INFO] aiogram.event: Update id=308067319 is handled. Duration 595 ms by bot id=6978548039
+[2025-12-14 13:33:46] [INFO] aiogram.event: Update id=308067320 is handled. Duration 424 ms by bot id=6978548039
+[2025-12-14 13:33:50] [INFO] aiogram.event: Update id=308067321 is not handled. Duration 70 ms by bot id=6978548039
+[2025-12-14 14:44:17] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 14:44:17] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 14:44:42] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 15:35:48] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 15:35:48] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 15:35:48] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 15:35:48] [INFO] root: Bot stopped
+[2025-12-14 15:35:48] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:10:41] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:10:42] [DEBUG] passlib.registry: registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+[2025-12-14 16:10:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:10:43] [INFO] root: Database tables initialized
+[2025-12-14 16:10:43] [INFO] root: Database connection successful
+[2025-12-14 16:10:43] [INFO] root: Bot started
+[2025-12-14 16:10:43] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:10:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:10:54] [ERROR] root: Database error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: столбец vpn_users.email не существует
+[SQL: SELECT vpn_users.id, vpn_users.tg_id, vpn_users.username, vpn_users.balance, vpn_users.email, vpn_users.created_at, vpn_users.updated_at 
+FROM vpn_users 
+WHERE vpn_users.tg_id = $1::BIGINT]
+[parameters: (1237947229,)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+[2025-12-14 16:10:54] [INFO] aiogram.event: Update id=308067322 is handled. Duration 69 ms by bot id=6978548039
+[2025-12-14 16:11:03] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:11:03] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:11:03] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:11:04] [INFO] root: Bot stopped
+[2025-12-14 16:11:04] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:12:09] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:12:09] [DEBUG] passlib.registry: registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+[2025-12-14 16:12:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:12:10] [INFO] root: Database tables initialized
+[2025-12-14 16:12:10] [INFO] root: Database connection successful
+[2025-12-14 16:12:10] [INFO] root: Bot started
+[2025-12-14 16:12:10] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:12:10] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:12:14] [INFO] aiogram.event: Update id=308067323 is handled. Duration 552 ms by bot id=6978548039
+[2025-12-14 16:12:16] [INFO] aiogram.event: Update id=308067324 is handled. Duration 478 ms by bot id=6978548039
+[2025-12-14 16:12:17] [ERROR] root: Database error: email_clb() missing 1 required positional argument: 'user_repository'
+[2025-12-14 16:12:17] [INFO] aiogram.event: Update id=308067325 is handled. Duration 67 ms by bot id=6978548039
+[2025-12-14 16:14:44] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:14:44] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:14:44] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:14:44] [INFO] root: Bot stopped
+[2025-12-14 16:14:44] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:14:49] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:14:49] [DEBUG] passlib.registry: registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+[2025-12-14 16:14:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:14:50] [INFO] root: Database tables initialized
+[2025-12-14 16:14:50] [INFO] root: Database connection successful
+[2025-12-14 16:14:50] [INFO] root: Bot started
+[2025-12-14 16:14:50] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:14:50] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:14:51] [INFO] aiogram.event: Update id=308067326 is handled. Duration 507 ms by bot id=6978548039
+[2025-12-14 16:14:52] [INFO] aiogram.event: Update id=308067327 is handled. Duration 408 ms by bot id=6978548039
+[2025-12-14 16:14:53] [ERROR] root: Database error: cannot access local variable 'media' where it is not associated with a value
+[2025-12-14 16:14:53] [INFO] aiogram.event: Update id=308067328 is handled. Duration 72 ms by bot id=6978548039
+[2025-12-14 16:15:19] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:15:19] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:15:19] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:15:19] [INFO] root: Bot stopped
+[2025-12-14 16:15:19] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:15:24] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:15:25] [DEBUG] passlib.registry: registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+[2025-12-14 16:15:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:15:25] [INFO] root: Database tables initialized
+[2025-12-14 16:15:25] [INFO] root: Database connection successful
+[2025-12-14 16:15:25] [INFO] root: Bot started
+[2025-12-14 16:15:25] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:15:26] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:15:30] [INFO] aiogram.event: Update id=308067329 is handled. Duration 712 ms by bot id=6978548039
+[2025-12-14 16:15:40] [INFO] aiogram.event: Update id=308067330 is handled. Duration 234 ms by bot id=6978548039
+[2025-12-14 16:15:50] [DEBUG] passlib.handlers.bcrypt: bcrypt 'builtin' backend not enabled via $PASSLIB_BUILTIN_BCRYPT
+[2025-12-14 16:15:50] [ERROR] root: Database error: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+[2025-12-14 16:15:50] [INFO] aiogram.event: Update id=308067331 is handled. Duration 70 ms by bot id=6978548039
+[2025-12-14 16:16:12] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:16:12] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:16:12] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:16:13] [INFO] root: Bot stopped
+[2025-12-14 16:16:13] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:16:24] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:16:25] [DEBUG] passlib.registry: registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+[2025-12-14 16:16:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:16:25] [INFO] root: Database tables initialized
+[2025-12-14 16:16:26] [INFO] root: Database connection successful
+[2025-12-14 16:16:26] [INFO] root: Bot started
+[2025-12-14 16:16:26] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:16:26] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:16:29] [INFO] aiogram.event: Update id=308067332 is handled. Duration 442 ms by bot id=6978548039
+[2025-12-14 16:16:30] [INFO] aiogram.event: Update id=308067333 is handled. Duration 398 ms by bot id=6978548039
+[2025-12-14 16:16:32] [INFO] aiogram.event: Update id=308067334 is handled. Duration 374 ms by bot id=6978548039
+[2025-12-14 16:16:34] [WARNING] passlib.handlers.bcrypt: (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\dyunj\OneDrive\Рабочий стол\vpn_bot\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+[2025-12-14 16:16:34] [DEBUG] passlib.handlers.bcrypt: detected 'bcrypt' backend, version '<unknown>'
+[2025-12-14 16:16:34] [DEBUG] passlib.handlers.bcrypt: 'bcrypt' backend lacks $2$ support, enabling workaround
+[2025-12-14 16:16:34] [ERROR] root: Database error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+[2025-12-14 16:16:34] [INFO] aiogram.event: Update id=308067335 is handled. Duration 134 ms by bot id=6978548039
+[2025-12-14 16:17:33] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:17:33] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:17:33] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:17:33] [INFO] root: Bot stopped
+[2025-12-14 16:17:33] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:24:29] [ERROR] root: Error loadding settings from .env
+[2025-12-14 16:25:12] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:25:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:25:13] [INFO] root: Database tables initialized
+[2025-12-14 16:25:13] [INFO] root: Database connection successful
+[2025-12-14 16:25:13] [INFO] root: Bot started
+[2025-12-14 16:25:13] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:25:13] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:25:23] [INFO] aiogram.event: Update id=308067336 is handled. Duration 457 ms by bot id=6978548039
+[2025-12-14 16:25:24] [INFO] aiogram.event: Update id=308067337 is handled. Duration 380 ms by bot id=6978548039
+[2025-12-14 16:25:25] [INFO] aiogram.event: Update id=308067338 is handled. Duration 505 ms by bot id=6978548039
+[2025-12-14 16:26:48] [ERROR] root: Database error: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)
+[2025-12-14 16:26:48] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2025-12-14 16:26:48] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:26:48] [INFO] aiogram.event: Update id=308067339 is handled. Duration 81238 ms by bot id=6978548039
+[2025-12-14 16:26:49] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 16:28:10] [ERROR] root: Database error: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)
+[2025-12-14 16:28:10] [ERROR] root: Database error: 
+[2025-12-14 16:28:10] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2025-12-14 16:28:10] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:28:10] [INFO] aiogram.event: Update id=308067340 is handled. Duration 81236 ms by bot id=6978548039
+[2025-12-14 16:28:10] [INFO] aiogram.event: Update id=308067342 is handled. Duration 81233 ms by bot id=6978548039
+[2025-12-14 16:28:10] [ERROR] root: Database error: HTTP Client says - Request timeout error
+[2025-12-14 16:28:10] [INFO] aiogram.event: Update id=308067341 is handled. Duration 81239 ms by bot id=6978548039
+[2025-12-14 16:28:22] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 16:31:04] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:31:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:31:04] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:31:04] [INFO] root: Bot stopped
+[2025-12-14 16:31:04] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:31:13] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:31:13] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:31:14] [INFO] root: Database tables initialized
+[2025-12-14 16:31:14] [INFO] root: Database connection successful
+[2025-12-14 16:31:14] [INFO] root: Bot started
+[2025-12-14 16:31:14] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:31:14] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:31:19] [INFO] aiogram.event: Update id=308067343 is handled. Duration 557 ms by bot id=6978548039
+[2025-12-14 16:31:54] [INFO] aiogram.event: Update id=308067344 is handled. Duration 238 ms by bot id=6978548039
+[2025-12-14 16:31:58] [INFO] aiogram.event: Update id=308067345 is handled. Duration 431 ms by bot id=6978548039
+[2025-12-14 16:31:59] [INFO] aiogram.event: Update id=308067346 is handled. Duration 378 ms by bot id=6978548039
+[2025-12-14 16:32:07] [INFO] aiogram.event: Update id=308067348 is handled. Duration 390 ms by bot id=6978548039
+[2025-12-14 16:32:08] [INFO] aiogram.event: Update id=308067349 is handled. Duration 235 ms by bot id=6978548039
+[2025-12-14 16:32:17] [INFO] aiogram.event: Update id=308067347 is handled. Duration 15334 ms by bot id=6978548039
+[2025-12-14 16:34:33] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:34:33] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:34:33] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:34:33] [INFO] root: Bot stopped
+[2025-12-14 16:34:33] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:35:56] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:37:43] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:37:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:37:44] [INFO] root: Database tables initialized
+[2025-12-14 16:37:44] [INFO] root: Database connection successful
+[2025-12-14 16:37:44] [INFO] root: Bot started
+[2025-12-14 16:37:44] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:37:45] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:37:50] [INFO] aiogram.event: Update id=308067350 is handled. Duration 565 ms by bot id=6978548039
+[2025-12-14 16:37:51] [INFO] aiogram.event: Update id=308067351 is handled. Duration 430 ms by bot id=6978548039
+[2025-12-14 16:37:52] [INFO] aiogram.event: Update id=308067352 is handled. Duration 490 ms by bot id=6978548039
+[2025-12-14 16:38:13] [ERROR] root: SMTP send failed: SMTPServerDisconnected('Connection unexpectedly closed: timed out')
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 407, in getreply
+    line = self.file.readline(_MAXLINE + 1)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\OneDrive\Рабочий стол\vpn_bot\client\navigation\additional_menu\email\email.py", line 64, in got_email
+    await asyncio.to_thread(send_email_code, email, code)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\dyunj\OneDrive\Рабочий стол\vpn_bot\client\navigation\additional_menu\email\utils.py", line 26, in send_email_code
+    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as server:
+         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 352, in connect
+    (code, msg) = self.getreply()
+                  ~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 410, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed: "
+                                 + str(e))
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed: timed out
+[2025-12-14 16:38:14] [INFO] aiogram.event: Update id=308067353 is handled. Duration 15342 ms by bot id=6978548039
+[2025-12-14 16:40:02] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:40:02] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:40:13] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 16:40:36] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:40:36] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:40:36] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:40:36] [INFO] root: Bot stopped
+[2025-12-14 16:40:36] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:40:42] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:40:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:40:43] [INFO] root: Database tables initialized
+[2025-12-14 16:40:43] [INFO] root: Database connection successful
+[2025-12-14 16:40:43] [INFO] root: Bot started
+[2025-12-14 16:40:43] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:40:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:40:48] [INFO] aiogram.event: Update id=308067354 is handled. Duration 357 ms by bot id=6978548039
+[2025-12-14 16:40:50] [INFO] aiogram.event: Update id=308067355 is handled. Duration 301 ms by bot id=6978548039
+[2025-12-14 16:40:51] [INFO] aiogram.event: Update id=308067356 is handled. Duration 213 ms by bot id=6978548039
+[2025-12-14 16:40:52] [INFO] aiogram.event: Update id=308067357 is handled. Duration 359 ms by bot id=6978548039
+[2025-12-14 16:40:53] [INFO] aiogram.event: Update id=308067358 is handled. Duration 417 ms by bot id=6978548039
+[2025-12-14 16:40:56] [INFO] aiogram.event: Update id=308067359 is handled. Duration 1210 ms by bot id=6978548039
+[2025-12-14 16:41:25] [INFO] aiogram.event: Update id=308067360 is handled. Duration 188 ms by bot id=6978548039
+[2025-12-14 16:41:34] [INFO] aiogram.event: Update id=308067361 is handled. Duration 242 ms by bot id=6978548039
+[2025-12-14 16:41:42] [INFO] aiogram.event: Update id=308067362 is handled. Duration 220 ms by bot id=6978548039
+[2025-12-14 16:41:44] [INFO] aiogram.event: Update id=308067363 is handled. Duration 257 ms by bot id=6978548039
+[2025-12-14 16:41:45] [INFO] aiogram.event: Update id=308067364 is handled. Duration 269 ms by bot id=6978548039
+[2025-12-14 16:41:49] [INFO] aiogram.event: Update id=308067365 is handled. Duration 362 ms by bot id=6978548039
+[2025-12-14 16:42:29] [INFO] aiogram.event: Update id=308067366 is handled. Duration 348 ms by bot id=6978548039
+[2025-12-14 16:42:30] [INFO] aiogram.event: Update id=308067367 is handled. Duration 247 ms by bot id=6978548039
+[2025-12-14 16:42:40] [INFO] aiogram.event: Update id=308067368 is handled. Duration 1078 ms by bot id=6978548039
+[2025-12-14 16:42:56] [INFO] aiogram.event: Update id=308067369 is handled. Duration 349 ms by bot id=6978548039
+[2025-12-14 16:43:05] [INFO] aiogram.event: Update id=308067370 is handled. Duration 292 ms by bot id=6978548039
+[2025-12-14 16:43:07] [INFO] aiogram.event: Update id=308067371 is handled. Duration 270 ms by bot id=6978548039
+[2025-12-14 16:43:08] [INFO] aiogram.event: Update id=308067372 is handled. Duration 305 ms by bot id=6978548039
+[2025-12-14 16:46:02] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 16:46:02] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 16:46:02] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 16:46:02] [INFO] root: Bot stopped
+[2025-12-14 16:46:02] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:46:10] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 16:46:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 16:46:11] [INFO] root: Database tables initialized
+[2025-12-14 16:46:11] [INFO] root: Database connection successful
+[2025-12-14 16:46:11] [INFO] root: Bot started
+[2025-12-14 16:46:11] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 16:46:12] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 16:46:38] [INFO] aiogram.event: Update id=308067373 is handled. Duration 426 ms by bot id=6978548039
+[2025-12-14 16:47:01] [INFO] aiogram.event: Update id=308067374 is handled. Duration 991 ms by bot id=6978548039
+[2025-12-14 16:47:37] [INFO] aiogram.event: Update id=308067375 is handled. Duration 168 ms by bot id=6978548039
+[2025-12-14 16:47:42] [INFO] aiogram.event: Update id=308067376 is handled. Duration 170 ms by bot id=6978548039
+[2025-12-14 16:47:52] [INFO] aiogram.event: Update id=308067377 is handled. Duration 423 ms by bot id=6978548039
+[2025-12-14 16:47:56] [INFO] aiogram.event: Update id=308067378 is handled. Duration 200 ms by bot id=6978548039
+[2025-12-14 16:48:08] [INFO] aiogram.event: Update id=308067379 is handled. Duration 228 ms by bot id=6978548039
+[2025-12-14 16:48:17] [INFO] aiogram.event: Update id=308067380 is handled. Duration 212 ms by bot id=6978548039
+[2025-12-14 16:48:32] [INFO] aiogram.event: Update id=308067381 is handled. Duration 258 ms by bot id=6978548039
+[2025-12-14 16:48:33] [INFO] aiogram.event: Update id=308067382 is handled. Duration 283 ms by bot id=6978548039
+[2025-12-14 16:48:45] [INFO] aiogram.event: Update id=308067383 is handled. Duration 292 ms by bot id=6978548039
+[2025-12-14 16:48:46] [INFO] aiogram.event: Update id=308067384 is handled. Duration 428 ms by bot id=6978548039
+[2025-12-14 16:48:47] [INFO] aiogram.event: Update id=308067385 is handled. Duration 338 ms by bot id=6978548039
+[2025-12-14 16:48:48] [INFO] aiogram.event: Update id=308067386 is handled. Duration 411 ms by bot id=6978548039
+[2025-12-14 16:48:49] [INFO] aiogram.event: Update id=308067387 is handled. Duration 357 ms by bot id=6978548039
+[2025-12-14 16:48:51] [INFO] aiogram.event: Update id=308067388 is handled. Duration 379 ms by bot id=6978548039
+[2025-12-14 17:32:32] [INFO] aiogram.event: Update id=308067389 is handled. Duration 619 ms by bot id=6978548039
+[2025-12-14 17:32:34] [INFO] aiogram.event: Update id=308067390 is handled. Duration 473 ms by bot id=6978548039
+[2025-12-14 17:32:41] [INFO] aiogram.event: Update id=308067391 is handled. Duration 370 ms by bot id=6978548039
+[2025-12-14 17:33:22] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 17:33:22] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 17:33:22] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 17:33:22] [INFO] root: Bot stopped
+[2025-12-14 17:33:22] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 17:51:10] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 17:51:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 17:51:11] [INFO] root: Database tables initialized
+[2025-12-14 17:51:12] [INFO] root: Database connection successful
+[2025-12-14 17:51:12] [INFO] root: Bot started
+[2025-12-14 17:51:12] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 17:51:12] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 17:51:20] [INFO] aiogram.event: Update id=308067392 is handled. Duration 569 ms by bot id=6978548039
+[2025-12-14 17:51:54] [INFO] aiogram.event: Update id=308067393 is handled. Duration 393 ms by bot id=6978548039
+[2025-12-14 17:51:55] [INFO] aiogram.event: Update id=308067394 is handled. Duration 375 ms by bot id=6978548039
+[2025-12-14 17:52:11] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2025-12-14 17:52:11] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 17:52:14] [INFO] aiogram.event: Update id=308067395 is handled. Duration 17884 ms by bot id=6978548039
+[2025-12-14 17:52:23] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 17:52:30] [INFO] aiogram.event: Update id=308067396 is handled. Duration 276 ms by bot id=6978548039
+[2025-12-14 17:52:31] [INFO] aiogram.event: Update id=308067397 is handled. Duration 283 ms by bot id=6978548039
+[2025-12-14 17:52:33] [INFO] aiogram.event: Update id=308067398 is handled. Duration 262 ms by bot id=6978548039
+[2025-12-14 17:52:36] [INFO] aiogram.event: Update id=308067399 is handled. Duration 287 ms by bot id=6978548039
+[2025-12-14 17:52:46] [INFO] aiogram.event: Update id=308067400 is handled. Duration 308 ms by bot id=6978548039
+[2025-12-14 17:53:02] [INFO] aiogram.event: Update id=308067401 is handled. Duration 296 ms by bot id=6978548039
+[2025-12-14 17:53:03] [INFO] aiogram.event: Update id=308067402 is handled. Duration 308 ms by bot id=6978548039
+[2025-12-14 17:53:06] [INFO] aiogram.event: Update id=308067403 is handled. Duration 1330 ms by bot id=6978548039
+[2025-12-14 21:01:42] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2025-12-14 21:01:42] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 21:01:53] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 6978548039)
+[2025-12-14 22:07:49] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 22:07:49] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 22:07:49] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 22:07:50] [INFO] root: Bot stopped
+[2025-12-14 22:07:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:07:59] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 22:07:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 22:08:00] [INFO] root: Database tables initialized
+[2025-12-14 22:08:00] [INFO] root: Database connection successful
+[2025-12-14 22:08:00] [INFO] root: Bot started
+[2025-12-14 22:08:00] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 22:08:00] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:08:03] [INFO] aiogram.event: Update id=308067404 is handled. Duration 575 ms by bot id=6978548039
+[2025-12-14 22:08:05] [INFO] aiogram.event: Update id=308067405 is handled. Duration 458 ms by bot id=6978548039
+[2025-12-14 22:08:18] [INFO] aiogram.event: Update id=308067406 is not handled. Duration 172 ms by bot id=6978548039
+[2025-12-14 22:09:01] [INFO] aiogram.event: Update id=308067407 is handled. Duration 365 ms by bot id=6978548039
+[2025-12-14 22:09:55] [INFO] aiogram.event: Update id=308067408 is handled. Duration 257 ms by bot id=6978548039
+[2025-12-14 22:13:52] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 22:13:52] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 22:13:52] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 22:13:52] [INFO] root: Bot stopped
+[2025-12-14 22:13:52] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:13:58] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 22:13:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 22:13:59] [INFO] root: Database tables initialized
+[2025-12-14 22:13:59] [INFO] root: Database connection successful
+[2025-12-14 22:13:59] [INFO] root: Bot started
+[2025-12-14 22:13:59] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 22:13:59] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:14:10] [INFO] aiogram.event: Update id=308067409 is handled. Duration 946 ms by bot id=6978548039
+[2025-12-14 22:15:57] [INFO] aiogram.event: Update id=308067410 is handled. Duration 638 ms by bot id=6978548039
+[2025-12-14 22:45:31] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 22:45:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 22:45:31] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 22:45:31] [INFO] root: Bot stopped
+[2025-12-14 22:45:31] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:45:40] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 22:45:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 22:45:41] [INFO] root: Database tables initialized
+[2025-12-14 22:45:41] [INFO] root: Database connection successful
+[2025-12-14 22:45:41] [INFO] root: Bot started
+[2025-12-14 22:45:41] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 22:45:41] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:45:44] [INFO] aiogram.event: Update id=308067411 is handled. Duration 484 ms by bot id=6978548039
+[2025-12-14 22:45:45] [INFO] aiogram.event: Update id=308067412 is handled. Duration 414 ms by bot id=6978548039
+[2025-12-14 22:45:46] [ERROR] root: Database error: cannot access local variable 'media' where it is not associated with a value
+[2025-12-14 22:45:46] [INFO] aiogram.event: Update id=308067413 is handled. Duration 72 ms by bot id=6978548039
+[2025-12-14 22:46:15] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 22:46:15] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 22:46:15] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 22:46:16] [INFO] root: Bot stopped
+[2025-12-14 22:46:16] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:46:21] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 22:46:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 22:46:22] [INFO] root: Database tables initialized
+[2025-12-14 22:46:22] [INFO] root: Database connection successful
+[2025-12-14 22:46:22] [INFO] root: Bot started
+[2025-12-14 22:46:22] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 22:46:23] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:46:24] [INFO] aiogram.event: Update id=308067414 is handled. Duration 628 ms by bot id=6978548039
+[2025-12-14 22:47:19] [INFO] aiogram.dispatcher: Polling stopped
+[2025-12-14 22:47:19] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2025-12-14 22:47:19] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 6978548039)
+[2025-12-14 22:47:19] [INFO] root: Bot stopped
+[2025-12-14 22:47:19] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:47:25] [INFO] root: Settings successfully loaded from .env
+[2025-12-14 22:47:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2025-12-14 22:47:26] [INFO] root: Database tables initialized
+[2025-12-14 22:47:26] [INFO] root: Database connection successful
+[2025-12-14 22:47:26] [INFO] root: Bot started
+[2025-12-14 22:47:26] [INFO] aiogram.dispatcher: Start polling
+[2025-12-14 22:47:26] [INFO] aiogram.dispatcher: Run polling for bot @dyunja_second_bot id=6978548039 - 'dyunja_second_bot'
+[2025-12-14 22:47:27] [INFO] aiogram.event: Update id=308067415 is handled. Duration 454 ms by bot id=6978548039
+[2025-12-14 22:47:28] [INFO] aiogram.event: Update id=308067416 is handled. Duration 399 ms by bot id=6978548039
+[2025-12-14 22:47:29] [INFO] aiogram.event: Update id=308067417 is handled. Duration 377 ms by bot id=6978548039
+[2025-12-14 22:47:38] [INFO] aiogram.event: Update id=308067418 is not handled. Duration 170 ms by bot id=6978548039
