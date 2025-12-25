@@ -8,7 +8,8 @@ from sqlalchemy import (
     ForeignKey,
     Enum,
     Text,
-    UniqueConstraint
+    UniqueConstraint,
+    Numeric
 )
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -16,7 +17,7 @@ from sqlalchemy.orm import (
     mapped_column,
     relationship
 )
-
+from decimal import Decimal
 
 class Base(DeclarativeBase):
     pass
@@ -53,6 +54,7 @@ class User(Base):
 
     balance: Mapped[int] = mapped_column(default=0)
     email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
+    subscription_token: Mapped[str | None] = mapped_column(String(36), unique=True, index=True, nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
@@ -108,7 +110,7 @@ class SubscriptionPlan(Base):
     name: Mapped[str] = mapped_column(String(64), unique=True)
     price: Mapped[int] = mapped_column()
     period_days: Mapped[int] = mapped_column(default=30)
-    key_limit: Mapped[int] = mapped_column(default=2)
+    gb_limit: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=100)
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
@@ -125,6 +127,7 @@ class Subscription(Base):
     user: Mapped["User"] = relationship(back_populates="subscriptions")
     plan: Mapped["SubscriptionPlan"] = relationship(back_populates="subscriptions")
 
+    gb_left: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=100)
     status: Mapped[SubStatus] = mapped_column(Enum(SubStatus), default=SubStatus.active)
     auto_renew: Mapped[bool] = mapped_column(Boolean, default=True)
 

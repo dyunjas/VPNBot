@@ -1,7 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import InlineKeyboardButton
 
-SERVERS_PER_PAGE = 6
+SERVERS_PER_PAGE = 10
 
 def _fmt_country(country_enum) -> str:
     try:
@@ -38,26 +38,25 @@ def servers_kb(servers, page: int = 0):
 
 def user_keys_kb(keys):
     builder = InlineKeyboardBuilder()
+    builder.row(InlineKeyboardButton(text="🔄 Единая VPN ссылка", callback_data="subscription_url"))
 
     if not keys:
-        builder.button(text="➕ Создать ключ", callback_data="create_key")
-        builder.adjust(1)
+        builder.row(InlineKeyboardButton(text="➕ Создать ключ", callback_data="create_key"))
         builder.row(InlineKeyboardButton(text="🪐 В главное меню", callback_data="main_menu"))
         return builder.as_markup()
 
+    keys_builder= InlineKeyboardBuilder()
     for key in keys:
         country = _fmt_country(key.server.country if key.server else "❓")
-        builder.button(
-            text=f"{country}",
-            callback_data=f"key_info:{key.id}"
-        )
+        keys_builder.button(text=country, callback_data=f"key_info:{key.id}")
+    keys_builder.adjust(2)
 
-    builder.adjust(1)
+    builder.attach(keys_builder)
     builder.row(InlineKeyboardButton(text="➕ Новый ключ", callback_data="create_key"))
     builder.row(InlineKeyboardButton(text="🪐 В главное меню", callback_data="main_menu"))
     return builder.as_markup()
 
-def key_info_kb(key):
+def key_info_kb(key, key_uri):
     builder = InlineKeyboardBuilder()
 
     builder.button(text="🗑 Удалить ключ", callback_data=f"delete_key:{key.id}")

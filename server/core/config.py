@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     SMTP_NOREPLY_USER: str
     SMTP_NOREPLY_PASS: str
     OTP_SECRET: str
+    PUBLIC_BASE_URL: str
 
     class Config:
         env_file = ".env"

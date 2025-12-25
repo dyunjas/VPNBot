@@ -13,6 +13,8 @@ from client.payments import add_funds, platega_payment
 from client.navigation.additional_menu.transaction import transaction
 from client.navigation.additional_menu.email import email
 from client.navigation.additional_menu.referral import referral
+from client.vpn_subscription import subscription_url
+from client.vpn_subscription.reissue_keys import reissue_keys
 
 router = Router()
 
@@ -30,3 +32,5 @@ router.include_router(platega_payment.router)
 router.include_router(transaction.router)
 router.include_router(email.router)
 router.include_router(referral.router)
+router.include_router(subscription_url.router)
+router.include_router(reissue_keys.router)

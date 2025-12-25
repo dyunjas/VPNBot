@@ -13,8 +13,9 @@ from client.payments.keyboards import back_profile_kb, payment_menu_kb
 
 from server.states import PaymentStates
 from server.core.logger_config import logger
+from server.core.loader import bot
 
-from server.payments.generate_platega_invoice import PlategaPaymentAPI  # <-- клиент Platega
+from server.payments.generate_platega_invoice import PlategaPaymentAPI
 from server.repositories.user_repository import UserRepository
 from server.repositories.transaction_repository import TransactionRepository
 
@@ -47,8 +48,8 @@ async def pay_platega_clb(
         currency="RUB",
         payment_method=2,
         description=f"Пополнение баланса на {amount} RUB",
-        return_url="https://t.me/shopchek_bot",
-        failed_url="https://t.me/shopchek_bot",
+        return_url="https://t.me/LunetVpnBot",
+        failed_url="https://t.me/LunetVpnBot",
         payload=order_id,
     )
 
@@ -134,7 +135,16 @@ async def check_platega_payment_clb(
 
         await user_repo.increase_balance(tg_id, transaction.amount)
         await transaction_repo.mark_transaction_as_paid(transaction_id)
-
+        user = await user_repo.get_user_by_tg_id(tg_id)
+        if user.referrer_id:
+            await user_repo.increase_balance(user.referrer_id, round(int(transaction.amount * 0.2)))
+            try:
+                await bot.send_message(
+                    chat_id = user.referrer_id,
+                    text = f"🎉 Ваш реферал пополнил баланс на {transaction.amount} RUB!\n🌟 Вам начислено 20% от суммы: {round(int(transaction.amount * 0.2))} RUB."
+                )
+            except:
+                pass
         text = (
             f"✅ Оплата успешно завершена!\n"
             f"<b>🌟 Баланс пополнен на:</b> {transaction.amount} RUB."

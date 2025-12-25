@@ -93,8 +93,8 @@ async def select_plan_clb(callback: CallbackQuery, subscription_repo: Subscripti
         f"<b>🌙 План:</b> {plan.name}\n"
         f"<b>🌟 Стоимость:</b> {plan.price} RUB\n"
         f"<b>✨ Период:</b> {plan.period_days} дней\n"
-        f"<b>🔑 Лимит ключей:</b> {plan.key_limit} шт.\n\n"
-        f"<i>ℹ️Количество перевыпусков ключей не ограничено. Одновременно вы можете иметь не более {plan.key_limit} ключей.</i>"
+        f"<b>📊 Лимит гигабайт:</b> безлимит GB.\n\n"
+        f"<i>ℹ️ Подключиться к VPN можно сразу после оплаты.</i>"
     )
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,

@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 from client.navigation.additional_menu.email.otp_hash import otp_hash
 
+import uuid
+
 
 
 class UserRepository:
@@ -170,4 +172,16 @@ class UserRepository:
             await self.session.commit()
             return True
         return False
+    
+    async def get_or_create_subscription_token(self, tg_id: int) -> str:
+        result = await self.session.execute(select(User).where(User.tg_id == tg_id))
+        user = result.scalar_one_or_none()
+
+        if not user.subscription_token:
+            user.subscription_token = str(uuid.uuid4())
+            self.session.add(user)
+            await self.session.commit()
+            await self.session.refresh(user)
+
+        return user.subscription_token
     

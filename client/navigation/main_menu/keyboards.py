@@ -4,8 +4,8 @@ from aiogram.types import WebAppInfo
 def main_menu_kb():
     builder = InlineKeyboardBuilder()
 
-    builder.button(text="🌙 Подписка", callback_data="my_subscription")
-    builder.button(text="🔑 Мои ключи", callback_data="my_keys")
+    builder.button(text="📄 Тарифы", callback_data="subscription")
+    builder.button(text="🌙 Подписка", callback_data="vpn_subscription")
     builder.button(
         text="🚀 Мини-Приложение",
         web_app=WebAppInfo(url="https://lunetpn.ru/miniapp/")

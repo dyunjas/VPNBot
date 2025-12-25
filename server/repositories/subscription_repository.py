@@ -8,6 +8,8 @@ from server.database.models import (
 
 from datetime import datetime, timedelta
 
+from decimal import Decimal
+
 from sqlalchemy.orm import joinedload
 
 class NotEnoughBalanceError(Exception):
@@ -104,3 +106,20 @@ class SubscriptionRepository:
             .limit(1)
         )
         return result.scalar_one_or_none()
+    
+    async def increase_gb_amount(self, tg_id: int, amount: Decimal) -> Decimal:
+        user_result = await self.session.execute(
+            select(User).where(User.tg_id == tg_id)
+        )
+        user = user_result.scalar_one_or_none()
+
+        subscription_result = await self.session.execute(
+            select(Subscription).where(Subscription.user_id == user.id)
+        )
+        subscription = subscription_result.scalar_one_or_none()
+
+        subscription.gb_left = Decimal(str(subscription.gb_left or 0)) + amount
+
+        await self.session.commit()
+        await self.session.refresh(subscription)
+        return subscription.gb_left

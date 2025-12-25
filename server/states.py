@@ -18,3 +18,7 @@ class BroadcastStates(StatesGroup):
 class EmailStates(StatesGroup):
     waiting_email = State()
     waiting_code = State()
+
+class GbAddStates(StatesGroup):
+    waiting_for_amount = State()
+    waiting_for_purchase = State()

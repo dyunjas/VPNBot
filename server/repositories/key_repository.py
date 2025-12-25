@@ -82,7 +82,7 @@ class KeyRepository:
 
         uri = (
             f"vless://{user_uuid}@{server.public_host}:{server.port}"
-            f"?{'&'.join(params)}#LunetVPN | {label}"
+            f"?{'&'.join(params)}#{label}"
         )
 
         key = Key(

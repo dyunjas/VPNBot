@@ -117,17 +117,6 @@ async def create_key_clb(
     if not user:
         await callback.answer("Пользователь не найден.", show_alert=True)
         return
-
-    user_keys = await key_repo.get_keys_by_user_id(user.id)
-    active_keys_cnt = sum(1 for k in user_keys if k.status == KeyStatus.active)
-    if active_keys_cnt >= plan.key_limit:
-        await callback.answer(
-            f"⚠️ Лимит ключей исчерпан ({active_keys_cnt}/{plan.key_limit}). "
-            "Удалите один из ключей, чтобы создать новый.",
-            show_alert=True
-        )
-        await callback.answer()
-        return
     
     existing = await key_repo.get_user_key_on_server(
     user.id, server_id, [KeyStatus.active, KeyStatus.deleted]
@@ -168,12 +157,7 @@ async def create_key_clb(
         f"<b>🕓 Создан:</b> {key.created_at.strftime('%d.%m.%Y %H:%M')}\n"
         f"<b>📅 Истекает:</b> {key.expires_at.strftime('%d.%m.%Y %H:%M') if key.expires_at else '∞'}\n"
         f"<b>🔑 Ключ:</b> <code>{key.uri}</code>\n\n"
-        f"<b>📝 Инструкция по подключению:\n</b>"
-        f"Скачайте приложение для своей платформы:\n"
-        f'<a href="https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x86.exe">Windows</a> | <a href="https://play.google.com/store/apps/details?id=com.happproxy">Android</a> | <a href="https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973">macOS/iOS</a> | <a href="https://github.com/Happ-proxy/happ-desktop/releases/download/alpha_0.5.0/Happ.linux.x86.AppImage">Linux</a>\n\n'
-        "1️⃣ Скопируйте ваш ключ доступа\n"
-        "2️⃣ Откройте скаченное приложение\n"
-        "3️⃣ Вставьте ключ и нажмите <b>Подключиться</b>"
+        f'<a href="https://telegra.ph/Lunet-VPN---instrukciya-12-18"><b>📝 Инструкция по подключению(нажмите, чтобы перейти)</b></a>'
     )
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,
@@ -183,7 +167,7 @@ async def create_key_clb(
 
     await callback.message.edit_media(
         media=media,
-        reply_markup=key_info_kb(key)
+        reply_markup=key_info_kb(key, key.uri)
     )
     await callback.answer(
         text="✅ Ключ создан",

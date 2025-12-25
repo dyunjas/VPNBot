@@ -3,7 +3,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.app import router as mini_router
+from api.miniapp.endpoints import router as mini_router
+from api.subscription_url.endpoints import router as subscription_router
 from server.database.session import init_db, check_connection
 
 app = FastAPI(title="Lunet VPN MiniApp")
@@ -16,6 +17,7 @@ print("FRONTEND_DIR:", FRONTEND_DIR)
 app.mount("/miniapp", StaticFiles(directory=FRONTEND_DIR, html=True), name="miniapp")
 
 app.include_router(mini_router)
+app.include_router(subscription_router)
 
 
 @app.on_event("startup")

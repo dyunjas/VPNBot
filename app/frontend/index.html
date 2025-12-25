@@ -2,160 +2,334 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Lunet VPN панель</title>
+  <title>Lunet VPN</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.css?=v2" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
+
 <body>
   <div id="outside-stub" class="outside-stub">
     <h1>🌙 Lunet VPN</h1>
     <p>Это приложение работает только внутри Telegram.</p>
     <p>
-      Откройте бота
-      <a href="https://t.me/LunetVPNBot" target="_blank">@LunetVPNBot</a>
-      и нажмите кнопку <b>«Открыть приложение»</b>.
+      Откройте бота и нажмите кнопку <b>«Открыть приложение»</b>.
     </p>
   </div>
 
-  <div class="app" id="app-root">
-    <header class="app-header">
-      <div class="brand-row">
-        <div class="brand-left">
-          <div class="brand-title">LUNET VPN</div>
-        </div>
+  <div id="app-root" class="app">
+    <div class="bg-blobs">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
 
-        <div class="brand-status">
-          <div class="brand-status-dot"></div>
-          <span id="user-info" class="subtitle"></span>
-        </div>
-      </div>
-    </header>
+    <div class="stack" id="stack">
+      <section class="view view-active" id="view-home">
+        <div class="hero">
+          <div class="hero-left">
+            <img id="home-avatar" class="hero-avatar" alt="avatar" />
+            <div class="hero-text">
+              <div id="home-name" class="hero-name">—</div>
+              <div class="hero-id">
+                <span id="home-id">ID: —</span>
+                <button id="btn-copy-id" class="mini-icon" title="Скопировать ID" type="button">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2" />
+                    <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
 
-    <main class="pages">
-      <section class="page page-active" data-page="tariffs">
-        <div class="card card-status">
-          <h2>Статус</h2>
-          <div id="status-text" class="muted status-text">Загружаю...</div>
-          <div class="hint">
-            Подписка и лимиты подтягиваются из вашего аккаунта Lunet.
+          <div class="hero-right">
+            <div id="home-balance" class="pill soft">— ₽</div>
+            <div id="sub-badge" class="pill status inactive">—</div>
           </div>
         </div>
 
-        <div class="card" id="plans-card">
-          <h2>Тарифы</h2>
-          <div id="plans-list" class="muted">Загружаю тарифы...</div>
-          <div class="hint">
-            Можно продлить или сменить тариф прямо здесь.
+        <div class="card glass sub-card">
+          <div class="sub-top">
+            <div>
+              <div class="sub-kicker">ТВОЯ ПОДПИСКА</div>
+            </div>
+            <div id="sub-emoji" class="sub-emoji">✨</div>
           </div>
+
+          <div id="sub-title" class="sub-title">—</div>
+          <div id="sub-meta" class="sub-meta">—</div>
+
+          <div id="sub-link-wrap" class="sub-link-wrap" style="display:none;">
+            <div id="sub-link" class="sub-link">—</div>
+
+            <div class="sub-link-actions">
+              <button id="btn-copy-sub" class="btn ghost small" type="button">Скопировать</button>
+              <button id="btn-open-sub" class="btn ghost small" type="button">Открыть</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card glass menu-card">
+          <div class="section-title">Меню</div>
+
+          <button class="row" data-open="profile" type="button">
+            <div class="row-ico">👤</div>
+            <div class="row-title">Профиль</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="referral" type="button">
+            <div class="row-ico">🎁</div>
+            <div class="row-title">Реферальная программа</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="setup" type="button">
+            <div class="row-ico">⚙️</div>
+            <div class="row-title">Установка и настройка</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="support" type="button">
+            <div class="row-ico">💬</div>
+            <div class="row-title">Поддержка</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="tariffs" type="button">
+            <div class="row-ico">⭐</div>
+            <div class="row-title">Тарифы</div>
+            <div class="row-chevron">›</div>
+          </button>
+        </div>
+
+        <div class="spacer"></div>
+      </section>
+
+      <section class="view" id="view-profile">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Профиль</div>
+          <div id="profile-pill" class="pill soft">— ₽</div>
+        </div>
+
+        <div class="card glass">
+          <div class="profile-center">
+            <img id="profile-avatar" class="avatar" alt="avatar"/>
+            <div id="profile-name" class="name">—</div>
+            <div id="profile-username" class="muted2">—</div>
+          </div>
+
+          <div class="section-title">Промокод</div>
+          <div class="input-row">
+            <input id="promo-input" class="input" placeholder="Введите промокод" />
+            <button id="promo-apply" class="btn accent" type="button">Применить</button>
+          </div>
+          <div id="promo-hint" class="hint"></div>
+
+          <div class="section-title" style="margin-top:14px;">Пополнение</div>
+          <div class="input-row">
+            <input id="topup-input" class="input" placeholder="Сумма, ₽ (например 100)" inputmode="numeric" />
+            <button id="topup-btn" class="btn ghost" type="button">Пополнить</button>
+          </div>
+          <div id="topup-hint" class="hint"></div>
+
+          <div class="hint">
+            После оплаты вернитесь в приложение и нажмите <b>«Проверить платежи»</b> в разделе «Транзакции».
+          </div>
+        </div>
+
+        <div class="card glass menu-card">
+          <div class="section-title">Подменю</div>
+
+          <button class="row" data-open="transactions" type="button">
+            <div class="row-ico">🧾</div>
+            <div class="row-title">Транзакции</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="referral" type="button">
+            <div class="row-ico">🎁</div>
+            <div class="row-title">Реферальная программа</div>
+            <div class="row-chevron">›</div>
+          </button>
+
+          <button class="row" data-open="support" type="button">
+            <div class="row-ico">💬</div>
+            <div class="row-title">Поддержка</div>
+            <div class="row-chevron">›</div>
+          </button>
         </div>
       </section>
 
-      <section class="page" data-page="servers">
-        <div class="card" id="servers-card">
-          <h2>Серверы</h2>
-          <div id="servers-list" class="muted">Загружаю список серверов...</div>
-          <div class="hint">
-            Выберите сервер, чтобы создать новый ключ.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-page="keys">
-        <div class="card">
-          <h2>Мои ключи</h2>
-          <div id="keys-list" class="muted">Загружаю ключи...</div>
-          <div class="actions-row">
-            <button class="secondary" id="btn-refresh-keys">🔄 Обновить</button>
-          </div>
+      <section class="view" id="view-transactions">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Транзакции</div>
         </div>
 
-        <div class="card">
-          <h2>Инструкция</h2>
+        <div class="card glass">
+          <div class="section-title">Проверка платежей</div>
           <div class="muted">
-            1️⃣ Скопируйте ваш VLESS-ключ.<br />
-            2️⃣ Откройте приложение Happ или другой клиент.<br />
-            3️⃣ Вставьте ключ и нажмите <b>Подключиться</b>.<br /><br />
-            Happ:<br />
-            <a
-              href="https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x86.exe"
-              target="_blank"
-            >
-              Windows
-            </a>
-            |
-            <a
-              href="https://play.google.com/store/apps/details?id=com.happproxy"
-              target="_blank"
-            >
-              Android
-            </a>
-            |
-            <a
-              href="https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973"
-              target="_blank"
-            >
-              macOS / iOS
-            </a>
-            |
-            <a
-              href="https://github.com/Happ-proxy/happ-desktop/releases/download/alpha_0.5.0/Happ.linux.x86.AppImage"
-              target="_blank"
-            >
-              Linux
-            </a>
+            Если вы только что оплатили — вернитесь сюда и нажмите кнопку ниже.
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="btn-check-payments" class="btn ghost" type="button">Проверить платежи</button>
+            <button id="btn-refresh-tx" class="btn ghost" type="button">Обновить список</button>
+          </div>
+
+          <div id="check-hint" class="hint"></div>
+        </div>
+
+        <div class="card glass">
+          <div class="section-title">Последние операции</div>
+          <div id="tx-list" class="muted">Загрузка…</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-referral">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Реферальная программа</div>
+        </div>
+
+        <div class="card glass">
+          <div class="ref-box">
+            <div class="ref-line">🎁 <b>+10 ₽</b> вам и другу за регистрацию</div>
+            <div class="ref-line">🌟 <b>+20%</b> с каждого пополнения друга</div>
+          </div>
+
+          <div class="link-card">
+            <div class="link-title">Ваша реф-ссылка</div>
+            <div id="ref-link" class="link-url">—</div>
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+              <button id="btn-copy-ref" class="btn ghost small" type="button">Скопировать</button>
+              <button id="btn-open-ref" class="btn ghost small" type="button">Открыть</button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="page" data-page="profile">
-        <div class="card">
-          <h2>Профиль</h2>
-
-          <div class="profile-header">
-            <div class="profile-avatar-wrap">
-              <img id="profile-avatar" class="profile-avatar" alt="avatar" />
-            </div>
-            <div class="profile-text">
-              <div id="profile-name" class="profile-name">Загрузка...</div>
-              <div id="profile-username" class="profile-username muted"></div>
-            </div>
-          </div>
-
-          <div class="profile-balance-row">
-            <div>Баланс: <span id="profile-balance">—</span> ₽</div>
-            <div class="profile-balance-buttons">
-              <button id="btn-topup" class="secondary small">Пополнить</button>
-              <button id="btn-check-payment" class="secondary small">
-                Проверить платёж
-              </button>
-            </div>
-          </div>
-
-          <div class="hint">
-            Подписка, ключи и баланс доступны в вашем аккаунте Lunet.
-          </div>
+      <section class="view" id="view-setup">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Установка и настройка</div>
         </div>
 
-        <div class="card">
-          <h2>Транзакции</h2>
-          <div id="profile-tx-list" class="muted">
-            Загрузка истории...
+        <div class="card glass">
+          <div class="muted">
+            Откройте инструкцию:
+          </div>
+
+          <div class="link-card">
+            <div class="link-title">Инструкция</div>
+            <div id="setup-link" class="link-url">—</div>
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+              <button id="btn-copy-setup" class="btn ghost small" type="button">Скопировать</button>
+              <button id="btn-open-setup" class="btn ghost small" type="button">Открыть</button>
+            </div>
           </div>
         </div>
       </section>
-    </main>
 
-    <nav class="tabbar">
-      <button class="tab-button active" data-target="tariffs">Тарифы</button>
-      <button class="tab-button" data-target="servers">Серверы</button>
-      <button class="tab-button" data-target="keys">Ключи</button>
-      <button class="tab-button" data-target="profile">Профиль</button>
+      <section class="view" id="view-support">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Поддержка</div>
+        </div>
+
+        <div class="card glass">
+          <div class="muted">
+            Обратитесь в поддержку в Telegram
+            <span id="support-tg" class="inline-link">@LunetVPNSupportBot</span>
+            или на почту
+            <span id="support-mail" class="inline-link">support@lunet.ru</span>.
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="btn-open-support-tg" class="btn ghost" type="button">Открыть Telegram</button>
+            <button id="btn-copy-support-mail" class="btn ghost" type="button">Скопировать email</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-tariffs">
+        <div class="view-head">
+          <button class="back" data-back type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="view-title">Тарифы</div>
+        </div>
+
+        <div class="card glass">
+          <div class="section-title">Статус</div>
+          <div id="status-text" class="muted">Загрузка…</div>
+        </div>
+
+        <div class="card glass" id="plans-card">
+          <div class="section-title">Тарифы</div>
+          <div id="plans-list" class="muted">Загрузка…</div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Навигация">
+      <button class="nav-item active" data-tab="home" type="button">
+        <span class="nav-ico">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="nav-txt">Главная</span>
+      </button>
+
+      <button class="nav-item" data-tab="tariffs" type="button">
+        <span class="nav-ico">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l2.2 6.7H21l-5.4 3.9L17.8 19 12 15.2 6.2 19l2.2-6.4L3 8.7h6.8L12 2Z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="nav-txt">Тарифы</span>
+      </button>
+
+      <button class="nav-item" data-tab="profile" type="button">
+        <span class="nav-ico">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 12a4.2 4.2 0 1 0-4.2-4.2A4.2 4.2 0 0 0 12 12Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M4 20c1.8-4 5.1-6 8-6s6.2 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="nav-txt">Профиль</span>
+      </button>
     </nav>
 
-    <div id="message" class="message"></div>
+    <div id="message" class="toast"></div>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

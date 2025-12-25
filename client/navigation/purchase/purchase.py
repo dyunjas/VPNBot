@@ -60,7 +60,7 @@ async def purchase_plan_clb(
         f"<b>🌟 Стоимость:</b> {plan.price} RUB\n"
         f"<b>✨ Активен до:</b> {subscription.current_period_end:%d.%m.%Y %H:%M}\n"
         f"<b>⭐️ Баланс:</b> {user.balance} RUB\n\n"
-        "<i>ℹ️ Создайте ключ для доступа и начните пользоваться сервисом</i>"
+        "<i>ℹ️ Создайте VPN ссылку и начните пользоваться сервисом.</i>"
     )
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,

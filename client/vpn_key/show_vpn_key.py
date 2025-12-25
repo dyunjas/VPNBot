@@ -51,12 +51,7 @@ async def show_key_info(callback: CallbackQuery, key_repo: KeyRepository):
         f"<b>🕓 Создан:</b> {key.created_at.strftime('%d.%m.%Y %H:%M')}\n"
         f"<b>📅 Истекает:</b> {key.expires_at.strftime('%d.%m.%Y %H:%M') if key.expires_at else '∞'}\n"
         f"<b>🔑 Ключ:</b> <code>{key.uri}</code>\n\n"
-        f"<b>📝 Инструкция по подключению:\n</b>"
-        f"Скачайте приложение для своей платформы:\n"
-        f'<a href="https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x86.exe">Windows</a> | <a href="https://play.google.com/store/apps/details?id=com.happproxy">Android</a> | <a href="https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973">macOS/iOS</a> | <a href="https://github.com/Happ-proxy/happ-desktop/releases/download/alpha_0.5.0/Happ.linux.x86.AppImage">Linux</a>\n\n'
-        "1️⃣ Скопируйте ваш ключ доступа\n"
-        "2️⃣ Откройте скаченное приложение\n"
-        "3️⃣ Вставьте ключ и нажмите <b>Подключиться</b>"
+        f'<a href="https://telegra.ph/Lunet-VPN---instrukciya-12-18"><b>📝 Инструкция по подключению(нажмите, чтобы перейти)</b></a>'
     )
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,
@@ -66,6 +61,6 @@ async def show_key_info(callback: CallbackQuery, key_repo: KeyRepository):
 
     await callback.message.edit_media(
         media=media,
-        reply_markup=key_info_kb(key)
+        reply_markup=key_info_kb(key, key.uri)
     )
     await callback.answer()
