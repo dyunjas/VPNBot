@@ -1,24 +1,24 @@
 import asyncio
 
-from server.core.loader import (
+from backend.core.loader import (
     setup_bot,
     shutdown_bot
 )
 
-from server.database.session import (
+from backend.database.session import (
     init_db,
     check_connection,
     engine
 )
 
-from server.middlewares.db import DBSessionMiddleware
-from server.middlewares.user_update import UserUpdateMiddleware
+from bot.middlewares.db import DBSessionMiddleware
+from bot.middlewares.user_update import UserUpdateMiddleware
 
-from client import client_routers
+from bot import bot_routers
 
-from server.core.logger_config import logger
+from backend.core.logger_config import logger
 
-from client.vpn_key.expire_checker import expire_checker_loop
+from backend.schedulers.expire_checker import expire_checker_loop
 
 async def main():
     try:
@@ -31,7 +31,7 @@ async def main():
         dp.update.middleware(DBSessionMiddleware())
         dp.update.middleware(UserUpdateMiddleware())
 
-        dp.include_router(client_routers.router)
+        dp.include_router(bot_routers.router)
 
         asyncio.create_task(expire_checker_loop(interval_sec=10000))
 

@@ -18,14 +18,114 @@ const outsideStubEl = document.getElementById("outside-stub");
 const toastEl = document.getElementById("message");
 const stackEl = document.getElementById("stack");
 
+function applyTelegramTopInset(){
+  try{
+    const top =
+      tg?.contentSafeAreaInset?.top ??
+      tg?.safeAreaInset?.top ??
+      18;
+    document.documentElement.style.setProperty("--tgTopPad", `${Math.max(12, top)}px`);
+  }catch{
+    document.documentElement.style.setProperty("--tgTopPad", `18px`);
+  }
+}
+
+if (!IN_TELEGRAM) {
+  if (appRootEl) appRootEl.style.display = "none";
+  if (outsideStubEl) outsideStubEl.style.display = "grid";
+} else {
+  if (outsideStubEl) outsideStubEl.style.display = "none";
+  if (appRootEl) appRootEl.style.display = "block";
+  applyTelegramTopInset();
+}
+
+function hapticTap() { try { tg?.HapticFeedback?.impactOccurred("light"); } catch {} }
+function hapticSuccess() { try { tg?.HapticFeedback?.notificationOccurred("success"); } catch {} }
+function hapticError() { try { tg?.HapticFeedback?.notificationOccurred("error"); } catch {} }
+
+let toastTimer = null;
+function toast(text, kind = "info") {
+  if (!toastEl) return;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastEl.classList.remove("toast--show");
+  toastEl.textContent = text || "";
+  toastEl.classList.add("toast--show");
+  toastTimer = setTimeout(() => toastEl.classList.remove("toast--show"), 2800);
+}
+
+let bannedLocked = false;
+function showBannedScreen() {
+  bannedLocked = true;
+  try { tg?.HapticFeedback?.notificationOccurred("error"); } catch {}
+  if (appRootEl) appRootEl.style.display = "none";
+  if (outsideStubEl) {
+    outsideStubEl.style.display = "grid";
+    outsideStubEl.innerHTML = `
+      <div class="outside__card">
+        <div class="outside__icon">🚫</div>
+        <div class="outside__title">Вы забанены</div>
+        <div class="outside__text">
+          Доступ к мини-приложению ограничен.<br/>
+          Если вы считаете, что это ошибка — напишите в поддержку.
+        </div>
+      </div>
+    `;
+  }
+}
+
+function friendlyErrorMessage(raw) {
+  const s = String(raw || "").toLowerCase();
+  if (s.includes("banned")) return "🚫 Вы забанены";
+  if (s.includes("initdata is missing") || s.includes("invalid initdata")) return "Откройте мини-приложение из Telegram-бота.";
+  if (s.includes("user not found")) return "Пользователь не найден. Сначала зайдите в бота и зарегистрируйтесь.";
+  if (s.includes("not enough balance")) return "Недостаточно средств. Пополните баланс и попробуйте снова.";
+  if (s.includes("no active subscription") || s.includes("no_subscription")) return "Подписка не активна. Оформите её в разделе «Тарифы».";
+  if (s.includes("no_pending")) return "Нет незавершённых платежей. Если вы оплатили только что — подождите 1–2 минуты и проверьте ещё раз.";
+  if (s.includes("platega")) return "Платёжный сервис временно недоступен. Попробуйте чуть позже или напишите в поддержку.";
+  if (raw && String(raw).length > 140) return "Что-то пошло не так. Попробуйте ещё раз.";
+  return raw || "Неизвестная ошибка";
+}
+
+async function apiRequest(path, body = {}) {
+  if (!IN_TELEGRAM) throw new Error("Это приложение работает только внутри Telegram");
+  if (bannedLocked) throw new Error("🚫 Вы забанены");
+
+  const payload = { initData: initData || null, ...body };
+
+  const res = await fetch(BACKEND_URL + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const text = await res.text();
+  let data;
+  try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+
+  if (!res.ok) {
+    const detail = data.detail || data.error || text || `HTTP ${res.status}`;
+    const msg = friendlyErrorMessage(detail);
+    toast(msg, "error");
+    if (String(detail || "").toLowerCase().includes("banned")) showBannedScreen();
+    throw new Error(msg);
+  }
+
+  if (data.error) {
+    const msg = friendlyErrorMessage(data.error);
+    toast(msg, "error");
+    if (String(data.error || "").toLowerCase().includes("banned")) showBannedScreen();
+    throw new Error(msg);
+  }
+
+  return data;
+}
+
 const homeAvatarEl = document.getElementById("home-avatar");
 const homeNameEl = document.getElementById("home-name");
 const homeIdEl = document.getElementById("home-id");
 const btnCopyId = document.getElementById("btn-copy-id");
 const homeBalanceEl = document.getElementById("home-balance");
 
-const subBadgeEl = document.getElementById("sub-badge");
-const subEmojiEl = document.getElementById("sub-emoji");
 const subTitleEl = document.getElementById("sub-title");
 const subMetaEl = document.getElementById("sub-meta");
 const subLinkWrapEl = document.getElementById("sub-link-wrap");
@@ -36,15 +136,19 @@ const btnOpenSub = document.getElementById("btn-open-sub");
 const profileAvatarEl = document.getElementById("profile-avatar");
 const profileNameEl = document.getElementById("profile-name");
 const profileUsernameEl = document.getElementById("profile-username");
-const profilePillEl = document.getElementById("profile-pill");
 
 const promoInputEl = document.getElementById("promo-input");
 const promoApplyBtn = document.getElementById("promo-apply");
 const promoHintEl = document.getElementById("promo-hint");
 
 const topupInputEl = document.getElementById("topup-input");
-const topupBtn = document.getElementById("topup-btn");
+const topupPayBtn = document.getElementById("topup-pay");
 const topupHintEl = document.getElementById("topup-hint");
+const topupMethodHintEl = document.getElementById("topup-method-hint");
+
+const pmCardBtn = document.getElementById("pm-card");
+const pmSbpBtn = document.getElementById("pm-sbp");
+const pmCryptoBtn = document.getElementById("pm-crypto");
 
 const txListEl = document.getElementById("tx-list");
 const btnCheckPayments = document.getElementById("btn-check-payments");
@@ -68,102 +172,13 @@ const supportMailEl = document.getElementById("support-mail");
 const btnOpenSupportTg = document.getElementById("btn-open-support-tg");
 const btnCopySupportMail = document.getElementById("btn-copy-support-mail");
 
-const navItems = document.querySelectorAll(".nav-item");
+const navItems = document.querySelectorAll(".tab");
 
 const viewIds = ["home","profile","transactions","referral","setup","support","tariffs"];
 const views = new Map(viewIds.map(id => [id, document.getElementById("view-" + id)]));
 
-if (!IN_TELEGRAM) {
-  if (appRootEl) appRootEl.style.display = "none";
-  if (outsideStubEl) outsideStubEl.style.display = "flex";
-} else {
-  if (outsideStubEl) outsideStubEl.style.display = "none";
-  if (appRootEl) appRootEl.style.display = "block";
-}
-
-function hapticTap() { try { tg?.HapticFeedback?.impactOccurred("light"); } catch {} }
-function hapticSuccess() { try { tg?.HapticFeedback?.notificationOccurred("success"); } catch {} }
-function hapticError() { try { tg?.HapticFeedback?.notificationOccurred("error"); } catch {} }
-
-let toastTimer = null;
-function toast(text, kind = "info") {
-  if (!toastEl) return;
-  if (toastTimer) clearTimeout(toastTimer);
-
-  toastEl.classList.remove("info", "error", "visible");
-  toastEl.textContent = text || "";
-  toastEl.classList.add(kind === "error" ? "error" : "info", "visible");
-
-  toastTimer = setTimeout(() => toastEl.classList.remove("visible"), 2800);
-}
-
-function friendlyErrorMessage(raw) {
-  const s = String(raw || "").toLowerCase();
-
-  if (s.includes("initdata is missing") || s.includes("invalid initdata")) {
-    return "Откройте мини-приложение из Telegram-бота.";
-  }
-  if (s.includes("user not found")) {
-    return "Пользователь не найден. Сначала зайдите в бота и зарегистрируйтесь.";
-  }
-  if (s.includes("not enough balance")) {
-    return "Недостаточно средств. Пополните баланс и попробуйте снова.";
-  }
-  if (s.includes("no active subscription") || s.includes("no_subscription")) {
-    return "Подписка не активна. Оформите её в разделе «Тарифы».";
-  }
-  if (s.includes("no_pending")) {
-    return "Нет незавершённых платежей. Если вы оплатили только что — подождите 1–2 минуты и проверьте ещё раз.";
-  }
-  if (s.includes("platega")) {
-    return "Платёжный сервис временно недоступен. Попробуйте чуть позже или напишите в поддержку.";
-  }
-
-  if (raw && String(raw).length > 140) return "Что-то пошло не так. Попробуйте ещё раз.";
-  return raw || "Неизвестная ошибка";
-}
-
-async function apiRequest(path, body = {}) {
-  if (!IN_TELEGRAM) throw new Error("Это приложение работает только внутри Telegram");
-
-  const payload = { initData: initData || null, ...body };
-
-  const res = await fetch(BACKEND_URL + path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  const text = await res.text();
-  let data;
-  try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
-
-  if (!res.ok) {
-    const detail = data.detail || data.error || text || `HTTP ${res.status}`;
-    const msg = friendlyErrorMessage(detail);
-    toast(msg, "error");
-    throw new Error(msg);
-  }
-  if (data.error) {
-    const msg = friendlyErrorMessage(data.error);
-    toast(msg, "error");
-    throw new Error(msg);
-  }
-  return data;
-}
-
-let navStack = ["home"];
-let currentView = "home";
-let navLocked = false;
-
-const ROOT_TABS = ["home", "tariffs", "profile"];
-
 function cleanup(el){
-  el.classList.remove("enter-from-right","enter-from-left","enter-to-center");
-}
-
-function setActiveTab(tab) {
-  navItems.forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+  el.classList.remove("view--enter-r","view--enter-l","view--to-center");
 }
 
 function waitTransition(el, fallbackMs = 520) {
@@ -181,6 +196,15 @@ function waitTransition(el, fallbackMs = 520) {
   });
 }
 
+const ROOT_TABS = ["home", "tariffs", "profile"];
+let navStack = ["home"];
+let currentView = "home";
+let navLocked = false;
+
+function setActiveTab(tab) {
+  navItems.forEach((b) => b.classList.toggle("tab--active", b.dataset.tab === tab));
+}
+
 async function showView(next, dir = "forward", push = true) {
   if (navLocked) return;
   const prev = currentView;
@@ -192,15 +216,15 @@ async function showView(next, dir = "forward", push = true) {
 
   navLocked = true;
 
-  prevEl.classList.remove("view-active");
+  prevEl.classList.remove("view--active");
   cleanup(prevEl);
 
   cleanup(nextEl);
-  nextEl.classList.add("view-active");
-  nextEl.classList.add(dir === "back" ? "enter-from-left" : "enter-from-right");
+  nextEl.classList.add("view--active");
+  nextEl.classList.add(dir === "back" ? "view--enter-l" : "view--enter-r");
 
   nextEl.offsetHeight;
-  nextEl.classList.add("enter-to-center");
+  nextEl.classList.add("view--to-center");
 
   await waitTransition(nextEl);
 
@@ -224,8 +248,7 @@ function goBack() {
 
 document.querySelectorAll("[data-open]").forEach(btn => {
   btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     hapticTap();
     const target = btn.dataset.open;
     showView(target, "forward", true);
@@ -235,8 +258,7 @@ document.querySelectorAll("[data-open]").forEach(btn => {
 
 document.querySelectorAll("[data-back]").forEach(btn => {
   btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     hapticTap();
     goBack();
   });
@@ -244,8 +266,7 @@ document.querySelectorAll("[data-back]").forEach(btn => {
 
 navItems.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     hapticTap();
 
     const tab = btn.dataset.tab;
@@ -255,80 +276,6 @@ navItems.forEach((btn) => {
     setActiveTab(tab);
   });
 });
-
-let touchStartX = 0;
-let touchStartY = 0;
-let touchActive = false;
-let ignoreSwipe = false;
-
-function isInteractiveTarget(target) {
-  if (!target) return false;
-  return !!target.closest?.("button, a, input, textarea, select, label");
-}
-
-stackEl?.addEventListener("touchstart", (e) => {
-  const t = e.touches[0];
-  touchStartX = t.clientX;
-  touchStartY = t.clientY;
-  touchActive = true;
-
-  ignoreSwipe = isInteractiveTarget(e.target);
-}, {passive:true});
-
-stackEl?.addEventListener("touchmove", (e) => {
-  if (!touchActive) return;
-  const t = e.touches[0];
-  const dx = t.clientX - touchStartX;
-  const dy = t.clientY - touchStartY;
-  if (Math.abs(dy) > Math.abs(dx)) ignoreSwipe = true;
-}, {passive:true});
-
-stackEl?.addEventListener("touchend", (e) => {
-  if (!touchActive || navLocked) return;
-  touchActive = false;
-
-  if (ignoreSwipe) return;
-
-  const t = e.changedTouches[0];
-  const dx = t.clientX - touchStartX;
-  const dy = t.clientY - touchStartY;
-
-  if (Math.abs(dy) > 90) return;
-  if (Math.abs(dx) < 70) return;
-
-  const inNested = navStack.length > 1;
-
-  if (inNested) {
-    if (dx > 0) {
-      hapticTap();
-      goBack();
-    }
-    return;
-  }
-
-  if (!ROOT_TABS.includes(currentView)) return;
-
-  const idx = ROOT_TABS.indexOf(currentView);
-  if (dx < 0) {
-    const next = ROOT_TABS[Math.min(ROOT_TABS.length - 1, idx + 1)];
-    if (next !== currentView) {
-      hapticTap();
-      navStack = [next];
-      showView(next, "forward", false);
-      onViewEnter(next);
-      setActiveTab(next);
-    }
-  } else {
-    const prev = ROOT_TABS[Math.max(0, idx - 1)];
-    if (prev !== currentView) {
-      hapticTap();
-      navStack = [prev];
-      showView(prev, "back", false);
-      onViewEnter(prev);
-      setActiveTab(prev);
-    }
-  }
-}, {passive:true});
 
 let TG_ID = null;
 
@@ -354,34 +301,27 @@ function initUserUI() {
 }
 
 btnCopyId?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   if (!TG_ID) return;
   try {
     await navigator.clipboard.writeText(String(TG_ID));
-    toast("ID скопирован", "info");
+    toast("ID скопирован");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать", "error");
+    toast("Не удалось скопировать");
     hapticError();
   }
 });
 
 let lastSubUrl = null;
 
-function setStatusPill(active) {
-  if (!subBadgeEl) return;
-  subBadgeEl.classList.remove("active","inactive");
-  subBadgeEl.classList.add(active ? "active" : "inactive");
-}
-
 async function loadProfileAndBalance() {
   try {
     const data = await apiRequest("/mini/profile");
     const bal = data.user?.balance ?? 0;
+
     if (homeBalanceEl) homeBalanceEl.textContent = `${bal} ₽`;
-    if (profilePillEl) profilePillEl.textContent = `${bal} ₽`;
     return data;
   } catch {
     return null;
@@ -393,31 +333,19 @@ async function loadStatusCard() {
     const data = await apiRequest("/mini/status");
 
     if (!data.has_subscription) {
-      if (subBadgeEl) subBadgeEl.textContent = "Неактивна";
-      setStatusPill(false);
-
-      if (subEmojiEl) subEmojiEl.textContent = "🥲";
       if (subTitleEl) subTitleEl.textContent = "Подписка неактивна";
       if (subMetaEl) subMetaEl.textContent = "Оформите подписку в разделе «Тарифы».";
-
       lastSubUrl = null;
       if (subLinkWrapEl) subLinkWrapEl.style.display = "none";
-
       if (statusTextEl) statusTextEl.textContent = "Нет активной подписки.";
       return;
     }
-
-    if (subBadgeEl) subBadgeEl.textContent = "Активна";
-    setStatusPill(true);
-
-    if (subEmojiEl) subEmojiEl.textContent = "✨";
 
     const planName = data.plan?.name ? data.plan.name : "Подписка";
     if (subTitleEl) subTitleEl.textContent = planName;
 
     const untilIso = data.subscription?.current_period_end || null;
     const until = untilIso ? new Date(untilIso) : null;
-
     if (subMetaEl) subMetaEl.textContent = `Действует до: ${until ? until.toLocaleString() : "—"}`;
 
     const url =
@@ -438,9 +366,6 @@ async function loadStatusCard() {
       statusTextEl.textContent = `Тариф: ${planName}\nПодписка до: ${untilTxt}`;
     }
   } catch {
-    if (subBadgeEl) subBadgeEl.textContent = "Ошибка";
-    setStatusPill(false);
-    if (subEmojiEl) subEmojiEl.textContent = "🌧️";
     if (subTitleEl) subTitleEl.textContent = "Ошибка";
     if (subMetaEl) subMetaEl.textContent = "Не удалось загрузить статус.";
     if (subLinkWrapEl) subLinkWrapEl.style.display = "none";
@@ -449,25 +374,23 @@ async function loadStatusCard() {
 }
 
 btnCopySub?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
-  if (!lastSubUrl) return toast("Ссылка для подключения пока недоступна.", "error");
+  if (!lastSubUrl) return toast("Ссылка пока недоступна");
   try {
     await navigator.clipboard.writeText(lastSubUrl);
-    toast("Ссылка скопирована", "info");
+    toast("Ссылка скопирована");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать ссылку.", "error");
+    toast("Не удалось скопировать ссылку");
     hapticError();
   }
 });
 
 btnOpenSub?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
-  if (!lastSubUrl) return toast("Ссылка для подключения пока недоступна.", "error");
+  if (!lastSubUrl) return toast("Ссылка пока недоступна");
   if (tg?.openLink) tg.openLink(lastSubUrl);
   else window.open(lastSubUrl, "_blank");
 });
@@ -475,27 +398,26 @@ btnOpenSub?.addEventListener("click", (e) => {
 async function applyPromocode() {
   const code = (promoInputEl?.value || "").trim();
   if (!code) {
-    toast("Введите промокод.", "error");
+    toast("Введите промокод");
     hapticError();
     return;
   }
 
   promoApplyBtn.disabled = true;
-  if (promoHintEl) promoHintEl.textContent = "Проверяю промокод…";
+  if (promoHintEl) promoHintEl.textContent = "Проверяю…";
   hapticTap();
 
   try {
     const data = await apiRequest("/mini/promocode/apply", { code });
     if (data.ok) {
-      const added = data.amount_added ?? data.amount ?? 0;
+      const added = data.amount_added ?? 0;
       const balance = data.balance ?? null;
 
-      toast(`Промокод применён. Начислено +${added} ₽`, "info");
+      toast(`Начислено +${added} ₽`);
       if (promoHintEl) promoHintEl.textContent = `Начислено: +${added} ₽`;
 
       if (balance !== null) {
         if (homeBalanceEl) homeBalanceEl.textContent = `${balance} ₽`;
-        if (profilePillEl) profilePillEl.textContent = `${balance} ₽`;
       } else {
         await loadProfileAndBalance();
       }
@@ -503,7 +425,7 @@ async function applyPromocode() {
       hapticSuccess();
     }
   } catch {
-    if (promoHintEl) promoHintEl.textContent = "Не удалось применить промокод.";
+    if (promoHintEl) promoHintEl.textContent = "Не удалось применить";
     hapticError();
   } finally {
     promoApplyBtn.disabled = false;
@@ -511,12 +433,42 @@ async function applyPromocode() {
 }
 
 promoApplyBtn?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   applyPromocode();
 });
 promoInputEl?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") applyPromocode();
+});
+
+let selectedPay = { method: "platega", platega_type: "card" };
+
+function setPayActive(btn){
+  [pmCardBtn, pmSbpBtn, pmCryptoBtn].forEach(b => b?.classList.remove("seg__btn--active"));
+  btn?.classList.add("seg__btn--active");
+}
+
+pmCardBtn?.addEventListener("click", (e) => {
+  e.preventDefault(); e.stopPropagation();
+  hapticTap();
+  selectedPay = { method: "platega", platega_type: "card" };
+  setPayActive(pmCardBtn);
+  if (topupMethodHintEl) topupMethodHintEl.textContent = "Выбрано: Карта";
+});
+
+pmSbpBtn?.addEventListener("click", (e) => {
+  e.preventDefault(); e.stopPropagation();
+  hapticTap();
+  selectedPay = { method: "platega", platega_type: "sbp" };
+  setPayActive(pmSbpBtn);
+  if (topupMethodHintEl) topupMethodHintEl.textContent = "Выбрано: СБП";
+});
+
+pmCryptoBtn?.addEventListener("click", (e) => {
+  e.preventDefault(); e.stopPropagation();
+  hapticTap();
+  selectedPay = { method: "crypto", asset: "USDT" };
+  setPayActive(pmCryptoBtn);
+  if (topupMethodHintEl) topupMethodHintEl.textContent = "Выбрано: Crypto (USDT)";
 });
 
 async function createTopup() {
@@ -524,21 +476,22 @@ async function createTopup() {
   const amount = Number(raw);
 
   if (!Number.isFinite(amount) || amount <= 0) {
-    toast("Введите корректную сумму пополнения.", "error");
+    toast("Введите корректную сумму");
     if (topupHintEl) topupHintEl.textContent = "Например: 100";
     hapticError();
     return;
   }
 
-  topupBtn.disabled = true;
-  if (topupHintEl) topupHintEl.textContent = "Создаю ссылку на оплату…";
+  topupPayBtn.disabled = true;
+  if (topupHintEl) topupHintEl.textContent = "Создаю оплату…";
   hapticTap();
 
   try {
-    const data = await apiRequest("/mini/balance/topup", { amount });
+    const payload = { amount: Math.floor(amount), ...selectedPay };
+    const data = await apiRequest("/mini/balance/topup", payload);
 
     if (!data.ok || !data.payment_url) {
-      toast("Не удалось создать платёж. Попробуйте ещё раз.", "error");
+      toast("Не удалось создать платёж");
       if (topupHintEl) topupHintEl.textContent = "";
       hapticError();
       return;
@@ -546,28 +499,24 @@ async function createTopup() {
 
     const url = data.payment_url;
 
-    toast("Открыл страницу оплаты. После оплаты нажмите «Проверить платежи».", "info");
-    if (topupHintEl) topupHintEl.textContent = "После оплаты: «Транзакции» → «Проверить платежи».";
+    toast("Открыл страницу оплаты");
+    if (topupHintEl) topupHintEl.textContent = "После оплаты: Транзакции → Проверить платежи.";
 
     if (tg?.openLink) tg.openLink(url);
     else window.open(url, "_blank");
 
     hapticSuccess();
   } catch {
-    if (topupHintEl) topupHintEl.textContent = "Не удалось открыть оплату.";
+    if (topupHintEl) topupHintEl.textContent = "Не удалось открыть оплату";
     hapticError();
   } finally {
-    topupBtn.disabled = false;
+    topupPayBtn.disabled = false;
   }
 }
 
-topupBtn?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+topupPayBtn?.addEventListener("click", (e) => {
+  e.preventDefault(); e.stopPropagation();
   createTopup();
-});
-topupInputEl?.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") createTopup();
 });
 
 async function loadTransactions() {
@@ -586,15 +535,14 @@ async function loadTransactions() {
     txListEl.innerHTML = "";
     txs.forEach((t) => {
       const created = t.created_at ? new Date(t.created_at) : null;
-
       const row = document.createElement("div");
-      row.className = "tx-row";
+      row.className = "tx";
       row.innerHTML = `
-        <div class="tx-left">
-          <div class="tx-title">${(t.payment_system || "Операция")}</div>
-          <div class="tx-meta">${created ? created.toLocaleString() : ""}${t.paid ? " • оплачено" : " • ожидает оплаты"}</div>
+        <div class="tx__left">
+          <div class="tx__title">${(t.payment_system || "Операция")}</div>
+          <div class="tx__meta">${created ? created.toLocaleString() : ""}${t.paid ? " • оплачено" : " • ожидает оплаты"}</div>
         </div>
-        <div class="tx-amount">${t.paid ? "+" : ""}${t.amount} ₽</div>
+        <div class="tx__amt">${t.paid ? "+" : ""}${t.amount} ₽</div>
       `;
       txListEl.appendChild(row);
     });
@@ -605,14 +553,14 @@ async function loadTransactions() {
 
 async function checkPayments() {
   if (btnCheckPayments) btnCheckPayments.disabled = true;
-  if (checkHintEl) checkHintEl.textContent = "Проверяю платежи…";
+  if (checkHintEl) checkHintEl.textContent = "Проверяю…";
   hapticTap();
 
   try {
     const data = await apiRequest("/mini/balance/check");
 
     if (!data.ok && data.reason === "no_pending") {
-      toast("Нет незавершённых платежей. Если вы оплатили только что — подождите 1–2 минуты и проверьте ещё раз.", "info");
+      toast("Ожидающих платежей нет");
       if (checkHintEl) checkHintEl.textContent = "Ожидающих платежей нет.";
       hapticSuccess();
       return;
@@ -621,7 +569,7 @@ async function checkPayments() {
     const tx = data.transaction || null;
 
     if (tx && tx.paid) {
-      toast(`Платёж подтверждён ✅ Баланс обновлён.`, "info");
+      toast("Платёж подтверждён ✅");
       if (checkHintEl) checkHintEl.textContent = "Платёж подтверждён. Баланс обновлён.";
       hapticSuccess();
 
@@ -631,17 +579,16 @@ async function checkPayments() {
     }
 
     if (tx && !tx.paid) {
-      toast("Платёж найден, но ещё не подтверждён. Попробуйте проверить снова через 1–2 минуты.", "info");
+      toast("Платёж найден, но ещё не подтверждён");
       if (checkHintEl) checkHintEl.textContent = `Статус: ${tx.status_raw || "ожидает подтверждения"}`;
-      hapticTap();
       await loadTransactions();
       return;
     }
 
-    toast("Не удалось определить статус платежа. Попробуйте позже.", "error");
+    toast("Не удалось определить статус платежа");
     if (checkHintEl) checkHintEl.textContent = "";
     hapticError();
-  } catch (e) {
+  } catch {
     if (checkHintEl) checkHintEl.textContent = "Не удалось проверить платежи.";
     hapticError();
   } finally {
@@ -650,14 +597,12 @@ async function checkPayments() {
 }
 
 btnCheckPayments?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   checkPayments();
 });
 
 btnRefreshTx?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   loadTransactions();
 });
@@ -691,22 +636,15 @@ function renderPlans(plans) {
 
   plans.forEach((p) => {
     const item = document.createElement("div");
-    item.style.padding = "12px";
-    item.style.borderRadius = "18px";
-    item.style.border = "1px solid rgba(148,163,184,0.10)";
-    item.style.background = "rgba(0,0,0,0.14)";
-    item.style.marginBottom = "10px";
-
+    item.className = "plan";
     item.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-        <div style="min-width:0;">
-          <div style="font-weight:1000;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
-          <div style="font-size:12px;color:rgba(232,235,242,0.62);">Срок: ${p.period_days} дней</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div class="pill" style="border-color:rgba(148,163,184,0.10);">${p.price} ₽</div>
-          <button class="btn accent small" type="button">Подключить</button>
-        </div>
+      <div style="min-width:0;">
+        <div class="plan__name">${p.name}</div>
+        <div class="plan__meta">Срок: ${p.period_days} дней</div>
+      </div>
+      <div class="plan__right">
+        <div class="pill">${p.price} ₽</div>
+        <button class="btn btn--accent btn--small" type="button">Подключить</button>
       </div>
     `;
 
@@ -718,17 +656,18 @@ function renderPlans(plans) {
 
 async function buyPlan(planId, btn) {
   btn.disabled = true;
-  toast("Оформляю подписку…", "info");
+  toast("Оформляю подписку…");
   hapticTap();
   try {
     const data = await apiRequest("/mini/subscription/buy", { plan_id: planId });
     if (data.ok) {
-      toast("Подписка оформлена ✅", "info");
+      toast("Подписка оформлена ✅");
       hapticSuccess();
       await loadStatusCard();
       await loadPlans();
+      await loadProfileAndBalance();
     } else {
-      toast("Не удалось оформить подписку. Попробуйте позже.", "error");
+      toast("Не удалось оформить подписку");
       hapticError();
     }
   } catch {
@@ -746,25 +685,23 @@ function initReferralLink() {
 }
 
 btnCopyRef?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
-  if (!lastRefUrl) return toast("Реф-ссылка недоступна.", "error");
+  if (!lastRefUrl) return toast("Реф-ссылка недоступна");
   try {
     await navigator.clipboard.writeText(lastRefUrl);
-    toast("Реф-ссылка скопирована", "info");
+    toast("Реф-ссылка скопирована");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать.", "error");
+    toast("Не удалось скопировать");
     hapticError();
   }
 });
 
 btnOpenRef?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
-  if (!lastRefUrl) return toast("Реф-ссылка недоступна.", "error");
+  if (!lastRefUrl) return toast("Реф-ссылка недоступна");
   if (tg?.openTelegramLink) tg.openTelegramLink(lastRefUrl);
   else window.open(lastRefUrl, "_blank");
 });
@@ -773,22 +710,20 @@ const SETUP_URL = "https://telegra.ph/Lunet-VPN---instrukciya-12-18";
 if (setupLinkEl) setupLinkEl.textContent = SETUP_URL;
 
 btnCopySetup?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   try {
     await navigator.clipboard.writeText(SETUP_URL);
-    toast("Ссылка скопирована", "info");
+    toast("Ссылка скопирована");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать.", "error");
+    toast("Не удалось скопировать");
     hapticError();
   }
 });
 
 btnOpenSetup?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   if (tg?.openLink) tg.openLink(SETUP_URL);
   else window.open(SETUP_URL, "_blank");
@@ -798,64 +733,44 @@ const SUPPORT_TG = "https://t.me/LunetVPNSupportBot";
 const SUPPORT_MAIL = "support@lunet.ru";
 
 supportTgEl?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   if (tg?.openTelegramLink) tg.openTelegramLink(SUPPORT_TG);
   else window.open(SUPPORT_TG, "_blank");
 });
 
 supportMailEl?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   try {
     await navigator.clipboard.writeText(SUPPORT_MAIL);
-    toast("Email скопирован", "info");
+    toast("Email скопирован");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать.", "error");
+    toast("Не удалось скопировать");
     hapticError();
   }
 });
 
 btnOpenSupportTg?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   if (tg?.openTelegramLink) tg.openTelegramLink(SUPPORT_TG);
   else window.open(SUPPORT_TG, "_blank");
 });
 
 btnCopySupportMail?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   hapticTap();
   try {
     await navigator.clipboard.writeText(SUPPORT_MAIL);
-    toast("Email скопирован", "info");
+    toast("Email скопирован");
     hapticSuccess();
   } catch {
-    toast("Не удалось скопировать.", "error");
+    toast("Не удалось скопировать");
     hapticError();
   }
 });
-
-(function injectTxStyle(){
-  const style = document.createElement("style");
-  style.textContent = `
-    .tx-row{
-      display:flex; justify-content:space-between; gap:12px;
-      padding: 12px 4px;
-      border-bottom: 1px solid rgba(148,163,184,0.10);
-    }
-    .tx-left{ min-width:0; }
-    .tx-title{ font-weight: 950; }
-    .tx-meta{ font-size: 12px; color: rgba(232,235,242,0.58); margin-top: 2px; }
-    .tx-amount{ font-weight: 1000; opacity:.92; }
-  `;
-  document.head.appendChild(style);
-})();
 
 async function onViewEnter(view) {
   if (view === "referral") initReferralLink();

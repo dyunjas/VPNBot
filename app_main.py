@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from api.miniapp.endpoints import router as mini_router
 from api.subscription_url.endpoints import router as subscription_router
-from server.database.session import init_db, check_connection
+from backend.database.session import init_db, check_connection
 
 app = FastAPI(title="Lunet VPN MiniApp")
 

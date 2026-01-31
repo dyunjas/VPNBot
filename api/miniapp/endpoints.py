@@ -1,29 +1,37 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any, Optional
 
 from aiogram.utils.web_app import safe_parse_webapp_init_data
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 
-from server.core.loader import settings
-from server.database.session import async_session
-from server.database.models import (
-    User,
-    KeyStatus,
-    SubscriptionPlan,
-    Transaction,
-    Promocode,
-    PromocodeActivation,
+from backend.core.loader import settings
+from backend.database.session import async_session
+from backend.database.models import KeyStatus
+
+from backend.services import (
+    BillingService,
+    PromoService,
+    SubscriptionService,
+    TransactionService,
+    UserService,
+    VPNService,
 )
-from server.repositories.key_repository import KeyRepository
-from server.repositories.server_repository import ServerRepository
-from server.repositories.subscription_repository import SubscriptionRepository, NotEnoughBalanceError
-from server.repositories.transaction_repository import TransactionRepository
-from server.payments.generate_platega_invoice import PlategaPaymentAPI
+from backend.services.exceptions import (
+    UserNotFound,
+    SubscriptionNotFound,
+    PlanNotFound,
+    InsufficientBalance,
+    TransactionNotFound,
+    PaymentNotConfirmed,
+    PromocodeNotFound,
+    PromocodeAlreadyUsed,
+    PromocodeExhausted,
+    KeyCreationError,
+    ServerNotFound,
+)
 
 router = APIRouter(prefix="/mini", tags=["mini-app"])
 
@@ -32,15 +40,16 @@ if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set in settings")
 
 XRAY_AUTH_TOKEN = settings.XRAY_AUTH
+if not XRAY_AUTH_TOKEN:
+    raise RuntimeError("XRAY_AUTH is not set in settings")
 
-_platega_client: PlategaPaymentAPI | None = None
+# ✅ Platega payment_method mapping (проверь коды у твоего провайдера)
+PLATEGA_METHOD_CARD = 11
+PLATEGA_METHOD_SBP = 2  # <-- если у тебя другой код СБП — поменяй
 
-
-def platega() -> PlategaPaymentAPI:
-    global _platega_client
-    if _platega_client is None:
-        _platega_client = PlategaPaymentAPI()
-    return _platega_client
+# ✅ Bot username / setup link
+BOT_USERNAME = getattr(settings, "BOT_USERNAME", "LunetVPNBot")
+SETUP_URL_FALLBACK = getattr(settings, "SETUP_URL", "https://t.me/LunetVPNBot")
 
 
 class InitPayload(BaseModel):
@@ -62,6 +71,14 @@ class BuySubscriptionPayload(InitPayload):
 
 class TopupPayload(InitPayload):
     amount: int
+    method: str = "platega"   # "platega" | "crypto"
+    asset: str = "USDT"       # crypto only (можешь оставить)
+    platega_type: str = "card"  # "card" | "sbp"
+
+
+class BalanceCheckPayload(InitPayload):
+    method: str = "platega"
+    provider_id: str | None = None
 
 
 class ApplyPromocodePayload(InitPayload):
@@ -90,12 +107,72 @@ def _get_tg_user(init_data: Optional[str]) -> dict[str, Any]:
     }
 
 
-async def _get_vpn_user(session: AsyncSession, tg_id: int) -> User:
-    res = await session.execute(select(User).where(User.tg_id == tg_id))
-    user = res.scalar_one_or_none()
-    if not user:
+async def _get_user_or_404(session: AsyncSession, tg_id: int):
+    user_service = UserService(session)
+    try:
+        user = await user_service.get_by_tg_id(tg_id)
+    except UserNotFound:
         raise HTTPException(404, "user not found, сначала зайдите в бота")
+
+    if getattr(user, "banned", False):
+        raise HTTPException(status_code=403, detail="banned")
+
     return user
+
+
+def _map_service_error(e: Exception) -> HTTPException:
+    if isinstance(e, InsufficientBalance):
+        return HTTPException(status_code=402, detail="Not enough balance")
+    if isinstance(e, PaymentNotConfirmed):
+        return HTTPException(status_code=409, detail=str(e) or "Payment not confirmed")
+
+    if isinstance(e, PlanNotFound):
+        return HTTPException(status_code=404, detail=str(e) or "Plan not found")
+    if isinstance(e, SubscriptionNotFound):
+        return HTTPException(status_code=404, detail=str(e) or "Subscription not found")
+
+    if isinstance(e, UserNotFound):
+        return HTTPException(status_code=404, detail=str(e) or "User not found")
+    if isinstance(e, TransactionNotFound):
+        return HTTPException(status_code=404, detail=str(e) or "Transaction not found")
+
+    if isinstance(e, PromocodeNotFound):
+        return HTTPException(status_code=404, detail="promocode not found")
+    if isinstance(e, PromocodeAlreadyUsed):
+        return HTTPException(status_code=409, detail="promocode already used by this user")
+    if isinstance(e, PromocodeExhausted):
+        return HTTPException(status_code=409, detail="promocode usage limit reached")
+
+    if isinstance(e, ServerNotFound):
+        return HTTPException(status_code=404, detail="server not found")
+    if isinstance(e, KeyCreationError):
+        return HTTPException(status_code=500, detail=str(e) or "key creation error")
+
+    return HTTPException(status_code=500, detail=str(e) or "internal error")
+
+
+@router.post("/referral")
+async def mini_referral(payload: InitPayload):
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = tg_user["id"]
+
+    async with async_session() as session:
+        user = await _get_user_or_404(session, tg_id)
+
+        # ✅ базовая реф-ссылка
+        referral_url = f"https://t.me/{BOT_USERNAME}?start=ref_{user.tg_id}"
+
+        return {
+            "ok": True,
+            "referral_url": referral_url,
+            "hint": "Скопируйте ссылку и отправьте другу. Бонусы начисляются после регистрации друга.",
+        }
+
+
+@router.post("/setup")
+async def mini_setup(payload: InitPayload):
+    _ = _get_tg_user(payload.initData)
+    return {"ok": True, "setup_url": SETUP_URL_FALLBACK}
 
 
 @router.post("/status")
@@ -104,14 +181,13 @@ async def mini_status(payload: InitPayload):
     tg_id = tg_user["id"]
 
     async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
+        user = await _get_user_or_404(session, tg_id)
 
-        sub_repo = SubscriptionRepository(session)
-        key_repo = KeyRepository(session)
+        sub_service = SubscriptionService(session)
+        vpn_service = VPNService(session, xray_auth_token=XRAY_AUTH_TOKEN)
 
-        subscription = await sub_repo.get_active_subscription_with_plan_by_tg(tg_id)
-        user_keys = await key_repo.get_keys_by_user_id(user.id)
-        active_keys_cnt = sum(1 for k in user_keys if k.status == KeyStatus.active)
+        subscription = await sub_service.get_active_subscription(user.id)
+        active_keys = await vpn_service.list_active_keys(user.id)
 
         sub_token = user.subscription_token
         sub_url = f"https://lunetpn.ru/sub/{sub_token}" if sub_token else None
@@ -120,15 +196,15 @@ async def mini_status(payload: InitPayload):
             return {
                 "ok": False,
                 "has_subscription": False,
-                "statusText": f"Нет активной подписки. Активных ключей: {active_keys_cnt}",
-                "active_keys": active_keys_cnt,
+                "statusText": f"Нет активной подписки. Активных ключей: {len(active_keys)}",
+                "active_keys": len(active_keys),
                 "subscription_token": sub_token,
                 "subscription_url": sub_url,
             }
 
         plan = subscription.plan
         status_text = (
-            f"Тариф: {plan.name} • Ключей: {active_keys_cnt}/{getattr(plan, 'key_limit', '—')}\n"
+            f"Тариф: {plan.name} • Ключей: {len(active_keys)}/{getattr(plan, 'key_limit', '—')}\n"
             f"Подписка до: {subscription.current_period_end.strftime('%d.%m.%Y %H:%M')}"
         )
 
@@ -136,7 +212,7 @@ async def mini_status(payload: InitPayload):
             "ok": True,
             "has_subscription": True,
             "statusText": status_text,
-            "active_keys": active_keys_cnt,
+            "active_keys": len(active_keys),
             "subscription_token": sub_token,
             "subscription_url": sub_url,
             "plan": {
@@ -145,7 +221,9 @@ async def mini_status(payload: InitPayload):
                 "key_limit": getattr(plan, "key_limit", None),
                 "price": plan.price,
                 "period_days": plan.period_days,
-                "gb_limit": str(getattr(plan, "gb_limit", None)) if getattr(plan, "gb_limit", None) is not None else None,
+                "gb_limit": str(getattr(plan, "gb_limit", None))
+                if getattr(plan, "gb_limit", None) is not None
+                else None,
             },
             "subscription": {
                 "current_period_start": subscription.current_period_start.isoformat()
@@ -160,203 +238,16 @@ async def mini_status(payload: InitPayload):
         }
 
 
-@router.post("/servers")
-async def mini_servers(payload: InitPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        _ = await _get_vpn_user(session, tg_id)
-
-        sub_repo = SubscriptionRepository(session)
-        server_repo = ServerRepository(session)
-
-        subscription = await sub_repo.get_active_subscription_with_plan_by_tg(tg_id)
-        if not subscription:
-            return {"ok": False, "reason": "no_subscription"}
-
-        servers = await server_repo.get_all_servers()
-
-        return {
-            "ok": True,
-            "servers": [
-                {
-                    "id": s.id,
-                    "country": s.country.value if hasattr(s.country, "value") else str(s.country),
-                    "public_host": s.public_host,
-                    "note": s.note,
-                    "created_at": s.created_at.isoformat() if s.created_at else None,
-                }
-                for s in servers
-            ],
-        }
-
-
-@router.post("/keys/list")
-async def mini_keys_list(payload: InitPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
-        key_repo = KeyRepository(session)
-
-        keys = await key_repo.get_keys_by_user_id(user.id)
-
-        return {
-            "ok": True,
-            "keys": [
-                {
-                    "id": k.id,
-                    "uuid": k.uuid,
-                    "uri": k.uri,
-                    "status": k.status.value,
-                    "server": (
-                        k.server.country.value if (k.server and hasattr(k.server.country, "value"))
-                        else (k.server.country if k.server else None)
-                    ),
-                    "created_at": k.created_at.isoformat() if k.created_at else None,
-                    "expires_at": k.expires_at.isoformat() if k.expires_at else None,
-                }
-                for k in keys
-                if k.status == KeyStatus.active
-            ],
-        }
-
-
-@router.post("/keys/ensure")
-async def mini_keys_ensure(payload: InitPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
-
-        sub_repo = SubscriptionRepository(session)
-        server_repo = ServerRepository(session)
-        key_repo = KeyRepository(session)
-
-        subscription = await sub_repo.get_active_subscription_with_plan_by_tg(tg_id)
-        if not subscription:
-            return {"ok": False, "reason": "no_subscription"}
-
-        user_keys = await key_repo.get_keys_by_user_id(user.id)
-        active_keys = [k for k in user_keys if k.status == KeyStatus.active]
-        if active_keys:
-            return {"ok": True, "created": False}
-
-        servers = await server_repo.get_all_servers()
-        if not servers:
-            return {"ok": False, "reason": "no_servers"}
-
-        server = servers[0]
-
-        key = await key_repo.create_key(
-            user_id=user.id,
-            server=server,
-            auth_token=XRAY_AUTH_TOKEN,
-            label=None,
-        )
-
-        return {
-            "ok": True,
-            "created": True,
-            "key": {
-                "id": key.id,
-                "uuid": key.uuid,
-                "uri": key.uri,
-                "server": (
-                    server.country.value if hasattr(server.country, "value")
-                    else server.country
-                ) if server else None,
-                "created_at": key.created_at.isoformat() if key.created_at else None,
-                "expires_at": key.expires_at.isoformat() if key.expires_at else None,
-            },
-        }
-
-
-@router.post("/keys/create")
-async def mini_keys_create(payload: CreateKeyPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
-        sub_repo = SubscriptionRepository(session)
-        server_repo = ServerRepository(session)
-        key_repo = KeyRepository(session)
-
-        subscription = await sub_repo.get_active_subscription_with_plan_by_tg(tg_id)
-        if not subscription:
-            raise HTTPException(403, "no active subscription")
-
-        plan = subscription.plan
-
-        user_keys = await key_repo.get_keys_by_user_id(user.id)
-        active_keys_cnt = sum(1 for k in user_keys if k.status == KeyStatus.active)
-        key_limit = getattr(plan, "key_limit", None)
-        if key_limit is not None and active_keys_cnt >= key_limit:
-            raise HTTPException(403, f"key limit reached {active_keys_cnt}/{key_limit}")
-
-        existing = await key_repo.get_user_key_on_server(
-            user.id,
-            payload.server_id,
-            [KeyStatus.active, KeyStatus.deleted],
-        )
-        if existing:
-            raise HTTPException(403, "key on this server already exists")
-
-        server = await server_repo.get_server_by_id(payload.server_id)
-        if not server:
-            raise HTTPException(404, "server not found")
-
-        key = await key_repo.create_key(
-            user_id=user.id,
-            server=server,
-            auth_token=XRAY_AUTH_TOKEN,
-            label=payload.label,
-        )
-
-        return {
-            "ok": True,
-            "key": {
-                "id": key.id,
-                "uuid": key.uuid,
-                "uri": key.uri,
-                "server": (
-                    server.country.value if hasattr(server.country, "value")
-                    else server.country
-                ) if server else None,
-                "created_at": key.created_at.isoformat() if key.created_at else None,
-                "expires_at": key.expires_at.isoformat() if key.expires_at else None,
-            },
-        }
-
-
-@router.post("/keys/delete")
-async def mini_keys_delete(payload: DeleteKeyPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
-        key_repo = KeyRepository(session)
-
-        key = await key_repo.get_key_by_id(payload.key_id)
-        if not key or key.user_id != user.id:
-            raise HTTPException(404, "key not found")
-
-        ok = await key_repo.delete_key(payload.key_id, auth_token=XRAY_AUTH_TOKEN)
-        return {"ok": ok}
-
-
 @router.post("/plans")
 async def mini_plans(payload: InitPayload):
-    _ = _get_tg_user(payload.initData)
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = tg_user["id"]
 
     async with async_session() as session:
-        result = await session.execute(select(SubscriptionPlan))
-        plans = result.scalars().all()
+        _ = await _get_user_or_404(session, tg_id)
+
+        sub_service = SubscriptionService(session)
+        plans = await sub_service.list_plans()
 
         return {
             "ok": True,
@@ -367,7 +258,9 @@ async def mini_plans(payload: InitPayload):
                     "price": p.price,
                     "period_days": p.period_days,
                     "key_limit": getattr(p, "key_limit", None),
-                    "gb_limit": str(getattr(p, "gb_limit", None)) if getattr(p, "gb_limit", None) is not None else None,
+                    "gb_limit": str(getattr(p, "gb_limit", None))
+                    if getattr(p, "gb_limit", None) is not None
+                    else None,
                     "created_at": p.created_at.isoformat() if p.created_at else None,
                 }
                 for p in plans
@@ -381,32 +274,26 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
     tg_id = tg_user["id"]
 
     async with async_session() as session:
-        sub_repo = SubscriptionRepository(session)
+        user = await _get_user_or_404(session, tg_id)
+        billing = BillingService(session)
 
         try:
-            subscription = await sub_repo.create_or_renew_subscription(
-                tg_id=tg_id,
-                plan_id=payload.plan_id,
-            )
-        except NotEnoughBalanceError:
-            raise HTTPException(status_code=402, detail="Not enough balance")
+            sub = await billing.buy_subscription(user_id=user.id, plan_id=payload.plan_id, auto_renew=True)
+        except Exception as e:
+            raise _map_service_error(e)
 
-        result = await session.execute(
-            select(SubscriptionPlan).where(SubscriptionPlan.id == subscription.plan_id)
-        )
-        plan = result.scalar_one_or_none()
-        if not plan:
-            raise HTTPException(500, "plan not found after subscription creation")
+        sub_service = SubscriptionService(session)
+        plan = await sub_service.get_plan(sub.plan_id)
 
         return {
             "ok": True,
             "subscription": {
-                "id": subscription.id,
+                "id": sub.id,
                 "plan_id": plan.id,
                 "plan_name": plan.name,
-                "current_period_start": subscription.current_period_start.isoformat(),
-                "current_period_end": subscription.current_period_end.isoformat(),
-                "status": subscription.status.value,
+                "current_period_start": sub.current_period_start.isoformat(),
+                "current_period_end": sub.current_period_end.isoformat(),
+                "status": sub.status.value if hasattr(sub.status, "value") else str(sub.status),
             },
         }
 
@@ -417,10 +304,10 @@ async def mini_profile(payload: InitPayload):
     tg_id = tg_user["id"]
 
     async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
+        user = await _get_user_or_404(session, tg_id)
 
-        tx_repo = TransactionRepository(session)
-        txs = await tx_repo.get_transactions(tg_id)
+        tx_service = TransactionService(session)
+        txs = await tx_service.list_by_user(user.id)
         txs = txs[:50]
 
         return {
@@ -436,13 +323,13 @@ async def mini_profile(payload: InitPayload):
             "transactions": [
                 {
                     "id": t.id,
-                    "amount": t.amount,
+                    "amount": int(t.amount) if t.amount is not None else None,
                     "payment_system": t.payment_system,
-                    "order_id": t.order_id,
+                    "order_id": getattr(t, "order_id", None),
                     "paid": t.paid,
                     "created_at": t.created_at.isoformat() if t.created_at else None,
                     "paid_at": t.paid_at.isoformat() if t.paid_at else None,
-                    "transaction_id": t.transaction_id,
+                    "transaction_id": getattr(t, "transaction_id", None),
                 }
                 for t in txs
             ],
@@ -459,53 +346,21 @@ async def mini_promocode_apply(payload: ApplyPromocodePayload):
     tg_id = tg_user["id"]
 
     async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
+        user = await _get_user_or_404(session, tg_id)
 
-        stmt = select(Promocode).where(func.lower(Promocode.code) == code.lower())
-        res = await session.execute(stmt)
-        promo = res.scalar_one_or_none()
-        if not promo:
-            raise HTTPException(404, "promocode not found")
+        promo_service = PromoService(session)
+        try:
+            promo = await promo_service.activate_promocode(user_id=user.id, code=code)
+        except Exception as e:
+            raise _map_service_error(e)
 
-        stmt_used = select(PromocodeActivation).where(
-            PromocodeActivation.promocode_id == promo.id,
-            PromocodeActivation.user_id == tg_id,
-        )
-        used_res = await session.execute(stmt_used)
-        used = used_res.scalar_one_or_none()
-        if used:
-            raise HTTPException(409, "promocode already used by this user")
-
-        stmt_cnt = select(func.count(PromocodeActivation.id)).where(
-            PromocodeActivation.promocode_id == promo.id
-        )
-        cnt_res = await session.execute(stmt_cnt)
-        used_count = int(cnt_res.scalar() or 0)
-
-        if promo.usages is not None and used_count >= int(promo.usages):
-            raise HTTPException(409, "promocode usage limit reached")
-
-        add_amount = int(promo.amount or 0)
-        if add_amount <= 0:
-            raise HTTPException(400, "promocode amount is invalid")
-
-        activation = PromocodeActivation(promocode_id=promo.id, user_id=tg_id)
-        session.add(activation)
-
-        user.balance = int(user.balance or 0) + add_amount
-
-        new_used_count = used_count + 1
-        if promo.usages is not None and new_used_count >= int(promo.usages):
-            promo.is_activated = True
-            promo.activated_at = datetime.now()
-
-        await session.commit()
-        await session.refresh(user)
+        user_service = UserService(session)
+        fresh_user = await user_service.get_by_id(user.id)
 
         return {
             "ok": True,
-            "amount_added": add_amount,
-            "balance": user.balance,
+            "amount_added": int(promo.amount or 0),
+            "balance": fresh_user.balance,
         }
 
 
@@ -514,103 +369,155 @@ async def mini_balance_topup(payload: TopupPayload):
     if payload.amount <= 0:
         raise HTTPException(400, "amount must be positive")
 
+    method = (payload.method or "platega").lower().strip()
+    if method not in ("platega", "crypto"):
+        raise HTTPException(400, "method must be 'platega' or 'crypto'")
+
     tg_user = _get_tg_user(payload.initData)
     tg_id = tg_user["id"]
 
     async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
+        user = await _get_user_or_404(session, tg_id)
+        billing = BillingService(session)
 
-        amount = float(payload.amount)
-        order_id = f"TPU-{tg_id}-{int(datetime.now().timestamp())}"
+        try:
+            if method == "platega":
+                amount = float(payload.amount)
+                pl_type = (payload.platega_type or "card").lower().strip()
+                if pl_type not in ("card", "sbp"):
+                    raise HTTPException(400, "platega_type must be 'card' or 'sbp'")
 
-        resp = await platega().create_payment(
-            amount=amount,
-            currency="RUB",
-            payment_method=2,
-            description=f"Пополнение баланса на {amount} RUB",
-            return_url="https://t.me/LunetVPNBot",
-            failed_url="https://t.me/LunetVPNBot",
-            payload=order_id,
-        )
+                payment_method = PLATEGA_METHOD_CARD if pl_type == "card" else PLATEGA_METHOD_SBP
 
-        http_status = resp.get("http_status", 200)
-        if http_status >= 400:
-            raise HTTPException(400, f"Platega HTTP {http_status}: {resp.get('error') or resp}")
+                payment = await billing.create_platega_payment(
+                    user_id=user.id,
+                    amount=amount,
+                    payment_method=payment_method,
+                    description=f"Пополнение баланса на {amount} RUB",
+                    return_url="https://t.me/LunetVPNBot",
+                    failed_url="https://t.me/LunetVPNBot",
+                )
 
-        transaction_id: str | None = resp.get("transactionId")
-        payment_url: str | None = resp.get("redirect") or resp.get("payformSuccessUrl")
-        status: str | None = resp.get("status")
+                payment_url = (
+                    payment.get("redirect")
+                    or payment.get("payformSuccessUrl")
+                    or payment.get("payment_url")
+                )
+                provider_id = str(payment.get("id") or payment.get("transactionId") or "")
 
-        if not transaction_id:
-            raise HTTPException(500, "Platega: no transactionId in response")
+                return {
+                    "ok": True,
+                    "method": "platega",
+                    "platega_type": pl_type,
+                    "payment_url": payment_url,
+                    "provider_id": provider_id,
+                    "status": payment.get("status"),
+                }
 
-        tx_repo = TransactionRepository(session)
-        await tx_repo.create_transaction(
-            tg_id=tg_id,
-            transaction_id=transaction_id,
-            amount=int(amount),
-            payment_system="PLATEGA",
-            order_id=order_id,
-        )
-
-        return {
-            "ok": True,
-            "payment_url": payment_url,
-            "transaction_id": transaction_id,
-            "status": status,
-        }
-
-
-@router.post("/balance/check")
-async def mini_balance_check(payload: InitPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_vpn_user(session, tg_id)
-        tx_repo = TransactionRepository(session)
-
-        stmt = (
-            select(Transaction)
-            .join(User)
-            .where(
-                User.tg_id == tg_id,
-                Transaction.paid.is_(False),
-                Transaction.payment_system == "PLATEGA",
+            # crypto
+            invoice = await billing.create_crypto_invoice(
+                user_id=user.id,
+                amount_rub=int(payload.amount),
+                asset=(payload.asset or "USDT"),
+                description=f"Пополнение баланса на {payload.amount} RUB (CryptoBot)",
+                expires_in=900,
             )
-            .order_by(Transaction.created_at.desc())
-            .limit(1)
-        )
-        result = await session.execute(stmt)
-        tx = result.scalar_one_or_none()
 
-        if not tx:
-            return {"ok": False, "reason": "no_pending", "message": "Нет незавершённых платежей"}
-
-        resp = await platega().get_status(tx.transaction_id)
-        http_status = resp.get("http_status", 200)
-        if http_status == 404:
-            raise HTTPException(404, "Platega: payment not found (404)")
-        if http_status >= 400:
-            raise HTTPException(400, f"Platega HTTP {http_status}: {resp.get('error') or resp}")
-
-        status: str = (resp.get("status") or "").upper()
-
-        if status == "CONFIRMED":
-            if not tx.paid:
-                await tx_repo.mark_transaction_as_paid(tx.transaction_id)
-                user.balance = (user.balance or 0) + tx.amount
-                await session.commit()
-                await session.refresh(user)
+            payment_url = (
+                invoice.get("pay_url")
+                or invoice.get("bot_invoice_url")
+                or invoice.get("mini_app_invoice_url")
+                or invoice.get("web_app_invoice_url")
+                or invoice.get("url")
+            )
+            invoice_id = invoice.get("invoice_id")
 
             return {
                 "ok": True,
-                "transaction": {"id": tx.id, "transaction_id": tx.transaction_id, "amount": tx.amount, "paid": True, "status_raw": status},
-                "balance": user.balance,
+                "method": "crypto",
+                "payment_url": payment_url,
+                "provider_id": str(invoice_id) if invoice_id is not None else None,
+                "status": invoice.get("status"),
+                "asset": payload.asset or "USDT",
             }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise _map_service_error(e)
+
+
+@router.post("/balance/check")
+async def mini_balance_check(payload: BalanceCheckPayload):
+    method = (payload.method or "platega").lower().strip()
+    if method not in ("platega", "crypto"):
+        raise HTTPException(400, "method must be 'platega' or 'crypto'")
+
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = tg_user["id"]
+
+    async with async_session() as session:
+        user = await _get_user_or_404(session, tg_id)
+
+        billing = BillingService(session)
+        tx_service = TransactionService(session)
+        user_service = UserService(session)
+
+        provider_id = (payload.provider_id or "").strip() or None
+
+        if not provider_id:
+            payment_system = "Platega" if method == "platega" else "CRYPTOBOT"
+            tx = await tx_service.get_last_unpaid_by_system(user_id=user.id, payment_system=payment_system)
+            if not tx:
+                return {"ok": False, "reason": "no_pending", "message": "Нет незавершённых платежей"}
+            provider_id = tx.transaction_id
+
+        try:
+            if method == "platega":
+                await billing.confirm_platega_payment(provider_id)
+            else:
+                try:
+                    invoice_id = int(provider_id)
+                except ValueError:
+                    raise HTTPException(400, "provider_id must be invoice_id (int) for crypto")
+                await billing.confirm_crypto_payment(invoice_id)
+
+        except PaymentNotConfirmed:
+            try:
+                tx = await tx_service.get_by_provider_id(provider_id)
+            except TransactionNotFound:
+                return {"ok": False, "reason": "tx_not_found", "message": "Transaction not found"}
+
+            fresh_user = await user_service.get_by_id(user.id)
+            return {
+                "ok": True,
+                "confirmed": False,
+                "method": method,
+                "transaction": {
+                    "id": tx.id,
+                    "provider_id": tx.transaction_id,
+                    "amount": int(tx.amount) if tx.amount is not None else None,
+                    "paid": tx.paid,
+                    "status_raw": "NOT_CONFIRMED",
+                },
+                "balance": fresh_user.balance,
+            }
+        except Exception as e:
+            raise _map_service_error(e)
+
+        tx = await tx_service.get_by_provider_id(provider_id)
+        fresh_user = await user_service.get_by_id(user.id)
 
         return {
             "ok": True,
-            "transaction": {"id": tx.id, "transaction_id": tx.transaction_id, "amount": tx.amount, "paid": tx.paid, "status_raw": status or "UNKNOWN"},
-            "balance": user.balance,
+            "confirmed": True,
+            "method": method,
+            "transaction": {
+                "id": tx.id,
+                "provider_id": tx.transaction_id,
+                "amount": int(tx.amount) if tx.amount is not None else None,
+                "paid": True,
+                "status_raw": "CONFIRMED",
+            },
+            "balance": fresh_user.balance,
         }

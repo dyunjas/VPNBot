@@ -31,3 +31,47 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.38.0
 yarl==1.22.0
+
+Choose an option (default 2 for IP): 2
+Using Let's Encrypt for IP certificate (shortlived profile)...
+Do you have an IPv6 address to include? (leave empty to skip):
+Setting up Let's Encrypt IP certificate (shortlived profile)...
+Note: IP certificates are valid for ~6 days and will auto-renew.
+Default listener is port 80. If you choose another port, ensure external port 80 forwards to it.
+Installing acme.sh for SSL certificate management...
+acme.sh installed successfully
+Port to use for ACME HTTP-01 listener (default 80):
+Using port 80 for standalone validation.
+Port 80 is free and ready for standalone validation.
+Issuing IP certificate for 94.141.162.83...
+[Thu Jan 22 09:15:07 PM MSK 2026] Using CA: https://acme-v02.api.letsencrypt.org/directory
+[Thu Jan 22 09:15:07 PM MSK 2026] Standalone mode.
+[Thu Jan 22 09:15:07 PM MSK 2026] LISTEN 0      511          0.0.0.0:80         0.0.0.0:*    users:(("nginx",pid=728,fd=5),("nginx",pid=727,fd=5))                                                                                              
+LISTEN 0      511             [::]:80            [::]:*    users:(("nginx",pid=728,fd=6),("nginx",pid=727,fd=6))        
+[Thu Jan 22 09:15:07 PM MSK 2026] tcp port 80 is already used by (("nginx",pid=728,fd=5),("nginx",pid=727,fd=5))        
+80            [
+[Thu Jan 22 09:15:07 PM MSK 2026] Please stop it first
+[Thu Jan 22 09:15:07 PM MSK 2026] _on_before_issue.
+[Thu Jan 22 09:15:07 PM MSK 2026] Please add '--debug' or '--log' to see more information.
+[Thu Jan 22 09:15:07 PM MSK 2026] See: https://github.com/acmesh-official/acme.sh/wiki/How-to-debug-acme.sh
+Failed to issue IP certificate
+Please ensure port 80 is reachable (or forwarded from external port 80)
+✗ IP certificate setup failed. Please check port 80 is open.
+
+═══════════════════════════════════════════
+     Panel Installation Complete!
+═══════════════════════════════════════════
+Username:    peJlc0WOjv
+Password:    Nn4rUd52i8
+Port:        23377
+WebBasePath: X1PK5ChlJwfL5hu1MP
+Access URL:  https://94.141.162.83:23377/X1PK5ChlJwfL5hu1MP
+═══════════════════════════════════════════
+⚠ IMPORTANT: Save these credentials securely!
+⚠ SSL Certificate: Enabled and configured
+Start migrating database...
+Migration done!
+Service files not found in tar.gz, downloading from GitHub...
+Setting up systemd unit...
+Created symlink /etc/systemd/system/multi-user.target.wants/x-ui.service → /etc/systemd/system/x-ui.service.
+x-ui v2.8.8 installation finished, it is running now...

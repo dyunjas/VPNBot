@@ -1,24 +1,23 @@
 import base64
 from datetime import datetime, timezone
-from fastapi import APIRouter, Response
-from sqlalchemy import select
 
-from server.database.session import async_session
-from server.database.models import User, KeyStatus
+from fastapi import APIRouter, Depends, Response
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import AsyncGenerator
 
-from server.repositories.key_repository import KeyRepository
-from server.repositories.server_repository import ServerRepository
-from server.repositories.subscription_repository import SubscriptionRepository
+from backend.core.config import settings
+from backend.core.logger_config import logger
+from backend.database.session import async_session
 
-from server.core.loader import settings
-from server.core.logger_config import logger
+from backend.services import UserService, SubscriptionService, VPNService
+from backend.services.exceptions import UserNotFound, SubscriptionNotFound
 
 from api.subscription_url.utils import (
     _build_expire_only_header,
     _profile_title,
     _profile_update_interval,
     _profile_web_page,
-    expired_subscription_response
+    expired_subscription_response,
 )
 
 router = APIRouter(tags=["subscription"])
@@ -26,79 +25,80 @@ router = APIRouter(tags=["subscription"])
 XRAY_AUTH_TOKEN = settings.XRAY_AUTH
 
 
-@router.get("/sub/{token}")
-async def subscription(token: str):
-    async with async_session() as session:
-        user = await session.scalar(
-            select(User).where(User.subscription_token == token)
-        )
+AsyncSessionGenerator = AsyncGenerator[AsyncSession, None]
 
+
+async def get_session() -> AsyncSessionGenerator:
+    async with async_session() as session:
+        yield session
+
+def get_user_service(session: AsyncSession = Depends(get_session)) -> UserService:
+    return UserService(session)
+
+
+def get_subscription_service(session: AsyncSession = Depends(get_session)) -> SubscriptionService:
+    return SubscriptionService(session)
+
+
+def get_vpn_service(session: AsyncSession = Depends(get_session)) -> VPNService:
+    return VPNService(session=session, xray_auth_token=XRAY_AUTH_TOKEN)
+
+
+@router.get("/sub/{token}", response_model=None)
+async def subscription(
+    token: str,
+    user_service: UserService = Depends(get_user_service),
+    subscription_service: SubscriptionService = Depends(get_subscription_service),
+    vpn_service: VPNService = Depends(get_vpn_service),
+):
+    try:
+        user = await user_service.get_by_subscription_token(token)
+    except UserNotFound:
+        logger.warning(f"[subscription] token not found: {token}")
         headers: dict[str, str] = {}
         headers |= _profile_title("🌙 Lunet VPN")
         headers |= _profile_update_interval(6)
         headers |= _profile_web_page("https://t.me/LunetVpnBot")
+        return expired_subscription_response(headers=headers)
 
-        if not user:
-            logger.warning(f"[subscription] token not found: {token}")
-            return expired_subscription_response(headers=headers)
+    headers: dict[str, str] = {}
+    headers |= _profile_title("🌙 Lunet VPN")
+    headers |= _profile_update_interval(6)
+    headers |= _profile_web_page("https://t.me/LunetVpnBot")
 
-        sub_repo = SubscriptionRepository(session)
-        subscription_obj = await sub_repo.get_user_subscription_by_tg_id(user.tg_id)
+    try:
+        subscription_obj = await subscription_service.get_active_subscription(user_id=user.id)
+    except SubscriptionNotFound:
+        return expired_subscription_response(headers=headers)
 
-        if subscription_obj and subscription_obj.current_period_end:
-            headers |= _build_expire_only_header(
-                subscription_obj.current_period_end
-            )
+    # ✅ всегда сравниваем в UTC (и не падаем если None)
+    now = datetime.now(timezone.utc)
 
-        if (
-            not subscription_obj
-            or not subscription_obj.current_period_end
-            or subscription_obj.current_period_end <= datetime.now()
-        ):
-            return expired_subscription_response(headers=headers)
+    if not subscription_obj.current_period_end:
+        return expired_subscription_response(headers=headers)
 
-        plan = subscription_obj.plan
-        if not plan:
-            logger.error(f"[subscription] plan not loaded user_id={user.id}")
-            return expired_subscription_response(headers=headers)
+    # current_period_end может быть naive -> приводим к UTC аккуратно
+    end_dt = subscription_obj.current_period_end
+    if end_dt.tzinfo is None:
+        end_dt = end_dt.replace(tzinfo=timezone.utc)
 
-        key_repo = KeyRepository(session)
-        server_repo = ServerRepository(session)
+    headers |= _build_expire_only_header(end_dt)
 
-        servers = await server_repo.get_all_servers()
+    if end_dt <= now:
+        return expired_subscription_response(headers=headers)
 
-        existing_keys = await key_repo.get_keys_by_user_id(user.id)
-        active_keys = [k for k in existing_keys if k.status == KeyStatus.active]
+    plan = subscription_obj.plan
+    if not plan:
+        logger.error(f"[subscription] plan not loaded user_id={user.id}")
+        return expired_subscription_response(headers=headers)
 
-        keys_by_server: dict[int, str] = {
-            k.server_id: k.uri
-            for k in active_keys
-            if k.server_id and k.uri
-        }
+    try:
+        keys_by_server = await vpn_service.get_or_create_keys(user_id=user.id)
+    except Exception as e:
+        logger.error(f"[subscription] get_or_create_keys failed user_id={user.id}: {e}")
+        return expired_subscription_response(headers=headers)
 
-        limit = int(getattr(plan, "key_limit", 0) or 0)
-
-        for server in servers:
-            if server.id in keys_by_server:
-                continue
-
-            if limit and len(keys_by_server) >= limit:
-                break
-
-            try:
-                key = await key_repo.create_key(
-                    user_id=user.id,
-                    server=server,
-                    auth_token=XRAY_AUTH_TOKEN
-                )
-                keys_by_server[server.id] = key.uri
-            except Exception as e:
-                logger.error(
-                    f"[subscription] create_key failed user_id={user.id} server_id={server.id}: {e}"
-                )
-
-        uris = [keys_by_server[s.id] for s in servers if s.id in keys_by_server]
-
+    uris = list(keys_by_server.values())
     if not uris:
         return expired_subscription_response(headers=headers)
 
