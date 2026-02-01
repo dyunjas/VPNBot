@@ -96,10 +96,13 @@ class VPNService:
         sub = await self.get_active_subscription(user_id)
 
         servers = await self.server_repo.list_all()
-        existing_keys = await self.key_repo.list_by_user_id(user.id)
+
+        existing_keys = await self.key_repo.list_by_user_id(user.id, with_server=False)
         active_keys = [k for k in existing_keys if k.status == KeyStatus.active]
 
-        keys_by_server = {k.server_id: k.uri for k in active_keys if k.server_id and k.uri}
+        keys_by_server: dict[int, str] = {
+            k.server_id: k.uri for k in active_keys if k.server_id and k.uri
+        }
 
         limit = int(getattr(sub.plan, "key_limit", 0) or 0)
 
@@ -108,15 +111,29 @@ class VPNService:
                 continue
             if limit and len(keys_by_server) >= limit:
                 break
+
             try:
+                uuid, uri = await self._create_xray_key(user_id=user.id, server=server)
+
                 key = await self.key_repo.create(
                     user_id=user.id,
-                    server=server,
-                    auth_token=self.XRAY_AUTH_TOKEN
+                    server_id=server.id,
+                    uuid=uuid,
+                    uri=uri,
+                    status=KeyStatus.active,
+                    created_at=datetime.now(timezone.utc),
                 )
-                keys_by_server[server.id] = key.uri
+
+                await self.session.commit()
+                await self.session.refresh(key)
+
+                keys_by_server[server.id] = uri
+
             except Exception as e:
-                raise KeyCreationError(f"Failed to create key for user id:{user.id}, server id:{server.id}: {e}")
+                logger.error(
+                    f"[get_or_create_keys] failed user_id={user.id} server_id={server.id}: {e}"
+                )
+                continue
 
         return keys_by_server
     

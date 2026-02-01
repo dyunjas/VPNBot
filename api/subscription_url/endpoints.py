@@ -1,9 +1,9 @@
 import base64
 from datetime import datetime, timezone
+from typing import AsyncGenerator
 
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import AsyncGenerator
 
 from backend.core.config import settings
 from backend.core.logger_config import logger
@@ -32,6 +32,7 @@ async def get_session() -> AsyncSessionGenerator:
     async with async_session() as session:
         yield session
 
+
 def get_user_service(session: AsyncSession = Depends(get_session)) -> UserService:
     return UserService(session)
 
@@ -51,34 +52,27 @@ async def subscription(
     subscription_service: SubscriptionService = Depends(get_subscription_service),
     vpn_service: VPNService = Depends(get_vpn_service),
 ):
-    try:
-        user = await user_service.get_by_subscription_token(token)
-    except UserNotFound:
-        logger.warning(f"[subscription] token not found: {token}")
-        headers: dict[str, str] = {}
-        headers |= _profile_title("🌙 Lunet VPN")
-        headers |= _profile_update_interval(6)
-        headers |= _profile_web_page("https://t.me/LunetVpnBot")
-        return expired_subscription_response(headers=headers)
-
     headers: dict[str, str] = {}
     headers |= _profile_title("🌙 Lunet VPN")
     headers |= _profile_update_interval(6)
     headers |= _profile_web_page("https://t.me/LunetVpnBot")
 
     try:
+        user = await user_service.get_by_subscription_token(token)
+    except UserNotFound:
+        logger.warning(f"[subscription] token not found: {token}")
+        return expired_subscription_response(headers=headers)
+
+    try:
         subscription_obj = await subscription_service.get_active_subscription(user_id=user.id)
     except SubscriptionNotFound:
         return expired_subscription_response(headers=headers)
 
-    # ✅ всегда сравниваем в UTC (и не падаем если None)
     now = datetime.now(timezone.utc)
-
-    if not subscription_obj.current_period_end:
+    end_dt = subscription_obj.current_period_end
+    if not end_dt:
         return expired_subscription_response(headers=headers)
 
-    # current_period_end может быть naive -> приводим к UTC аккуратно
-    end_dt = subscription_obj.current_period_end
     if end_dt.tzinfo is None:
         end_dt = end_dt.replace(tzinfo=timezone.utc)
 
@@ -94,11 +88,19 @@ async def subscription(
 
     try:
         keys_by_server = await vpn_service.get_or_create_keys(user_id=user.id)
-    except Exception as e:
-        logger.error(f"[subscription] get_or_create_keys failed user_id={user.id}: {e}")
+    except Exception:
+        logger.exception(f"[subscription] get_or_create_keys failed user_id={user.id}")
+        return Response(
+            content="",
+            media_type="text/plain; charset=utf-8",
+            headers=headers,
+            status_code=500,
+        )
+
+    if not keys_by_server:
         return expired_subscription_response(headers=headers)
 
-    uris = list(keys_by_server.values())
+    uris = [keys_by_server[sid] for sid in sorted(keys_by_server.keys()) if keys_by_server.get(sid)]
     if not uris:
         return expired_subscription_response(headers=headers)
 

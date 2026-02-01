@@ -7197,3 +7197,53 @@ TypeError: UserRepository.set_subscription_token() takes 1 positional argument b
 [2026-02-01 01:30:35] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
 [2026-02-01 01:30:35] [ERROR] asyncio: Unclosed client session
 client_session: <aiohttp.client.ClientSession object at 0x000002534494F750>
+[2026-02-01 02:07:25] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 02:07:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 02:07:31] [INFO] root: Database tables initialized
+[2026-02-01 02:07:33] [INFO] root: Database connection successful
+[2026-02-01 02:07:33] [INFO] root: Bot started
+[2026-02-01 02:07:33] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 02:07:33] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 02:07:33] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 02:07:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 02:07:39] [INFO] root: Database tables initialized
+[2026-02-01 02:07:41] [INFO] root: Database connection successful
+[2026-02-01 02:07:59] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 02:07:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 02:08:04] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-01 02:08:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 02:08:04] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 02:08:04] [INFO] root: Bot stopped
+[2026-02-01 02:08:04] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 02:08:04] [INFO] root: Database tables initialized
+[2026-02-01 02:08:07] [INFO] root: Database connection successful
+[2026-02-01 02:08:09] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 02:08:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 02:08:15] [INFO] root: Database tables initialized
+[2026-02-01 02:08:17] [INFO] root: Database connection successful
+[2026-02-01 02:08:17] [INFO] root: Bot started
+[2026-02-01 02:08:17] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 02:08:18] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 02:08:25] [ERROR] root: Database error: Telegram server says - Bad Request: inline keyboard button Web App URL ' https://3a1b5d0f7d1b.ngrok-free.app/miniapp/?v=301' is invalid: Unsupported URL protocol
+[2026-02-01 02:08:25] [INFO] aiogram.event: Update id=975847432 is handled. Duration 2737 ms by bot id=8282595014
+[2026-02-01 02:08:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-01 02:08:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 02:08:50] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 02:08:51] [INFO] root: Bot stopped
+[2026-02-01 02:08:51] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 02:08:56] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 02:08:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 02:09:02] [INFO] root: Database tables initialized
+[2026-02-01 02:09:04] [INFO] root: Database connection successful
+[2026-02-01 02:09:04] [INFO] root: Bot started
+[2026-02-01 02:09:04] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 02:09:05] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 02:09:08] [INFO] aiogram.event: Update id=975847433 is handled. Duration 2704 ms by bot id=8282595014
+[2026-02-01 02:10:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 02:10:16] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 02:10:27] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 8282595014)
+[2026-02-01 02:14:18] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-01 02:14:18] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 02:14:18] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 02:14:18] [INFO] root: Bot stopped
+[2026-02-01 02:14:18] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'

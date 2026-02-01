@@ -8,24 +8,52 @@ function isTelegramWebApp() {
 }
 
 const IN_TELEGRAM = isTelegramWebApp();
-if (tg && typeof tg.expand === "function") tg.expand();
+
+function requestFullScreenIfPossible() {
+  try {
+    if (tg?.expand) tg.expand();
+
+    if (typeof tg?.requestFullscreen === "function") {
+      tg.requestFullscreen();
+    }
+  } catch {}
+}
+
+if (IN_TELEGRAM && tg) {
+  try {
+    if (typeof tg.ready === "function") tg.ready();
+
+    if (typeof tg.setHeaderColor === "function") tg.setHeaderColor("#0b1020");
+    if (typeof tg.setBackgroundColor === "function") tg.setBackgroundColor("#0b1020");
+
+    requestFullScreenIfPossible();
+
+    setTimeout(requestFullScreenIfPossible, 150);
+    setTimeout(requestFullScreenIfPossible, 600);
+
+    if (typeof tg.onEvent === "function") {
+      tg.onEvent("viewportChanged", () => requestFullScreenIfPossible());
+    }
+  } catch {}
+}
 
 const initData = IN_TELEGRAM && tg ? tg.initData : null;
 const initDataUnsafe = IN_TELEGRAM && tg ? tg.initDataUnsafe : null;
 
+// ====== DOM refs ======
 const appRootEl = document.getElementById("app-root");
 const outsideStubEl = document.getElementById("outside-stub");
 const toastEl = document.getElementById("message");
 const stackEl = document.getElementById("stack");
 
-function applyTelegramTopInset(){
-  try{
+function applyTelegramTopInset() {
+  try {
     const top =
       tg?.contentSafeAreaInset?.top ??
       tg?.safeAreaInset?.top ??
       18;
     document.documentElement.style.setProperty("--tgTopPad", `${Math.max(12, top)}px`);
-  }catch{
+  } catch {
     document.documentElement.style.setProperty("--tgTopPad", `18px`);
   }
 }

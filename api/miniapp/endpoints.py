@@ -43,11 +43,9 @@ XRAY_AUTH_TOKEN = settings.XRAY_AUTH
 if not XRAY_AUTH_TOKEN:
     raise RuntimeError("XRAY_AUTH is not set in settings")
 
-# ✅ Platega payment_method mapping (проверь коды у твоего провайдера)
 PLATEGA_METHOD_CARD = 11
-PLATEGA_METHOD_SBP = 2  # <-- если у тебя другой код СБП — поменяй
+PLATEGA_METHOD_SBP = 2 
 
-# ✅ Bot username / setup link
 BOT_USERNAME = getattr(settings, "BOT_USERNAME", "LunetVPNBot")
 SETUP_URL_FALLBACK = getattr(settings, "SETUP_URL", "https://t.me/LunetVPNBot")
 
@@ -71,9 +69,9 @@ class BuySubscriptionPayload(InitPayload):
 
 class TopupPayload(InitPayload):
     amount: int
-    method: str = "platega"   # "platega" | "crypto"
-    asset: str = "USDT"       # crypto only (можешь оставить)
-    platega_type: str = "card"  # "card" | "sbp"
+    method: str = "platega"  
+    asset: str = "USDT"     
+    platega_type: str = "card" 
 
 
 class BalanceCheckPayload(InitPayload):
@@ -159,7 +157,6 @@ async def mini_referral(payload: InitPayload):
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
 
-        # ✅ базовая реф-ссылка
         referral_url = f"https://t.me/{BOT_USERNAME}?start=ref_{user.tg_id}"
 
         return {
@@ -414,12 +411,11 @@ async def mini_balance_topup(payload: TopupPayload):
                     "status": payment.get("status"),
                 }
 
-            # crypto
             invoice = await billing.create_crypto_invoice(
                 user_id=user.id,
                 amount_rub=int(payload.amount),
                 asset=(payload.asset or "USDT"),
-                description=f"Пополнение баланса на {payload.amount} RUB (CryptoBot)",
+                description=f"Пополнение баланса на {payload.amount} RUB",
                 expires_in=900,
             )
 
