@@ -65,16 +65,30 @@ class SubscriptionService:
                 next_renewal_at=now + period,
             )
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
+
         else:
+            end = sub.current_period_end
+
+            if end and end.tzinfo is None:
+                end = end.replace(tzinfo=timezone.utc)
+
+            if end and end > now:
+                start = sub.current_period_start
+                end = end + period
+            else:
+                start = now
+                end = now + period
+
             await self.sub_repo.set_plan_and_period(
                 sub,
                 plan_id=plan.id,
                 status=SubStatus.active,
                 auto_renew=auto_renew,
-                current_period_start=now,
-                current_period_end=now + period,
-                next_renewal_at=now + period,
+                current_period_start=start,
+                current_period_end=end,
+                next_renewal_at=end,
             )
+
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
 
         if not user.subscription_token:

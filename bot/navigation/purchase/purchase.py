@@ -37,7 +37,7 @@ async def purchase_plan_clb(
         )
 
     except UserNotFound:
-        await callback.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден", show_alert=True)
+        await callback.message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден", show_alert=True)
         return
 
     except InsufficientBalance:
@@ -53,7 +53,7 @@ async def purchase_plan_clb(
 
     except Exception as e:
         logger.exception(f"Ошибка при покупке подписки: {e}")
-        await callback.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ошибка оформления подписки", show_alert=True)
+        await callback.message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ошибка оформления подписки", show_alert=True)
         return
     
     plan = await subscription_service.get_plan(plan_id)

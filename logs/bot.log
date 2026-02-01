@@ -7247,3 +7247,100 @@ client_session: <aiohttp.client.ClientSession object at 0x000002534494F750>
 [2026-02-01 02:14:18] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
 [2026-02-01 02:14:18] [INFO] root: Bot stopped
 [2026-02-01 02:14:18] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:30:59] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:31:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:31:08] [INFO] root: Database tables initialized
+[2026-02-01 16:31:11] [INFO] root: Database connection successful
+[2026-02-01 16:31:11] [INFO] root: Bot started
+[2026-02-01 16:31:11] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 16:31:11] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:31:15] [ERROR] root: Expire checker: notify soon failed tg_id=8400557561: Telegram server says - Bad Request: chat not found
+[2026-02-01 16:31:16] [ERROR] root: Database error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column vpn_subscription_plans_1.devices does not exist
+[SQL: SELECT vpn_subscriptions.id, vpn_subscriptions.user_id, vpn_subscriptions.plan_id, vpn_subscriptions.gb_left, vpn_subscriptions.status, vpn_subscriptions.auto_renew, vpn_subscriptions.current_period_start, vpn_subscriptions.current_period_end, vpn_subscriptions.next_renewal_at, vpn_subscriptions.created_at, vpn_subscription_plans_1.id AS id_1, vpn_subscription_plans_1.name, vpn_subscription_plans_1.price, vpn_subscription_plans_1.period_days, vpn_subscription_plans_1.devices, vpn_subscription_plans_1.created_at AS created_at_1 
+FROM vpn_subscriptions LEFT OUTER JOIN vpn_subscription_plans AS vpn_subscription_plans_1 ON vpn_subscription_plans_1.id = vpn_subscriptions.plan_id 
+WHERE vpn_subscriptions.user_id = $1::INTEGER AND vpn_subscriptions.status = $2::substatus AND vpn_subscriptions.current_period_end > $3::TIMESTAMP WITH TIME ZONE ORDER BY vpn_subscriptions.current_period_end DESC 
+ LIMIT $4::INTEGER]
+[parameters: (1, 'active', datetime.datetime(2026, 2, 1, 11, 31, 16, 340290, tzinfo=datetime.timezone.utc), 1)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+[2026-02-01 16:31:16] [INFO] aiogram.event: Update id=975847434 is handled. Duration 3178 ms by bot id=8282595014
+[2026-02-01 16:31:43] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-01 16:31:43] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 16:31:43] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 16:31:43] [INFO] root: Bot stopped
+[2026-02-01 16:31:43] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:31:43] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001AA8A4F4410>
+[2026-02-01 16:32:11] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:32:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:32:13] [INFO] root: Database tables initialized
+[2026-02-01 16:32:13] [INFO] root: Database connection successful
+[2026-02-01 16:32:13] [INFO] root: Bot started
+[2026-02-01 16:32:13] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 16:32:13] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:32:17] [INFO] aiogram.event: Update id=975847435 is handled. Duration 366 ms by bot id=8282595014
+[2026-02-01 16:32:19] [ERROR] root: Database error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: столбец vpn_subscription_plans_1.devices не существует
+[SQL: SELECT vpn_subscriptions.id, vpn_subscriptions.user_id, vpn_subscriptions.plan_id, vpn_subscriptions.gb_left, vpn_subscriptions.status, vpn_subscriptions.auto_renew, vpn_subscriptions.current_period_start, vpn_subscriptions.current_period_end, vpn_subscriptions.next_renewal_at, vpn_subscriptions.created_at, vpn_subscription_plans_1.id AS id_1, vpn_subscription_plans_1.name, vpn_subscription_plans_1.price, vpn_subscription_plans_1.period_days, vpn_subscription_plans_1.devices, vpn_subscription_plans_1.created_at AS created_at_1 
+FROM vpn_subscriptions LEFT OUTER JOIN vpn_subscription_plans AS vpn_subscription_plans_1 ON vpn_subscription_plans_1.id = vpn_subscriptions.plan_id 
+WHERE vpn_subscriptions.user_id = $1::INTEGER AND vpn_subscriptions.status = $2::substatus AND vpn_subscriptions.current_period_end > $3::TIMESTAMP WITH TIME ZONE ORDER BY vpn_subscriptions.current_period_end DESC 
+ LIMIT $4::INTEGER]
+[parameters: (5, 'active', datetime.datetime(2026, 2, 1, 11, 32, 19, 328594, tzinfo=datetime.timezone.utc), 1)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+[2026-02-01 16:32:19] [INFO] aiogram.event: Update id=975847436 is handled. Duration 146 ms by bot id=8282595014
+[2026-02-01 16:32:40] [ERROR] root: Database error: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: столбец vpn_subscription_plans_1.devices не существует
+[SQL: SELECT vpn_subscriptions.id, vpn_subscriptions.user_id, vpn_subscriptions.plan_id, vpn_subscriptions.gb_left, vpn_subscriptions.status, vpn_subscriptions.auto_renew, vpn_subscriptions.current_period_start, vpn_subscriptions.current_period_end, vpn_subscriptions.next_renewal_at, vpn_subscriptions.created_at, vpn_subscription_plans_1.id AS id_1, vpn_subscription_plans_1.name, vpn_subscription_plans_1.price, vpn_subscription_plans_1.period_days, vpn_subscription_plans_1.devices, vpn_subscription_plans_1.created_at AS created_at_1 
+FROM vpn_subscriptions LEFT OUTER JOIN vpn_subscription_plans AS vpn_subscription_plans_1 ON vpn_subscription_plans_1.id = vpn_subscriptions.plan_id 
+WHERE vpn_subscriptions.user_id = $1::INTEGER AND vpn_subscriptions.status = $2::substatus AND vpn_subscriptions.current_period_end > $3::TIMESTAMP WITH TIME ZONE ORDER BY vpn_subscriptions.current_period_end DESC 
+ LIMIT $4::INTEGER]
+[parameters: (5, 'active', datetime.datetime(2026, 2, 1, 11, 32, 40, 521743, tzinfo=datetime.timezone.utc), 1)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+[2026-02-01 16:32:40] [INFO] aiogram.event: Update id=975847437 is handled. Duration 137 ms by bot id=8282595014
+[2026-02-01 16:32:41] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-01 16:32:41] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 16:32:41] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 16:32:41] [INFO] root: Bot stopped
+[2026-02-01 16:32:41] [INFO] aiogram.dispatcher: Polling stopped for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:32:47] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:32:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:32:48] [INFO] root: Database tables initialized
+[2026-02-01 16:32:49] [INFO] root: Database connection successful
+[2026-02-01 16:32:49] [INFO] root: Bot started
+[2026-02-01 16:32:49] [INFO] aiogram.dispatcher: Start polling
+[2026-02-01 16:32:49] [INFO] aiogram.dispatcher: Run polling for bot @usaunibot id=8282595014 - 'USA University'
+[2026-02-01 16:32:49] [INFO] aiogram.event: Update id=975847438 is handled. Duration 350 ms by bot id=8282595014
+[2026-02-01 16:32:51] [INFO] aiogram.event: Update id=975847439 is handled. Duration 383 ms by bot id=8282595014
+[2026-02-01 16:35:55] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:35:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:35:56] [INFO] root: Database tables initialized
+[2026-02-01 16:35:56] [INFO] root: Database connection successful
+[2026-02-01 16:35:58] [ERROR] root: [subscription] notify failed user_id=5
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\api\subscription_url\endpoints.py", line 152, in subscription
+    await notifier.send_user_message(user_id=user.id, text=text)
+  File "C:\Users\dyunj\VPNBot\api\subscription_url\endpoints.py", line 80, in send_user_message
+    raise NotImplementedError
+NotImplementedError
+[2026-02-01 16:36:11] [ERROR] root: [subscription] notify failed user_id=5
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\api\subscription_url\endpoints.py", line 152, in subscription
+    await notifier.send_user_message(user_id=user.id, text=text)
+  File "C:\Users\dyunj\VPNBot\api\subscription_url\endpoints.py", line 80, in send_user_message
+    raise NotImplementedError
+NotImplementedError
+[2026-02-01 16:37:47] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:37:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:37:47] [INFO] root: Database tables initialized
+[2026-02-01 16:37:47] [INFO] root: Database connection successful
+[2026-02-01 16:39:17] [INFO] aiogram.event: Update id=975847440 is not handled. Duration 126 ms by bot id=8282595014
+[2026-02-01 16:42:43] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000178A3369940>
+[2026-02-01 16:42:51] [INFO] root: Settings successfully loaded from .env
+[2026-02-01 16:42:52] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-01 16:42:52] [INFO] root: Database tables initialized
+[2026-02-01 16:42:52] [INFO] root: Database connection successful
+[2026-02-01 16:49:42] [INFO] aiogram.event: Update id=975847441 is not handled. Duration 133 ms by bot id=8282595014
+[2026-02-01 17:02:10] [INFO] aiogram.event: Update id=975847442 is not handled. Duration 129 ms by bot id=8282595014
+[2026-02-01 17:03:00] [INFO] aiogram.event: Update id=975847443 is not handled. Duration 124 ms by bot id=8282595014
+[2026-02-01 17:04:28] [INFO] aiogram.event: Update id=975847444 is not handled. Duration 131 ms by bot id=8282595014
+[2026-02-01 17:25:18] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-01 17:25:18] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8282595014)
+[2026-02-01 17:25:29] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 8282595014)
