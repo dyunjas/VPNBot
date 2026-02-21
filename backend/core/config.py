@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     OTP_SECRET: str
     PUBLIC_BASE_URL: str
     SECRET_KEY: str
+    ADMIN_WEB_TOKEN: str | None = None
+    ADMIN_WEB_LOGIN: str | None = None
+    ADMIN_WEB_PASSWORD: str | None = None
+    ADMIN_WEB_JWT_EXPIRE_HOURS: int = 12
 
     class Config:
         env_file = ".env"

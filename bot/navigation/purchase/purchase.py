@@ -5,7 +5,10 @@ from backend.images import MAIN_MENU_IMG
 from bot.navigation.purchase.keyboards import fail_purchase_kb, success_purchase_kb
 
 from backend.services import UserService, BillingService, SubscriptionService
-from backend.services.exceptions import UserNotFound, InsufficientBalance, PlanNotFound
+from backend.services.exceptions import (
+    UserNotFound, InsufficientBalance, 
+    PlanNotFound, TooEarlyToRenew
+)
 from backend.core.logger_config import logger
 
 router = Router()
@@ -48,13 +51,28 @@ async def purchase_plan_clb(
         return
 
     except PlanNotFound:
-        await callback.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> План не найден", show_alert=True)
+        await callback.answer("План не найден", show_alert=True)
+        return
+    
+    except TooEarlyToRenew:
+        await callback.answer("Подписку нельзя продлить раньше, чем за 3 дня до её окончания", show_alert=True)
         return
 
     except Exception as e:
         logger.exception(f"Ошибка при покупке подписки: {e}")
         await callback.message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ошибка оформления подписки", show_alert=True)
         return
+    
+    try:
+        await callback.bot.send_gift(
+            gift_id="5170233102089322756", 
+            user_id=tg_id,
+            text=f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji>Спасибо за покупку!",
+            text_parse_mode="HTML"
+        )
+    except Exception as e:
+        print(f"{e}")
+        pass
     
     plan = await subscription_service.get_plan(plan_id)
 

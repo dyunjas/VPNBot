@@ -1,401 +1,196 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Lunet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Lunet</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.css?v=300" />
+  <link rel="stylesheet" href="styles.css?v=412" />
 </head>
-
 <body>
-  <div id="outside-stub" class="outside">
+  <div id="outside-stub" class="outside" style="display:none;">
     <div class="outside__card">
-      <div class="outside__icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a7 7 0 1 0 11.5 11.5Z"></path>
-        </svg>
-      </div>
-      <div class="outside__title">Mini-App</div>
-      <div class="outside__text">
-        Это приложение работает только внутри Telegram.<br/>
-        Откройте бота и нажмите <b>«Открыть приложение»</b>.
-      </div>
+      <div class="outside__title">Mini App доступен только в Telegram</div>
+      <p>Откройте приложение через бота Lunet.</p>
     </div>
   </div>
 
+    <div id="banned-stub" class="outside" style="display:none;">
+    <div class="outside__card">
+      <div class="outside__title">Вы забанены</div>
+      <p>������ � ����-���������� ���������. ���������� � ���������.</p>
+    </div>
+  </div>
   <div id="app-root" class="app">
-    <div class="bg" aria-hidden="true"></div>
-
-    <header class="topspace" aria-hidden="true"></header>
-
-    <main class="stack" id="stack">
-      <section class="view view--active" id="view-home" aria-label="Главная">
-        <div class="panel">
-          <div class="user">
-            <img id="home-avatar" class="user__avatar" alt="avatar" />
-
-            <div class="user__meta">
-              <div id="home-name" class="user__name">—</div>
-              <div class="user__idrow">
-                <span id="home-id" class="user__id">ID: —</span>
-                <button id="btn-copy-id" class="iconbtn" type="button" aria-label="Скопировать ID">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9 9h10v10H9z"></path>
-                    <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div id="home-balance" class="pill pill--balance">— ₽</div>
+    <main id="view-host" class="view-host">
+      <section class="view view--active" id="view-home">
+        <div class="card profile-card glass">
+          <img id="home-avatar" class="avatar" alt="avatar" />
+          <div class="profile-card__meta">
+            <div id="home-name" class="profile-card__name">Пользователь</div>
+            <div id="home-id" class="profile-card__id">ID: -</div>
           </div>
+          <div id="home-balance" class="balance">0 ₽</div>
+        </div>
 
-          <div class="subcard">
-            <div class="subcard__top">
-              <div>
-                <div class="kicker">ПОДПИСКА</div>
-                <div id="sub-title" class="subcard__title">—</div>
-                <div id="sub-meta" class="subcard__meta">—</div>
-              </div>
-
-              <div class="subcard__badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2l1.4 5.1L19 9l-5.6 1.9L12 16l-1.4-5.1L5 9l5.6-1.9L12 2z"></path>
-                </svg>
-              </div>
+        <div class="card glass">
+          <h2>Подписка</h2>
+          <div id="sub-title" class="sub-title">Проверка...</div>
+          <p id="sub-meta" class="muted"></p>
+          <div class="grid-two stat-grid">
+            <div class="stat glass-soft">
+              <span>Ключи</span>
+              <b id="stat-keys">0</b>
             </div>
-
-            <div id="sub-link-wrap" class="subcard__linkwrap" style="display:none;">
-              <div id="sub-link" class="mono subcard__link">—</div>
-              <div class="subcard__actions">
-                <button id="btn-copy-sub" class="btn btn--ghost btn--small" type="button">
-                  <span class="btn__ico" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M9 9h10v10H9z"></path>
-                      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path>
-                    </svg>
-                  </span>
-                  Скопировать
-                </button>
-
-                <button id="btn-open-sub" class="btn btn--ghost btn--small" type="button">
-                  <span class="btn__ico" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M14 3h7v7"></path>
-                      <path d="M10 14 21 3"></path>
-                      <path d="M21 14v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"></path>
-                    </svg>
-                  </span>
-                  Открыть
-                </button>
-              </div>
+            <div class="stat glass-soft">
+              <span>Устройства</span>
+              <b id="stat-devices">0/0</b>
             </div>
           </div>
+          <div id="sub-link-wrap" class="sub-actions" style="display:none;">
+            <button class="btn" id="btn-copy-sub" type="button">Скопировать ссылку</button>
+            <button class="btn btn--ghost" id="btn-open-sub" type="button">Открыть</button>
+            <button class="btn btn--ghost" id="btn-reissue" type="button">Перевыпустить ключи</button>
+          </div>
+        </div>
 
-          <div class="menucard">
-            <div class="menucard__title">Меню</div>
+        <div class="card glass">
+          <h2>Реферальная система</h2>
+          <div class="grid-two stat-grid">
+            <div class="stat glass-soft">
+              <span>Реф. баланс</span>
+              <b id="ref-balance">0 ₽</b>
+            </div>
+            <div class="stat glass-soft">
+              <span>Приглашено</span>
+              <b id="ref-invited">0</b>
+            </div>
+          </div>
+          <button class="btn" data-open="referral" type="button">Открыть раздел</button>
+        </div>
+      </section>
 
-            <button class="row" data-open="profile" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M12 12a4.2 4.2 0 1 0-4.2-4.2A4.2 4.2 0 0 0 12 12Z"></path><path d="M4 20c1.8-4 5.1-6 8-6s6.2 2 8 6"></path></svg>
-              </span>
-              <span class="row__txt">Профиль</span>
-              <span class="row__chev">›</span>
-            </button>
+      <section class="view" id="view-plans">
+        <div class="card glass">
+          <h2>Тарифы</h2>
+          <div id="plans-list" class="list">Загрузка...</div>
+        </div>
+      </section>
 
-            <button class="row" data-open="referral" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M20 12v10H4V12"></path><path d="M22 7H2v5h20V7Z"></path><path d="M12 22V7"></path></svg>
-              </span>
-              <span class="row__txt">Реферальная программа</span>
-              <span class="row__chev">›</span>
-            </button>
+      <section class="view" id="view-devices">
+        <div class="card glass">
+          <h2>Устройства</h2>
+          <p class="muted">Удаляйте старые устройства, чтобы освободить слот.</p>
+          <div id="device-limit" class="muted">Лимит: -</div>
+          <div id="devices-list" class="list">Загрузка...</div>
+        </div>
+      </section>
 
-            <button class="row" data-open="setup" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0-3.5-3.5 3.5 3.5 0 0 0 3.5 3.5Z"></path><path d="M19.4 15a8 8 0 0 0 .1-2l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1L15 5h-6l-.4 3a8 8 0 0 0-1.7 1L4.5 8 2.5 11.5 4.5 13a8 8 0 0 0 .1 2l-2 1.5 2 3.5 2.4-1a8 8 0 0 0 1.7 1L9 23h6l.4-3a8 8 0 0 0 1.7-1l2.4 1 2-3.5-2.1-1.5Z"></path></svg>
-              </span>
-              <span class="row__txt">Установка и настройка</span>
-              <span class="row__chev">›</span>
-            </button>
+      <section class="view" id="view-profile">
+        <div class="card glass">
+          <h2>Промокод</h2>
+          <div class="row">
+            <input id="promo-input" class="input" placeholder="Введите промокод" />
+            <button id="promo-apply" class="btn" type="button">Применить</button>
+          </div>
+          <p id="promo-hint" class="muted"></p>
+        </div>
 
-            <button class="row" data-open="support" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path></svg>
-              </span>
-              <span class="row__txt">Поддержка</span>
-              <span class="row__chev">›</span>
-            </button>
+        <div class="card glass">
+          <h2>Пополнение</h2>
+          <div class="row">
+            <input id="topup-input" class="input" placeholder="Сумма в рублях" inputmode="numeric" />
+          </div>
+          <div class="row">
+            <select id="topup-method" class="select">
+              <option value="card">Карта</option>
+              <option value="sbp">СБП</option>
+              <option value="crypto">Crypto (USDT)</option>
+            </select>
+            <button id="topup-pay" class="btn" type="button">Оплатить</button>
+          </div>
+          <p id="topup-hint" class="muted"></p>
+        </div>
 
-            <button class="row" data-open="tariffs" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.7H21l-5.4 3.9L17.8 19 12 15.2 6.2 19l2.2-6.4L3 8.7h6.8L12 2Z"></path></svg>
-              </span>
-              <span class="row__txt">Тарифы</span>
-              <span class="row__chev">›</span>
-            </button>
+        <div class="card glass">
+          <h2>Транзакции</h2>
+          <div class="row">
+            <button id="btn-check-payments" class="btn" type="button">Проверить платежи</button>
+            <button id="btn-refresh-tx" class="btn btn--ghost" type="button">Обновить</button>
+          </div>
+          <div id="tx-list" class="list">Загрузка...</div>
+          <div class="row">
+            <button id="btn-more-tx" class="btn btn--ghost" type="button" style="display:none;">Загрузить еще</button>
           </div>
         </div>
       </section>
 
-      <section class="view" id="view-profile" aria-label="Профиль">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Профиль</div>
-          <div class="viewhead__spacer"></div>
-        </div>
-
-        <div class="panel">
-          <div class="profile">
-            <img id="profile-avatar" class="profile__avatar" alt="avatar" />
-            <div id="profile-name" class="profile__name">—</div>
-            <div id="profile-username" class="profile__user">—</div>
+      <section class="view" id="view-referral">
+        <div class="card glass">
+          <h2>Реферальная ссылка</h2>
+          <div id="ref-link" class="mono link">-</div>
+          <div class="row">
+            <button id="btn-copy-ref" class="btn" type="button">Скопировать</button>
+            <button id="btn-open-ref" class="btn btn--ghost" type="button">Открыть</button>
           </div>
+          <p id="ref-extra" class="muted"></p>
+        </div>
 
-          <div class="card">
-            <div class="card__title">Промокод</div>
-            <div class="formrow">
-              <input id="promo-input" class="input" placeholder="Введите промокод" />
-              <button id="promo-apply" class="btn btn--accent" type="button">Применить</button>
-            </div>
-            <div id="promo-hint" class="hint"></div>
+        <div class="card glass">
+          <h2>Вывод реферального баланса</h2>
+          <div class="row">
+            <input id="withdraw-amount" class="input" inputmode="numeric" placeholder="Сумма (минимум 500 ₽)" />
           </div>
-
-          <div class="card">
-            <div class="card__title">Пополнение</div>
-
-            <div class="formrow">
-              <input id="topup-input" class="input" placeholder="Сумма, ₽ (например 100)" inputmode="numeric" />
-            </div>
-
-            <div class="seg" role="tablist" aria-label="Способ оплаты">
-              <button id="pm-card" class="seg__btn seg__btn--active" type="button" role="tab" aria-selected="true">
-                <span class="seg__ico" aria-hidden="true">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2H3V7Z"></path>
-                    <path d="M3 9h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                    <path d="M7 15h4"></path>
-                  </svg>
-                </span>
-                Карта
-              </button>
-
-              <button id="pm-sbp" class="seg__btn" type="button" role="tab" aria-selected="false">
-                <span class="seg__ico" aria-hidden="true">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M4 4h6v6H4V4Z"></path>
-                    <path d="M14 4h6v6h-6V4Z"></path>
-                    <path d="M4 14h6v6H4v-6Z"></path>
-                    <path d="M14 14h2v2h-2v-2Z"></path>
-                    <path d="M18 14h2v6h-6v-2"></path>
-                    <path d="M12 12h10"></path>
-                  </svg>
-                </span>
-                СБП
-              </button>
-
-              <button id="pm-crypto" class="seg__btn" type="button" role="tab" aria-selected="false">
-                <span class="seg__ico" aria-hidden="true">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9Z"></path>
-                    <path d="M9.5 8.2h4.1a2.1 2.1 0 0 1 0 4.2H9.5V8.2Z"></path>
-                    <path d="M9.5 12.4h4.6a2.2 2.2 0 0 1 0 4.4H9.5v-4.4Z"></path>
-                    <path d="M11 7v10"></path>
-                  </svg>
-                </span>
-                Crypto
-              </button>
-            </div>
-
-            <div class="paybar">
-              <button id="topup-pay" class="btn btn--accent paybar__btn" type="button">Оплатить</button>
-              <div id="topup-method-hint" class="paybar__hint">Выбрано: Карта</div>
-            </div>
-
-            <div id="topup-hint" class="hint"></div>
-            <div class="hint hint--box">
-              После оплаты: откройте «Транзакции» → нажмите <b>«Проверить платежи»</b>.
-            </div>
+          <div class="row">
+            <input id="withdraw-method" class="input" placeholder="Реквизиты: карта/СБП/USDT TRC20" />
           </div>
-
-          <div class="menucard">
-            <div class="menucard__title">Подменю</div>
-
-            <button class="row" data-open="transactions" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M6 2h9l3 3v17H6V2Z"></path><path d="M9 11h6"></path><path d="M9 15h6"></path><path d="M9 7h3"></path></svg>
-              </span>
-              <span class="row__txt">Транзакции</span>
-              <span class="row__chev">›</span>
-            </button>
-
-            <button class="row" data-open="referral" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M20 12v10H4V12"></path><path d="M22 7H2v5h20V7Z"></path><path d="M12 22V7"></path></svg>
-              </span>
-              <span class="row__txt">Реферальная программа</span>
-              <span class="row__chev">›</span>
-            </button>
-
-            <button class="row" data-open="support" type="button">
-              <span class="row__ico">
-                <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path></svg>
-              </span>
-              <span class="row__txt">Поддержка</span>
-              <span class="row__chev">›</span>
-            </button>
+          <div class="row">
+            <button id="btn-withdraw-create" class="btn" type="button">Вывести</button>
           </div>
-        </div>
-      </section>
-
-      <section class="view" id="view-transactions" aria-label="Транзакции">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Транзакции</div>
-          <div class="viewhead__spacer"></div>
+          <p id="withdraw-hint" class="muted"></p>
         </div>
 
-        <div class="panel">
-          <div class="card">
-            <div class="card__title">Проверка платежей</div>
-            <div class="muted">Если вы только что оплатили — вернитесь сюда и нажмите кнопку ниже.</div>
-
-            <div class="btnrow">
-              <button id="btn-check-payments" class="btn btn--ghost" type="button">Проверить платежи</button>
-              <button id="btn-refresh-tx" class="btn btn--ghost" type="button">Обновить список</button>
-            </div>
-
-            <div id="check-hint" class="hint"></div>
-          </div>
-
-          <div class="card">
-            <div class="card__title">Последние операции</div>
-            <div id="tx-list" class="muted">Загрузка…</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="view" id="view-referral" aria-label="Реферальная программа">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Реферальная программа</div>
-          <div class="viewhead__spacer"></div>
-        </div>
-
-        <div class="panel">
-          <div class="card">
-            <div class="refbox">
-              <div class="refbox__line"><b>+10 ₽</b> вам и другу за регистрацию</div>
-              <div class="refbox__line"><b>+20%</b> с каждого пополнения друга</div>
-            </div>
-
-            <div class="linkbox">
-              <div class="linkbox__title">Ваша реф-ссылка</div>
-              <div id="ref-link" class="mono linkbox__url">—</div>
-              <div class="btnrow">
-                <button id="btn-copy-ref" class="btn btn--ghost btn--small" type="button">Скопировать</button>
-                <button id="btn-open-ref" class="btn btn--ghost btn--small" type="button">Открыть</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="view" id="view-setup" aria-label="Установка и настройка">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Установка</div>
-          <div class="viewhead__spacer"></div>
-        </div>
-
-        <div class="panel">
-          <div class="card">
-            <div class="card__title">Инструкция</div>
-            <div id="setup-link" class="mono linkbox__url">—</div>
-            <div class="btnrow">
-              <button id="btn-copy-setup" class="btn btn--ghost btn--small" type="button">Скопировать</button>
-              <button id="btn-open-setup" class="btn btn--ghost btn--small" type="button">Открыть</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="view" id="view-support" aria-label="Поддержка">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Поддержка</div>
-          <div class="viewhead__spacer"></div>
-        </div>
-
-        <div class="panel">
-          <div class="card">
-            <div class="muted">
-              Telegram: <span id="support-tg" class="linklike">@LunetVPNSupportBot</span><br/>
-              Email: <span id="support-mail" class="linklike">support@lunet.ru</span>
-            </div>
-
-            <div class="btnrow">
-              <button id="btn-open-support-tg" class="btn btn--ghost" type="button">Открыть Telegram</button>
-              <button id="btn-copy-support-mail" class="btn btn--ghost" type="button">Скопировать email</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="view" id="view-tariffs" aria-label="Тарифы">
-        <div class="viewhead">
-          <button class="back" data-back type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
-          </button>
-          <div class="viewhead__title">Тарифы</div>
-          <div class="viewhead__spacer"></div>
-        </div>
-
-        <div class="panel">
-          <div class="card">
-            <div class="card__title">Статус</div>
-            <div id="status-text" class="muted">Загрузка…</div>
-          </div>
-
-          <div class="card" id="plans-card">
-            <div class="card__title">Тарифы</div>
-            <div id="plans-list" class="muted">Загрузка…</div>
+        <div class="card glass">
+          <h2>История заявок на вывод</h2>
+          <div id="withdraw-list" class="list">Загрузка...</div>
+          <div class="row">
+            <button id="btn-more-withdraw" class="btn btn--ghost" type="button" style="display:none;">Загрузить еще</button>
           </div>
         </div>
       </section>
     </main>
 
-    <nav class="bottom" aria-label="Навигация">
+    <nav class="bottom-nav glass-nav">
       <button class="tab tab--active" data-tab="home" type="button">
-        <span class="tab__ico"><svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"></path></svg></span>
-        <span class="tab__txt">Главная</span>
+        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1Z"/></svg></span>
+        <span class="tab__label">Главная</span>
       </button>
-
-      <button class="tab" data-tab="tariffs" type="button">
-        <span class="tab__ico"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.7H21l-5.4 3.9L17.8 19 12 15.2 6.2 19l2.2-6.4L3 8.7h6.8L12 2Z"></path></svg></span>
-        <span class="tab__txt">Тарифы</span>
+      <button class="tab" data-tab="plans" type="button">
+        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 9.2 8.8 2 10l5.3 5-1.3 7 6-3.3 6 3.3-1.3-7 5.3-5-7.2-1.2Z"/></svg></span>
+        <span class="tab__label">Тарифы</span>
       </button>
-
+      <button class="tab" data-tab="devices" type="button">
+        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
+        <span class="tab__label">Устройства</span>
+      </button>
       <button class="tab" data-tab="profile" type="button">
-        <span class="tab__ico"><svg viewBox="0 0 24 24"><path d="M12 12a4.2 4.2 0 1 0-4.2-4.2A4.2 4.2 0 0 0 12 12Z"></path><path d="M4 20c1.8-4 5.1-6 8-6s6.2 2 8 6"></path></svg></span>
-        <span class="tab__txt">Профиль</span>
+        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.8-4 4.5-6 8-6s6.2 2 8 6"/></svg></span>
+        <span class="tab__label">Профиль</span>
       </button>
     </nav>
 
-    <div id="message" class="toast" role="status" aria-live="polite"></div>
+    <div id="message" class="toast"></div>
+
+    <div id="app-loader" class="app-loader">
+      <div class="loader-card glass">
+        <div class="loader-ring"></div>
+        <div class="loader-title">Lunet</div>
+        <div id="loader-text" class="loader-text">Загружаем данные...</div>
+      </div>
+    </div>
   </div>
 
-  <script src="app.js?v=301"></script>
+  <script src="app.js?v=409"></script>
 </body>
 </html>
+

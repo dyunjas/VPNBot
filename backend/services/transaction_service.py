@@ -45,13 +45,15 @@ class TransactionService:
         txs = await self.tx_repo.list_by_user_id(user_id)
 
         ps = (payment_system or "").lower().strip()
-        candidates = [
-            t for t in txs
-            if (not t.paid) and (str(t.payment_system).lower() == ps)
-        ]
+        candidates = [t for t in txs if (not t.paid) and (str(t.payment_system).lower().strip() == ps)]
 
-        candidates.sort(
-            key=lambda t: t.created_at if t.created_at is not None else datetime.min.replace(tzinfo=timezone.utc),
-            reverse=True,
-        )
+        def _sort_key(tx: Transaction) -> float:
+            dt = tx.created_at
+            if dt is None:
+                return 0.0
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.timestamp()
+
+        candidates.sort(key=_sort_key, reverse=True)
         return candidates[0] if candidates else None

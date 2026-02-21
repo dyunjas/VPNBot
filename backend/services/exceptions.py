@@ -10,6 +10,9 @@ class SubscriptionNotFound(ServiceError):
 class PlanNotFound(ServiceError):
     pass
 
+class TooEarlyToRenew(Exception):
+    pass
+
 class InsufficientBalance(ServiceError):
     pass
 
@@ -43,17 +46,25 @@ class PromocodeExhausted(ServiceError):
 class ServerNotFound(ServiceError):
     pass
 
-class EmailNotFound(ServiceError):
+
+class WithdrawalNotFound(Exception):
     pass
 
-class EmailVerificationNotFound(ServiceError):
+
+class WithdrawalNotPending(Exception):
     pass
 
-class EmailVerificationExpired(ServiceError):
+
+class NotEnoughReferralBalance(Exception):
     pass
 
-class InvalidVerificationCode(Exception):
+class AdminPermissionDenied(Exception):
     pass
 
-class TooManyAttempts(Exception):
+
+class DeviceLimitReached(Exception):
     pass
+
+class DeviceNotFound(Exception):
+    pass
+

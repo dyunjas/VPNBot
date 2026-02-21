@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Redirect</title>
+</head>
+<body>
+  <script>
+    const token = localStorage.getItem("admin_access_token");
+    if (token) {
+      window.location.replace("/admin/dashboard.html");
+    } else {
+      window.location.replace("/admin/login.html");
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

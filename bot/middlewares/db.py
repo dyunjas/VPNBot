@@ -9,7 +9,8 @@ from typing import (
 from backend.database.session import async_session
 from backend.services import (
     UserService, TransactionService, BillingService, 
-    SubscriptionService, VPNService, PromoService
+    SubscriptionService, VPNService, PromoService,
+    ReferralService, WithdrawalService, AdminService, DeviceService
 )
 
 from backend.core.config import settings
@@ -31,6 +32,10 @@ class DBSessionMiddleware(BaseMiddleware):
             data["subscription_service"] = SubscriptionService(session)
             data["vpn_service"] = VPNService(session, xray_auth_token=settings.XRAY_AUTH)
             data["promo_service"] = PromoService(session)
+            data["referral_service"] = ReferralService(session)
+            data["withdrawal_service"] = WithdrawalService(session)
+            data["admin_service"] = AdminService(session)
+            data["device_service"] = DeviceService(session)
 
             try:
                 result = await handler(event, data)

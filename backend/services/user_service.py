@@ -3,6 +3,7 @@ from datetime import datetime, timezone, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.database.models import User
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import UserNotFound, InsufficientBalance
 
@@ -58,6 +59,7 @@ class UserService:
             raise UserNotFound(f"User with id:{user_id} not found")
         await self.user_repo.add_balance(user_id=user_id, amount=amount)
         await self.session.commit()
+        await self.session.refresh(user)
         return user.balance
 
     async def sub_balance(self, user_id: int, amount: int) -> int:
@@ -66,8 +68,9 @@ class UserService:
             raise UserNotFound(f"User with id:{user_id} not found")
         if user.balance < amount:
             raise InsufficientBalance("Insufficient balance")
-        await self.user_repo.sub_balance(user_id, amount)
+        await self.user_repo.sub_balance(user_id=user_id, amount=amount)
         await self.session.commit()
+        await self.session.refresh(user)
         return user.balance
 
     async def get_subscription_token(self, user_id: int) -> str:
@@ -103,4 +106,7 @@ class UserService:
         await self.user_repo.set_referrer(user_id=user_id, referrer_id=referrer_id)
         await self.session.commit()
         return True
+    
+    async def get_all_users(self) -> list[User]:
+        return await self.user_repo.get_all_users()
         

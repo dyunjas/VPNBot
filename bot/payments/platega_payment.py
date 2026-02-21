@@ -8,7 +8,7 @@ from backend.images import MAIN_MENU_IMG
 from bot.payments.keyboards import back_profile_kb, payment_menu_kb
 from backend.states import PaymentStates
 from backend.core.logger_config import logger
-from backend.services import BillingService, UserService
+from backend.services import BillingService, UserService, ReferralService
 from backend.services.exceptions import UserNotFound, PaymentNotConfirmed, TransactionNotFound
 
 router = Router()
@@ -106,6 +106,7 @@ async def check_platega_payment_clb(
     state: FSMContext,
     billing_service: BillingService,
     user_service: UserService,
+    referral_service: ReferralService,
 ):
     transaction_id = callback.data.split(":", 1)[1]
 
@@ -125,34 +126,35 @@ async def check_platega_payment_clb(
         )
         return
 
-    amount_display = getattr(tx, "amount", 0)
+    amount_display = int(getattr(tx, "amount", 0) or 0)
 
     try:
         tx_user_id = getattr(tx, "user_id", None)
-        if tx_user_id is not None:
+        if tx_user_id is not None and amount_display > 0:
             payer = await user_service.get_by_id(int(tx_user_id))
 
-            referrer_id = getattr(payer, "referrer_id", None)
-            if referrer_id:
-                bonus = int(round(float(amount_display) * 0.20))
+            bonus = await referral_service.reward_from_purchase(
+                user_id=payer.id,
+                purchase_amount=amount_display,
+            )
 
-                if bonus > 0:
-                    await user_service.add_balance(int(referrer_id), bonus)
+            if bonus > 0 and payer.referrer_id:
+                try:
+                    referrer = await user_service.get_by_id(int(payer.referrer_id))
+                    await callback.bot.send_message(
+                        chat_id=referrer.tg_id,
+                        text=(
+                            "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> Бонус за реферала!\n"
+                            f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Начислено:</b> {bonus} RUB\n"
+                            f"<b><tg-emoji emoji-id='5769403330761593044'>👛</tg-emoji> Платёж реферала:</b> {amount_display} RUB"
+                        ),
+                        parse_mode="HTML"
+                    )
+                except Exception:
+                    pass
 
-                    try:
-                        referrer = await user_service.get_by_id(int(referrer_id))
-                        await callback.bot.send_message(
-                            chat_id=referrer.tg_id,
-                            text=(
-                                "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> Бонус за реферала!\n"
-                                f"<b>Начислено:</b> {bonus} RUB (20% от платежа реферала)"
-                            ),
-                            parse_mode="HTML"
-                        )
-                    except Exception:
-                        pass
     except Exception as e:
-        logger.exception(f"[REF] Failed to начислить 20% referrer for tx={transaction_id}: {e}")
+        logger.exception(f"[REF] Failed to increase balance referrer for tx={transaction_id}: {e}")
 
     await callback.message.edit_media(
         InputMediaPhoto(

@@ -9,7 +9,7 @@ from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import (
     UserNotFound,
     SubscriptionNotFound,
-    PlanNotFound,
+    PlanNotFound, TooEarlyToRenew
 )
 
 
@@ -32,10 +32,16 @@ class SubscriptionService:
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
-        return await self.sub_repo.get_active_with_plan(
+
+        sub = await self.sub_repo.get_active_with_plan(
             user_id,
             now=datetime.now(timezone.utc),
         )
+
+        if not sub:
+            raise SubscriptionNotFound("Active subscription not found")
+
+        return sub
 
     async def activate_subscription(
         self,
@@ -53,6 +59,20 @@ class SubscriptionService:
         period = timedelta(days=plan.period_days)
 
         sub = await self.sub_repo.get_by_id_for_update(user_id)
+
+        if sub:
+            end = sub.current_period_end
+
+            if end and end.tzinfo is None:
+                end = end.replace(tzinfo=timezone.utc)
+
+            if end and end > now:
+                time_left = end - now
+
+                if time_left > timedelta(days=3):
+                    raise TooEarlyToRenew(
+                        "Subscription can ony be renewed within 3 days before expiration"
+                    )
 
         if not sub:
             sub = await self.sub_repo.create(
@@ -94,6 +114,70 @@ class SubscriptionService:
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user.id)
 
+        return sub
+    
+    async def renew_subscription(
+        self, 
+        *,
+        user_id: int,
+        duration_hours: int
+    ):
+        if duration_hours <= 0:
+            raise ValueError("Duration hours must be > 0")
+        
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+        
+        now = datetime.now(timezone.utc)
+        delta = timedelta(hours=duration_hours)
+
+        sub = await self.sub_repo.get_by_id_for_update(user_id)
+
+        if not sub:
+            default_plan = await self.sub_repo.get_plan_by_id(1)
+            if not default_plan:
+                raise PlanNotFound("Default plan not found")
+            
+            sub = await self.sub_repo.create(
+                user_id=user_id,
+                plan_id=default_plan.id,
+                status=SubStatus.active,
+                auto_renew=False,
+                current_period_start=now,
+                current_period_end=now + delta,
+                next_renewal_at=now + delta
+            )
+
+            await self.sub_repo.add_gb_left(sub, Decimal(default_plan.gb_limit))
+        
+        else:
+            end = sub.current_period_end
+
+            if end and end.tzinfo is None:
+                end = end.replace(tzinfo=timezone.utc)
+
+            if end and end > now:
+                start = sub.current_period_start
+                new_end = end + delta
+            else:
+                start = now
+                new_end = now + delta
+            
+            await self.sub_repo.set_plan_and_period(
+                sub,
+                plan_id=sub.plan_id,
+                status=SubStatus.active,
+                auto_renew=sub.auto_renew,
+                current_period_start=start,
+                current_period_end=new_end,
+                next_renewal_at=new_end,
+            )
+        
+        if not user.subscription_token:
+            await self.user_repo.set_subscription_token(user_id=user_id)
+
+        await self.session.commit()
         return sub
 
     async def add_traffic(self, user_id: int, gb: Decimal):

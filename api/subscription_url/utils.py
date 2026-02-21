@@ -1,5 +1,6 @@
-import base64
+﻿import base64
 from datetime import datetime, timezone
+
 from fastapi import Response
 
 
@@ -7,6 +8,7 @@ def _to_unix(dt: datetime) -> int:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return int(dt.timestamp())
+
 
 def _build_expire_only_header(expire_dt: datetime | None) -> dict[str, str]:
     if not expire_dt:
@@ -29,6 +31,12 @@ def _profile_web_page(url: str) -> dict[str, str]:
     return {"profile-web-page-url": url}
 
 
+def _b64_response(lines: list[str], headers: dict[str, str] | None = None) -> Response:
+    plain = "\n".join(lines)
+    b64 = base64.b64encode(plain.encode("utf-8")).decode("ascii")
+    return Response(content=b64, media_type="text/plain; charset=utf-8", headers=headers or {})
+
+
 def expired_subscription_response(headers: dict[str, str] | None = None) -> Response:
     fake_uris = [
         (
@@ -39,7 +47,7 @@ def expired_subscription_response(headers: dict[str, str] | None = None) -> Resp
         (
             "vless://00000000-0000-0000-0000-000000000002@expired2:443"
             "?type=tcp&encryption=none"
-            "#⚡️ Продлите подписку"
+            "#⚠️ Продлите подписку"
         ),
         (
             "vless://00000000-0000-0000-0000-000000000003@expired3:443"
@@ -47,12 +55,25 @@ def expired_subscription_response(headers: dict[str, str] | None = None) -> Resp
             "#🌙 t.me/LunetVpnBot"
         ),
     ]
+    return _b64_response(fake_uris, headers=headers)
 
-    plain = "\n".join(fake_uris)
-    b64 = base64.b64encode(plain.encode("utf-8")).decode("ascii")
 
-    return Response(
-        content=b64,
-        media_type="text/plain; charset=utf-8",
-        headers=headers or {},
-    )
+def device_limit_response(headers: dict[str, str] | None = None) -> Response:
+    fake_uris = [
+        (
+            "vless://00000000-0000-0000-0000-000000000011@limit1:443"
+            "?type=tcp&encryption=none"
+            "#🚫 Лимит устройств исчерпан"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000012@limit2:443"
+            "?type=tcp&encryption=none"
+            "#🧹 Удалите устройство в боте"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000013@limit3:443"
+            "?type=tcp&encryption=none"
+            "#🌙 t.me/LunetVpnBot"
+        ),
+    ]
+    return _b64_response(fake_uris, headers=headers)

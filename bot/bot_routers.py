@@ -9,7 +9,9 @@ from bot.navigation.purchase import purchase
 from bot.payments import add_funds, platega_payment
 from bot.navigation.additional_menu.transaction import transaction
 from bot.navigation.additional_menu.referral import referral
+from bot.navigation.additional_menu.referral import withdraw_balance
 from bot.vpn_subscription import subscription_url
+from bot.vpn_subscription import devices
 from bot.vpn_subscription.reissue_keys import reissue_keys
 from bot.payments import cryptobot_payment
 
@@ -26,5 +28,7 @@ router.include_router(platega_payment.router)
 router.include_router(cryptobot_payment.router)
 router.include_router(transaction.router)
 router.include_router(referral.router)
+router.include_router(withdraw_balance.router)
 router.include_router(subscription_url.router)
+router.include_router(devices.router)
 router.include_router(reissue_keys.router)

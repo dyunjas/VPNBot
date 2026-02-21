@@ -1,4 +1,4 @@
-# handlers/start.py (или где у тебя start/main_menu)
+# handlers/start.py
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.filters.command import CommandObject
@@ -7,6 +7,7 @@ from aiogram.types import CallbackQuery, Message, InputMediaPhoto
 from bot.navigation.main_menu.keyboards import main_menu_kb
 
 from backend.services import UserService
+from backend.services.referral_service import ReferralService
 from backend.services.exceptions import UserNotFound
 
 from backend.images import MAIN_MENU_IMG
@@ -19,13 +20,21 @@ async def start_cmd(
     message: Message,
     command: CommandObject,
     user_service: UserService,
-    user,
-    is_new_user: bool,
+    referral_service: ReferralService,
 ):
     tg_id = message.from_user.id
+    
+    try:
+        user = await user_service.get_by_tg_id(tg_id)
+    except UserNotFound:
+        await message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
+        )
+        return
+    
     args = (command.args or "").strip()
 
-    if is_new_user and args.startswith("ref_"):
+    if args.startswith("ref_"):
         ref_str = args.split("_", 1)[1]
 
         if ref_str.isdigit():
@@ -35,16 +44,12 @@ async def start_cmd(
                 try:
                     referrer = await user_service.get_by_tg_id(ref_tg_id)
 
-                    linked = await user_service.set_referrer(
+                    linked = await referral_service.attach_referrer(
                         user_id=user.id,
                         referrer_id=referrer.id,
-                        only_id_empty=True,
                     )
 
                     if linked:
-                        await user_service.add_balance(referrer.id, 10)
-                        await user_service.add_balance(user.id, 10)
-
                         referral_name = (
                             f"@{message.from_user.username}"
                             if message.from_user.username
@@ -56,9 +61,10 @@ async def start_cmd(
                             text=(
                                 "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> У вас новый реферал!\n"
                                 f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> {referral_name}\n"
-                                "<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Начислено: 10 RUB"
+                                "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> Начислено: 3 дня VPN"
                             )
                         )
+
                 except UserNotFound:
                     pass
 

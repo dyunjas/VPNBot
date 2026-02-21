@@ -4,10 +4,15 @@ from backend.services.billing_service import BillingService
 from backend.services.subscription_service import SubscriptionService
 from backend.services.vpn_service import VPNService
 from backend.services.promo_service import PromoService
+from backend.services.referral_service import ReferralService
+from backend.services.withdrawal_service import WithdrawalService
+from backend.services.admin_service import AdminService
+from backend.services.device_service import DeviceService
 
 
 
 __all__ = [
     "UserService", "TransactionService", "BillingService",
-    "SubscriptionService", "VPNService", "PromoService"
+    "SubscriptionService", "VPNService", "PromoService",
+    "ReferralService", "WithdrawalService", "AdminService", "DeviceService"
     ]

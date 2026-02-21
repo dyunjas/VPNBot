@@ -6,11 +6,11 @@ from backend.database.session import (
 
 from backend.database.models import (
     User, Server, Key, SubscriptionPlan, 
-    Subscription, Transaction
+    Subscription, Transaction, UserDevice
     )
 
 
 __all__ = [
-    "User", "Server", "Key", "SubscriptionPlan", "Subscription", "Transaction",
+    "User", "Server", "Key", "SubscriptionPlan", "Subscription", "Transaction", "UserDevice",
     'async_session', 'engine', 'init_db'
     ]

@@ -1,5 +1,5 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import WebAppInfo
+from aiogram.types import WebAppInfo, InlineKeyboardButton
 
 def main_menu_kb():
     builder = InlineKeyboardBuilder()

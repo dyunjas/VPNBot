@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database.models import User, Key
+from backend.database.models import User, Key, ReferralAccount
 
 import uuid
 
@@ -56,19 +56,6 @@ class UserRepository:
             update(User)
             .where(User.id == user_id)
             .values(username=username)
-        )
-
-    async def link_tg(
-            self,
-            *,
-            user_id: int,
-            tg_id: int,
-            username: str | None = None
-    ) -> None:
-        await self.session.execute(
-            update(User)
-            .where(User.id == user_id)
-            .values(tg_id=tg_id, username=username)
         )
     
     async def add_balance(
@@ -144,3 +131,7 @@ class UserRepository:
             .where(User.id == user_id)
             .values(referrer_id=referrer_id)
         )
+
+    async def get_all_users(self):
+        res = await self.session.execute(select(User))
+        return list(res.scalars().all())

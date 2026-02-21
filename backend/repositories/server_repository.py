@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Tuple
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models import Server, Key, KeyStatus
@@ -27,7 +27,7 @@ class ServerRepository:
     async def get_load_by_server_id(self, server_id: int) -> tuple[int, int]:
         stmt = (
             select(
-                func.sum(func.case((Key.status == KeyStatus.active, 1), else_=0)).label("active_cnt"),
+                func.sum(case((Key.status == KeyStatus.active, 1), else_=0)).label("active_cnt"),
                 func.count(Key.id).label("total_cnt"),
             )
             .where(Key.server_id == server_id)
@@ -42,7 +42,7 @@ class ServerRepository:
         subq = (
             select(
                 Key.server_id.label("sid"),
-                func.sum(func.case((Key.status == KeyStatus.active, 1), else_=0)).label("active_cnt"),
+                func.sum(case((Key.status == KeyStatus.active, 1), else_=0)).label("active_cnt"),
                 func.count(Key.id).label("total_cnt"),
             )
             .group_by(Key.server_id)

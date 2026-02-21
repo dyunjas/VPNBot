@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_UP
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,6 +17,8 @@ from backend.services.exceptions import (
     TransactionNotFound,
     InsufficientBalance,
     PaymentNotConfirmed,
+    SubscriptionNotFound,
+    TooEarlyToRenew,
 )
 
 USDT_RATE = Decimal("79")
@@ -170,6 +172,20 @@ class BillingService:
         auto_renew: bool = True,
     ):
         plan = await self.sub_service.get_plan(plan_id)
+
+        now = datetime.now(timezone.utc)
+        try:
+            current_sub = await self.sub_service.get_active_subscription(user_id)
+            end = current_sub.current_period_end
+            if end and end.tzinfo is None:
+                end = end.replace(tzinfo=timezone.utc)
+
+            if end and end > now and (end - now) > timedelta(days=3):
+                raise TooEarlyToRenew(
+                    "Subscription can ony be renewed within 3 days before expiration"
+                )
+        except SubscriptionNotFound:
+            pass
 
         await self.charge_balance(user_id=user_id, amount=plan.price)
 

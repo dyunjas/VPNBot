@@ -1,11 +1,13 @@
+﻿from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import InlineKeyboardButton
 
-def back_keys_kb(url):
+
+def back_keys_kb(url: str):
     builder = InlineKeyboardBuilder()
 
-    builder.add(InlineKeyboardButton(text="Копировать ссылку", copy_text={"text": f"{url}"}))
+    builder.add(InlineKeyboardButton(text="Копировать ссылку", copy_text={"text": url}))
     builder.button(text="🔄 Перевыпустить ключи", callback_data="reissue_keys")
+    builder.button(text="📱 Устройства", callback_data="subscription_devices")
     builder.button(text="⬅️ Назад", callback_data="main_menu")
 
     builder.adjust(1)
