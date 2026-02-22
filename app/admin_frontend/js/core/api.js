@@ -88,7 +88,10 @@ async function api(path, options = {}) {
   }
 
   if (!res.ok) {
-    const err = data.detail || `HTTP ${res.status}`;
+    let err = data.detail || `HTTP ${res.status}`;
+    if (res.status === 413 || String(err).toLowerCase().includes("request entity too large")) {
+      err = "Файл слишком большой для загрузки. Уменьшите размер изображения или увеличьте лимит client_max_body_size в nginx.";
+    }
     showToast(err, "error");
     throw new Error(err);
   }

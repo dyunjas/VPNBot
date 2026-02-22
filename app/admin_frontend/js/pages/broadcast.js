@@ -1,4 +1,7 @@
 ﻿document.addEventListener("DOMContentLoaded", async () => {
+  const MAX_IMAGE_SIZE_MB = 8;
+  const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+
   ensureAuthOrRedirect();
   renderShell({
     activeKey: "broadcast",
@@ -37,7 +40,11 @@
     form.set("text", text);
     form.set("parse_mode", q("parse_mode").value);
     form.set("include_banned", String(q("include_banned").checked));
+
     const file = q("image").files && q("image").files[0] ? q("image").files[0] : null;
+    if (file && file.size > MAX_IMAGE_SIZE_BYTES) {
+      return alert(`Изображение слишком большое. Максимум: ${MAX_IMAGE_SIZE_MB} МБ.`);
+    }
     if (file) form.set("image", file);
 
     await withButtonLoading(e.currentTarget, async () => {

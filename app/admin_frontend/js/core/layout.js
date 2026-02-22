@@ -181,7 +181,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
       <aside class="sidebar">
         <div class="logo">
           <div class="logo-badge">
-            <img src="/admin/assets/moon.svg?v=25" alt="Lunet" />
+            <img src="/admin/assets/moon.svg?v=26" alt="Lunet" />
           </div>
           <div class="logo-title">Lunet Admin</div>
         </div>
@@ -232,6 +232,7 @@ function renderPager(meta, prevBtn, nextBtn, label) {
   prevBtn.disabled = meta.page <= 1;
   nextBtn.disabled = meta.page >= meta.pages;
 }
+
 
 
 
