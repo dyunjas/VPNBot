@@ -9499,3 +9499,102 @@ client_session: <aiohttp.client.ClientSession object at 0x000002419C54B110>
 [2026-02-22 14:43:30] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-02-22 14:43:30] [INFO] root: Bot stopped
 [2026-02-22 14:43:30] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-02-22 14:51:31] [INFO] root: Settings successfully loaded from .env
+[2026-02-22 14:51:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-22 14:51:32] [INFO] root: Database tables initialized
+[2026-02-22 14:51:32] [INFO] root: Database connection successful
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_field with data[42:61]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_value with data[63:85]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[89:2344]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_field with data[2388:2407]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_value with data[2409:2437]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[2441:2445]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_field with data[2489:2508]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_value with data[2510:2542]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[2546:2551]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_field with data[2595:2614]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_value with data[2616:2701]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_field with data[2703:2715]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_value with data[2717:2726]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[2730:16384]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:81920]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:83101]
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-22 14:52:07] [DEBUG] python_multipart.multipart: Calling on_end with no data
+[2026-02-22 18:08:08] [INFO] root: Settings successfully loaded from .env
+[2026-02-22 18:08:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-22 18:08:11] [INFO] root: Database tables initialized
+[2026-02-22 18:08:11] [INFO] root: Database connection successful
+[2026-02-22 18:08:11] [INFO] root: Bot started
+[2026-02-22 18:08:11] [INFO] aiogram.dispatcher: Start polling
+[2026-02-22 18:08:12] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-02-22 18:08:33] [INFO] aiogram.event: Update id=891134147 is handled. Duration 317 ms by bot id=7557954606
+[2026-02-22 18:08:35] [INFO] aiogram.event: Update id=891134148 is handled. Duration 357 ms by bot id=7557954606
+[2026-02-22 18:08:40] [INFO] aiogram.event: Update id=891134149 is handled. Duration 293 ms by bot id=7557954606
+[2026-02-22 18:08:43] [INFO] aiogram.event: Update id=891134150 is handled. Duration 305 ms by bot id=7557954606
+[2026-02-22 18:08:46] [INFO] aiogram.event: Update id=891134151 is handled. Duration 289 ms by bot id=7557954606
+[2026-02-22 18:08:48] [INFO] aiogram.event: Update id=891134152 is handled. Duration 1232 ms by bot id=7557954606
+[2026-02-22 18:08:55] [INFO] aiogram.event: Update id=891134153 is handled. Duration 287 ms by bot id=7557954606
+[2026-02-22 18:08:57] [INFO] aiogram.event: Update id=891134154 is handled. Duration 321 ms by bot id=7557954606
+[2026-02-22 18:09:01] [INFO] aiogram.event: Update id=891134155 is handled. Duration 229 ms by bot id=7557954606
+[2026-02-22 18:09:02] [INFO] aiogram.event: Update id=891134156 is handled. Duration 317 ms by bot id=7557954606
+[2026-02-22 18:09:03] [INFO] aiogram.event: Update id=891134157 is handled. Duration 259 ms by bot id=7557954606
+[2026-02-22 18:09:05] [INFO] aiogram.event: Update id=891134158 is handled. Duration 378 ms by bot id=7557954606
+[2026-02-22 18:09:10] [INFO] aiogram.event: Update id=891134159 is handled. Duration 170 ms by bot id=7557954606
+[2026-02-22 18:09:11] [INFO] aiogram.event: Update id=891134160 is handled. Duration 288 ms by bot id=7557954606
+[2026-02-22 18:09:52] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-22 18:09:52] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-22 18:09:52] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-02-22 18:09:52] [INFO] root: Bot stopped
+[2026-02-22 18:09:52] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-02-22 18:09:57] [INFO] root: Settings successfully loaded from .env
+[2026-02-22 18:09:58] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-22 18:09:58] [INFO] root: Database tables initialized
+[2026-02-22 18:09:58] [INFO] root: Database connection successful
+[2026-02-22 18:09:58] [INFO] root: Bot started
+[2026-02-22 18:09:58] [INFO] aiogram.dispatcher: Start polling
+[2026-02-22 18:09:59] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-02-22 18:10:00] [INFO] aiogram.event: Update id=891134161 is handled. Duration 379 ms by bot id=7557954606
+[2026-02-22 18:10:01] [INFO] aiogram.event: Update id=891134162 is handled. Duration 333 ms by bot id=7557954606
+[2026-02-22 18:10:06] [INFO] aiogram.event: Update id=891134163 is handled. Duration 267 ms by bot id=7557954606
+[2026-02-22 18:10:12] [INFO] aiogram.event: Update id=891134164 is handled. Duration 323 ms by bot id=7557954606
+[2026-02-22 18:10:17] [INFO] aiogram.event: Update id=891134165 is handled. Duration 283 ms by bot id=7557954606
+[2026-02-22 18:10:19] [INFO] aiogram.event: Update id=891134166 is handled. Duration 283 ms by bot id=7557954606
+[2026-02-22 18:10:22] [INFO] aiogram.event: Update id=891134167 is handled. Duration 293 ms by bot id=7557954606
+[2026-02-22 18:10:25] [INFO] aiogram.event: Update id=891134168 is handled. Duration 316 ms by bot id=7557954606
+[2026-02-22 18:10:28] [INFO] aiogram.dispatcher: Polling stopped
+[2026-02-22 18:10:28] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-02-22 18:10:28] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-02-22 18:10:29] [INFO] root: Bot stopped
+[2026-02-22 18:10:29] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

@@ -84,6 +84,15 @@ class UserService:
             return token
         return user.subscription_token
 
+    async def reissue_subscription_token(self, user_id: int) -> str:
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+
+        token = await self.user_repo.reissue_subscription_token(user_id=user_id)
+        await self.session.commit()
+        return token
+
     async def set_referrer(
         self,
         *,

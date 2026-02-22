@@ -101,6 +101,22 @@ class UserRepository:
             .values(subscription_token=token)
         )
 
+    async def reissue_subscription_token(
+        self,
+        *,
+        user_id: int,
+        token: str | None = None,
+    ) -> str:
+        if token is None:
+            token = str(uuid.uuid4())
+
+        await self.session.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(subscription_token=token)
+        )
+        return token
+
     async def get_user_by_token(self, token: str) -> User | None:
         res = await self.session.execute(
             select(User).where(User.subscription_token == token)

@@ -178,7 +178,7 @@ async def subscription(
                     f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device.get('device_model') or '—'}</b>\n"
                     f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device.get('device_os') or '—'} / {device.get('os_version') or '—'}</b>\n"
                     f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%Y-%m-%d %H:%M:%S')}</b>\n\n"
-                    "Если это не вы, обратитесь в поддержку для перевыпуска VPN-ссылки."
+                    "Если это не вы, перевыпустите свою VPN-ссылку в меню <b>Подписка</b>."
                 )
                 await _safe_notify(user.tg_id, msg)
 
