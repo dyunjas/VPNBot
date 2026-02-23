@@ -142,6 +142,15 @@ function formatDate(iso) {
   return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("ru-RU");
 }
 
+function calcDaysLeft(endIso) {
+  if (!endIso) return 0;
+  const end = new Date(endIso);
+  if (Number.isNaN(end.getTime())) return 0;
+  const msLeft = end.getTime() - Date.now();
+  if (msLeft <= 0) return 0;
+  return Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+}
+
 function statusBadge(status) {
   const s = String(status || "").toLowerCase();
   if (s === "approved") return '<span class="badge badge--ok">Подтвержден</span>';
@@ -185,9 +194,10 @@ async function loadStatus() {
   const plan = data.plan || {};
   const sub = data.subscription || {};
   const usedDevices = Math.max((sub.devices_limit || 0) - (sub.devices_left || 0), 0);
+  const daysLeft = calcDaysLeft(sub.current_period_end);
 
-  $("sub-title").textContent = plan.name ? `Тариф: ${plan.name}` : "Подписка активна";
-  $("sub-meta").textContent = `До: ${formatDate(sub.current_period_end)}\nТрафик: Безлимит`;
+  $("sub-title").textContent = `Осталось дней: ${daysLeft}`;
+  $("sub-meta").textContent = `Действует до: ${formatDate(sub.current_period_end)}\nТрафик: Безлимит`;
   $("stat-keys").textContent = String(data.active_keys || 0);
   $("stat-devices").textContent = `${usedDevices}/${sub.devices_limit || 0}`;
 
@@ -610,7 +620,7 @@ async function bootstrap() {
       return;
     }
     setLoader(false);
-    toast(e.message || "������ ��������");
+    toast(e.message || "Ошибка загрузки");
   }
 }
 

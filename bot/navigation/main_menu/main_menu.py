@@ -21,6 +21,7 @@ async def start_cmd(
     command: CommandObject,
     user_service: UserService,
     referral_service: ReferralService,
+    is_new_user: bool = False,
 ):
     tg_id = message.from_user.id
     
@@ -34,7 +35,7 @@ async def start_cmd(
     
     args = (command.args or "").strip()
 
-    if args.startswith("ref_"):
+    if args.startswith("ref_") and is_new_user and getattr(user, "referrer_id", None) is None:
         ref_str = args.split("_", 1)[1]
 
         if ref_str.isdigit():

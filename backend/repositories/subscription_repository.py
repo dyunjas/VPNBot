@@ -120,3 +120,11 @@ class SubscriptionRepository:
             .values(status=SubStatus.expired)
         )
         return int(res.rowcount or 0)
+
+    async def set_auto_renew(self, *, subscription_id: int, auto_renew: bool) -> int:
+        res = await self.session.execute(
+            update(Subscription)
+            .where(Subscription.id == subscription_id)
+            .values(auto_renew=auto_renew)
+        )
+        return int(res.rowcount or 0)

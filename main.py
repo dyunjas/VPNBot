@@ -33,7 +33,7 @@ async def main():
 
         dp.include_router(bot_routers.router)
 
-        asyncio.create_task(expire_checker_loop(interval_sec=10000))
+        asyncio.create_task(expire_checker_loop(interval_sec=15))
 
         logger.info("Bot started")
         await dp.start_polling(bot)

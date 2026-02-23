@@ -202,5 +202,22 @@ class SubscriptionService:
         if updated <= 0:
             raise SubscriptionNotFound("Subscription not found")
         await self.session.commit()
+
+    async def set_auto_renew(
+        self,
+        *,
+        user_id: int,
+        auto_renew: bool,
+    ):
+        sub = await self.get_active_subscription(user_id=user_id)
+        updated = await self.sub_repo.set_auto_renew(
+            subscription_id=sub.id,
+            auto_renew=auto_renew,
+        )
+        if updated <= 0:
+            raise SubscriptionNotFound("Subscription not found")
+        sub.auto_renew = auto_renew
+        await self.session.commit()
+        return sub
     
     
