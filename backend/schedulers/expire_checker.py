@@ -153,7 +153,15 @@ async def expire_checker():
                     )
 
             try:
-                remain = sub.current_period_end - now
+                period_end = sub.current_period_end
+                if period_end and period_end.tzinfo is None:
+                    period_end = period_end.replace(tzinfo=timezone.utc)
+                elif period_end:
+                    period_end = period_end.astimezone(timezone.utc)
+                else:
+                    continue
+
+                remain = period_end - now
                 hours = max(1, int(remain.total_seconds() // 3600))
                 await _notify_subscription_ending_soon(user.tg_id, hours)
             except Exception as e:
@@ -167,4 +175,3 @@ async def expire_checker_loop(interval_sec: int = 300):
         except Exception:
             logger.exception("Expire checker execution error")
         await asyncio.sleep(interval_sec)
-
