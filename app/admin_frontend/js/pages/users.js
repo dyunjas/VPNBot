@@ -7,12 +7,19 @@ function renderUsersLayout() {
         <input id="search" type="text" placeholder="Поиск: Telegram ID / username / email" />
         <select id="sort_by">
           <option value="created_at">Дата регистрации</option>
+          <option value="id">ID</option>
+          <option value="updated_at">Последнее обновление</option>
           <option value="tg_id">Telegram ID</option>
+          <option value="username">Username</option>
+          <option value="email">Email</option>
           <option value="balance">Баланс</option>
+          <option value="active_keys_count">Активные ключи</option>
+          <option value="devices_count">Устройства</option>
+          <option value="subscription_end">Дата окончания подписки</option>
         </select>
         <select id="sort_dir">
-          <option value="desc">Сначала новые</option>
-          <option value="asc">Сначала старые</option>
+          <option value="desc">По убыванию</option>
+          <option value="asc">По возрастанию</option>
         </select>
         <select id="banned">
           <option value="all">Все</option>

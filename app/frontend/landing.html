@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lunet VPS</title>
+  <link rel="icon" href="/miniapp/assets/favicon.ico" />
+  <link rel="stylesheet" href="/miniapp/landing.css?v=6" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <header class="topbar panel">
+      <div class="brand">
+        <img src="/miniapp/assets/moon.png" alt="Lunet" class="brand-logo" />
+        <div>
+          <div class="brand-title">Lunet VPS</div>
+          <div class="brand-sub">Личный VPS сервер с быстрым доступом</div>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="#benefits">Преимущества</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#how">Подключение</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Попробовать</a>
+    </header>
+
+    <section class="hero panel">
+      <div class="hero-copy">
+        <p class="hero-kicker">LUNET NETWORK</p>
+        <h1>Личный VPS сервер без сложной настройки</h1>
+        <p class="hero-text">Запуск в 1 клик на телефоне и компьютере. Стабильные узлы, гибкая смена локаций и быстрый доступ через бота.</p>
+        <div class="feature-tags">
+          <span>До 10 Гбит/с</span>
+          <span>10+ локаций</span>
+          <span>iOS / Android / Windows / macOS</span>
+          <span>Подключение за 1 минуту</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Купить от 45 ₽</a>
+          <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Подключить Lite</a>
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="/miniapp/assets/moon.png" alt="Moon mascot" class="hero-image" />
+      </div>
+    </section>
+
+    <section id="benefits" class="section">
+      <h2>Что вы получаете</h2>
+      <div class="benefits-grid">
+        <article class="panel card">
+          <h3>Стабильный доступ</h3>
+          <p>Надежные серверы с оптимальным маршрутом и минимальной задержкой.</p>
+        </article>
+        <article class="panel card">
+          <h3>Удобное подключение</h3>
+          <p>Готовый профиль и инструкции сразу после оплаты.</p>
+        </article>
+        <article class="panel card">
+          <h3>Для всех устройств</h3>
+          <p>Работает на смартфонах, ПК и ноутбуках в одной подписке.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <h2>Тарифы</h2>
+      <div class="prices-grid">
+        <article class="panel price-card">
+          <div class="price-name">Lite</div>
+          <div class="price-value">45 ₽</div>
+          <div class="price-meta">Базовый доступ</div>
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        </article>
+        <article class="panel price-card">
+          <div class="price-name">1 месяц</div>
+          <div class="price-value">105 ₽</div>
+          <div class="price-meta">Стандартный доступ</div>
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        </article>
+        <article class="panel price-card">
+          <div class="price-name">3 месяца</div>
+          <div class="price-value">275 ₽</div>
+          <div class="price-meta">Оптимальный выбор</div>
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        </article>
+        <article class="panel price-card">
+          <div class="price-name">6 месяцев</div>
+          <div class="price-value">495 ₽</div>
+          <div class="price-meta">С выгодой на срок</div>
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        </article>
+        <article class="panel price-card featured">
+          <div class="price-name">12 месяцев</div>
+          <div class="price-value">995 ₽</div>
+          <div class="price-meta">Максимальная выгода</div>
+          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <h2>Как это работает</h2>
+      <div class="how-grid">
+        <article class="panel card">
+          <h3>1) Получите ключ</h3>
+          <p>После оплаты вы получаете ключ для подключения и подробную инструкцию.</p>
+          <div class="code" id="sub-key">https://lunetpn.ru/sub/7f9a10c5be24d1</div>
+        </article>
+        <article class="panel card">
+          <h3>2) Выберите локацию</h3>
+          <p>Нажмите на нужный регион. Список локаций загружается из базы серверов.</p>
+          <div id="locations" class="location-chips"></div>
+          <div class="code" id="location-selected">Локации загружаются...</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2>Частые вопросы</h2>
+      <div class="faq-grid">
+        <details class="panel faq-item">
+          <summary>Можно менять локации без ограничений?</summary>
+          <p>Да. Переключение между серверами доступно в любой момент без доплаты.</p>
+        </details>
+        <details class="panel faq-item">
+          <summary>Как быстро я получу доступ после оплаты?</summary>
+          <p>Обычно сразу. Бот выдает ключ и инструкции автоматически, без ожидания оператора.</p>
+        </details>
+        <details class="panel faq-item">
+          <summary>Какие устройства поддерживаются?</summary>
+          <p>iOS, Android, Windows, macOS и Linux. Можно подключить телефон и компьютер одновременно.</p>
+        </details>
+        <details class="panel faq-item">
+          <summary>Работает через мобильную сеть?</summary>
+          <p>Да, в сетях LTE/5G и Wi‑Fi. Если оператор режет трафик, можно сменить локацию в один клик.</p>
+        </details>
+        <details class="panel faq-item">
+          <summary>Что делать, если не получается подключиться?</summary>
+          <p>Напишите в бота Lunet. Поддержка поможет с настройкой и проверит ваш ключ.</p>
+        </details>
+        <details class="panel faq-item">
+          <summary>Есть гарантия возврата?</summary>
+          <p>Если сервис не подошел, обратитесь в поддержку в боте. Поможем найти решение или оформим возврат по условиям.</p>
+        </details>
+      </div>
+    </section>
+
+    <footer class="footer panel">
+      <div class="footer-left">
+        <strong>Lunet VPS</strong>
+        <span>© 2026. Надежный VPS сервер с быстрым подключением.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Telegram-бот</a>
+        <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">Поддержка</a>
+        <a href="https://t.me/LunetVpn" target="_blank" rel="noopener">Статус узлов</a>
+      </div>
+    </footer>
+  </div>
+  <script src="/miniapp/landing.js?v=6"></script>
+</body>
+</html>

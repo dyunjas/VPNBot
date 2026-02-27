@@ -34,6 +34,8 @@ if (IN_TELEGRAM && tg) {
 
 const initData = IN_TELEGRAM && tg ? tg.initData : null;
 const initDataUnsafe = IN_TELEGRAM && tg ? tg.initDataUnsafe : null;
+const FALLBACK_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23dce9ff'/%3E%3Cstop offset='1' stop-color='%23c7dbfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='96' height='96' rx='48' fill='url(%23g)'/%3E%3Ccircle cx='48' cy='38' r='18' fill='%23556f97'/%3E%3Cpath d='M20 84c4-16 16-24 28-24s24 8 28 24' fill='%23556f97'/%3E%3C/svg%3E";
 
 // ====== DOM refs ======
 const appRootEl = document.getElementById("app-root");
@@ -308,7 +310,7 @@ function initUserUI() {
     [u.first_name, u.last_name].filter(Boolean).join(" ") ||
     (u.username ? "@" + u.username : `ID: ${u.id}`);
 
-  const photo = u.photo_url ? u.photo_url : "https://t.me/i/userpic/320/0.png";
+  const photo = u.photo_url ? u.photo_url : FALLBACK_AVATAR;
 
   if (homeAvatarEl) homeAvatarEl.src = photo;
   if (homeNameEl) homeNameEl.textContent = name;
@@ -345,4 +347,3 @@ async function loadProfileAndBalance() {
     return null;
   }
 }
-

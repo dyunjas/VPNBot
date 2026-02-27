@@ -1,8 +1,12 @@
-﻿import base64
+﻿import asyncio
+import base64
 import json
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from typing import Any, AsyncGenerator
 from uuid import UUID
+
+import aiohttp
 
 from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -44,6 +48,137 @@ def _is_uuid_like(value: str) -> bool:
         return True
     except Exception:
         return False
+
+
+def _normalize_agent_base(grpc_endpoint: str) -> str:
+    grpc_endpoint = (grpc_endpoint or "").strip()
+    if not grpc_endpoint:
+        return ""
+    parsed = urlparse(grpc_endpoint)
+    if not parsed.scheme:
+        return f"http://{grpc_endpoint}"
+    return grpc_endpoint
+
+
+def _num(value: Any) -> int:
+    try:
+        if value is None or isinstance(value, bool):
+            return 0
+        return max(0, int(float(value)))
+    except Exception:
+        return 0
+
+
+def _extract_traffic_ud(payload: Any) -> tuple[int, int]:
+    if isinstance(payload, list):
+        up, down = 0, 0
+        for item in payload:
+            u, d = _extract_traffic_ud(item)
+            up += u
+            down += d
+        return up, down
+
+    if not isinstance(payload, dict):
+        return 0, 0
+
+    up = (
+        _num(payload.get("upload"))
+        or _num(payload.get("uplink"))
+        or _num(payload.get("up"))
+        or _num(payload.get("sent"))
+    )
+    down = (
+        _num(payload.get("download"))
+        or _num(payload.get("downlink"))
+        or _num(payload.get("down"))
+        or _num(payload.get("recv"))
+    )
+
+    # Some agents return only total traffic.
+    total = (
+        _num(payload.get("total_bytes"))
+        or _num(payload.get("bytes_total"))
+        or _num(payload.get("traffic_bytes"))
+        or _num(payload.get("total_traffic"))
+        or _num(payload.get("total"))
+    )
+    if (not up and not down) and total:
+        return 0, total
+
+    nested_up, nested_down = 0, 0
+    for key in ("data", "result", "payload", "stats", "current", "persisted", "traffic"):
+        if key in payload:
+            u, d = _extract_traffic_ud(payload.get(key))
+            nested_up += u
+            nested_down += d
+
+    return up + nested_up, down + nested_down
+
+
+async def _fetch_traffic_for_server(
+    *,
+    session: aiohttp.ClientSession,
+    base: str,
+    auth_token: str | None,
+    user_id: int,
+    email: str,
+) -> tuple[int, int]:
+    if not base:
+        return 0, 0
+
+    headers: dict[str, str] = {}
+    if auth_token:
+        headers["Authorization"] = f"Bearer {auth_token}"
+
+    variants = (
+        {"user_id": str(user_id), "email": email},
+        {"email": email},
+        {"user_id": str(user_id)},
+    )
+
+    for params in variants:
+        try:
+            async with session.get(f"{base}/user_traffic", headers=headers, params=params) as resp:
+                if resp.status != 200:
+                    continue
+                data = await resp.json(content_type=None)
+                up, down = _extract_traffic_ud(data)
+                if up or down:
+                    return up, down
+        except Exception:
+            continue
+    return 0, 0
+
+
+async def _sum_user_traffic_all_servers(vpn_service: VPNService, user_id: int) -> tuple[int, int]:
+    servers = await vpn_service.server_repo.list_all()
+    if not servers:
+        return 0, 0
+
+    email = f"user-{user_id}@lunet"
+    timeout = aiohttp.ClientTimeout(total=4)
+    async with aiohttp.ClientSession(timeout=timeout) as http:
+        tasks = [
+            _fetch_traffic_for_server(
+                session=http,
+                base=_normalize_agent_base(getattr(server, "grpc_endpoint", "") or ""),
+                auth_token=XRAY_AUTH_TOKEN,
+                user_id=user_id,
+                email=email,
+            )
+            for server in servers
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    total_up = 0
+    total_down = 0
+    for item in results:
+        if isinstance(item, Exception):
+            continue
+        up, down = item
+        total_up += _num(up)
+        total_down += _num(down)
+    return total_up, total_down
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
@@ -227,7 +362,32 @@ async def subscription(
     if end_dt.tzinfo is None:
         end_dt = end_dt.replace(tzinfo=timezone.utc)
 
+    # Aggregate user traffic from all configured servers via /user_traffic.
+    used_upload = 0
+    used_download = 0
+    try:
+        used_upload, used_download = await _sum_user_traffic_all_servers(vpn_service=vpn_service, user_id=user.id)
+    except Exception:
+        logger.exception("[subscription] aggregate traffic failed user_id=%s", user.id)
+        used_upload, used_download = 0, 0
+
+    total_limit_bytes = 0
+    try:
+        gb_limit = int(getattr(subscription_obj.plan, "gb_limit", 0) or 0)
+        if gb_limit > 0:
+            total_limit_bytes = gb_limit * (1024**3)
+    except Exception:
+        total_limit_bytes = 0
+
     headers |= _build_expire_only_header(end_dt)
+    expire_unix = int(end_dt.timestamp())
+    used_total = max(0, int(used_upload) + int(used_download))
+    headers["Subscription-Userinfo"] = (
+        f"upload={max(0, int(used_upload))}; "
+        f"download={max(0, int(used_download))}; "
+        f"total={max(int(total_limit_bytes), used_total, 0)}; "
+        f"expire={expire_unix}"
+    )
 
     if end_dt <= now:
         return expired_subscription_response(headers=headers)
@@ -253,3 +413,6 @@ async def subscription(
     b64 = base64.b64encode(plain.encode("utf-8")).decode("ascii")
 
     return Response(content=b64, media_type="text/plain; charset=utf-8", headers=headers)
+
+
+

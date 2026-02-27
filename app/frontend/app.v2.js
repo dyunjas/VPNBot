@@ -10,6 +10,11 @@ const loaderEl = document.getElementById("app-loader");
 const loaderTextEl = document.getElementById("loader-text");
 
 const MIN_WITHDRAW_AMOUNT = 500;
+["copy","cut","contextmenu","selectstart","dragstart"].forEach((evt) => {
+  document.addEventListener(evt, (e) => {
+    e.preventDefault();
+  }, { passive: false });
+});
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -51,11 +56,14 @@ const state = {
   userId: null,
   subscriptionUrl: null,
   referralUrl: null,
+  topupMethod: "card",
   transactions: [],
   txVisible: 10,
   withdrawals: [],
   withdrawalsVisible: 10,
 };
+const FALLBACK_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23dce9ff'/%3E%3Cstop offset='1' stop-color='%23c7dbfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='96' height='96' rx='48' fill='url(%23g)'/%3E%3Ccircle cx='48' cy='38' r='18' fill='%23556f97'/%3E%3Cpath d='M20 84c4-16 16-24 28-24s24 8 28 24' fill='%23556f97'/%3E%3C/svg%3E";
 
 const $ = (id) => document.getElementById(id);
 
@@ -79,6 +87,7 @@ function friendlyErrorMessage(raw) {
   const s = String(raw || "").toLowerCase();
 
   if (s.includes("banned")) return "Доступ к мини-приложению ограничен";
+  if (s.includes("payment required") || s === "http 402") return "Недостаточно средств для покупки подписки";
   if (s.includes("invalid initdata") || s.includes("initdata is missing")) return "Откройте приложение через Telegram-бота";
   if (s.includes("user not found")) return "Пользователь не найден. Сначала зайдите в бота";
   if (s.includes("not enough referral balance")) return "Недостаточно реферального баланса";
@@ -93,6 +102,27 @@ function friendlyErrorMessage(raw) {
   if (s.includes("укажите способ вывода")) return String(raw);
 
   return raw || "Произошла ошибка";
+}
+
+function normalizeErrorDetail(detail) {
+  if (Array.isArray(detail)) {
+    const parts = detail
+      .map((item) => {
+        if (typeof item === "string") return item;
+        if (item && typeof item === "object") {
+          return item.msg || item.message || item.detail || JSON.stringify(item);
+        }
+        return String(item || "");
+      })
+      .filter(Boolean);
+    return parts.join("; ");
+  }
+
+  if (detail && typeof detail === "object") {
+    return detail.msg || detail.message || detail.detail || JSON.stringify(detail);
+  }
+
+  return String(detail || "");
 }
 
 async function api(path, body = {}) {
@@ -110,7 +140,7 @@ async function api(path, body = {}) {
   }
 
   if (!res.ok) {
-    const rawDetail = data.detail || data.error || `HTTP ${res.status}`;
+    const rawDetail = normalizeErrorDetail(data.detail || data.error || `HTTP ${res.status}`);
     const rawStr = String(rawDetail || "").toLowerCase();
     if (res.status === 403 && rawStr.includes("banned")) {
       const err = new Error("BANNED");
@@ -166,7 +196,7 @@ async function loadProfile() {
   const tgUser = tg?.initDataUnsafe?.user;
 
   const name = [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(" ") || user.username || "Пользователь";
-  const photo = tgUser?.photo_url || "https://t.me/i/userpic/320/0.png";
+  const photo = tgUser?.photo_url || FALLBACK_AVATAR;
 
   state.userId = user.tg_id;
 
@@ -343,7 +373,7 @@ function renderTransactions(items) {
   if (moreBtn) {
     if (state.txVisible < items.length) {
       const next = Math.min(10, items.length - state.txVisible);
-      moreBtn.textContent = `Загрузить еще +${next}`;
+      moreBtn.textContent = `Показать еще ${next}`;
       moreBtn.style.display = "inline-flex";
     } else {
       moreBtn.style.display = "none";
@@ -391,7 +421,7 @@ function renderWithdrawals(items) {
   if (moreBtn) {
     if (state.withdrawalsVisible < items.length) {
       const next = Math.min(10, items.length - state.withdrawalsVisible);
-      moreBtn.textContent = `Загрузить еще +${next}`;
+      moreBtn.textContent = `Показать еще ${next}`;
       moreBtn.style.display = "inline-flex";
     } else {
       moreBtn.style.display = "none";
@@ -468,9 +498,31 @@ async function applyPromocode() {
 }
 
 function getTopupPayload() {
-  const method = $("topup-method")?.value || "card";
+  const method = state.topupMethod || document.querySelector(".pay-method--active")?.dataset.method || "card";
   if (method === "crypto") return { method: "crypto", asset: "USDT" };
   return { method: "platega", platega_type: method };
+}
+
+function initTopupMethodPicker() {
+  const buttons = Array.from(document.querySelectorAll("#topup-methods .pay-method"));
+  if (!buttons.length) return;
+
+  const setActive = (method) => {
+    state.topupMethod = method || "card";
+    buttons.forEach((btn) => {
+      btn.classList.toggle("pay-method--active", btn.dataset.method === state.topupMethod);
+    });
+  };
+
+  const current = buttons.find((btn) => btn.classList.contains("pay-method--active"))?.dataset.method || "card";
+  setActive(current);
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      haptic();
+      setActive(btn.dataset.method);
+    });
+  });
 }
 
 async function createTopup() {
@@ -544,6 +596,8 @@ async function reissueKeys() {
 }
 
 function initEvents() {
+  initTopupMethodPicker();
+
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       haptic();
@@ -625,4 +679,6 @@ async function bootstrap() {
 }
 
 if (IN_TELEGRAM) bootstrap();
+
+
 

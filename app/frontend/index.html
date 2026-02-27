@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Lunet</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f78e0'/%3E%3Cpath d='M20 34h24v4H20zM20 24h24v4H20zM20 44h16v4H20z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.css?v=412" />
+  <link rel="stylesheet" href="styles.v2.css?v=1" />
 </head>
 <body>
   <div id="outside-stub" class="outside" style="display:none;">
@@ -34,7 +35,10 @@
         </div>
 
         <div class="card glass">
-          <h2>Подписка</h2>
+          <div class="sub-head">
+            <h2>Подписка</h2>
+            <img src="/miniapp/assets/moon.png" alt="Lunet Moon" class="sub-card__moon" loading="eager" decoding="async" />
+          </div>
           <div id="sub-title" class="sub-title">Проверка...</div>
           <p id="sub-meta" class="muted"></p>
           <div class="grid-two stat-grid">
@@ -101,12 +105,21 @@
           <div class="row">
             <input id="topup-input" class="input" placeholder="Сумма в рублях" inputmode="numeric" />
           </div>
+          <div id="topup-methods" class="payment-methods">
+            <button class="pay-method pay-method--active" data-method="card" type="button" aria-label="Оплата картой">
+              <img class="pay-method__icon" src="/miniapp/assets/pay-mir.png" alt="MIR" />
+              <span class="pay-method__label">Карта</span>
+            </button>
+            <button class="pay-method" data-method="sbp" type="button" aria-label="Оплата через СБП">
+              <img class="pay-method__icon" src="/miniapp/assets/pay-sbp.png" alt="СБП" />
+              <span class="pay-method__label">СБП</span>
+            </button>
+            <button class="pay-method" data-method="crypto" type="button" aria-label="Оплата криптовалютой">
+              <img class="pay-method__icon" src="/miniapp/assets/pay-usdt.png" alt="USDT" />
+              <span class="pay-method__label">USDT</span>
+            </button>
+          </div>
           <div class="row">
-            <select id="topup-method" class="select">
-              <option value="card">Карта</option>
-              <option value="sbp">СБП</option>
-              <option value="crypto">Crypto (USDT)</option>
-            </select>
             <button id="topup-pay" class="btn" type="button">Оплатить</button>
           </div>
           <p id="topup-hint" class="muted"></p>
@@ -119,8 +132,8 @@
             <button id="btn-refresh-tx" class="btn btn--ghost" type="button">Обновить</button>
           </div>
           <div id="tx-list" class="list">Загрузка...</div>
-          <div class="row">
-            <button id="btn-more-tx" class="btn btn--ghost" type="button" style="display:none;">Загрузить еще</button>
+          <div class="row row--more">
+            <button id="btn-more-tx" class="btn btn--ghost" type="button" style="display:none;">Показать еще 10</button>
           </div>
         </div>
       </section>
@@ -153,8 +166,8 @@
         <div class="card glass">
           <h2>История заявок на вывод</h2>
           <div id="withdraw-list" class="list">Загрузка...</div>
-          <div class="row">
-            <button id="btn-more-withdraw" class="btn btn--ghost" type="button" style="display:none;">Загрузить еще</button>
+          <div class="row row--more">
+            <button id="btn-more-withdraw" class="btn btn--ghost" type="button" style="display:none;">Показать еще 10</button>
           </div>
         </div>
       </section>
@@ -190,7 +203,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=410"></script>
+  <script src="app.v2.js?v=1"></script>
 </body>
 </html>
 

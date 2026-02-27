@@ -1,6 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
   if (getToken()) {
-    window.location.replace("/admin/dashboard.html");
+    window.location.replace("/admin/dashboard");
     return;
   }
 
@@ -15,9 +15,10 @@
         }),
       });
       setToken(data.access_token);
-      window.location.replace("/admin/dashboard.html");
+      window.location.replace("/admin/dashboard");
     }).catch((err) => {
       q("error").textContent = err.message || "Ошибка входа";
     });
   });
 });
+

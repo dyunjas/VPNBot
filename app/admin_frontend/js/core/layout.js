@@ -1,6 +1,6 @@
 ﻿function ensureAuthOrRedirect() {
   if (!getToken()) {
-    window.location.replace("/admin/login.html");
+    window.location.replace("/admin/login");
   }
 }
 
@@ -130,15 +130,15 @@ document.addEventListener("click", (e) => {
 });
 
 const ADMIN_MENU = [
-  { key: "dashboard", href: "/admin/dashboard.html", label: "Обзор", icon: "overview" },
-  { key: "users", href: "/admin/users.html", label: "Пользователи", icon: "users" },
-  { key: "subscriptions", href: "/admin/subscriptions.html", label: "Подписки", icon: "subs" },
-  { key: "plans", href: "/admin/plans.html", label: "Тарифы", icon: "plans" },
-  { key: "transactions", href: "/admin/transactions.html", label: "Транзакции", icon: "tx" },
-  { key: "withdrawals", href: "/admin/withdrawals.html", label: "Заявки на вывод", icon: "wd" },
-  { key: "referrals", href: "/admin/referrals.html", label: "Реферальная система", icon: "ref" },
-  { key: "servers", href: "/admin/servers.html", label: "Серверы", icon: "srv" },
-  { key: "broadcast", href: "/admin/broadcast.html", label: "Рассылки", icon: "mail" },
+  { key: "dashboard", href: "/admin/dashboard", label: "Обзор", icon: "overview" },
+  { key: "users", href: "/admin/users", label: "Пользователи", icon: "users" },
+  { key: "subscriptions", href: "/admin/subscriptions", label: "Подписки", icon: "subs" },
+  { key: "plans", href: "/admin/plans", label: "Тарифы", icon: "plans" },
+  { key: "transactions", href: "/admin/transactions", label: "Транзакции", icon: "tx" },
+  { key: "withdrawals", href: "/admin/withdrawals", label: "Заявки на вывод", icon: "wd" },
+  { key: "referrals", href: "/admin/referrals", label: "Реферальная система", icon: "ref" },
+  { key: "servers", href: "/admin/servers", label: "Серверы", icon: "srv" },
+  { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
 ];
 
 function menuIcon(kind) {
@@ -159,7 +159,7 @@ function menuIcon(kind) {
 
 function renderMenu(activeKey) {
   return ADMIN_MENU.map((item) => `
-    <a href="${item.href}" class="${activeKey === item.key ? "active" : ""}">
+    <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
       <span class="menu-ico">${menuIcon(item.icon)}</span>
       <span>${item.label}</span>
     </a>
@@ -212,13 +212,23 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
 
   q("logout").addEventListener("click", () => {
     clearToken();
-    window.location.replace("/admin/login.html");
+    window.location.replace("/admin/login");
   });
 
   q("quick_nav").addEventListener("change", (e) => {
     const val = e.target.value;
     if (val) window.location.href = val;
   });
+
+  const menuEl = document.querySelector(".menu");
+  if (menuEl) {
+    menuEl.addEventListener("click", (e) => {
+      const link = e.target.closest("a");
+      if (!link) return;
+      menuEl.querySelectorAll("a").forEach((el) => el.classList.remove("active-tap"));
+      link.classList.add("active-tap");
+    });
+  }
 
   initFancySelects(document);
 }
@@ -232,6 +242,8 @@ function renderPager(meta, prevBtn, nextBtn, label) {
   prevBtn.disabled = meta.page <= 1;
   nextBtn.disabled = meta.page >= meta.pages;
 }
+
+
 
 
 

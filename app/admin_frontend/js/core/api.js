@@ -38,6 +38,50 @@ function showToast(message, kind = "error") {
 
 window.alert = (msg) => showToast(msg, "error");
 
+function extractApiErrorMessage(detail) {
+  if (detail === null || detail === undefined) return "";
+  if (typeof detail === "string") return detail.trim();
+  if (typeof detail === "number" || typeof detail === "boolean") return String(detail);
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => extractApiErrorMessage(item))
+      .filter(Boolean)
+      .join("; ");
+  }
+  if (typeof detail === "object") {
+    if (typeof detail.message === "string" && detail.message.trim()) return detail.message.trim();
+    if (typeof detail.detail === "string" && detail.detail.trim()) return detail.detail.trim();
+    if (Array.isArray(detail.loc) && detail.msg) {
+      return `${detail.loc.join(".")}: ${detail.msg}`;
+    }
+    const parts = Object.entries(detail)
+      .map(([k, v]) => {
+        const msg = extractApiErrorMessage(v);
+        return msg ? `${k}: ${msg}` : "";
+      })
+      .filter(Boolean);
+    return parts.join("; ");
+  }
+  return String(detail);
+}
+
+function toErrorMessage(err, fallback = "Произошла ошибка") {
+  if (!err) return fallback;
+  if (typeof err === "string") return err;
+  if (err instanceof Error) return err.message || fallback;
+  return extractApiErrorMessage(err) || fallback;
+}
+
+window.addEventListener("error", (event) => {
+  const message = toErrorMessage(event.error || event.message, "Неожиданная ошибка на странице");
+  showToast(message, "error");
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  const message = toErrorMessage(event.reason, "Ошибка выполнения запроса");
+  showToast(message, "error");
+});
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -81,14 +125,15 @@ async function api(path, options = {}) {
 
   if (res.status === 401) {
     clearToken();
-    if (!window.location.pathname.endsWith("/login.html")) {
-      window.location.replace("/admin/login.html");
+    if (!window.location.pathname.endsWith("/login")) {
+      window.location.replace("/admin/login");
     }
     throw new Error("Требуется вход в систему");
   }
 
   if (!res.ok) {
-    let err = data.detail || `HTTP ${res.status}`;
+    const detail = data?.error?.message || data?.detail || data?.message || data;
+    let err = extractApiErrorMessage(detail) || `HTTP ${res.status}`;
     if (res.status === 413 || String(err).toLowerCase().includes("request entity too large")) {
       err = "Файл слишком большой для загрузки. Уменьшите размер изображения или увеличьте лимит client_max_body_size в nginx.";
     }

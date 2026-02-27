@@ -9798,3 +9798,187 @@ client_session: <aiohttp.client.ClientSession object at 0x0000012D4D655A90>
 [2026-02-23 23:15:32] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
 [2026-02-23 23:15:32] [ERROR] asyncio: Unclosed client session
 client_session: <aiohttp.client.ClientSession object at 0x000002B146635810>
+[2026-02-27 14:33:30] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 14:33:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 14:33:32] [INFO] root: Database tables initialized
+[2026-02-27 14:33:32] [INFO] root: Database connection successful
+[2026-02-27 15:03:25] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:03:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:03:26] [INFO] root: Database tables initialized
+[2026-02-27 15:03:26] [INFO] root: Database connection successful
+[2026-02-27 15:09:47] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:09:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:09:48] [INFO] root: Database tables initialized
+[2026-02-27 15:09:48] [INFO] root: Database connection successful
+[2026-02-27 15:12:22] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:12:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:12:23] [INFO] root: Database tables initialized
+[2026-02-27 15:12:23] [INFO] root: Database connection successful
+[2026-02-27 15:15:21] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:15:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:15:22] [INFO] root: Database tables initialized
+[2026-02-27 15:15:22] [INFO] root: Database connection successful
+[2026-02-27 15:16:42] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:16:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:16:43] [INFO] root: Database tables initialized
+[2026-02-27 15:16:43] [INFO] root: Database connection successful
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_field with data[42:61]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_value with data[63:85]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[89:114]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_field with data[158:177]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_value with data[179:207]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[211:215]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_field with data[259:278]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_value with data[280:312]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[316:321]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_field with data[365:384]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_value with data[386:455]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_field with data[457:469]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_value with data[471:480]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[484:81920]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:131072]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_data with data[0:43187]
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-02-27 15:17:59] [DEBUG] python_multipart.multipart: Calling on_end with no data
+[2026-02-27 15:22:29] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001FBA44C42F0>
+[2026-02-27 15:22:45] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:22:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:22:46] [INFO] root: Database tables initialized
+[2026-02-27 15:22:46] [INFO] root: Database connection successful
+[2026-02-27 15:42:49] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 15:42:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 15:42:50] [INFO] root: Database tables initialized
+[2026-02-27 15:42:50] [INFO] root: Database connection successful
+[2026-02-27 16:15:56] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 16:15:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 16:15:57] [INFO] root: Database tables initialized
+[2026-02-27 16:15:57] [INFO] root: Database connection successful
+[2026-02-27 16:28:47] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 16:28:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 16:28:48] [INFO] root: Database tables initialized
+[2026-02-27 16:28:48] [INFO] root: Database connection successful
+[2026-02-27 16:32:50] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 16:32:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 16:32:51] [INFO] root: Database tables initialized
+[2026-02-27 16:32:51] [INFO] root: Database connection successful
+[2026-02-27 16:44:46] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 16:44:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 16:44:46] [INFO] root: Database tables initialized
+[2026-02-27 16:44:46] [INFO] root: Database connection successful
+[2026-02-27 17:02:44] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 17:02:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 17:02:46] [INFO] root: Database tables initialized
+[2026-02-27 17:02:47] [INFO] root: Database connection successful
+[2026-02-27 18:43:50] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 18:43:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 18:43:55] [INFO] root: Database tables initialized
+[2026-02-27 18:43:57] [INFO] root: Database connection successful
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=7: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=14: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=2: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=16: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=11: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=1: Server disconnected
+[2026-02-27 23:29:50] [ERROR] root: [reissue_keys] XRAY remove_user failed user_id=1 server_id=10: Server disconnected
+[2026-02-27 23:29:51] [ERROR] root: [reissue_keys] create key failed user_id=1 server_id=15: Server disconnected
+[2026-02-27 23:56:59] [INFO] root: Settings successfully loaded from .env
+[2026-02-27 23:57:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-27 23:57:06] [INFO] root: Database tables initialized
+[2026-02-27 23:57:09] [INFO] root: Database connection successful
+[2026-02-28 00:03:03] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001A524C7F750>
+[2026-02-28 00:03:03] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001A524E37590>, 48937.0963608)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001A524C7FC50>
+[2026-02-28 00:18:28] [INFO] root: Settings successfully loaded from .env
+[2026-02-28 00:18:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-28 00:18:30] [INFO] root: Database tables initialized
+[2026-02-28 00:18:31] [INFO] root: Database connection successful
+[2026-02-28 00:19:00] [WARNING] root: [subscription] invalid token format: token...
+[2026-02-28 00:26:05] [WARNING] root: [subscription] invalid token format: token...
+[2026-02-28 00:26:09] [WARNING] root: [subscription] invalid token format: token...
+[2026-02-28 00:26:10] [WARNING] root: [subscription] invalid token format: token...
+[2026-02-28 00:26:10] [WARNING] root: [subscription] invalid token format: token...
+[2026-02-28 00:26:48] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:27:28] [INFO] root: Settings successfully loaded from .env
+[2026-02-28 00:27:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-28 00:27:30] [INFO] root: Database tables initialized
+[2026-02-28 00:27:30] [INFO] root: Database connection successful
+[2026-02-28 00:27:30] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:30:33] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:33:00] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:33:01] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:33:01] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:33:01] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:33:32] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:35:37] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:38:06] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:39:11] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:42:06] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:42:09] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:43:28] [INFO] root: Settings successfully loaded from .env
+[2026-02-28 00:43:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-28 00:43:30] [INFO] root: Database tables initialized
+[2026-02-28 00:43:31] [INFO] root: Database connection successful
+[2026-02-28 00:43:31] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:59:26] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0 hwid=None model=None os=None ver=None locale=None
+[2026-02-28 00:59:54] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=v2raytun/windows hwid=869C722B-C5F1-49D9-A9B2-78E9FCAF1BD9 model=25H2 | 2009 os=Windows ver=Windows 11 Home Single Language locale=None
+[2026-02-28 01:00:18] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002D18BF80440>
+[2026-02-28 01:00:24] [INFO] root: Settings successfully loaded from .env
+[2026-02-28 01:00:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-28 01:00:26] [INFO] root: Database tables initialized
+[2026-02-28 01:00:27] [INFO] root: Database connection successful
+[2026-02-28 01:00:29] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=v2raytun/windows hwid=869C722B-C5F1-49D9-A9B2-78E9FCAF1BD9 model=25H2 | 2009 os=Windows ver=Windows 11 Home Single Language locale=None
+[2026-02-28 01:04:22] [INFO] root: Settings successfully loaded from .env
+[2026-02-28 01:04:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-02-28 01:04:24] [INFO] root: Database tables initialized
+[2026-02-28 01:04:25] [INFO] root: Database connection successful
+[2026-02-28 01:04:29] [INFO] root: [subscription] token=bae68368... ip=127.0.0.1 ua=v2raytun/windows hwid=869C722B-C5F1-49D9-A9B2-78E9FCAF1BD9 model=25H2 | 2009 os=Windows ver=Windows 11 Home Single Language locale=None

@@ -13,12 +13,51 @@ async def admin_users(
     banned: Literal["all", "only", "exclude"] = Query(default="all"),
 ):
     now = datetime.now(timezone.utc)
-    sort_column = SORT_FIELDS.get(sort_by, User.created_at)
-    order_by = desc(sort_column) if sort_dir == "desc" else sort_column.asc()
     offset = (page - 1) * page_size
 
     async with async_session() as session:
-        stmt = select(User)
+        active_keys_sq = (
+            select(
+                Key.user_id.label("user_id"),
+                func.count(Key.id).label("active_keys_count"),
+            )
+            .where(Key.status == KeyStatus.active)
+            .group_by(Key.user_id)
+            .subquery()
+        )
+        devices_sq = (
+            select(
+                UserDevice.user_id.label("user_id"),
+                func.count(UserDevice.id).label("devices_count"),
+            )
+            .group_by(UserDevice.user_id)
+            .subquery()
+        )
+        active_sub_sq = (
+            select(
+                Subscription.user_id.label("user_id"),
+                func.max(Subscription.current_period_end).label("subscription_end"),
+            )
+            .where(Subscription.status == SubStatus.active)
+            .group_by(Subscription.user_id)
+            .subquery()
+        )
+
+        active_keys_expr = func.coalesce(active_keys_sq.c.active_keys_count, 0)
+        devices_expr = func.coalesce(devices_sq.c.devices_count, 0)
+        sub_end_expr = active_sub_sq.c.subscription_end
+
+        stmt = (
+            select(
+                User,
+                active_keys_expr.label("active_keys_count"),
+                devices_expr.label("devices_count"),
+                sub_end_expr.label("subscription_end"),
+            )
+            .outerjoin(active_keys_sq, active_keys_sq.c.user_id == User.id)
+            .outerjoin(devices_sq, devices_sq.c.user_id == User.id)
+            .outerjoin(active_sub_sq, active_sub_sq.c.user_id == User.id)
+        )
         count_stmt = select(func.count(User.id))
 
         if banned == "only":
@@ -39,45 +78,35 @@ async def admin_users(
             stmt = stmt.where(search_clause)
             count_stmt = count_stmt.where(search_clause)
 
+        sort_fields = {
+            "id": User.id,
+            "tg_id": User.tg_id,
+            "username": func.lower(func.coalesce(User.username, "")),
+            "email": func.lower(func.coalesce(User.email, "")),
+            "balance": User.balance,
+            "created_at": User.created_at,
+            "updated_at": User.updated_at,
+            "active_keys_count": active_keys_expr,
+            "devices_count": devices_expr,
+            "subscription_end": sub_end_expr,
+        }
+        sort_column = sort_fields.get(sort_by, User.created_at)
+        if sort_by == "subscription_end":
+            if sort_dir == "asc":
+                sort_column = func.coalesce(sort_column, datetime(9999, 12, 31, tzinfo=timezone.utc))
+            else:
+                sort_column = func.coalesce(sort_column, datetime(1970, 1, 1, tzinfo=timezone.utc))
+
+        order_by = desc(sort_column) if sort_dir == "desc" else sort_column.asc()
+
         total = int(await session.scalar(count_stmt) or 0)
-        users = list((await session.execute(stmt.order_by(order_by).offset(offset).limit(page_size))).scalars().all())
-
-        user_ids = [u.id for u in users]
-        keys_map: dict[int, int] = {}
-        sub_map: dict[int, datetime] = {}
-        devices_map: dict[int, int] = {}
-
-        if user_ids:
-            key_rows = (
-                await session.execute(
-                    select(Key.user_id, func.count(Key.id))
-                    .where(Key.user_id.in_(user_ids), Key.status == KeyStatus.active)
-                    .group_by(Key.user_id)
-                )
-            ).all()
-            keys_map = {int(uid): int(cnt) for uid, cnt in key_rows}
-
-            sub_rows = (
-                await session.execute(
-                    select(Subscription.user_id, func.max(Subscription.current_period_end))
-                    .where(Subscription.user_id.in_(user_ids), Subscription.status == SubStatus.active)
-                    .group_by(Subscription.user_id)
-                )
-            ).all()
-            sub_map = {int(uid): _as_aware_utc(dt) for uid, dt in sub_rows if dt}
-
-            device_rows = (
-                await session.execute(
-                    select(UserDevice.user_id, func.count(UserDevice.id))
-                    .where(UserDevice.user_id.in_(user_ids))
-                    .group_by(UserDevice.user_id)
-                )
-            ).all()
-            devices_map = {int(uid): int(cnt) for uid, cnt in device_rows}
+        users = list(
+            (await session.execute(stmt.order_by(order_by, User.id.desc()).offset(offset).limit(page_size))).all()
+        )
 
         rows = []
-        for user in users:
-            sub_end = sub_map.get(user.id)
+        for user, active_keys_count, devices_count, subscription_end in users:
+            sub_end = _as_aware_utc(subscription_end)
             rows.append(
                 {
                     "id": user.id,
@@ -87,8 +116,8 @@ async def admin_users(
                     "balance": int(user.balance or 0),
                     "banned": bool(user.banned),
                     "subscription_token": user.subscription_token,
-                    "active_keys_count": keys_map.get(user.id, 0),
-                    "devices_count": devices_map.get(user.id, 0),
+                    "active_keys_count": int(active_keys_count or 0),
+                    "devices_count": int(devices_count or 0),
                     "subscription_active": bool(sub_end and sub_end > now),
                     "subscription_end": _to_iso(sub_end),
                     "created_at": _to_iso(user.created_at),
