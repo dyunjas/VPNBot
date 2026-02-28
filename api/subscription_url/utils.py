@@ -77,3 +77,24 @@ def device_limit_response(headers: dict[str, str] | None = None) -> Response:
         ),
     ]
     return _b64_response(fake_uris, headers=headers)
+
+
+def traffic_limit_response(headers: dict[str, str] | None = None) -> Response:
+    fake_uris = [
+        (
+            "vless://00000000-0000-0000-0000-000000000021@traffic1:443"
+            "?type=tcp&encryption=none"
+            "#📉 Гигабайты закончились"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000022@traffic2:443"
+            "?type=tcp&encryption=none"
+            "#🛒 Докупите гигабайты в боте"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000023@traffic3:443"
+            "?type=tcp&encryption=none"
+            "#🌙 t.me/LunetVpnBot"
+        ),
+    ]
+    return _b64_response(fake_uris, headers=headers)

@@ -3,6 +3,7 @@ import base64
 import json
 from urllib.parse import urlparse
 from datetime import datetime, timezone
+from decimal import Decimal
 from typing import Any, AsyncGenerator
 from uuid import UUID
 
@@ -18,10 +19,12 @@ from api.subscription_url.utils import (
     _profile_web_page,
     device_limit_response,
     expired_subscription_response,
+    traffic_limit_response,
 )
 from backend.core.config import settings
 from backend.core.loader import bot
 from backend.core.logger_config import logger
+from backend.database.models import KeyStatus
 from backend.database.session import async_session
 from backend.services import SubscriptionService, UserService, VPNService
 from backend.services.device_service import DeviceService
@@ -179,6 +182,56 @@ async def _sum_user_traffic_all_servers(vpn_service: VPNService, user_id: int) -
         total_up += _num(up)
         total_down += _num(down)
     return total_up, total_down
+
+
+async def _deactivate_user_keys(vpn_service: VPNService, user_id: int) -> None:
+    email = f"user-{user_id}@lunet"
+    keys = await vpn_service.key_repo.list_user_keys_by_status(
+        user_id=user_id,
+        statuses=[KeyStatus.active],
+        with_server=True,
+    )
+    if not keys:
+        return
+
+    headers = {"Content-Type": "application/json"}
+    if XRAY_AUTH_TOKEN:
+        headers["Authorization"] = f"Bearer {XRAY_AUTH_TOKEN}"
+
+    processed_server_ids: set[int] = set()
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as http:
+        for key in keys:
+            if key.server_id and key.server_id in processed_server_ids:
+                continue
+            if key.server_id:
+                processed_server_ids.add(key.server_id)
+
+            server = getattr(key, "server", None)
+            base = _normalize_agent_base(getattr(server, "grpc_endpoint", "") if server else "")
+            if base:
+                try:
+                    await http.post(
+                        f"{base}/remove_user",
+                        headers=headers,
+                        json={"email": email},
+                    )
+                except Exception:
+                    logger.warning(
+                        "[subscription] remove_user failed during traffic lock user_id=%s server_id=%s",
+                        user_id,
+                        key.server_id,
+                    )
+
+            try:
+                await vpn_service.key_repo.set_status(key.id, KeyStatus.deleted)
+            except Exception:
+                logger.warning(
+                    "[subscription] set_status deleted failed user_id=%s key_id=%s",
+                    user_id,
+                    key.id,
+                )
+
+    await vpn_service.session.commit()
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
@@ -362,6 +415,10 @@ async def subscription(
     if end_dt.tzinfo is None:
         end_dt = end_dt.replace(tzinfo=timezone.utc)
 
+    if not subscription_obj.plan:
+        logger.error("[subscription] plan not loaded user_id=%s", user.id)
+        return expired_subscription_response(headers=headers)
+
     # Aggregate user traffic from all configured servers via /user_traffic.
     used_upload = 0
     used_download = 0
@@ -371,29 +428,45 @@ async def subscription(
         logger.exception("[subscription] aggregate traffic failed user_id=%s", user.id)
         used_upload, used_download = 0, 0
 
-    total_limit_bytes = 0
+    gb_limit = 0
     try:
         gb_limit = int(getattr(subscription_obj.plan, "gb_limit", 0) or 0)
-        if gb_limit > 0:
-            total_limit_bytes = gb_limit * (1024**3)
     except Exception:
-        total_limit_bytes = 0
+        gb_limit = 0
+    total_limit_bytes = max(0, gb_limit * (1024**3))
 
     headers |= _build_expire_only_header(end_dt)
     expire_unix = int(end_dt.timestamp())
     used_total = max(0, int(used_upload) + int(used_download))
+
+    # Persist remaining traffic into vpn_subscriptions.gb_left:
+    # gb_left = gb_limit - used_gb
+    try:
+        used_gb = (Decimal(used_total) / Decimal(1024**3)) if used_total > 0 else Decimal(0)
+        gb_left = Decimal(gb_limit) - used_gb
+        if gb_left < 0:
+            gb_left = Decimal(0)
+        subscription_obj.gb_left = gb_left.quantize(Decimal("0.01"))
+        await subscription_service.session.commit()
+    except Exception:
+        logger.exception("[subscription] failed to persist gb_left user_id=%s", user.id)
+
     headers["Subscription-Userinfo"] = (
         f"upload={max(0, int(used_upload))}; "
         f"download={max(0, int(used_download))}; "
-        f"total={max(int(total_limit_bytes), used_total, 0)}; "
+        f"total={int(total_limit_bytes)}; "
         f"expire={expire_unix}"
     )
 
-    if end_dt <= now:
-        return expired_subscription_response(headers=headers)
+    # Traffic limit reached: deactivate keys and return explicit guidance.
+    if total_limit_bytes > 0 and used_total >= total_limit_bytes:
+        try:
+            await _deactivate_user_keys(vpn_service=vpn_service, user_id=user.id)
+        except Exception:
+            logger.exception("[subscription] failed to deactivate keys on traffic limit user_id=%s", user.id)
+        return traffic_limit_response(headers=headers)
 
-    if not subscription_obj.plan:
-        logger.error("[subscription] plan not loaded user_id=%s", user.id)
+    if end_dt <= now:
         return expired_subscription_response(headers=headers)
 
     try:

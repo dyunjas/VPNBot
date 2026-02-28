@@ -1,9 +1,8 @@
 from sqlalchemy import text
-from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import (
-    create_async_engine,
     AsyncSession,
-    async_sessionmaker
+    async_sessionmaker,
+    create_async_engine,
 )
 
 from backend.core.config import settings
@@ -15,9 +14,14 @@ from backend.core.logger_config import logger
 
 engine = create_async_engine(
     settings.POSTGRES_ASYNC_URL,
-    poolclass=NullPool,
+    pool_size=max(1, int(settings.DB_POOL_SIZE)),
+    max_overflow=max(0, int(settings.DB_MAX_OVERFLOW)),
+    pool_timeout=max(1, int(settings.DB_POOL_TIMEOUT)),
+    pool_recycle=max(60, int(settings.DB_POOL_RECYCLE)),
+    pool_use_lifo=True,
+    pool_pre_ping=True,
     echo=False,
-    future=True
+    future=True,
 )
 
 async_session = async_sessionmaker(
