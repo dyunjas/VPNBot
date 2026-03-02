@@ -3,9 +3,12 @@ from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.config import settings
+from backend.core.logger_config import logger
 from backend.database.models import SubStatus
 from backend.repositories.subscription_repository import SubscriptionRepository
 from backend.repositories.user_repository import UserRepository
+from backend.services.vpn_service import VPNService
 from backend.services.exceptions import (
     UserNotFound,
     SubscriptionNotFound,
@@ -18,6 +21,13 @@ class SubscriptionService:
         self.session = session
         self.sub_repo = SubscriptionRepository(session)
         self.user_repo = UserRepository(session)
+        self.vpn_service = VPNService(session=session, xray_auth_token=settings.XRAY_AUTH)
+
+    async def _reset_user_traffic_safe(self, user_id: int) -> None:
+        try:
+            await self.vpn_service.reset_user_traffic(user_id=user_id)
+        except Exception as e:
+            logger.warning("[subscription] reset_user_traffic skipped user_id=%s: %s", user_id, e)
 
     async def list_plans(self):
         return await self.sub_repo.list_plans()
@@ -114,6 +124,7 @@ class SubscriptionService:
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user.id)
 
+        await self._reset_user_traffic_safe(user_id=user_id)
         return sub
     
     async def renew_subscription(
@@ -177,6 +188,7 @@ class SubscriptionService:
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user_id)
 
+        await self._reset_user_traffic_safe(user_id=user_id)
         await self.session.commit()
         return sub
 

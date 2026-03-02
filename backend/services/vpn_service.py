@@ -147,6 +147,44 @@ class VPNService:
 
         return deleted
 
+    async def reset_user_traffic(self, user_id: int) -> None:
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+
+        servers = await self.server_repo.list_all()
+        headers = {"Content-Type": "application/json"}
+        if self.XRAY_AUTH_TOKEN:
+            headers["Authorization"] = f"Bearer {self.XRAY_AUTH_TOKEN}"
+
+        timeout = aiohttp.ClientTimeout(total=5)
+        async with aiohttp.ClientSession(timeout=timeout) as http:
+            for server in servers:
+                base = self._normalize_agent_base(getattr(server, "grpc_endpoint", "") or "")
+                if not base:
+                    continue
+                try:
+                    async with http.post(
+                        f"{base}/reset_user_traffic",
+                        headers=headers,
+                        params={"user_id": str(user_id)},
+                        json={"user_id": user_id},
+                    ) as resp:
+                        if resp.status >= 400:
+                            logger.warning(
+                                "[reset_user_traffic] bad response user_id=%s server_id=%s status=%s",
+                                user_id,
+                                getattr(server, "id", None),
+                                resp.status,
+                            )
+                except Exception as e:
+                    logger.warning(
+                        "[reset_user_traffic] request failed user_id=%s server_id=%s: %s",
+                        user_id,
+                        getattr(server, "id", None),
+                        e,
+                    )
+
 
     async def get_keys_for_subscription(self, user_id: int) -> str:
         user = await self.user_repo.get_by_id(user_id)
@@ -217,6 +255,7 @@ class VPNService:
         await self.key_repo.delete_by_user_id(user_id)
         await self.session.commit()
 
+        created_keys = 0
         for server in servers:
             try:
                 uuid, uri = await self._create_xray_key(
@@ -232,14 +271,15 @@ class VPNService:
                     status=KeyStatus.active,
                     created_at=datetime.now(),
                 )
+                created_keys += 1
             except Exception as e:
-                logger.error(
+                logger.warning(
                     f"[reissue_keys] create key failed "
                     f"user_id={user_id} server_id={server.id}: {e}"
                 )
-                raise KeyCreationError(
-                    f"Failed to create key for server {server.id}"
-                )
+
+        if created_keys == 0:
+            raise KeyCreationError("Failed to create keys on all servers")
 
         await self.session.commit()
 
