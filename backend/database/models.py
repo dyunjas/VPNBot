@@ -45,6 +45,10 @@ class AdminRole(str, enum.Enum):
     manager = "manager"
     support = "support"
 
+class SupportMessageDirection(str, enum.Enum):
+    user = "user"
+    support = "support"
+
 
 class User(Base):
     __tablename__ = "vpn_users"
@@ -280,6 +284,31 @@ class Subscription(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    topups: Mapped[list["SubscriptionTopup"]] = relationship(
+        "SubscriptionTopup",
+        back_populates="subscription",
+        cascade="all, delete-orphan",
+    )
+
+
+class SubscriptionTopup(Base):
+    __tablename__ = "vpn_subscription_topups"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    subscription_id: Mapped[int] = mapped_column(
+        ForeignKey("vpn_subscriptions.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    gb_added: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+    subscription: Mapped["Subscription"] = relationship(
+        "Subscription",
+        back_populates="topups",
     )
 
 

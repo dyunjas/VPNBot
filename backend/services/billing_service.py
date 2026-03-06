@@ -22,6 +22,8 @@ from backend.services.exceptions import (
 )
 
 USDT_RATE = Decimal("79")
+TRAFFIC_PRICE_PER_GB_RUB = Decimal("0.5")
+MIN_TRAFFIC_PURCHASE_GB = 5
 
 
 class BillingService:
@@ -199,11 +201,14 @@ class BillingService:
         return sub
 
     async def add_gb_to_subscription(self, user_id: int, gb: int):
-        price = Decimal(gb) * Decimal(10)
+        if gb < MIN_TRAFFIC_PURCHASE_GB:
+            raise ValueError(f"Minimum traffic purchase is {MIN_TRAFFIC_PURCHASE_GB} GB")
+
+        price = (Decimal(gb) * TRAFFIC_PRICE_PER_GB_RUB).to_integral_value(rounding=ROUND_UP)
 
         await self.charge_balance(user_id=user_id, amount=price)
 
         sub = await self.sub_service.add_traffic(user_id=user_id, gb=Decimal(gb))
 
         await self.session.commit()
-        return sub
+        return sub, int(price)

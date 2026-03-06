@@ -1,4 +1,4 @@
-﻿const BACKEND_URL = window.location.origin;
+const BACKEND_URL = window.location.origin;
 const tg = window.Telegram?.WebApp ?? null;
 const IN_TELEGRAM = Boolean(tg?.initDataUnsafe?.user || (navigator.userAgent || "").includes("Telegram"));
 
@@ -100,6 +100,14 @@ function friendlyErrorMessage(raw) {
   }
   if (s.includes("минимальная сумма вывода")) return String(raw);
   if (s.includes("укажите способ вывода")) return String(raw);
+  if (
+    s.includes("clientconnectordnserror")
+    || s.includes("getaddrinfo failed")
+    || s.includes("api.telegram.org")
+    || s.includes("не удалось подключиться к telegram")
+  ) {
+    return "Не удалось подключиться к Telegram. Попробуйте позже.";
+  }
 
   return raw || "Произошла ошибка";
 }
@@ -123,6 +131,23 @@ function normalizeErrorDetail(detail) {
   }
 
   return String(detail || "");
+}
+
+function getInitialViewFromUrl() {
+  const params = new URLSearchParams(window.location.search || "");
+  const view = (params.get("view") || "").trim().toLowerCase();
+  if (view) return view;
+  const hash = (window.location.hash || "").replace(/^#/, "").trim().toLowerCase();
+  return hash || "";
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 async function api(path, body = {}) {
@@ -626,6 +651,11 @@ function initEvents() {
   });
   $("btn-reissue")?.addEventListener("click", reissueKeys);
   $("btn-withdraw-create")?.addEventListener("click", createWithdrawal);
+  $("btn-open-support")?.addEventListener("click", () => {
+    const supportUrl = "https://t.me/LunetVPNSupport";
+    tg?.openTelegramLink?.(supportUrl);
+    if (!tg?.openTelegramLink) window.open(supportUrl, "_blank");
+  });
 
   $("btn-copy-sub")?.addEventListener("click", async () => {
     if (!state.subscriptionUrl) return toast("Ссылка недоступна");
@@ -666,7 +696,9 @@ async function bootstrap() {
       sleep(1500),
     ]);
 
-    switchView("home");
+    const initialView = getInitialViewFromUrl();
+    const allowedViews = new Set(["home", "plans", "devices", "profile", "referral"]);
+    switchView(allowedViews.has(initialView) ? initialView : "home");
     setLoader(false);
   } catch (e) {
     if (e?.code === "BANNED" || String(e?.message || "").toLowerCase().includes("banned")) {
@@ -679,6 +711,7 @@ async function bootstrap() {
 }
 
 if (IN_TELEGRAM) bootstrap();
+
 
 
 

@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     ADMIN_WEB_LOGIN: str | None = None
     ADMIN_WEB_PASSWORD: str | None = None
     ADMIN_WEB_JWT_EXPIRE_HOURS: int = 12
+    SUPPORT_FORUM_CHAT_ID: int | None = None
     DB_POOL_SIZE: int = 2
     DB_MAX_OVERFLOW: int = 0
     DB_POOL_TIMEOUT: int = 20

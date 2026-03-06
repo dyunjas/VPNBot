@@ -7,6 +7,7 @@ from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.database.models import SubStatus
 from backend.repositories.subscription_repository import SubscriptionRepository
+from backend.repositories.subscription_topup_repository import SubscriptionTopupRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.vpn_service import VPNService
 from backend.services.exceptions import (
@@ -20,6 +21,7 @@ class SubscriptionService:
     def __init__(self, session: AsyncSession):
         self.session = session
         self.sub_repo = SubscriptionRepository(session)
+        self.topup_repo = SubscriptionTopupRepository(session)
         self.user_repo = UserRepository(session)
         self.vpn_service = VPNService(session=session, xray_auth_token=settings.XRAY_AUTH)
 
@@ -124,6 +126,7 @@ class SubscriptionService:
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user.id)
 
+        await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
         await self._reset_user_traffic_safe(user_id=user_id)
         return sub
     
@@ -188,6 +191,7 @@ class SubscriptionService:
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user_id)
 
+        await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
         await self._reset_user_traffic_safe(user_id=user_id)
         await self.session.commit()
         return sub
@@ -200,8 +204,12 @@ class SubscriptionService:
         if not sub:
             raise SubscriptionNotFound("Subscription not found")
 
+        await self.topup_repo.add_topup(subscription_id=sub.id, gb=gb)
         await self.sub_repo.add_gb_left(sub, gb)
         return sub
+
+    async def get_topup_gb(self, subscription_id: int) -> Decimal:
+        return await self.topup_repo.sum_gb(subscription_id=subscription_id)
     
     async def list_active_expired(self, *, now: datetime):
         return await self.sub_repo.list_active_expired(now=now)

@@ -433,17 +433,28 @@ async def subscription(
         gb_limit = int(getattr(subscription_obj.plan, "gb_limit", 0) or 0)
     except Exception:
         gb_limit = 0
-    total_limit_bytes = max(0, gb_limit * (1024**3))
+
+    topup_gb = Decimal(0)
+    try:
+        topup_gb = await subscription_service.get_topup_gb(subscription_id=subscription_obj.id)
+    except Exception:
+        logger.exception("[subscription] failed to load topup_gb user_id=%s", user.id)
+        topup_gb = Decimal(0)
+
+    total_gb_limit = Decimal(gb_limit) + Decimal(topup_gb or 0)
+    if total_gb_limit < 0:
+        total_gb_limit = Decimal(0)
+    total_limit_bytes = int(total_gb_limit * Decimal(1024**3))
 
     headers |= _build_expire_only_header(end_dt)
     expire_unix = int(end_dt.timestamp())
     used_total = max(0, int(used_upload) + int(used_download))
 
     # Persist remaining traffic into vpn_subscriptions.gb_left:
-    # gb_left = gb_limit - used_gb
+    # gb_left = (plan_gb_limit + topup_gb) - used_gb
     try:
         used_gb = (Decimal(used_total) / Decimal(1024**3)) if used_total > 0 else Decimal(0)
-        gb_left = Decimal(gb_limit) - used_gb
+        gb_left = total_gb_limit - used_gb
         if gb_left < 0:
             gb_left = Decimal(0)
         subscription_obj.gb_left = gb_left.quantize(Decimal("0.01"))

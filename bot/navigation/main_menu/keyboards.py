@@ -1,5 +1,8 @@
+from aiogram.types import WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import WebAppInfo, InlineKeyboardButton
+
+MINIAPP_URL = "https://6ecf-194-116-236-249.ngrok-free.app/miniapp/?v=401"
+
 
 def main_menu_kb():
     builder = InlineKeyboardBuilder()
@@ -8,11 +11,10 @@ def main_menu_kb():
     builder.button(text="🌙 Подписка", callback_data="vpn_subscription")
     builder.button(
         text="🚀 Мини-Приложение",
-        web_app=WebAppInfo(url="https://3a1b5d0f7d1b.ngrok-free.app/miniapp/?v=301")
+        web_app=WebAppInfo(url=MINIAPP_URL),
     )
     builder.button(text="🌟 Профиль", callback_data="profile")
     builder.button(text="✨ Информация", callback_data="information")
 
     builder.adjust(2, 1, 2)
-
     return builder.as_markup()
