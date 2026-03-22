@@ -1,9 +1,10 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery, TelegramObject, User as TgUser
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Callable, Dict, Any, Awaitable
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.services import UserService
+from backend.services import UserService, SubscriptionService
 from backend.services.exceptions import UserNotFound
 
 
@@ -32,6 +33,7 @@ class UserUpdateMiddleware(BaseMiddleware):
                 username=event_user.username
             )
             data["is_new_user"] = True
+            await self._grant_trial_and_notify(event, session, user.tg_id, user.id)
 
         data["user"] = user
 
@@ -43,6 +45,50 @@ class UserUpdateMiddleware(BaseMiddleware):
             await user_service.set_username(user.id, event_user.username)
 
         return await handler(event, data)
+
+    async def _grant_trial_and_notify(
+        self,
+        event: TelegramObject,
+        session: AsyncSession,
+        tg_id: int,
+        user_id: int,
+    ) -> None:
+        sub_service = SubscriptionService(session)
+        try:
+            await sub_service.activate_subscription(
+                user_id=user_id,
+                plan_id=9,
+                auto_renew=False,
+            )
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            return
+
+        text = (
+            "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> <b>Вам выдан тестовый период.</b>\n\n"
+            "Перейдите в меню «Подписка», чтобы посмотреть детали."
+        )
+        builder = InlineKeyboardBuilder()
+        builder.button(text="🌙 Подписка", callback_data="vpn_subscription")
+        markup = builder.as_markup()
+        try:
+            if isinstance(event, Message):
+                await event.answer(text, reply_markup=markup)
+                return
+
+            if isinstance(event, CallbackQuery):
+                if event.message:
+                    await event.message.answer(text, reply_markup=markup)
+                else:
+                    await event.bot.send_message(chat_id=tg_id, text=text, reply_markup=markup)
+                return
+
+            bot = getattr(event, "bot", None)
+            if bot:
+                await bot.send_message(chat_id=tg_id, text=text, reply_markup=markup)
+        except Exception:
+            pass
 
     async def _notify_banned(self, event: TelegramObject, tg_id: int) -> None:
         text = (

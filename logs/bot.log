@@ -10735,3 +10735,90 @@ client_session: <aiohttp.client.ClientSession object at 0x000001996BBDABA0>
 [2026-03-07 00:03:54] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-03-07 00:03:54] [INFO] root: Bot stopped
 [2026-03-07 00:03:54] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:23:51] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:23:53] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:23:54] [INFO] root: Database tables initialized
+[2026-03-22 15:23:54] [INFO] root: Database connection successful
+[2026-03-22 15:23:54] [INFO] root: Bot started
+[2026-03-22 15:23:54] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:24:16] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:24:16] [ERROR] root: Bot crashed: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Превышен таймаут семафора]
+[2026-03-22 15:24:16] [INFO] root: Bot stopped
+[2026-03-22 15:24:44] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:24:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:24:45] [INFO] root: Database tables initialized
+[2026-03-22 15:24:45] [INFO] root: Database connection successful
+[2026-03-22 15:24:45] [INFO] root: Bot started
+[2026-03-22 15:24:45] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:24:46] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:24:56] [INFO] aiogram.event: Update id=891134500 is handled. Duration 241 ms by bot id=7557954606
+[2026-03-22 15:26:31] [ERROR] root: Database error: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-03-22 15:26:31] [INFO] aiogram.event: Update id=891134501 is handled. Duration 28 ms by bot id=7557954606
+[2026-03-22 15:26:37] [INFO] aiogram.event: Update id=891134502 is handled. Duration 296 ms by bot id=7557954606
+[2026-03-22 15:26:41] [INFO] aiogram.event: Update id=891134503 is handled. Duration 128 ms by bot id=7557954606
+[2026-03-22 15:27:26] [ERROR] root: Database error: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-03-22 15:27:26] [INFO] aiogram.event: Update id=891134504 is handled. Duration 10 ms by bot id=7557954606
+[2026-03-22 15:29:29] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:29:29] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-22 15:29:29] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-22 15:29:29] [INFO] root: Bot stopped
+[2026-03-22 15:29:29] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:29:34] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:29:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:29:34] [INFO] root: Database tables initialized
+[2026-03-22 15:29:34] [INFO] root: Database connection successful
+[2026-03-22 15:29:34] [INFO] root: Bot started
+[2026-03-22 15:29:34] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:29:35] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:29:46] [WARNING] root: [reset_user_traffic] bad response user_id=33 server_id=1 status=404
+[2026-03-22 15:29:46] [INFO] aiogram.event: Update id=891134505 is handled. Duration 1020 ms by bot id=7557954606
+[2026-03-22 15:30:20] [INFO] aiogram.event: Update id=891134506 is handled. Duration 237 ms by bot id=7557954606
+[2026-03-22 15:31:49] [INFO] aiogram.event: Update id=891134507 is handled. Duration 116 ms by bot id=7557954606
+[2026-03-22 15:35:30] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:35:30] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-22 15:35:30] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-22 15:35:30] [INFO] root: Bot stopped
+[2026-03-22 15:35:30] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:35:36] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:35:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:35:37] [INFO] root: Database tables initialized
+[2026-03-22 15:35:37] [INFO] root: Database connection successful
+[2026-03-22 15:35:37] [INFO] root: Bot started
+[2026-03-22 15:35:37] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:35:48] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:35:48] [ERROR] root: Bot crashed: HTTP Client says - ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [getaddrinfo failed]
+[2026-03-22 15:35:48] [INFO] root: Bot stopped
+[2026-03-22 15:36:28] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:36:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:36:29] [INFO] root: Database tables initialized
+[2026-03-22 15:36:29] [INFO] root: Database connection successful
+[2026-03-22 15:36:29] [INFO] root: Bot started
+[2026-03-22 15:36:29] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:36:30] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:36:39] [WARNING] root: [reset_user_traffic] bad response user_id=34 server_id=1 status=404
+[2026-03-22 15:36:39] [INFO] aiogram.event: Update id=891134508 is handled. Duration 425 ms by bot id=7557954606
+[2026-03-22 15:36:50] [INFO] aiogram.event: Update id=891134509 is handled. Duration 116 ms by bot id=7557954606
+[2026-03-22 15:36:53] [INFO] aiogram.event: Update id=891134510 is handled. Duration 273 ms by bot id=7557954606
+[2026-03-22 15:38:01] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:38:01] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-22 15:38:01] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-22 15:38:01] [INFO] root: Bot stopped
+[2026-03-22 15:38:01] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:38:07] [INFO] root: Settings successfully loaded from .env
+[2026-03-22 15:38:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-22 15:38:08] [INFO] root: Database tables initialized
+[2026-03-22 15:38:08] [INFO] root: Database connection successful
+[2026-03-22 15:38:08] [INFO] root: Bot started
+[2026-03-22 15:38:08] [INFO] aiogram.dispatcher: Start polling
+[2026-03-22 15:38:08] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-22 15:38:18] [WARNING] root: [reset_user_traffic] bad response user_id=35 server_id=1 status=404
+[2026-03-22 15:38:19] [INFO] aiogram.event: Update id=891134511 is handled. Duration 501 ms by bot id=7557954606
+[2026-03-22 15:38:26] [INFO] aiogram.event: Update id=891134512 is handled. Duration 231 ms by bot id=7557954606
+[2026-03-22 15:39:07] [WARNING] root: [reset_user_traffic] bad response user_id=36 server_id=1 status=404
+[2026-03-22 15:39:07] [INFO] aiogram.event: Update id=891134513 is handled. Duration 538 ms by bot id=7557954606
+[2026-03-22 15:39:10] [INFO] aiogram.event: Update id=891134514 is handled. Duration 309 ms by bot id=7557954606
+[2026-03-22 15:39:43] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-22 15:39:43] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-22 15:39:43] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-22 15:39:43] [INFO] root: Bot stopped
+[2026-03-22 15:39:43] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

@@ -69,6 +69,9 @@ async def start_cmd(
                 except UserNotFound:
                     pass
 
+    if is_new_user:
+        return
+
     text = (
         "<tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Добро пожаловать в Lunet!\n\n"
         "<b>В нашем сервисе:</b>\n"
