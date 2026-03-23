@@ -6,7 +6,7 @@ from bot.navigation.additional_menu.profile import profile
 from bot.navigation.additional_menu.profile import promocode
 from bot.navigation.subscription import subscription
 from bot.navigation.purchase import purchase
-from bot.payments import add_funds, platega_payment
+from bot.payments import add_funds, platega_payment, pally_payment
 from bot.navigation.additional_menu.transaction import transaction
 from bot.navigation.additional_menu.referral import referral
 from bot.navigation.additional_menu.referral import withdraw_balance
@@ -26,6 +26,7 @@ router.include_router(purchase.router)
 router.include_router(promocode.router)
 router.include_router(add_funds.router)
 router.include_router(platega_payment.router)
+router.include_router(pally_payment.router)
 router.include_router(cryptobot_payment.router)
 router.include_router(transaction.router)
 router.include_router(referral.router)

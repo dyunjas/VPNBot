@@ -27,6 +27,9 @@ class VPNService:
 
 
     def _normalize_agent_base(self, grpc_endpoint: str) -> str:
+        grpc_endpoint = (grpc_endpoint or "").strip()
+        if not grpc_endpoint:
+            return ""
         parsed = urlparse(grpc_endpoint)
         if not parsed.scheme:
             return f"http://{grpc_endpoint}"
@@ -34,7 +37,9 @@ class VPNService:
 
 
     async def _create_xray_key(self, user_id: int, server):
-        agent_base = self._normalize_agent_base(server.grpc_endpoint)
+        agent_base = self._normalize_agent_base(getattr(server, "grpc_endpoint", "") or "")
+        if not agent_base:
+            raise Exception("XRAY agent base is empty")
 
         headers = {
             "Authorization": f"Bearer {self.XRAY_AUTH_TOKEN}",
@@ -42,13 +47,14 @@ class VPNService:
         }
         payload = {"email": f"user-{user_id}@lunet"}
 
-        async with aiohttp.ClientSession() as http:
+        timeout = aiohttp.ClientTimeout(total=5)
+        async with aiohttp.ClientSession(timeout=timeout) as http:
             async with http.post(
                 f"{agent_base}/add_user",
                 json=payload,
                 headers=headers,
             ) as resp:
-                data = await resp.json()
+                data = await resp.json(content_type=None)
 
         if not data.get("ok"):
             raise Exception(f"XRAY add_user failed: {data}")
@@ -239,7 +245,8 @@ class VPNService:
             }
 
             try:
-                async with aiohttp.ClientSession() as http:
+                timeout = aiohttp.ClientTimeout(total=5)
+                async with aiohttp.ClientSession(timeout=timeout) as http:
                     async with http.post(
                         f"{agent_base}/remove_user",
                         json=payload,

@@ -10,8 +10,9 @@ def back_profile_kb():
 
 def payment_choice_kb():
     builder = InlineKeyboardBuilder()
+    builder.button(text="⚡️ СБП 1", callback_data="pay_pally")
+    builder.button(text="⚡️ СБП 2", callback_data="pay_platega:sbp")
     builder.button(text="💳 Банковская карта", callback_data="pay_platega:card")
-    builder.button(text="⚡ СБП", callback_data="pay_platega:sbp")
     builder.button(text="🪙 Криптовалюта", callback_data="pay_cryptobot")
     builder.button(text="⬅️ Назад", callback_data="profile")
     builder.adjust(1)

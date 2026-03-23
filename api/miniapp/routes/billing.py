@@ -39,7 +39,7 @@ async def mini_balance_topup(payload: TopupPayload):
         raise HTTPException(400, "Сумма должна быть больше нуля")
 
     method = (payload.method or "platega").lower().strip()
-    if method not in ("platega", "crypto"):
+    if method not in ("platega", "crypto", "pally"):
         raise HTTPException(400, "Неверный способ оплаты")
 
     tg_user = _get_tg_user(payload.initData)
@@ -86,6 +86,33 @@ async def mini_balance_topup(payload: TopupPayload):
                     "status": payment.get("status"),
                 }
 
+            if method == "pally":
+                amount = float(payload.amount)
+                payment = await billing.create_pally_payment(
+                    user_id=user.id,
+                    amount=amount,
+                    description=f"Пополнение баланса на {amount} RUB",
+                    return_url="https://t.me/LunetVPNBot",
+                    failed_url="https://t.me/LunetVPNBot",
+                )
+
+                payment_url = (
+                    payment.get("payment_url")
+                    or payment.get("pay_url")
+                    or payment.get("url")
+                    or payment.get("link")
+                    or payment.get("redirect")
+                )
+                provider_id = str(payment.get("id") or "")
+
+                return {
+                    "ok": True,
+                    "method": "pally",
+                    "payment_url": payment_url,
+                    "provider_id": provider_id,
+                    "status": payment.get("status"),
+                }
+
             invoice = await billing.create_crypto_invoice(
                 user_id=user.id,
                 amount_rub=int(payload.amount),
@@ -121,8 +148,8 @@ async def mini_balance_topup(payload: TopupPayload):
 @router.post("/balance/check")
 async def mini_balance_check(payload: BalanceCheckPayload):
     method = (payload.method or "platega").lower().strip()
-    if method not in ("platega", "crypto"):
-        raise HTTPException(400, "method must be 'platega' or 'crypto'")
+    if method not in ("platega", "crypto", "pally"):
+        raise HTTPException(400, "method must be 'platega', 'crypto' or 'pally'")
 
     tg_user = _get_tg_user(payload.initData)
     tg_id = tg_user["id"]
@@ -137,7 +164,12 @@ async def mini_balance_check(payload: BalanceCheckPayload):
         provider_id = (payload.provider_id or "").strip() or None
 
         if not provider_id:
-            payment_system = "platega" if method == "platega" else "cryptobot"
+            if method == "platega":
+                payment_system = "platega"
+            elif method == "pally":
+                payment_system = "PALLY"
+            else:
+                payment_system = "cryptobot"
             tx = await tx_service.get_last_unpaid_by_system(
                 user_id=user.id,
                 payment_system=payment_system,
@@ -149,6 +181,8 @@ async def mini_balance_check(payload: BalanceCheckPayload):
         try:
             if method == "platega":
                 await billing.confirm_platega_payment(provider_id)
+            elif method == "pally":
+                await billing.confirm_pally_payment(provider_id)
             else:
                 try:
                     invoice_id = int(provider_id)
@@ -183,6 +217,11 @@ async def mini_balance_check(payload: BalanceCheckPayload):
         finally:
             try:
                 await billing.platega.close()
+            except Exception:
+                pass
+            try:
+                if billing.pally:
+                    await billing.pally.close()
             except Exception:
                 pass
             try:

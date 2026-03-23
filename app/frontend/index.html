@@ -112,13 +112,17 @@
             <input id="topup-input" class="input" placeholder="Сумма в рублях" inputmode="numeric" />
           </div>
           <div id="topup-methods" class="payment-methods">
-            <button class="pay-method pay-method--active" data-method="card" type="button" aria-label="Оплата картой">
-              <img class="pay-method__icon" src="/miniapp/assets/pay-mir.png" alt="MIR" />
-              <span class="pay-method__label">Карта</span>
+            <button class="pay-method" data-method="pally" type="button" aria-label="Оплата через СБП 1">
+              <img class="pay-method__icon" src="/miniapp/assets/pay-sbp.png" alt="СБП 1" />
+              <span class="pay-method__label">СБП 1</span>
             </button>
             <button class="pay-method" data-method="sbp" type="button" aria-label="Оплата через СБП">
               <img class="pay-method__icon" src="/miniapp/assets/pay-sbp.png" alt="СБП" />
-              <span class="pay-method__label">СБП</span>
+              <span class="pay-method__label">СБП 2</span>
+            </button>
+            <button class="pay-method pay-method--active" data-method="card" type="button" aria-label="Оплата картой">
+              <img class="pay-method__icon" src="/miniapp/assets/pay-mir.png" alt="MIR" />
+              <span class="pay-method__label">Карта</span>
             </button>
             <button class="pay-method" data-method="crypto" type="button" aria-label="Оплата криптовалютой">
               <img class="pay-method__icon" src="/miniapp/assets/pay-usdt.png" alt="USDT" />

@@ -525,6 +525,7 @@ async function applyPromocode() {
 function getTopupPayload() {
   const method = state.topupMethod || document.querySelector(".pay-method--active")?.dataset.method || "card";
   if (method === "crypto") return { method: "crypto", asset: "USDT" };
+  if (method === "pally") return { method: "pally" };
   return { method: "platega", platega_type: method };
 }
 
@@ -585,7 +586,7 @@ async function createTopup() {
 async function checkPayments() {
   haptic();
   try {
-    const data = await api("/mini/balance/check");
+    const data = await api("/mini/balance/check", getTopupPayload());
 
     if (!data.ok && data.reason === "no_pending") {
       toast(`Ожидающих платежей нет (проверено: ${data.checked || 0})`);

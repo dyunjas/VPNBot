@@ -28,7 +28,8 @@ class DBSessionMiddleware(BaseMiddleware):
             data["session"] = session
             data["user_service"] = UserService(session)
             data["transaction_service"] = TransactionService(session)
-            data["billing_service"] = BillingService(session)
+            billing_service = BillingService(session)
+            data["billing_service"] = billing_service
             data["subscription_service"] = SubscriptionService(session)
             data["vpn_service"] = VPNService(session, xray_auth_token=settings.XRAY_AUTH)
             data["promo_service"] = PromoService(session)
@@ -45,4 +46,8 @@ class DBSessionMiddleware(BaseMiddleware):
                 await session.rollback()
                 logger.error(f"Database error: {e}")
             finally:
+                try:
+                    await billing_service.close_clients()
+                except Exception:
+                    pass
                 await session.close()

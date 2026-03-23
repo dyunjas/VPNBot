@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
     CRYPTOBOT_SECRET: str
+    PALLY_API_TOKEN: str | None = None
+    PALLY_SHOP_ID: str | None = None
+    PALLY_SUCCESS_URL: str | None = None
+    PALLY_FAIL_URL: str | None = None
     SMTP_HOST: str
     SMTP_PORT: int
     SMTP_NOREPLY_USER: str

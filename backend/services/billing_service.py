@@ -10,6 +10,7 @@ from backend.repositories.transaction_repository import TransactionRepository
 
 from backend.payments.platega import PlategaPaymentAPI
 from backend.payments.cryptobot import CryptoPayAPI, CurrencyType
+from backend.payments.pally import PallyPaymentAPI
 
 from backend.services.subscription_service import SubscriptionService
 from backend.services.exceptions import (
@@ -35,6 +36,69 @@ class BillingService:
 
         self.platega = PlategaPaymentAPI()
         self.crypto = CryptoPayAPI()
+        self.pally: PallyPaymentAPI | None = None
+
+    def _get_pally(self) -> PallyPaymentAPI:
+        if self.pally is None:
+            self.pally = PallyPaymentAPI()
+        return self.pally
+
+    @staticmethod
+    def _extract_pally_id(payload: dict) -> str | None:
+        for key in ("id", "bill_id", "billId", "invoice_id", "order_id"):
+            value = payload.get(key)
+            if value:
+                return str(value)
+
+        data = payload.get("data")
+        if isinstance(data, dict):
+            for key in ("id", "bill_id", "billId", "invoice_id", "order_id"):
+                value = data.get(key)
+                if value:
+                    return str(value)
+        return None
+
+    @staticmethod
+    def _extract_pally_url(payload: dict) -> str | None:
+        for key in ("payment_url", "pay_url", "url", "link", "link_page_url", "redirect", "payformSuccessUrl"):
+            value = payload.get(key)
+            if value:
+                return str(value)
+
+        data = payload.get("data")
+        if isinstance(data, dict):
+            for key in ("payment_url", "pay_url", "url", "link", "link_page_url", "redirect"):
+                value = data.get(key)
+                if value:
+                    return str(value)
+        return None
+
+    @staticmethod
+    def _is_pally_paid(payload: dict) -> bool:
+        nested = payload.get("data") if isinstance(payload.get("data"), dict) else {}
+
+        if payload.get("paid") is True or payload.get("is_paid") is True or payload.get("success") is True:
+            return True
+        if nested.get("paid") is True or nested.get("is_paid") is True or nested.get("success") is True:
+            return True
+
+        status = (
+            payload.get("status")
+            or payload.get("bill_status")
+            or payload.get("state")
+            or payload.get("payment_status")
+            or nested.get("status")
+            or nested.get("bill_status")
+            or nested.get("state")
+            or nested.get("payment_status")
+            or ""
+        )
+        status_str = str(status).lower().strip()
+        if status_str in {"paid", "success", "confirmed", "completed", "done", "ok"}:
+            return True
+        if status_str.isdigit() and int(status_str) == 1:
+            return True
+        return False
 
     async def create_platega_payment(
         self,
@@ -95,6 +159,23 @@ class BillingService:
         await self.session.commit()
         return tx
 
+    async def close_clients(self) -> None:
+        try:
+            await self.platega.close()
+        except Exception:
+            pass
+
+        try:
+            await self.crypto.close()
+        except Exception:
+            pass
+
+        try:
+            if self.pally:
+                await self.pally.close()
+        except Exception:
+            pass
+
     async def create_crypto_invoice(
         self,
         user_id: int,
@@ -151,6 +232,78 @@ class BillingService:
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount) 
         await self.tx_repo.mark_paid(
             provider_transaction_id=str(invoice_id),
+            paid_at=datetime.now(timezone.utc),
+        )
+
+        await self.session.commit()
+        return tx
+
+    async def create_pally_payment(
+        self,
+        user_id: int,
+        amount: float,
+        description: str | None = None,
+        return_url: str | None = None,
+        failed_url: str | None = None,
+        ttl: int = 600,
+    ) -> dict:
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+
+        payload = f"PALLY-{user.id}-{int(datetime.now().timestamp())}"
+
+        pally = self._get_pally()
+        payment = await pally.create_invoice(
+            amount=amount,
+            order_id=payload,
+            description=description or f"Top up {amount} RUB",
+            success_url=return_url,
+            fail_url=failed_url,
+            ttl=ttl,
+        )
+
+        if payment.get("error"):
+            raise ValueError(f"PALLY API error: {payment.get('error')}")
+
+        provider_id = self._extract_pally_id(payment)
+        if not provider_id:
+            raise ValueError(f"PALLY API did not return bill id: {payment}")
+
+        payment_url = self._extract_pally_url(payment)
+        if payment_url and "payment_url" not in payment:
+            payment["payment_url"] = payment_url
+        payment["id"] = provider_id
+
+        await self.tx_repo.create(
+            user_id=user_id,
+            provider_transaction_id=str(provider_id),
+            payment_system="PALLY",
+            amount=Decimal(amount),
+            created_at=datetime.now(timezone.utc),
+            paid=False,
+            paid_at=None,
+        )
+
+        await self.session.commit()
+        return payment
+
+    async def confirm_pally_payment(self, provider_transaction_id: str):
+        tx = await self.tx_repo.get_by_provider_id_for_update(provider_transaction_id)
+        if not tx:
+            raise TransactionNotFound("Transaction not found")
+
+        if tx.paid:
+            return tx
+
+        pally = self._get_pally()
+        status = await pally.get_status(provider_transaction_id)
+        if not self._is_pally_paid(status):
+            raise PaymentNotConfirmed("Payment not confirmed")
+
+        await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
+        await self.tx_repo.mark_paid(
+            provider_transaction_id=provider_transaction_id,
             paid_at=datetime.now(timezone.utc),
         )
 
