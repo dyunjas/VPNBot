@@ -11,7 +11,12 @@ from fastapi.staticfiles import StaticFiles
 from api.admin.endpoints import router as admin_router
 from backend.database.session import init_db, check_connection
 
-app = FastAPI(title="Lunet VPN Admin")
+app = FastAPI(
+    title="Lunet VPN Admin",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ADMIN_FRONTEND_DIR = os.path.join(BASE_DIR, "app", "admin_frontend")

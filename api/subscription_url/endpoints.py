@@ -10,6 +10,7 @@ from uuid import UUID
 import aiohttp
 
 from fastapi import APIRouter, Depends, Request, Response
+from fastapi.responses import HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.subscription_url.utils import (
@@ -34,6 +35,45 @@ router = APIRouter(tags=["subscription"])
 
 XRAY_AUTH_TOKEN = settings.XRAY_AUTH
 BOT_TOKEN = settings.BOT_TOKEN
+
+
+def _is_browser_request(request: Request) -> bool:
+    accept = (request.headers.get("accept") or "").lower()
+    user_agent = (request.headers.get("user-agent") or "").lower()
+    return ("text/html" in accept) or ("mozilla/" in user_agent)
+
+
+def _moon_html_response() -> HTMLResponse:
+    html = """
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lunet</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: radial-gradient(130% 90% at 0% 0%, #dbe7f8 0%, #c8d8ef 60%, #bfd0ea 100%);
+    }
+    img {
+      width: min(280px, 74vw);
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 12px 24px rgba(35, 73, 122, 0.20));
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+  </style>
+</head>
+<body>
+  <img src="/miniapp/assets/moon.png" alt="Moon" />
+</body>
+</html>
+"""
+    return HTMLResponse(content=html)
 
 
 def _clip(value: str | None, limit: int) -> str | None:
@@ -297,6 +337,9 @@ async def subscription(
     vpn_service: VPNService = Depends(get_vpn_service),
     device_service: DeviceService = Depends(get_device_service),
 ):
+    if _is_browser_request(request):
+        return _moon_html_response()
+
     headers: dict[str, str] = {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
         "Pragma": "no-cache",

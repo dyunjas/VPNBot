@@ -56,3 +56,7 @@
 [2026-03-29 15:11:25] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-03-29 15:11:25] [INFO] root: Bot stopped
 [2026-03-29 15:11:25] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-29 15:36:45] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 15:36:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 15:36:46] [INFO] root: Database tables initialized
+[2026-03-29 15:36:46] [INFO] root: Database connection successful

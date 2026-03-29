@@ -11,7 +11,12 @@ from api.subscription_url.endpoints import router as subscription_router
 from backend.database.models import Server
 from backend.database.session import async_session, init_db, check_connection
 
-app = FastAPI(title="Lunet VPN MiniApp")
+app = FastAPI(
+    title="Lunet VPN MiniApp",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
