@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import aiohttp
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.repositories.admin_repository import AdminRepository
 from backend.repositories.server_repository import ServerRepository
 from backend.services.exceptions import AdminPermissionDenied, ServerNotFound
@@ -75,14 +76,23 @@ class AdminService:
     async def get_server_stats(self, server_id: int) -> dict[str, Any]:
         server = await self._get_server(server_id)
         base = self._normalize_agent_base(server.grpc_endpoint) 
-        return await self._get_json(f"{base}/stats")
+        logger.info("[biz][admin] server_stats_requested server_id=%s", server_id)
+        payload = await self._get_json(f"{base}/stats")
+        logger.info("[biz][admin] server_stats_completed server_id=%s", server_id)
+        return payload
 
     async def get_server_health(self, server_id: int) -> dict[str, Any]:
         server = await self._get_server(server_id)
         base = self._normalize_agent_base(server.grpc_endpoint)
-        return await self._get_json(f"{base}/health")
+        logger.info("[biz][admin] server_health_requested server_id=%s", server_id)
+        payload = await self._get_json(f"{base}/health")
+        logger.info("[biz][admin] server_health_completed server_id=%s", server_id)
+        return payload
 
     async def resync_server(self, server_id: int) -> dict[str, Any]:
         server = await self._get_server(server_id)
         base = self._normalize_agent_base(server.grpc_endpoint)
-        return await self._post_json(f"{base}/resync", payload={})
+        logger.info("[biz][admin] server_resync_requested server_id=%s", server_id)
+        payload = await self._post_json(f"{base}/resync", payload={})
+        logger.info("[biz][admin] server_resync_completed server_id=%s", server_id)
+        return payload

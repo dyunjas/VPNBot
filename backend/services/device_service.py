@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.database.models import UserDevice, Subscription
 from backend.repositories.device_repository import DeviceRepository
 from backend.repositories.subscription_repository import SubscriptionRepository
@@ -52,14 +53,12 @@ class DeviceService:
     async def count_devices(self, user_id: int) -> int:
         return await self.device_repo.count_by_user(user_id)
 
-
     async def get_subscription_with_slots(self, user_id: int) -> Subscription:
         sub = await self._get_active_subscription_with_plan(user_id)
         await self._sync_subscription_limit_from_plan(sub)
         await self.session.commit()
         await self.session.refresh(sub)
         return sub
-
 
     async def register_device_if_new(
         self,
@@ -80,6 +79,12 @@ class DeviceService:
         if existing:
             await self.device_repo.touch_last_seen(user_id=user_id, hwid=hwid, seen_at=seen_at)
             await self.session.commit()
+            logger.info(
+                "[biz][device] seen_existing user_id=%s device_id=%s hwid=%s",
+                user_id,
+                existing.id,
+                hwid,
+            )
             return False, None
 
         sub = await self._get_active_subscription_with_plan(user_id)
@@ -88,6 +93,12 @@ class DeviceService:
         consumed = await self.device_repo.decrease_device_slot(sub.id)
         if consumed <= 0:
             await self.session.commit()
+            logger.warning(
+                "[biz][device] register_limit_reached user_id=%s subscription_id=%s hwid=%s",
+                user_id,
+                sub.id,
+                hwid,
+            )
             raise DeviceLimitReached("No free device slots")
 
         await self.device_repo.create(
@@ -103,6 +114,12 @@ class DeviceService:
 
         await self.session.commit()
         await self.session.refresh(sub)
+        logger.info(
+            "[biz][device] registered user_id=%s subscription_id=%s hwid=%s",
+            user_id,
+            sub.id,
+            hwid,
+        )
         return True, sub
 
     async def delete_device_by_hwid(
@@ -120,6 +137,7 @@ class DeviceService:
 
         if not refund_slot:
             await self.session.commit()
+            logger.info("[biz][device] deleted_no_refund user_id=%s hwid=%s", user_id, hwid)
             return None
 
         sub = await self._get_active_subscription_with_plan(user_id)
@@ -129,6 +147,12 @@ class DeviceService:
 
         await self.session.commit()
         await self.session.refresh(sub)
+        logger.info(
+            "[biz][device] deleted_with_refund user_id=%s subscription_id=%s hwid=%s",
+            user_id,
+            sub.id,
+            hwid,
+        )
         return sub
 
     async def delete_device_by_id(
@@ -148,6 +172,11 @@ class DeviceService:
 
         if not refund_slot:
             await self.session.commit()
+            logger.info(
+                "[biz][device] deleted_by_id_no_refund user_id=%s device_id=%s",
+                user_id,
+                device_id,
+            )
             return None
 
         sub = await self._get_active_subscription_with_plan(user_id)
@@ -157,6 +186,12 @@ class DeviceService:
 
         await self.session.commit()
         await self.session.refresh(sub)
+        logger.info(
+            "[biz][device] deleted_by_id_with_refund user_id=%s subscription_id=%s device_id=%s",
+            user_id,
+            sub.id,
+            device_id,
+        )
         return sub
 
     async def remove_device_for_user(self, *, user_id: int, device_id: int) -> None:

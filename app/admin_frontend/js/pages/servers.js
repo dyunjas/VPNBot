@@ -48,6 +48,23 @@
     `,
   });
 
+  function buildServerAdminUrl(endpoint) {
+    const raw = String(endpoint || "").trim();
+    if (!raw) return "";
+
+    const withScheme = /^https?:\/\//i.test(raw) ? raw : `http://${raw}`;
+    try {
+      const url = new URL(withScheme);
+      if (!/^https?:$/i.test(url.protocol)) url.protocol = "http:";
+      url.pathname = "/web";
+      url.search = "";
+      url.hash = "";
+      return url.toString();
+    } catch {
+      return `http://${raw.replace(/^\/+|\/+$/g, "")}/web`;
+    }
+  }
+
   function renderResult(data) {
     const result = (data && data.result) || {};
     const keys = Object.keys(result);
@@ -112,7 +129,28 @@
         try { await serverAction(s.id, "resync"); } catch (e) { alert(e.message); }
       });
 
-      actions.append(h, st, rs);
+      const web = document.createElement("button");
+      web.textContent = "Панель";
+      web.className = "btn-primary";
+      web.addEventListener("click", () => {
+        const url = buildServerAdminUrl(s.grpc_endpoint);
+        if (!url) return alert("Endpoint не задан");
+        window.open(url, "_blank", "noopener,noreferrer");
+      });
+
+      const del = document.createElement("button");
+      del.textContent = "Удалить";
+      del.className = "btn-danger";
+      del.addEventListener("click", async (e) => {
+        if (!confirm(`Удалить сервер #${s.id}? Действие необратимо.`)) return;
+        await withButtonLoading(e.currentTarget, async () => {
+          await api(`/admin-api/servers/${s.id}`, { method: "DELETE" });
+          showToast("Сервер удален", "success");
+          await loadRows();
+        }).catch((err) => alert(err.message));
+      });
+
+      actions.append(h, st, rs, web, del);
       tr.querySelector("td:last-child").appendChild(actions);
       q("tbody").appendChild(tr);
     });

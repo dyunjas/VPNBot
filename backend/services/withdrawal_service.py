@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.database.models import WithdrawalStatus
 from backend.repositories.referral_repository import ReferralRepository
 from backend.repositories.withdrawal_repository import WithdrawalRepository
@@ -47,6 +48,12 @@ class WithdrawalService:
         amount: int,
         method: str
     ):
+        logger.info(
+            "[biz][withdrawal] create_requested user_id=%s amount=%s method=%s",
+            user_id,
+            amount,
+            method,
+        )
         if amount <= 0:
             raise ValueError("Amount must be > 0")
 
@@ -59,6 +66,11 @@ class WithdrawalService:
             amount=amount
         )
         if not updated:
+            logger.warning(
+                "[biz][withdrawal] create_insufficient_ref_balance user_id=%s amount=%s",
+                user_id,
+                amount,
+            )
             raise NotEnoughReferralBalance("Not enough referral balance")
 
         withdrawal = await self.withdrawal_repo.create_withdrawal(
@@ -68,6 +80,13 @@ class WithdrawalService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][withdrawal] created user_id=%s withdrawal_id=%s amount=%s method=%s",
+            user_id,
+            withdrawal.id,
+            amount,
+            method,
+        )
         return withdrawal
 
     async def list_by_user(self, *, user_id: int, limit: int = 30):
@@ -88,6 +107,11 @@ class WithdrawalService:
         admin_user_id: int,
         withdrawal_id: int
     ):
+        logger.info(
+            "[biz][withdrawal] approve_requested admin_user_id=%s withdrawal_id=%s",
+            admin_user_id,
+            withdrawal_id,
+        )
         await self._ensure_admin(admin_user_id)
 
         withdrawal = await self.withdrawal_repo.get_by_id(withdrawal_id)
@@ -99,11 +123,21 @@ class WithdrawalService:
             status=WithdrawalStatus.approved
         )
         if not updated:
+            logger.warning(
+                "[biz][withdrawal] approve_not_pending admin_user_id=%s withdrawal_id=%s",
+                admin_user_id,
+                withdrawal_id,
+            )
             raise WithdrawalNotPending("Withdrawal is not pending")
 
         await self.session.commit()
 
         withdrawal.status = WithdrawalStatus.approved
+        logger.info(
+            "[biz][withdrawal] approved admin_user_id=%s withdrawal_id=%s",
+            admin_user_id,
+            withdrawal_id,
+        )
         return withdrawal
 
     async def reject(
@@ -112,6 +146,11 @@ class WithdrawalService:
         admin_user_id: int,
         withdrawal_id: int
     ):
+        logger.info(
+            "[biz][withdrawal] reject_requested admin_user_id=%s withdrawal_id=%s",
+            admin_user_id,
+            withdrawal_id,
+        )
         await self._ensure_admin(admin_user_id)
 
         withdrawal = await self.withdrawal_repo.get_by_id(withdrawal_id)
@@ -123,6 +162,11 @@ class WithdrawalService:
             status=WithdrawalStatus.rejected
         )
         if not updated:
+            logger.warning(
+                "[biz][withdrawal] reject_not_pending admin_user_id=%s withdrawal_id=%s",
+                admin_user_id,
+                withdrawal_id,
+            )
             raise WithdrawalNotPending("Withdrawal is not pending")
 
         account = withdrawal.referral_account
@@ -137,4 +181,11 @@ class WithdrawalService:
         await self.session.commit()
 
         withdrawal.status = WithdrawalStatus.rejected
+        logger.info(
+            "[biz][withdrawal] rejected admin_user_id=%s withdrawal_id=%s refund_user_id=%s amount=%s",
+            admin_user_id,
+            withdrawal_id,
+            account.user_id,
+            withdrawal.amount,
+        )
         return withdrawal

@@ -139,6 +139,7 @@ const ADMIN_MENU = [
   { key: "referrals", href: "/admin/referrals", label: "Реферальная система", icon: "ref" },
   { key: "servers", href: "/admin/servers", label: "Серверы", icon: "srv" },
   { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
+  { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
 ];
 
 function menuIcon(kind) {
@@ -152,6 +153,7 @@ function menuIcon(kind) {
     ref: "<circle cx='7.5' cy='8.5' r='2'/><circle cx='16.5' cy='8.5' r='2'/><circle cx='12' cy='15.5' r='2.2'/><path d='M9 9.5l2 4M15 9.5l-2 4'/>",
     srv: "<rect x='5' y='6' width='14' height='4' rx='1.2'/><rect x='5' y='14' width='14' height='4' rx='1.2'/><circle cx='8' cy='8' r='0.8'/><circle cx='8' cy='16' r='0.8'/>",
     mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='1.8'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
+    logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7a1.5 1.5 0 0 1 1.5-1.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
   const icon = map[kind] || map.overview;
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg>`;
@@ -176,12 +178,13 @@ function renderQuickNav() {
 function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   document.body.innerHTML = `
     <div class="app-bg"></div>
+    <button id="mobile_nav_overlay" class="mobile-nav-overlay" type="button" aria-label="Закрыть меню"></button>
 
     <div class="app">
       <aside class="sidebar">
         <div class="logo">
           <div class="logo-badge">
-            <img src="/admin/assets/moon.svg?v=26" alt="Lunet" />
+            <img src="/admin/assets/moon.png?v=26" alt="Lunet" />
           </div>
           <div class="logo-title">Lunet Admin</div>
         </div>
@@ -201,6 +204,9 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
             <div class="page-sub">${subtitle}</div>
           </div>
           <div class="topbar-right">
+            <button id="mobile_nav_toggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню">
+              <span></span><span></span><span></span>
+            </button>
             <select id="quick_nav" class="top-select">${renderQuickNav()}</select>
           </div>
         </header>
@@ -220,6 +226,22 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     if (val) window.location.href = val;
   });
 
+  const openMobileNav = () => document.body.classList.add("mobile-nav-open");
+  const closeMobileNav = () => document.body.classList.remove("mobile-nav-open");
+
+  const navToggle = q("mobile_nav_toggle");
+  const navOverlay = q("mobile_nav_overlay");
+  if (navToggle) {
+    navToggle.addEventListener("click", () => {
+      if (document.body.classList.contains("mobile-nav-open")) closeMobileNav();
+      else openMobileNav();
+    });
+  }
+  if (navOverlay) navOverlay.addEventListener("click", closeMobileNav);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980) closeMobileNav();
+  });
+
   const menuEl = document.querySelector(".menu");
   if (menuEl) {
     menuEl.addEventListener("click", (e) => {
@@ -227,6 +249,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
       if (!link) return;
       menuEl.querySelectorAll("a").forEach((el) => el.classList.remove("active-tap"));
       link.classList.add("active-tap");
+      closeMobileNav();
     });
   }
 

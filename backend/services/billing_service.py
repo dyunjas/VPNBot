@@ -5,6 +5,7 @@ from decimal import Decimal, ROUND_UP
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.repositories.user_repository import UserRepository
 from backend.repositories.transaction_repository import TransactionRepository
 
@@ -109,8 +110,15 @@ class BillingService:
         return_url: str | None = None,
         failed_url: str | None = None,
     ) -> dict:
+        logger.info(
+            "[biz][billing] platega_create_requested user_id=%s amount=%s payment_method=%s",
+            user_id,
+            amount,
+            payment_method,
+        )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][billing] platega_create_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
         payload = f"TPU-{user.id}-{int(datetime.now().timestamp())}"
@@ -135,19 +143,43 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] platega_created user_id=%s provider_id=%s amount=%s",
+            user_id,
+            payment.get("id"),
+            amount,
+        )
 
         return payment
 
     async def confirm_platega_payment(self, provider_transaction_id: str):
+        logger.info(
+            "[biz][billing] platega_confirm_requested provider_id=%s",
+            provider_transaction_id,
+        )
         tx = await self.tx_repo.get_by_provider_id_for_update(provider_transaction_id)
         if not tx:
+            logger.warning(
+                "[biz][billing] platega_confirm_tx_not_found provider_id=%s",
+                provider_transaction_id,
+            )
             raise TransactionNotFound("Transaction not found")
 
         if tx.paid:
+            logger.info(
+                "[biz][billing] platega_confirm_already_paid provider_id=%s user_id=%s",
+                provider_transaction_id,
+                tx.user_id,
+            )
             return tx
 
         status = await self.platega.get_status(provider_transaction_id)
         if status.get("status") != "CONFIRMED":
+            logger.warning(
+                "[biz][billing] platega_not_confirmed provider_id=%s status=%s",
+                provider_transaction_id,
+                status.get("status"),
+            )
             raise PaymentNotConfirmed("Payment not confirmed")
 
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
@@ -157,6 +189,12 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] platega_confirmed provider_id=%s user_id=%s amount=%s",
+            provider_transaction_id,
+            tx.user_id,
+            tx.amount,
+        )
         return tx
 
     async def close_clients(self) -> None:
@@ -185,8 +223,15 @@ class BillingService:
         description: str | None = None,
         expires_in: int | None = 900,
     ) -> dict:
+        logger.info(
+            "[biz][billing] crypto_create_requested user_id=%s amount_rub=%s asset=%s",
+            user_id,
+            amount_rub,
+            asset,
+        )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][billing] crypto_create_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
         amount_crypto = (Decimal(amount_rub) / USDT_RATE).quantize(
@@ -215,18 +260,37 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] crypto_created user_id=%s invoice_id=%s amount_rub=%s amount_crypto=%s",
+            user_id,
+            invoice.get("invoice_id"),
+            amount_rub,
+            amount_crypto,
+        )
         return invoice
 
     async def confirm_crypto_payment(self, invoice_id: int):
+        logger.info("[biz][billing] crypto_confirm_requested invoice_id=%s", invoice_id)
         tx = await self.tx_repo.get_by_provider_id_for_update(str(invoice_id))
         if not tx:
+            logger.warning("[biz][billing] crypto_confirm_tx_not_found invoice_id=%s", invoice_id)
             raise TransactionNotFound("Transaction not found")
 
         if tx.paid:
+            logger.info(
+                "[biz][billing] crypto_confirm_already_paid invoice_id=%s user_id=%s",
+                invoice_id,
+                tx.user_id,
+            )
             return tx
 
         invoice = await self.crypto.get_invoice_status(invoice_id)
         if invoice.get("status") != "paid":
+            logger.warning(
+                "[biz][billing] crypto_not_paid invoice_id=%s status=%s",
+                invoice_id,
+                invoice.get("status"),
+            )
             raise PaymentNotConfirmed("Invoice not paid")
 
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount) 
@@ -236,6 +300,12 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] crypto_confirmed invoice_id=%s user_id=%s amount=%s",
+            invoice_id,
+            tx.user_id,
+            tx.amount,
+        )
         return tx
 
     async def create_pally_payment(
@@ -247,8 +317,15 @@ class BillingService:
         failed_url: str | None = None,
         ttl: int = 600,
     ) -> dict:
+        logger.info(
+            "[biz][billing] pally_create_requested user_id=%s amount=%s ttl=%s",
+            user_id,
+            amount,
+            ttl,
+        )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][billing] pally_create_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
         payload = f"PALLY-{user.id}-{int(datetime.now().timestamp())}"
@@ -264,10 +341,16 @@ class BillingService:
         )
 
         if payment.get("error"):
+            logger.error(
+                "[biz][billing] pally_create_api_error user_id=%s error=%s",
+                user_id,
+                payment.get("error"),
+            )
             raise ValueError(f"PALLY API error: {payment.get('error')}")
 
         provider_id = self._extract_pally_id(payment)
         if not provider_id:
+            logger.error("[biz][billing] pally_create_missing_provider_id user_id=%s", user_id)
             raise ValueError(f"PALLY API did not return bill id: {payment}")
 
         payment_url = self._extract_pally_url(payment)
@@ -286,19 +369,43 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] pally_created user_id=%s provider_id=%s amount=%s",
+            user_id,
+            provider_id,
+            amount,
+        )
         return payment
 
     async def confirm_pally_payment(self, provider_transaction_id: str):
+        logger.info(
+            "[biz][billing] pally_confirm_requested provider_id=%s",
+            provider_transaction_id,
+        )
         tx = await self.tx_repo.get_by_provider_id_for_update(provider_transaction_id)
         if not tx:
+            logger.warning(
+                "[biz][billing] pally_confirm_tx_not_found provider_id=%s",
+                provider_transaction_id,
+            )
             raise TransactionNotFound("Transaction not found")
 
         if tx.paid:
+            logger.info(
+                "[biz][billing] pally_confirm_already_paid provider_id=%s user_id=%s",
+                provider_transaction_id,
+                tx.user_id,
+            )
             return tx
 
         pally = self._get_pally()
         status = await pally.get_status(provider_transaction_id)
         if not self._is_pally_paid(status):
+            logger.warning(
+                "[biz][billing] pally_not_paid provider_id=%s status=%s",
+                provider_transaction_id,
+                status,
+            )
             raise PaymentNotConfirmed("Payment not confirmed")
 
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
@@ -308,17 +415,40 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] pally_confirmed provider_id=%s user_id=%s amount=%s",
+            provider_transaction_id,
+            tx.user_id,
+            tx.amount,
+        )
         return tx
 
     async def charge_balance(self, user_id: int, amount: Decimal):
+        logger.info(
+            "[biz][billing] charge_balance_requested user_id=%s amount=%s",
+            user_id,
+            amount,
+        )
         user = await self.user_repo.get_by_id_for_update(user_id)
         if not user:
+            logger.warning("[biz][billing] charge_balance_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
         if user.balance < amount:
+            logger.warning(
+                "[biz][billing] charge_balance_insufficient user_id=%s balance=%s required=%s",
+                user_id,
+                user.balance,
+                amount,
+            )
             raise InsufficientBalance("Insufficient balance")
 
         await self.user_repo.sub_balance(user_id=user_id, amount=amount)
+        logger.info(
+            "[biz][billing] charge_balance_completed user_id=%s amount=%s",
+            user_id,
+            amount,
+        )
 
     async def buy_subscription(
         self,
@@ -326,6 +456,12 @@ class BillingService:
         plan_id: int,
         auto_renew: bool = True,
     ):
+        logger.info(
+            "[biz][billing] buy_subscription_requested user_id=%s plan_id=%s auto_renew=%s",
+            user_id,
+            plan_id,
+            auto_renew,
+        )
         plan = await self.sub_service.get_plan(plan_id)
 
         now = datetime.now(timezone.utc)
@@ -336,6 +472,12 @@ class BillingService:
                 end = end.replace(tzinfo=timezone.utc)
 
             if end and end > now and (end - now) > timedelta(days=3):
+                logger.warning(
+                    "[biz][billing] buy_subscription_too_early user_id=%s plan_id=%s seconds_left=%s",
+                    user_id,
+                    plan_id,
+                    int((end - now).total_seconds()),
+                )
                 raise TooEarlyToRenew(
                     "Subscription can ony be renewed within 3 days before expiration"
                 )
@@ -351,9 +493,21 @@ class BillingService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] buy_subscription_completed user_id=%s subscription_id=%s plan_id=%s charged=%s",
+            user_id,
+            sub.id,
+            plan_id,
+            plan.price,
+        )
         return sub
 
     async def add_gb_to_subscription(self, user_id: int, gb: int):
+        logger.info(
+            "[biz][billing] buy_traffic_requested user_id=%s gb=%s",
+            user_id,
+            gb,
+        )
         if gb < MIN_TRAFFIC_PURCHASE_GB:
             raise ValueError(f"Minimum traffic purchase is {MIN_TRAFFIC_PURCHASE_GB} GB")
 
@@ -364,4 +518,11 @@ class BillingService:
         sub = await self.sub_service.add_traffic(user_id=user_id, gb=Decimal(gb))
 
         await self.session.commit()
+        logger.info(
+            "[biz][billing] buy_traffic_completed user_id=%s subscription_id=%s gb=%s charged=%s",
+            user_id,
+            sub.id,
+            gb,
+            int(price),
+        )
         return sub, int(price)

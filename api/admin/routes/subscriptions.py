@@ -133,3 +133,12 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         return {"ok": True}
 
 
+@router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_admin_auth)])
+async def admin_subscription_delete(subscription_id: int):
+    async with async_session() as session:
+        sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
+        await session.delete(sub)
+        await session.commit()
+        return {"ok": True}
+
+

@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from sqlalchemy.exc import IntegrityError
 from ..common import *
 
 router = APIRouter()
@@ -63,5 +64,21 @@ async def admin_server_action(server_id: int, payload: ServerActionPayload):
             raise HTTPException(status_code=404, detail=str(e))
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/servers/{server_id}", dependencies=[Depends(require_admin_auth)])
+async def admin_server_delete(server_id: int):
+    async with async_session() as session:
+        server = _http_404_if_none(await session.get(Server, server_id), "server not found")
+        await session.delete(server)
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            raise HTTPException(
+                status_code=400,
+                detail="cannot delete server with linked entities",
+            )
+        return {"ok": True}
 
 

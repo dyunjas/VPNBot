@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.repositories.referral_repository import ReferralRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.subscription_service import SubscriptionService
@@ -26,6 +27,7 @@ class ReferralService:
         
         account = await self.referral_repo.create_account(user_id)
         await self.session.flush()
+        logger.info("[biz][referral] account_created user_id=%s account_id=%s", user_id, account.id)
         return account
     
     async def get_account(self, user_id: int):
@@ -33,6 +35,7 @@ class ReferralService:
     
     async def attach_referrer(self, *, user_id: int, referrer_id: int) -> bool:
         if user_id == referrer_id:
+            logger.warning("[biz][referral] attach_self_referrer_blocked user_id=%s", user_id)
             return False
 
         user = await self.user_repo.get_by_id(user_id)
@@ -60,8 +63,19 @@ class ReferralService:
             )
 
             await self.session.commit()
+            logger.info(
+                "[biz][referral] referrer_attached user_id=%s referrer_id=%s bonus_hours=%s",
+                user_id,
+                referrer_id,
+                REF_BONUS_HOURS,
+            )
             return True
 
+        logger.info(
+            "[biz][referral] referrer_attach_skipped user_id=%s referrer_id=%s reason=already_attached",
+            user_id,
+            referrer_id,
+        )
         return False
     
     async def reward_from_purchase(
@@ -84,6 +98,13 @@ class ReferralService:
 
         reward = purchase_amount * percent // 100
         if reward <= 0:
+            logger.info(
+                "[biz][referral] purchase_reward_zero user_id=%s referrer_id=%s purchase_amount=%s percent=%s",
+                user_id,
+                referrer_id,
+                purchase_amount,
+                percent,
+            )
             return 0
         
         await self.referral_repo.add_referral_balance(
@@ -92,6 +113,14 @@ class ReferralService:
         )
 
         await self.session.commit()
+        logger.info(
+            "[biz][referral] purchase_reward_added user_id=%s referrer_id=%s purchase_amount=%s percent=%s reward=%s",
+            user_id,
+            referrer_id,
+            purchase_amount,
+            percent,
+            reward,
+        )
         return reward
     
     async def get_balance(self, user_id: int) -> int:

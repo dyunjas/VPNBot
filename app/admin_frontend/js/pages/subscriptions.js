@@ -101,7 +101,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${s.auto_renew ? "Да" : "Нет"}</td>
         <td>${s.devices_left}/${s.devices_limit}</td>
         <td>${formatDateTime(s.current_period_end)}</td>
-        <td><button data-edit="${s.id}">Изменить</button></td>
+        <td class="row-actions">
+          <button data-edit="${s.id}">Изменить</button>
+          <button class="btn-danger" data-delete="${s.id}">Удалить</button>
+        </td>
       `;
       q("tbody").appendChild(tr);
     });
@@ -109,6 +112,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     q("tbody").querySelectorAll("button[data-edit]").forEach((b) => {
       b.addEventListener("click", () => {
         q("edit_sub_id").value = b.getAttribute("data-edit");
+      });
+    });
+
+    q("tbody").querySelectorAll("button[data-delete]").forEach((b) => {
+      b.addEventListener("click", async (e) => {
+        const subId = Number(b.getAttribute("data-delete") || "0");
+        if (!subId) return;
+        if (!confirm(`Удалить подписку #${subId}? Действие необратимо.`)) return;
+
+        await withButtonLoading(e.currentTarget, async () => {
+          await api(`/admin-api/subscriptions/${subId}`, { method: "DELETE" });
+          await loadRows();
+          showToast("Подписка удалена", "success");
+        }).catch((err) => alert(err.message));
       });
     });
 

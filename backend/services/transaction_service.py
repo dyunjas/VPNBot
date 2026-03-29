@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.repositories.transaction_repository import TransactionRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import TransactionNotFound, UserNotFound
@@ -33,12 +34,29 @@ class TransactionService:
         return await self.tx_repo.list_by_user_id(user_id)
 
     async def mark_paid(self, provider_transaction_id: str):
+        logger.info(
+            "[biz][transaction] mark_paid_requested provider_id=%s",
+            provider_transaction_id,
+        )
         tx = await self.get_by_provider_id(provider_transaction_id)
         if not tx.paid:
             tx.paid = True
             tx.paid_at = datetime.now(timezone.utc)
             await self.session.commit()
             await self.session.refresh(tx)
+            logger.info(
+                "[biz][transaction] marked_paid provider_id=%s tx_id=%s user_id=%s amount=%s",
+                provider_transaction_id,
+                tx.id,
+                tx.user_id,
+                tx.amount,
+            )
+        else:
+            logger.info(
+                "[biz][transaction] mark_paid_skipped_already_paid provider_id=%s tx_id=%s",
+                provider_transaction_id,
+                tx.id,
+            )
         return tx
     
     async def get_last_unpaid_by_system(self, user_id: int, payment_system: str):

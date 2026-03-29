@@ -61,8 +61,15 @@ class SubscriptionService:
         plan_id: int,
         auto_renew: bool,
     ):
+        logger.info(
+            "[biz][subscription] activate_requested user_id=%s plan_id=%s auto_renew=%s",
+            user_id,
+            plan_id,
+            auto_renew,
+        )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][subscription] activate_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
         plan = await self.get_plan(plan_id)
@@ -82,6 +89,12 @@ class SubscriptionService:
                 time_left = end - now
 
                 if time_left > timedelta(days=3):
+                    logger.warning(
+                        "[biz][subscription] activate_too_early user_id=%s plan_id=%s seconds_left=%s",
+                        user_id,
+                        plan_id,
+                        int(time_left.total_seconds()),
+                    )
                     raise TooEarlyToRenew(
                         "Subscription can ony be renewed within 3 days before expiration"
                     )
@@ -97,6 +110,14 @@ class SubscriptionService:
                 next_renewal_at=now + period,
             )
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
+            logger.info(
+                "[biz][subscription] created user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
+                user_id,
+                sub.id,
+                plan.id,
+                sub.current_period_end,
+                plan.gb_limit,
+            )
 
         else:
             end = sub.current_period_end
@@ -122,12 +143,30 @@ class SubscriptionService:
             )
 
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
+            logger.info(
+                "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
+                user_id,
+                sub.id,
+                plan.id,
+                end,
+                plan.gb_limit,
+            )
 
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user.id)
+            logger.info(
+                "[biz][subscription] token_issued user_id=%s subscription_id=%s",
+                user_id,
+                sub.id,
+            )
 
         await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
         await self._reset_user_traffic_safe(user_id=user_id)
+        logger.info(
+            "[biz][subscription] activate_completed user_id=%s subscription_id=%s",
+            user_id,
+            sub.id,
+        )
         return sub
     
     async def renew_subscription(
@@ -136,11 +175,17 @@ class SubscriptionService:
         user_id: int,
         duration_hours: int
     ):
+        logger.info(
+            "[biz][subscription] renew_requested user_id=%s duration_hours=%s",
+            user_id,
+            duration_hours,
+        )
         if duration_hours <= 0:
             raise ValueError("Duration hours must be > 0")
         
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][subscription] renew_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
         
         now = datetime.now(timezone.utc)
@@ -151,6 +196,7 @@ class SubscriptionService:
         if not sub:
             default_plan = await self.sub_repo.get_plan_by_id(1)
             if not default_plan:
+                logger.error("[biz][subscription] renew_default_plan_missing user_id=%s", user_id)
                 raise PlanNotFound("Default plan not found")
             
             sub = await self.sub_repo.create(
@@ -164,6 +210,13 @@ class SubscriptionService:
             )
 
             await self.sub_repo.add_gb_left(sub, Decimal(default_plan.gb_limit))
+            logger.info(
+                "[biz][subscription] renew_created_default user_id=%s subscription_id=%s period_end=%s gb_added=%s",
+                user_id,
+                sub.id,
+                sub.current_period_end,
+                default_plan.gb_limit,
+            )
         
         else:
             end = sub.current_period_end
@@ -187,25 +240,54 @@ class SubscriptionService:
                 current_period_end=new_end,
                 next_renewal_at=new_end,
             )
+            logger.info(
+                "[biz][subscription] renew_extended user_id=%s subscription_id=%s new_period_end=%s",
+                user_id,
+                sub.id,
+                new_end,
+            )
         
         if not user.subscription_token:
             await self.user_repo.set_subscription_token(user_id=user_id)
+            logger.info(
+                "[biz][subscription] renew_token_issued user_id=%s subscription_id=%s",
+                user_id,
+                sub.id,
+            )
 
         await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
         await self._reset_user_traffic_safe(user_id=user_id)
         await self.session.commit()
+        logger.info(
+            "[biz][subscription] renew_completed user_id=%s subscription_id=%s",
+            user_id,
+            sub.id,
+        )
         return sub
 
     async def add_traffic(self, user_id: int, gb: Decimal):
+        logger.info(
+            "[biz][subscription] add_traffic_requested user_id=%s gb=%s",
+            user_id,
+            gb,
+        )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
+            logger.warning("[biz][subscription] add_traffic_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
         sub = await self.get_active_subscription(user_id)
         if not sub:
+            logger.warning("[biz][subscription] add_traffic_sub_not_found user_id=%s", user_id)
             raise SubscriptionNotFound("Subscription not found")
 
         await self.topup_repo.add_topup(subscription_id=sub.id, gb=gb)
         await self.sub_repo.add_gb_left(sub, gb)
+        logger.info(
+            "[biz][subscription] add_traffic_completed user_id=%s subscription_id=%s gb=%s",
+            user_id,
+            sub.id,
+            gb,
+        )
         return sub
 
     async def get_topup_gb(self, subscription_id: int) -> Decimal:
@@ -220,8 +302,16 @@ class SubscriptionService:
     async def mark_expired(self, *, subscription_id: int) -> None:
         updated = await self.sub_repo.mark_expired(subscription_id=subscription_id)
         if updated <= 0:
+            logger.warning(
+                "[biz][subscription] mark_expired_not_found subscription_id=%s",
+                subscription_id,
+            )
             raise SubscriptionNotFound("Subscription not found")
         await self.session.commit()
+        logger.info(
+            "[biz][subscription] marked_expired subscription_id=%s",
+            subscription_id,
+        )
 
     async def set_auto_renew(
         self,
@@ -235,9 +325,20 @@ class SubscriptionService:
             auto_renew=auto_renew,
         )
         if updated <= 0:
+            logger.warning(
+                "[biz][subscription] set_auto_renew_not_found user_id=%s auto_renew=%s",
+                user_id,
+                auto_renew,
+            )
             raise SubscriptionNotFound("Subscription not found")
         sub.auto_renew = auto_renew
         await self.session.commit()
+        logger.info(
+            "[biz][subscription] auto_renew_changed user_id=%s subscription_id=%s auto_renew=%s",
+            user_id,
+            sub.id,
+            auto_renew,
+        )
         return sub
     
     

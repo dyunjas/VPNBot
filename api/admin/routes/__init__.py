@@ -7,6 +7,7 @@ from .servers import router as servers_router
 from .broadcast import router as broadcast_router
 from .withdrawals import router as withdrawals_router
 from .referrals import router as referrals_router
+from .logs import router as logs_router
 
 __all__ = [
     "auth_router",
@@ -18,4 +19,5 @@ __all__ = [
     "broadcast_router",
     "withdrawals_router",
     "referrals_router",
+    "logs_router",
 ]

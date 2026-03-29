@@ -67,7 +67,10 @@
         <td>${p.gb_limit ?? 0}</td>
         <td>${p.device_limit}</td>
         <td>${p.subscriptions_count}</td>
-        <td><button data-edit="${p.id}">Изменить</button></td>
+        <td class="row-actions">
+          <button data-edit="${p.id}">Изменить</button>
+          <button class="btn-danger" data-delete="${p.id}">Удалить</button>
+        </td>
       `;
       q("tbody").appendChild(tr);
     });
@@ -75,6 +78,20 @@
     q("tbody").querySelectorAll("button[data-edit]").forEach((b) => {
       b.addEventListener("click", () => {
         q("edit_id").value = b.getAttribute("data-edit");
+      });
+    });
+
+    q("tbody").querySelectorAll("button[data-delete]").forEach((b) => {
+      b.addEventListener("click", async (e) => {
+        const planId = Number(b.getAttribute("data-delete") || "0");
+        if (!planId) return;
+        if (!confirm(`Удалить тариф #${planId}? Действие необратимо.`)) return;
+
+        await withButtonLoading(e.currentTarget, async () => {
+          await api(`/admin-api/plans/${planId}`, { method: "DELETE" });
+          await loadPlans();
+          showToast("Тариф удален", "success");
+        }).catch((err) => alert(err.message));
       });
     });
   }

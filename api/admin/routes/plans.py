@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from sqlalchemy.exc import IntegrityError
 from ..common import *
 
 router = APIRouter()
@@ -82,6 +83,22 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
             plan.device_limit = payload.device_limit
         await session.commit()
         await session.refresh(plan)
+        return {"ok": True}
+
+
+@router.delete("/plans/{plan_id}", dependencies=[Depends(require_admin_auth)])
+async def admin_plan_delete(plan_id: int):
+    async with async_session() as session:
+        plan = _http_404_if_none(await session.get(SubscriptionPlan, plan_id), "plan not found")
+        await session.delete(plan)
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            raise HTTPException(
+                status_code=400,
+                detail="cannot delete plan with linked entities",
+            )
         return {"ok": True}
 
 

@@ -11004,3 +11004,97 @@ connector: <aiohttp.connector.TCPConnector object at 0x0000023B0BDCDA90>
 [2026-03-23 21:12:40] [INFO] aiogram.event: Update id=891134562 is handled. Duration 281 ms by bot id=7557954606
 [2026-03-23 21:12:41] [INFO] aiogram.event: Update id=891134563 is handled. Duration 197 ms by bot id=7557954606
 [2026-03-23 21:12:42] [INFO] aiogram.event: Update id=891134564 is handled. Duration 132 ms by bot id=7557954606
+[2026-03-29 14:16:53] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 14:16:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 14:16:56] [INFO] root: Database tables initialized
+[2026-03-29 14:16:56] [INFO] root: Database connection successful
+[2026-03-29 14:16:56] [INFO] root: Bot started
+[2026-03-29 14:16:56] [INFO] aiogram.dispatcher: Start polling
+[2026-03-29 14:16:57] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-29 14:17:11] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 14:17:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 14:17:12] [INFO] root: Database tables initialized
+[2026-03-29 14:17:12] [INFO] root: Database connection successful
+[2026-03-29 14:18:49] [INFO] aiogram.event: Update id=891134574 is handled. Duration 244 ms by bot id=7557954606
+[2026-03-29 14:18:57] [INFO] aiogram.event: Update id=891134575 is handled. Duration 248 ms by bot id=7557954606
+[2026-03-29 14:19:01] [INFO] aiogram.event: Update id=891134576 is handled. Duration 113 ms by bot id=7557954606
+[2026-03-29 14:19:03] [INFO] aiogram.event: Update id=891134577 is handled. Duration 216 ms by bot id=7557954606
+[2026-03-29 14:19:05] [INFO] aiogram.event: Update id=891134578 is handled. Duration 233 ms by bot id=7557954606
+[2026-03-29 14:19:05] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-03-29 14:19:05] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=7471201
+[2026-03-29 14:19:06] [INFO] aiogram.event: Update id=891134579 is handled. Duration 106 ms by bot id=7557954606
+[2026-03-29 14:19:08] [INFO] aiogram.event: Update id=891134580 is handled. Duration 201 ms by bot id=7557954606
+[2026-03-29 14:19:09] [INFO] aiogram.event: Update id=891134581 is handled. Duration 121 ms by bot id=7557954606
+[2026-03-29 14:19:10] [INFO] aiogram.event: Update id=891134582 is handled. Duration 232 ms by bot id=7557954606
+[2026-03-29 14:19:13] [INFO] aiogram.event: Update id=891134583 is handled. Duration 227 ms by bot id=7557954606
+[2026-03-29 14:19:14] [INFO] aiogram.event: Update id=891134584 is handled. Duration 212 ms by bot id=7557954606
+[2026-03-29 14:19:15] [INFO] aiogram.event: Update id=891134585 is handled. Duration 222 ms by bot id=7557954606
+[2026-03-29 14:19:18] [INFO] aiogram.event: Update id=891134586 is handled. Duration 114 ms by bot id=7557954606
+[2026-03-29 14:19:19] [INFO] root: [PALLY] Create payment tg_id=36 amount=10
+[2026-03-29 14:19:19] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=10.0 ttl=600
+[2026-03-29 14:19:20] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 error=HTTP 401
+[2026-03-29 14:19:20] [ERROR] root: [PALLY] Payment creation failed for tg_id=36: PALLY API error: HTTP 401
+[2026-03-29 14:19:20] [INFO] aiogram.event: Update id=891134587 is handled. Duration 673 ms by bot id=7557954606
+[2026-03-29 14:19:23] [INFO] root: [PLATEGA] Create payment tg_id=36 amount=10 method=СБП
+[2026-03-29 14:19:23] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=10.0 payment_method=2
+[2026-03-29 14:19:23] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=89a4193f-497e-4409-868e-9cb0441aff41 amount=10.0
+[2026-03-29 14:19:23] [INFO] aiogram.event: Update id=891134588 is handled. Duration 516 ms by bot id=7557954606
+[2026-03-29 14:22:30] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 14:22:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 14:22:31] [INFO] root: Database tables initialized
+[2026-03-29 14:22:31] [INFO] root: Database connection successful
+[2026-03-29 14:22:36] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-29 14:22:36] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-29 14:22:36] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 14:22:36] [INFO] root: Bot stopped
+[2026-03-29 14:22:36] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-29 14:22:41] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 14:22:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 14:22:42] [INFO] root: Database tables initialized
+[2026-03-29 14:22:42] [INFO] root: Database connection successful
+[2026-03-29 14:22:42] [INFO] root: Bot started
+[2026-03-29 14:22:42] [INFO] aiogram.dispatcher: Start polling
+[2026-03-29 14:22:42] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-29 14:30:06] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-03-29 14:30:06] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 14:31:07] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+[2026-03-29 14:31:07] [WARNING] aiogram.dispatcher: Sleep for 1.393055 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-03-29 14:32:09] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+[2026-03-29 14:32:09] [WARNING] aiogram.dispatcher: Sleep for 1.834893 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-03-29 14:32:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-29 14:32:16] [WARNING] aiogram.dispatcher: Sleep for 2.340606 seconds and try again... (tryings = 3, bot id = 7557954606)
+[2026-03-29 14:32:28] [INFO] aiogram.dispatcher: Connection established (tryings = 4, bot id = 7557954606)
+[2026-03-29 14:32:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-03-29 14:32:58] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 14:33:09] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Указанное сетевое имя более недоступно]
+[2026-03-29 14:33:09] [WARNING] aiogram.dispatcher: Sleep for 1.229928 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-03-29 14:33:29] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Превышен таймаут семафора]
+[2026-03-29 14:33:29] [WARNING] aiogram.dispatcher: Sleep for 1.778751 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-03-29 14:33:43] [INFO] aiogram.dispatcher: Connection established (tryings = 3, bot id = 7557954606)
+[2026-03-29 14:34:30] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-03-29 14:34:30] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 14:35:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+[2026-03-29 14:35:31] [WARNING] aiogram.dispatcher: Sleep for 1.398997 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-03-29 14:35:43] [INFO] aiogram.dispatcher: Connection established (tryings = 2, bot id = 7557954606)
+[2026-03-29 14:36:22] [INFO] aiogram.event: Update id=891134589 is not handled. Duration 7 ms by bot id=7557954606
+[2026-03-29 14:57:29] [INFO] root: Settings successfully loaded from .env
+[2026-03-29 14:57:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-29 14:57:29] [INFO] root: Database tables initialized
+[2026-03-29 14:57:29] [INFO] root: Database connection successful
+[2026-03-29 14:59:24] [INFO] aiogram.event: Update id=891134590 is handled. Duration 235 ms by bot id=7557954606
+[2026-03-29 14:59:26] [INFO] aiogram.event: Update id=891134591 is handled. Duration 220 ms by bot id=7557954606
+[2026-03-29 14:59:26] [INFO] aiogram.event: Update id=891134592 is handled. Duration 121 ms by bot id=7557954606
+[2026-03-29 15:00:15] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-03-29 15:00:15] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 15:01:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+[2026-03-29 15:01:16] [WARNING] aiogram.dispatcher: Sleep for 1.370978 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-03-29 15:01:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Превышен таймаут семафора]
+[2026-03-29 15:01:37] [WARNING] aiogram.dispatcher: Sleep for 1.839912 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-03-29 15:02:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [None]
+[2026-03-29 15:02:39] [WARNING] aiogram.dispatcher: Sleep for 2.574373 seconds and try again... (tryings = 3, bot id = 7557954606)
+[2026-03-29 15:02:51] [INFO] aiogram.dispatcher: Connection established (tryings = 4, bot id = 7557954606)
+[2026-03-29 15:11:25] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-29 15:11:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-29 15:11:25] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-29 15:11:25] [INFO] root: Bot stopped
+[2026-03-29 15:11:25] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

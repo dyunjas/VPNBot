@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.logger_config import logger
 from backend.repositories.promocode_repository import PromocodeRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import (
@@ -16,6 +17,7 @@ class PromoService:
         self.user_repo = UserRepository(session)
 
     async def activate_promocode(self, user_id: int, code: str) -> Promocode:
+        logger.info("[biz][promo] activate_requested user_id=%s code=%s", user_id, code)
 
         user = await self.user_repo.get_by_id(user_id)
         if not user:
@@ -32,6 +34,7 @@ class PromoService:
         if promo.usages <= 0:
             raise PromocodeExhausted(f"Promocode exhausted: {code}")
 
+        before_balance = int(user.balance or 0)
         user.balance += promo.amount
 
         await self.promo_repo.add_activation(
@@ -43,6 +46,14 @@ class PromoService:
         await self.promo_repo.decrement_usages(promo.id, by=1)
 
         await self.session.commit()
+        logger.info(
+            "[biz][promo] activated user_id=%s code=%s amount=%s balance_before=%s balance_after=%s",
+            user_id,
+            code,
+            promo.amount,
+            before_balance,
+            int(user.balance or 0),
+        )
         return promo
 
     async def create_promocode(self, code: str, amount: int, usages: int):
@@ -53,6 +64,12 @@ class PromoService:
             created_at=datetime.now(timezone.utc)
         )
         await self.session.commit()
+        logger.info(
+            "[biz][promo] created code=%s amount=%s usages=%s",
+            code,
+            amount,
+            usages,
+        )
         return promo
 
     async def get_promocode(self, code: str):
