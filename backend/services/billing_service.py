@@ -95,7 +95,7 @@ class BillingService:
             or ""
         )
         status_str = str(status).lower().strip()
-        if status_str in {"paid", "success", "confirmed", "completed", "done", "ok"}:
+        if status_str in {"paid", "SUCCESS"}:
             return True
         if status_str.isdigit() and int(status_str) == 1:
             return True
