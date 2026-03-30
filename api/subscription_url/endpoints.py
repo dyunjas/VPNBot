@@ -21,7 +21,6 @@ from api.subscription_url.utils import (
     device_limit_response,
     expired_subscription_response,
     traffic_limit_response,
-    unsupported_app_response,
 )
 from backend.core.config import settings
 from backend.core.loader import bot
@@ -395,7 +394,12 @@ async def subscription(
                 safe_token,
                 happ_payload.get("user_agent"),
             )
-            return unsupported_app_response(headers=headers)
+            return Response(
+                content="Приложение не поддерживается, обратитесь в поддержку.",
+                media_type="text/plain; charset=utf-8",
+                headers=headers,
+                status_code=400,
+            )
 
         is_new, _ = await device_service.register_device_if_new(
             user_id=user.id,
