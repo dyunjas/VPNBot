@@ -31,6 +31,13 @@ class SubscriptionService:
         except Exception as e:
             logger.warning("[subscription] reset_user_traffic skipped user_id=%s: %s", user_id, e)
 
+    def _apply_device_limit_from_plan(self, sub, new_limit: int) -> None:
+        old_limit = int(getattr(sub, "devices_limit", 0) or 0)
+        old_left = int(getattr(sub, "devices_left", 0) or 0)
+        used_devices = max(old_limit - old_left, 0)
+        sub.devices_limit = int(new_limit)
+        sub.devices_left = max(int(new_limit) - used_devices, 0)
+
     async def list_plans(self):
         return await self.sub_repo.list_plans()
 
@@ -109,6 +116,7 @@ class SubscriptionService:
                 current_period_end=now + period,
                 next_renewal_at=now + period,
             )
+            self._apply_device_limit_from_plan(sub, int(plan.device_limit))
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
             logger.info(
                 "[biz][subscription] created user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
@@ -141,6 +149,7 @@ class SubscriptionService:
                 current_period_end=end,
                 next_renewal_at=end,
             )
+            self._apply_device_limit_from_plan(sub, int(plan.device_limit))
 
             await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
             logger.info(
@@ -208,6 +217,7 @@ class SubscriptionService:
                 current_period_end=now + delta,
                 next_renewal_at=now + delta
             )
+            self._apply_device_limit_from_plan(sub, int(default_plan.device_limit))
 
             await self.sub_repo.add_gb_left(sub, Decimal(default_plan.gb_limit))
             logger.info(
