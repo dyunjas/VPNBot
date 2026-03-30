@@ -77,29 +77,14 @@ class BillingService:
     @staticmethod
     def _is_pally_paid(payload: dict) -> bool:
         nested = payload.get("data") if isinstance(payload.get("data"), dict) else {}
-
-        if payload.get("paid") is True or payload.get("is_paid") is True or payload.get("success") is True:
-            return True
-        if nested.get("paid") is True or nested.get("is_paid") is True or nested.get("success") is True:
-            return True
-
         status = (
-            payload.get("status")
-            or payload.get("bill_status")
-            or payload.get("state")
-            or payload.get("payment_status")
-            or nested.get("status")
-            or nested.get("bill_status")
+            nested.get("status")
             or nested.get("state")
-            or nested.get("payment_status")
+            or payload.get("status")
+            or payload.get("state")
             or ""
         )
-        status_str = str(status).lower().strip()
-        if status_str in {"paid", "SUCCESS"}:
-            return True
-        if status_str.isdigit() and int(status_str) == 1:
-            return True
-        return False
+        return str(status).strip().upper() == "SUCCESS"
 
     async def create_platega_payment(
         self,
