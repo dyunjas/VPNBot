@@ -98,3 +98,24 @@ def traffic_limit_response(headers: dict[str, str] | None = None) -> Response:
         ),
     ]
     return _b64_response(fake_uris, headers=headers)
+
+
+def unsupported_app_response(headers: dict[str, str] | None = None) -> Response:
+    fake_uris = [
+        (
+            "vless://00000000-0000-0000-0000-000000000031@unsupported1:443"
+            "?type=tcp&encryption=none"
+            "#⚠️ Приложение не поддерживается"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000032@unsupported2:443"
+            "?type=tcp&encryption=none"
+            "#💬 Обратитесь в поддержку"
+        ),
+        (
+            "vless://00000000-0000-0000-0000-000000000033@unsupported3:443"
+            "?type=tcp&encryption=none"
+            "#🌙 t.me/LunetVpnBot"
+        ),
+    ]
+    return _b64_response(fake_uris, headers=headers)

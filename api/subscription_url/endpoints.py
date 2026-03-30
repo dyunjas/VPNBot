@@ -21,6 +21,7 @@ from api.subscription_url.utils import (
     device_limit_response,
     expired_subscription_response,
     traffic_limit_response,
+    unsupported_app_response,
 )
 from backend.core.config import settings
 from backend.core.loader import bot
@@ -387,31 +388,39 @@ async def subscription(
 
     try:
         hwid = device.get("hwid")
-        if hwid:
-            is_new, _ = await device_service.register_device_if_new(
-                user_id=user.id,
-                hwid=hwid,
-                device_model=device.get("device_model"),
-                device_os=device.get("device_os"),
-                os_version=device.get("os_version"),
-                device_locale=device.get("device_locale"),
-                user_agent=device.get("user_agent"),
-                seen_at=device.get("connected_at"),
+        if not hwid:
+            logger.warning(
+                "[subscription] hwid missing user_id=%s token=%s ua=%s",
+                user.id,
+                safe_token,
+                happ_payload.get("user_agent"),
             )
+            return unsupported_app_response(headers=headers)
 
-            if is_new and user.tg_id:
-                short_token = (user.subscription_token or "")[:8] if user.subscription_token else ""
-                now_dt = device.get("connected_at") or datetime.now(timezone.utc)
-                msg = (
-                    "<tg-emoji emoji-id='5839354140261619193'>🛜</tg-emoji> "
-                    "<b>Новое устройство подключено к подписке</b>\n\n"
-                    f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token}</code>\n"
-                    f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device.get('device_model') or '—'}</b>\n"
-                    f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device.get('device_os') or '—'} / {device.get('os_version') or '—'}</b>\n"
-                    f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%Y-%m-%d %H:%M:%S')}</b>\n\n"
-                    "Если это не вы, перевыпустите свою VPN-ссылку в меню <b>Подписка</b>."
-                )
-                await _safe_notify(user.tg_id, msg)
+        is_new, _ = await device_service.register_device_if_new(
+            user_id=user.id,
+            hwid=hwid,
+            device_model=device.get("device_model"),
+            device_os=device.get("device_os"),
+            os_version=device.get("os_version"),
+            device_locale=device.get("device_locale"),
+            user_agent=device.get("user_agent"),
+            seen_at=device.get("connected_at"),
+        )
+
+        if is_new and user.tg_id:
+            short_token = (user.subscription_token or "")[:8] if user.subscription_token else ""
+            now_dt = device.get("connected_at") or datetime.now(timezone.utc)
+            msg = (
+                "<tg-emoji emoji-id='5839354140261619193'>🛜</tg-emoji> "
+                "<b>Новое устройство подключено к подписке</b>\n\n"
+                f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token}</code>\n"
+                f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device.get('device_model') or '—'}</b>\n"
+                f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device.get('device_os') or '—'} / {device.get('os_version') or '—'}</b>\n"
+                f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%Y-%m-%d %H:%M:%S')}</b>\n\n"
+                "Если это не вы, перевыпустите свою VPN-ссылку в меню <b>Подписка</b>."
+            )
+            await _safe_notify(user.tg_id, msg)
 
     except DeviceLimitReached:
         logger.warning("[subscription] device limit reached user_id=%s", user.id)
