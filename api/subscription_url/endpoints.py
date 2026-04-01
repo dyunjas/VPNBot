@@ -544,7 +544,11 @@ async def subscription(
     if not keys_by_server:
         return expired_subscription_response(headers=headers)
 
-    uris = [keys_by_server[sid] for sid in sorted(keys_by_server.keys()) if keys_by_server.get(sid)]
+    ordered_servers = await vpn_service.server_repo.list_all()
+    ordered_server_ids = [s.id for s in ordered_servers if s.id in keys_by_server]
+    ordered_server_ids_set = set(ordered_server_ids)
+    remaining_ids = sorted([sid for sid in keys_by_server.keys() if sid not in ordered_server_ids_set])
+    uris = [keys_by_server[sid] for sid in ordered_server_ids + remaining_ids if keys_by_server.get(sid)]
     if not uris:
         return expired_subscription_response(headers=headers)
 

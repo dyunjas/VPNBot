@@ -14,7 +14,7 @@ class ServerRepository:
 
     async def list_all(self) -> List[Server]:
         res = await self.session.execute(
-            select(Server).order_by(Server.created_at.desc())
+            select(Server).order_by(Server.display_order.asc(), Server.id.asc())
         )
         return res.scalars().all()
     
@@ -56,7 +56,7 @@ class ServerRepository:
                 func.coalesce(subq.c.total_cnt, 0).label("total_cnt"),
             )
             .outerjoin(subq, Server.id == subq.c.sid)
-            .order_by(Server.created_at.desc())
+            .order_by(Server.display_order.asc(), Server.id.asc())
         )
 
         res = await self.session.execute(stmt)

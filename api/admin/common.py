@@ -183,6 +183,7 @@ class ServerActionPayload(BaseModel):
     action: Literal["health", "stats", "resync"]
 
 class ServerCreatePayload(BaseModel):
+    display_order: int = Field(default=100, ge=0, le=1000000)
     country: str = Field(min_length=2, max_length=64)
     inbound_tag: str = Field(min_length=1, max_length=64)
     grpc_endpoint: str = Field(min_length=3, max_length=128)
@@ -231,6 +232,10 @@ class PromocodeCreatePayload(BaseModel):
     code: str = Field(min_length=2, max_length=32)
     amount: int = Field(gt=0)
     usages: int = Field(default=1, gt=0)
+
+
+class ServerUpdatePayload(BaseModel):
+    display_order: int | None = Field(default=None, ge=0, le=1000000)
 
 __all__ = [
     "asyncio",
@@ -305,6 +310,7 @@ __all__ = [
     "UserActionPayload",
     "ServerActionPayload",
     "ServerCreatePayload",
+    "ServerUpdatePayload",
     "SubscriptionCreatePayload",
     "SubscriptionUpdatePayload",
     "PlanCreatePayload",

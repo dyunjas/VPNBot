@@ -14,7 +14,7 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Страна</th><th>Хост</th><th>Endpoint</th><th>Ключи</th><th>Действия</th></tr>
+                <tr><th>№</th><th>ID</th><th>Страна</th><th>Хост</th><th>Endpoint</th><th>Ключи</th><th>Действия</th></tr>
               </thead>
               <tbody id="tbody"></tbody>
             </table>
@@ -26,6 +26,7 @@
             <h3>Добавить сервер</h3>
             <div class="toolbar">
               <input id="country" type="text" placeholder="Страна (например, Germany)" />
+              <input id="display_order" type="number" min="0" value="100" placeholder="Номер отображения" />
               <input id="inbound_tag" type="text" placeholder="Inbound tag" />
               <input id="grpc_endpoint" type="text" placeholder="GRPC endpoint (host:port или URL)" />
               <input id="public_host" type="text" placeholder="Публичный хост" />
@@ -100,6 +101,7 @@
     items.forEach((s) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
+        <td>${safeText(s.display_order)}</td>
         <td>${s.id}</td>
         <td>${safeText(s.country)}</td>
         <td>${safeText(s.public_host)}:${safeText(s.port)}</td>
@@ -110,6 +112,27 @@
 
       const actions = document.createElement("div");
       actions.className = "row-actions";
+
+      const orderInput = document.createElement("input");
+      orderInput.type = "number";
+      orderInput.min = "0";
+      orderInput.value = String(Number.isFinite(Number(s.display_order)) ? Number(s.display_order) : 100);
+      orderInput.style.width = "88px";
+
+      const orderSave = document.createElement("button");
+      orderSave.textContent = "Сохранить №";
+      orderSave.addEventListener("click", async (e) => {
+        const nextOrder = Number(orderInput.value);
+        if (!Number.isFinite(nextOrder) || nextOrder < 0) return alert("Номер отображения должен быть >= 0");
+        await withButtonLoading(e.currentTarget, async () => {
+          await api(`/admin-api/servers/${s.id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ display_order: Math.floor(nextOrder) }),
+          });
+          showToast("Номер обновлен", "success");
+          await loadRows();
+        }).catch((err) => alert(err.message));
+      });
 
       const h = document.createElement("button");
       h.textContent = "Проверка";
@@ -150,7 +173,7 @@
         }).catch((err) => alert(err.message));
       });
 
-      actions.append(h, st, rs, web, del);
+      actions.append(orderInput, orderSave, h, st, rs, web, del);
       tr.querySelector("td:last-child").appendChild(actions);
       q("tbody").appendChild(tr);
     });
@@ -159,6 +182,7 @@
   q("create_server").addEventListener("click", async (e) => {
     const payload = {
       country: q("country").value.trim(),
+      display_order: Math.floor(Number(q("display_order").value || "100")),
       inbound_tag: q("inbound_tag").value.trim(),
       grpc_endpoint: q("grpc_endpoint").value.trim(),
       public_host: q("public_host").value.trim(),
@@ -172,6 +196,9 @@
 
     if (!payload.country || !payload.inbound_tag || !payload.grpc_endpoint || !payload.public_host || !payload.pbk) {
       return alert("Заполните обязательные поля: страна, inbound tag, endpoint, public host, pbk");
+    }
+    if (!Number.isFinite(payload.display_order) || payload.display_order < 0) {
+      return alert("Номер отображения должен быть >= 0");
     }
 
     await withButtonLoading(e.currentTarget, async () => {

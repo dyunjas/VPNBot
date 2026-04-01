@@ -208,7 +208,11 @@ class VPNService:
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
         keys_by_server = await self.get_or_create_keys(user_id)
-        uris = list(keys_by_server.values())
+        servers = await self.server_repo.list_all()
+        ordered_ids = [server.id for server in servers if server.id in keys_by_server]
+        ordered_ids_set = set(ordered_ids)
+        ordered_ids.extend(sorted([sid for sid in keys_by_server.keys() if sid not in ordered_ids_set]))
+        uris = [keys_by_server[sid] for sid in ordered_ids if keys_by_server.get(sid)]
 
         if not uris:
             raise KeyCreationError(f"No keys available for id:{user_id}")

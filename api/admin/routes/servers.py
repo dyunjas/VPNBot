@@ -14,6 +14,7 @@ async def admin_servers():
         "items": [
             {
                 "id": server.id,
+                "display_order": int(getattr(server, "display_order", 0) or 0),
                 "country": server.country,
                 "public_host": server.public_host,
                 "grpc_endpoint": server.grpc_endpoint,
@@ -30,6 +31,7 @@ async def admin_servers():
 async def admin_server_create(payload: ServerCreatePayload):
     async with async_session() as session:
         server = Server(
+            display_order=payload.display_order,
             country=payload.country.strip(),
             inbound_tag=payload.inbound_tag.strip(),
             grpc_endpoint=payload.grpc_endpoint.strip(),
@@ -46,6 +48,18 @@ async def admin_server_create(payload: ServerCreatePayload):
         await session.commit()
         await session.refresh(server)
         return {"ok": True, "server_id": server.id}
+
+
+@router.patch("/servers/{server_id}", dependencies=[Depends(require_admin_auth)])
+async def admin_server_update(server_id: int, payload: ServerUpdatePayload):
+    async with async_session() as session:
+        server = _http_404_if_none(await session.get(Server, server_id), "server not found")
+
+        if payload.display_order is not None:
+            server.display_order = payload.display_order
+
+        await session.commit()
+        return {"ok": True}
 
 
 @router.post("/servers/{server_id}/action", dependencies=[Depends(require_admin_auth)])

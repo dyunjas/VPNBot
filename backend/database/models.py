@@ -201,6 +201,7 @@ class Server(Base):
     __tablename__ = "vpn_servers"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    display_order: Mapped[int] = mapped_column(default=100, nullable=False)
     country: Mapped[str] = mapped_column(String(64))
     inbound_tag: Mapped[str] = mapped_column(String(64))
     grpc_endpoint: Mapped[str] = mapped_column(String(128))
