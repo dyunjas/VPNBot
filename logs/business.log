@@ -19,3 +19,6 @@
 [2026-04-01 11:29:02] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222204
 [2026-04-01 11:29:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
 [2026-04-01 11:29:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222174
+[2026-04-01 13:10:50] [INFO] root: [biz][promo] activate_requested user_id=36 code=WELCOME
+[2026-04-01 13:10:50] [INFO] root: [biz][promo] activated user_id=36 code=WELCOME amount=95 balance_before=10 balance_after=105
+[2026-04-01 13:11:19] [INFO] root: [biz][promo] activate_requested user_id=29 code=WELCOME

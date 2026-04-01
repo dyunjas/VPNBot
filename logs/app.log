@@ -108,3 +108,49 @@
 [2026-04-01 11:29:17] [INFO] root: Database connection successful
 [2026-04-01 11:29:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
 [2026-04-01 11:29:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222174
+[2026-04-01 13:07:55] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:07:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 13:07:57] [INFO] root: Database tables initialized
+[2026-04-01 13:07:57] [INFO] root: Database connection successful
+[2026-04-01 13:09:17] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:09:18] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 13:09:18] [INFO] root: Database tables initialized
+[2026-04-01 13:09:18] [INFO] root: Database connection successful
+[2026-04-01 13:09:18] [INFO] root: Bot started
+[2026-04-01 13:09:18] [INFO] aiogram.dispatcher: Start polling
+[2026-04-01 13:10:04] [INFO] aiogram.dispatcher: Polling stopped
+[2026-04-01 13:10:04] [INFO] root: Bot stopped
+[2026-04-01 13:10:10] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:10:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 13:10:11] [INFO] root: Database tables initialized
+[2026-04-01 13:10:11] [INFO] root: Database connection successful
+[2026-04-01 13:10:11] [INFO] root: Bot started
+[2026-04-01 13:10:11] [INFO] aiogram.dispatcher: Start polling
+[2026-04-01 13:10:23] [INFO] aiogram.dispatcher: Polling stopped
+[2026-04-01 13:10:23] [ERROR] root: Bot crashed: HTTP Client says - ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [getaddrinfo failed]
+[2026-04-01 13:10:23] [INFO] root: Bot stopped
+[2026-04-01 13:10:36] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:10:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 13:10:37] [INFO] root: Database tables initialized
+[2026-04-01 13:10:37] [INFO] root: Database connection successful
+[2026-04-01 13:10:37] [INFO] root: Bot started
+[2026-04-01 13:10:37] [INFO] aiogram.dispatcher: Start polling
+[2026-04-01 13:10:37] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-04-01 13:10:42] [INFO] aiogram.event: Update id=891134603 is handled. Duration 350 ms by bot id=7557954606
+[2026-04-01 13:10:44] [INFO] aiogram.event: Update id=891134604 is handled. Duration 390 ms by bot id=7557954606
+[2026-04-01 13:10:46] [INFO] aiogram.event: Update id=891134605 is handled. Duration 303 ms by bot id=7557954606
+[2026-04-01 13:10:50] [INFO] root: [biz][promo] activate_requested user_id=36 code=WELCOME
+[2026-04-01 13:10:50] [INFO] root: [biz][promo] activated user_id=36 code=WELCOME amount=95 balance_before=10 balance_after=105
+[2026-04-01 13:10:50] [INFO] aiogram.event: Update id=891134606 is handled. Duration 190 ms by bot id=7557954606
+[2026-04-01 13:11:13] [INFO] aiogram.event: Update id=891134607 is handled. Duration 148 ms by bot id=7557954606
+[2026-04-01 13:11:14] [INFO] aiogram.event: Update id=891134608 is handled. Duration 400 ms by bot id=7557954606
+[2026-04-01 13:11:15] [INFO] aiogram.event: Update id=891134609 is handled. Duration 296 ms by bot id=7557954606
+[2026-04-01 13:11:16] [INFO] aiogram.event: Update id=891134610 is handled. Duration 392 ms by bot id=7557954606
+[2026-04-01 13:11:17] [INFO] aiogram.event: Update id=891134611 is handled. Duration 397 ms by bot id=7557954606
+[2026-04-01 13:11:19] [INFO] root: [biz][promo] activate_requested user_id=29 code=WELCOME
+[2026-04-01 13:11:19] [INFO] aiogram.event: Update id=891134612 is handled. Duration 159 ms by bot id=7557954606
+[2026-04-01 13:11:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-04-01 13:11:39] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-04-01 13:11:43] [INFO] aiogram.dispatcher: Polling stopped
+[2026-04-01 13:11:44] [INFO] root: Bot stopped
+[2026-04-01 13:11:44] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

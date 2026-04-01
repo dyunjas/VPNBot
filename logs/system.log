@@ -42,3 +42,23 @@
 [2026-04-01 11:29:16] [INFO] root: Settings successfully loaded from .env
 [2026-04-01 11:29:17] [INFO] root: Database tables initialized
 [2026-04-01 11:29:17] [INFO] root: Database connection successful
+[2026-04-01 13:07:55] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:07:57] [INFO] root: Database tables initialized
+[2026-04-01 13:07:57] [INFO] root: Database connection successful
+[2026-04-01 13:09:17] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:09:18] [INFO] root: Database tables initialized
+[2026-04-01 13:09:18] [INFO] root: Database connection successful
+[2026-04-01 13:09:18] [INFO] root: Bot started
+[2026-04-01 13:10:04] [INFO] root: Bot stopped
+[2026-04-01 13:10:10] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:10:11] [INFO] root: Database tables initialized
+[2026-04-01 13:10:11] [INFO] root: Database connection successful
+[2026-04-01 13:10:11] [INFO] root: Bot started
+[2026-04-01 13:10:23] [ERROR] root: Bot crashed: HTTP Client says - ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [getaddrinfo failed]
+[2026-04-01 13:10:23] [INFO] root: Bot stopped
+[2026-04-01 13:10:36] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 13:10:37] [INFO] root: Database tables initialized
+[2026-04-01 13:10:37] [INFO] root: Database connection successful
+[2026-04-01 13:10:37] [INFO] root: Bot started
+[2026-04-01 13:11:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-04-01 13:11:44] [INFO] root: Bot stopped

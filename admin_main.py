@@ -85,6 +85,10 @@ async def admin_broadcast():
 async def admin_logs():
     return _admin_page("logs")
 
+@app.get("/admin/promocodes")
+async def admin_promocodes():
+    return _admin_page("promocodes")
+
 
 @app.get("/admin/login.html")
 async def admin_login_html():
@@ -138,6 +142,10 @@ async def admin_broadcast_html():
 @app.get("/admin/logs.html")
 async def admin_logs_html():
     return RedirectResponse(url="/admin/logs", status_code=307)
+
+@app.get("/admin/promocodes.html")
+async def admin_promocodes_html():
+    return RedirectResponse(url="/admin/promocodes", status_code=307)
 
 
 app.mount("/admin", StaticFiles(directory=ADMIN_FRONTEND_DIR, html=False), name="admin")

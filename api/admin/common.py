@@ -16,6 +16,8 @@ from backend.core.loader import bot
 from backend.database.models import (
     Key,
     KeyStatus,
+    Promocode,
+    PromocodeActivation,
     ReferralAccount,
     ReferralWithdrawal,
     Server,
@@ -224,6 +226,12 @@ class PlanUpdatePayload(BaseModel):
     gb_limit: int | None = Field(default=None, ge=0)
     device_limit: int | None = Field(default=None, gt=0)
 
+
+class PromocodeCreatePayload(BaseModel):
+    code: str = Field(min_length=2, max_length=32)
+    amount: int = Field(gt=0)
+    usages: int = Field(default=1, gt=0)
+
 __all__ = [
     "asyncio",
     "uuid",
@@ -255,6 +263,8 @@ __all__ = [
     "bot",
     "Key",
     "KeyStatus",
+    "Promocode",
+    "PromocodeActivation",
     "ReferralAccount",
     "ReferralWithdrawal",
     "Server",
@@ -299,4 +309,5 @@ __all__ = [
     "SubscriptionUpdatePayload",
     "PlanCreatePayload",
     "PlanUpdatePayload",
+    "PromocodeCreatePayload",
 ]

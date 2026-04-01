@@ -138,6 +138,7 @@ const ADMIN_MENU = [
   { key: "withdrawals", href: "/admin/withdrawals", label: "Заявки на вывод", icon: "wd" },
   { key: "referrals", href: "/admin/referrals", label: "Реферальная система", icon: "ref" },
   { key: "servers", href: "/admin/servers", label: "Серверы", icon: "srv" },
+  { key: "promocodes", href: "/admin/promocodes", label: "Промокоды", icon: "promo" },
   { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
 ];
@@ -152,6 +153,7 @@ function menuIcon(kind) {
     wd: "<path d='M12 5v10'/><path d='M8.5 11.5L12 15l3.5-3.5'/><path d='M6 19h12'/>",
     ref: "<circle cx='7.5' cy='8.5' r='2'/><circle cx='16.5' cy='8.5' r='2'/><circle cx='12' cy='15.5' r='2.2'/><path d='M9 9.5l2 4M15 9.5l-2 4'/>",
     srv: "<rect x='5' y='6' width='14' height='4' rx='1.2'/><rect x='5' y='14' width='14' height='4' rx='1.2'/><circle cx='8' cy='8' r='0.8'/><circle cx='8' cy='16' r='0.8'/>",
+    promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
     mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='1.8'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
     logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7a1.5 1.5 0 0 1 1.5-1.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
