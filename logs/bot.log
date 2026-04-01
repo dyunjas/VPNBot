@@ -11102,3 +11102,51 @@ connector: <aiohttp.connector.TCPConnector object at 0x0000023B0BDCDA90>
 [2026-03-29 15:36:46] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-03-29 15:36:46] [INFO] root: Database tables initialized
 [2026-03-29 15:36:46] [INFO] root: Database connection successful
+[2026-03-31 17:29:10] [INFO] root: Settings successfully loaded from .env
+[2026-03-31 17:29:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-03-31 17:29:12] [INFO] root: Database tables initialized
+[2026-03-31 17:29:12] [INFO] root: Database connection successful
+[2026-03-31 17:29:12] [INFO] root: Bot started
+[2026-03-31 17:29:12] [INFO] aiogram.dispatcher: Start polling
+[2026-03-31 17:29:12] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-03-31 17:29:34] [INFO] aiogram.event: Update id=891134593 is handled. Duration 341 ms by bot id=7557954606
+[2026-03-31 17:29:35] [INFO] aiogram.event: Update id=891134594 is handled. Duration 285 ms by bot id=7557954606
+[2026-03-31 17:29:59] [INFO] aiogram.event: Update id=891134595 is handled. Duration 314 ms by bot id=7557954606
+[2026-03-31 17:30:01] [INFO] aiogram.event: Update id=891134596 is handled. Duration 374 ms by bot id=7557954606
+[2026-03-31 17:30:02] [INFO] aiogram.event: Update id=891134597 is handled. Duration 145 ms by bot id=7557954606
+[2026-03-31 17:30:05] [INFO] aiogram.event: Update id=891134598 is handled. Duration 535 ms by bot id=7557954606
+[2026-03-31 17:30:07] [INFO] aiogram.event: Update id=891134599 is handled. Duration 161 ms by bot id=7557954606
+[2026-03-31 17:30:09] [INFO] aiogram.event: Update id=891134600 is handled. Duration 269 ms by bot id=7557954606
+[2026-03-31 17:30:16] [INFO] aiogram.event: Update id=891134601 is handled. Duration 292 ms by bot id=7557954606
+[2026-03-31 17:30:18] [INFO] aiogram.event: Update id=891134602 is handled. Duration 262 ms by bot id=7557954606
+[2026-03-31 17:37:31] [INFO] aiogram.dispatcher: Polling stopped
+[2026-03-31 17:37:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-31 17:37:31] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-03-31 17:37:31] [INFO] root: Bot stopped
+[2026-03-31 17:37:31] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-04-01 11:22:30] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 11:22:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 11:22:31] [INFO] root: Database tables initialized
+[2026-04-01 11:22:31] [INFO] root: Database connection successful
+[2026-04-01 11:27:24] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-04-01 11:27:24] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=7222303
+[2026-04-01 11:27:28] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-04-01 11:27:28] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=7222298
+[2026-04-01 11:27:29] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-04-01 11:27:29] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=7222298
+[2026-04-01 11:27:29] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-04-01 11:27:29] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=7222297
+[2026-04-01 11:27:30] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-04-01 11:27:30] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222296
+[2026-04-01 11:27:30] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-04-01 11:27:30] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=7222296
+[2026-04-01 11:27:31] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-04-01 11:27:31] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=7222295
+[2026-04-01 11:29:02] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-04-01 11:29:02] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222204
+[2026-04-01 11:29:16] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 11:29:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-04-01 11:29:17] [INFO] root: Database tables initialized
+[2026-04-01 11:29:17] [INFO] root: Database connection successful
+[2026-04-01 11:29:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-04-01 11:29:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222174

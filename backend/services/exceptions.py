@@ -16,6 +16,9 @@ class TooEarlyToRenew(Exception):
 class InsufficientBalance(ServiceError):
     pass
 
+class PurchaseInProgress(ServiceError):
+    pass
+
 
 class TransactionNotFound(ServiceError):
     pass

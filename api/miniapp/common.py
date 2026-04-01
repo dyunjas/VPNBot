@@ -28,6 +28,7 @@ from backend.services.exceptions import (
     KeyCreationError,
     PaymentNotConfirmed,
     PlanNotFound,
+    PurchaseInProgress,
     PromocodeAlreadyUsed,
     PromocodeExhausted,
     PromocodeNotFound,
@@ -137,13 +138,15 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=402, detail="������������ ������������ �������")
     if isinstance(e, PaymentNotConfirmed):
         return HTTPException(status_code=409, detail=str(e) or "������ ��� �� �����������")
+    if isinstance(e, PurchaseInProgress):
+        return HTTPException(status_code=409, detail=str(e) or "Покупка уже обрабатывается")
 
     if isinstance(e, PlanNotFound):
         return HTTPException(status_code=404, detail=str(e) or "����� �� ������")
     if isinstance(e, SubscriptionNotFound):
         return HTTPException(status_code=404, detail=str(e) or "�������� �� �������")
     if isinstance(e, TooEarlyToRenew):
-        return HTTPException(status_code=409, detail="��������� �������� ������ �� 3 ��� �� ��������� ������� ��������")
+        return HTTPException(status_code=409, detail="Продлить подписку можно только за 3 дня до окончания текущей")
     if isinstance(e, UserNotFound):
         return HTTPException(status_code=404, detail=str(e) or "Пользователь не найден")
     if isinstance(e, TransactionNotFound):
@@ -193,6 +196,7 @@ __all__ = [
     "PlanNotFound",
     "TooEarlyToRenew",
     "InsufficientBalance",
+    "PurchaseInProgress",
     "TransactionNotFound",
     "PaymentNotConfirmed",
     "NotEnoughReferralBalance",

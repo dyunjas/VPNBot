@@ -3,6 +3,9 @@ from datetime import datetime, timezone
 
 from fastapi import Response
 
+_BOT_REF = "t.me/LunetVpnBot"
+_PLACEHOLDER_UUID_PREFIX = "00000000-0000-0000-0000-0000000000"
+
 
 def _to_unix(dt: datetime) -> int:
     if dt.tzinfo is None:
@@ -37,85 +40,61 @@ def _b64_response(lines: list[str], headers: dict[str, str] | None = None) -> Re
     return Response(content=b64, media_type="text/plain; charset=utf-8", headers=headers or {})
 
 
+def _placeholder_vless_lines(prefix: str, messages: list[str]) -> list[str]:
+    lines: list[str] = []
+    for index, message in enumerate(messages, start=1):
+        host = f"{prefix}{index}"
+        suffix = f"{index:02d}"
+        lines.append(
+            f"vless://{_PLACEHOLDER_UUID_PREFIX}{suffix}@{host}:443"
+            f"?type=tcp&encryption=none#{message}"
+        )
+    return lines
+
+
 def expired_subscription_response(headers: dict[str, str] | None = None) -> Response:
-    fake_uris = [
-        (
-            "vless://00000000-0000-0000-0000-000000000001@expired1:443"
-            "?type=tcp&encryption=none"
-            "#🔴 Подписка не найдена"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000002@expired2:443"
-            "?type=tcp&encryption=none"
-            "#⚠️ Продлите подписку"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000003@expired3:443"
-            "?type=tcp&encryption=none"
-            "#🌙 t.me/LunetVpnBot"
-        ),
-    ]
+    fake_uris = _placeholder_vless_lines(
+        "expired",
+        [
+            "🔴 Подписка не найдена",
+            "⚠️ Продлите подписку",
+            f"🌙 {_BOT_REF}",
+        ],
+    )
     return _b64_response(fake_uris, headers=headers)
 
 
 def device_limit_response(headers: dict[str, str] | None = None) -> Response:
-    fake_uris = [
-        (
-            "vless://00000000-0000-0000-0000-000000000011@limit1:443"
-            "?type=tcp&encryption=none"
-            "#🚫 Лимит устройств исчерпан"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000012@limit2:443"
-            "?type=tcp&encryption=none"
-            "#🧹 Удалите устройство в боте"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000013@limit3:443"
-            "?type=tcp&encryption=none"
-            "#🌙 t.me/LunetVpnBot"
-        ),
-    ]
+    fake_uris = _placeholder_vless_lines(
+        "limit",
+        [
+            "🚫 Лимит устройств исчерпан",
+            "🧹 Удалите устройство в боте",
+            f"🌙 {_BOT_REF}",
+        ],
+    )
     return _b64_response(fake_uris, headers=headers)
 
 
 def traffic_limit_response(headers: dict[str, str] | None = None) -> Response:
-    fake_uris = [
-        (
-            "vless://00000000-0000-0000-0000-000000000021@traffic1:443"
-            "?type=tcp&encryption=none"
-            "#📉 Гигабайты закончились"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000022@traffic2:443"
-            "?type=tcp&encryption=none"
-            "#🛒 Докупите гигабайты в боте"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000023@traffic3:443"
-            "?type=tcp&encryption=none"
-            "#🌙 t.me/LunetVpnBot"
-        ),
-    ]
+    fake_uris = _placeholder_vless_lines(
+        "traffic",
+        [
+            "📉 Гигабайты закончились",
+            "🛒 Докупите гигабайты в боте",
+            f"🌙 {_BOT_REF}",
+        ],
+    )
     return _b64_response(fake_uris, headers=headers)
 
 
 def unsupported_app_response(headers: dict[str, str] | None = None) -> Response:
-    fake_uris = [
-        (
-            "vless://00000000-0000-0000-0000-000000000031@unsupported1:443"
-            "?type=tcp&encryption=none"
-            "#⚠️ Приложение не поддерживается"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000032@unsupported2:443"
-            "?type=tcp&encryption=none"
-            "#💬 Обратитесь в поддержку"
-        ),
-        (
-            "vless://00000000-0000-0000-0000-000000000033@unsupported3:443"
-            "?type=tcp&encryption=none"
-            "#🌙 t.me/LunetVpnBot"
-        ),
-    ]
+    fake_uris = _placeholder_vless_lines(
+        "unsupported",
+        [
+            "⚠️ Приложение не поддерживается",
+            "💬 Обратитесь в поддержку",
+            f"🌙 {_BOT_REF}",
+        ],
+    )
     return _b64_response(fake_uris, headers=headers)

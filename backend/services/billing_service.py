@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_UP
 
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.logger_config import logger
@@ -21,6 +22,7 @@ from backend.services.exceptions import (
     PaymentNotConfirmed,
     SubscriptionNotFound,
     TooEarlyToRenew,
+    PurchaseInProgress,
 )
 
 USDT_RATE = Decimal("79")
@@ -435,6 +437,16 @@ class BillingService:
             amount,
         )
 
+    @staticmethod
+    def _is_lock_not_available_error(exc: OperationalError) -> bool:
+        orig = getattr(exc, "orig", None)
+        sqlstate = getattr(orig, "pgcode", None) or getattr(orig, "sqlstate", None)
+        if sqlstate == "55P03":
+            return True
+
+        text = str(orig or exc).lower()
+        return "lock not available" in text or "database is locked" in text
+
     async def buy_subscription(
         self,
         user_id: int,
@@ -447,6 +459,23 @@ class BillingService:
             plan_id,
             auto_renew,
         )
+
+        try:
+            user = await self.user_repo.get_by_id_for_update_nowait(user_id)
+        except OperationalError as e:
+            if self._is_lock_not_available_error(e):
+                logger.info(
+                    "[biz][billing] buy_subscription_locked user_id=%s plan_id=%s",
+                    user_id,
+                    plan_id,
+                )
+                raise PurchaseInProgress("Покупка уже обрабатывается. Подождите пару секунд.")
+            raise
+
+        if not user:
+            logger.warning("[biz][billing] buy_subscription_user_not_found user_id=%s", user_id)
+            raise UserNotFound(f"User with id:{user_id} not found")
+
         plan = await self.sub_service.get_plan(plan_id)
 
         now = datetime.now(timezone.utc)

@@ -31,6 +31,12 @@ class UserRepository:
             select(User).where(User.id == user_id).with_for_update()
         )
         return res.scalar_one_or_none()
+
+    async def get_by_id_for_update_nowait(self, user_id: int) -> User | None:
+        res = await self.session.execute(
+            select(User).where(User.id == user_id).with_for_update(nowait=True)
+        )
+        return res.scalar_one_or_none()
     
     async def create(
             self,

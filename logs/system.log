@@ -30,3 +30,15 @@
 [2026-03-29 15:36:45] [INFO] root: Settings successfully loaded from .env
 [2026-03-29 15:36:46] [INFO] root: Database tables initialized
 [2026-03-29 15:36:46] [INFO] root: Database connection successful
+[2026-03-31 17:29:10] [INFO] root: Settings successfully loaded from .env
+[2026-03-31 17:29:12] [INFO] root: Database tables initialized
+[2026-03-31 17:29:12] [INFO] root: Database connection successful
+[2026-03-31 17:29:12] [INFO] root: Bot started
+[2026-03-31 17:37:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-03-31 17:37:31] [INFO] root: Bot stopped
+[2026-04-01 11:22:30] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 11:22:31] [INFO] root: Database tables initialized
+[2026-04-01 11:22:31] [INFO] root: Database connection successful
+[2026-04-01 11:29:16] [INFO] root: Settings successfully loaded from .env
+[2026-04-01 11:29:17] [INFO] root: Database tables initialized
+[2026-04-01 11:29:17] [INFO] root: Database connection successful

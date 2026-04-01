@@ -1,6 +1,5 @@
 ﻿import asyncio
 import base64
-import json
 from urllib.parse import urlparse
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -89,7 +88,7 @@ def _is_uuid_like(value: str) -> bool:
     try:
         UUID(value)
         return True
-    except Exception:
+    except (TypeError, ValueError, AttributeError):
         return False
 
 
@@ -108,7 +107,7 @@ def _num(value: Any) -> int:
         if value is None or isinstance(value, bool):
             return 0
         return max(0, int(float(value)))
-    except Exception:
+    except (TypeError, ValueError, OverflowError):
         return 0
 
 
@@ -188,7 +187,7 @@ async def _fetch_traffic_for_server(
                 up, down = _extract_traffic_ud(data)
                 if up or down:
                     return up, down
-        except Exception:
+        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError):
             continue
     return 0, 0
 
@@ -255,7 +254,7 @@ async def _deactivate_user_keys(vpn_service: VPNService, user_id: int) -> None:
                         headers=headers,
                         json={"email": email},
                     )
-                except Exception:
+                except (aiohttp.ClientError, asyncio.TimeoutError):
                     logger.warning(
                         "[subscription] remove_user failed during traffic lock user_id=%s server_id=%s",
                         user_id,
@@ -553,6 +552,5 @@ async def subscription(
     b64 = base64.b64encode(plain.encode("utf-8")).decode("ascii")
 
     return Response(content=b64, media_type="text/plain; charset=utf-8", headers=headers)
-
 
 

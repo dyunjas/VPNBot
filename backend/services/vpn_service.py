@@ -1,30 +1,34 @@
-import base64
+﻿import base64
 from datetime import datetime, timezone
 from decimal import Decimal
 from urllib.parse import urlparse
-from sqlalchemy.ext.asyncio import AsyncSession
-import aiohttp
-from backend.core.logger_config import logger
 
+import aiohttp
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.core.logger_config import logger
+from backend.database.models import KeyStatus
 from backend.repositories.key_repository import KeyRepository
 from backend.repositories.server_repository import ServerRepository
 from backend.repositories.subscription_repository import SubscriptionRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import (
-    UserNotFound, SubscriptionNotFound, KeyCreationError, TrafficError, ServerNotFound
+    KeyCreationError,
+    ServerNotFound,
+    SubscriptionNotFound,
+    TrafficError,
+    UserNotFound,
 )
-from backend.database.models import KeyStatus
 
 
 class VPNService:
-    def __init__(self, session: AsyncSession, xray_auth_token: str):
+    def __init__(self, session: AsyncSession, xray_auth_token: str | None):
         self.session = session
         self.key_repo = KeyRepository(session)
         self.server_repo = ServerRepository(session)
         self.sub_repo = SubscriptionRepository(session)
         self.user_repo = UserRepository(session)
         self.XRAY_AUTH_TOKEN = xray_auth_token
-
 
     def _normalize_agent_base(self, grpc_endpoint: str) -> str:
         grpc_endpoint = (grpc_endpoint or "").strip()
@@ -35,16 +39,19 @@ class VPNService:
             return f"http://{grpc_endpoint}"
         return grpc_endpoint
 
+    def _xray_headers(self, *, with_json_content_type: bool = True) -> dict[str, str]:
+        headers: dict[str, str] = {}
+        if self.XRAY_AUTH_TOKEN:
+            headers["Authorization"] = f"Bearer {self.XRAY_AUTH_TOKEN}"
+        if with_json_content_type:
+            headers["Content-Type"] = "application/json"
+        return headers
 
-    async def _create_xray_key(self, user_id: int, server):
+    async def _create_xray_key(self, user_id: int, server) -> tuple[str, str]:
         agent_base = self._normalize_agent_base(getattr(server, "grpc_endpoint", "") or "")
         if not agent_base:
-            raise Exception("XRAY agent base is empty")
+            raise KeyCreationError("XRAY agent base is empty")
 
-        headers = {
-            "Authorization": f"Bearer {self.XRAY_AUTH_TOKEN}",
-            "Content-Type": "application/json",
-        }
         payload = {"email": f"user-{user_id}@lunet"}
 
         timeout = aiohttp.ClientTimeout(total=5)
@@ -52,14 +59,21 @@ class VPNService:
             async with http.post(
                 f"{agent_base}/add_user",
                 json=payload,
-                headers=headers,
+                headers=self._xray_headers(),
             ) as resp:
+                if resp.status >= 400:
+                    body = await resp.text()
+                    raise KeyCreationError(
+                        f"XRAY add_user HTTP {resp.status} for server_id={getattr(server, 'id', None)}: {body}"
+                    )
                 data = await resp.json(content_type=None)
 
         if not data.get("ok"):
-            raise Exception(f"XRAY add_user failed: {data}")
+            raise KeyCreationError(f"XRAY add_user failed: {data}")
 
-        uuid = data["uuid"]
+        uuid = data.get("uuid")
+        if not uuid:
+            raise KeyCreationError(f"XRAY add_user response has no uuid: {data}")
 
         params = [
             "type=grpc",
@@ -76,12 +90,9 @@ class VPNService:
         if server.short_id:
             params.append(f"sid={server.short_id}")
 
-        uri = (
-            f"vless://{uuid}@{server.public_host}:{server.port}"
-            f"?{'&'.join(params)}#{server.country}"
-        )
+        uri = f"vless://{uuid}@{server.public_host}:{server.port}?{'&'.join(params)}#{server.country}"
 
-        return uuid, uri
+        return str(uuid), uri
 
     async def get_active_subscription(self, user_id: int):
         user = await self.user_repo.get_by_id(user_id)
@@ -137,17 +148,20 @@ class VPNService:
 
             except Exception as e:
                 logger.error(
-                    f"[get_or_create_keys] failed user_id={user.id} server_id={server.id}: {e}"
+                    "[get_or_create_keys] failed user_id=%s server_id=%s: %s",
+                    user.id,
+                    server.id,
+                    e,
                 )
                 continue
 
         return keys_by_server
-    
+
     async def delete_all_user_keys(self, user_id: int) -> int:
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
-        
+
         deleted = await self.key_repo.delete_all_by_user_id(user_id)
         await self.session.commit()
 
@@ -159,9 +173,7 @@ class VPNService:
             raise UserNotFound(f"User with id:{user_id} not found")
 
         servers = await self.server_repo.list_all()
-        headers = {"Content-Type": "application/json"}
-        if self.XRAY_AUTH_TOKEN:
-            headers["Authorization"] = f"Bearer {self.XRAY_AUTH_TOKEN}"
+        headers = self._xray_headers()
 
         timeout = aiohttp.ClientTimeout(total=5)
         async with aiohttp.ClientSession(timeout=timeout) as http:
@@ -190,7 +202,6 @@ class VPNService:
                         getattr(server, "id", None),
                         e,
                     )
-
 
     async def get_keys_for_subscription(self, user_id: int) -> str:
         user = await self.user_repo.get_by_id(user_id)
@@ -231,33 +242,30 @@ class VPNService:
             with_server=True,
         )
 
-        for key in keys:
-            server = key.server
-            if not server or not server.grpc_endpoint:
-                continue
+        timeout = aiohttp.ClientTimeout(total=5)
+        async with aiohttp.ClientSession(timeout=timeout) as http:
+            for key in keys:
+                server = key.server
+                if not server or not server.grpc_endpoint:
+                    continue
 
-            agent_base = self._normalize_agent_base(server.grpc_endpoint)
+                agent_base = self._normalize_agent_base(server.grpc_endpoint)
+                payload = {"email": f"user-{user_id}@lunet"}
 
-            payload = {"email": f"user-{user_id}@lunet"}
-            headers = {
-                "Authorization": f"Bearer {self.XRAY_AUTH_TOKEN}",
-                "Content-Type": "application/json",
-            }
-
-            try:
-                timeout = aiohttp.ClientTimeout(total=5)
-                async with aiohttp.ClientSession(timeout=timeout) as http:
+                try:
                     async with http.post(
                         f"{agent_base}/remove_user",
                         json=payload,
-                        headers=headers,
+                        headers=self._xray_headers(),
                     ):
                         pass
-            except Exception as e:
-                logger.error(
-                    f"[reissue_keys] XRAY remove_user failed "
-                    f"user_id={user_id} server_id={server.id}: {e}"
-                )
+                except Exception as e:
+                    logger.error(
+                        "[reissue_keys] XRAY remove_user failed user_id=%s server_id=%s: %s",
+                        user_id,
+                        server.id,
+                        e,
+                    )
 
         await self.key_repo.delete_by_user_id(user_id)
         await self.session.commit()
@@ -276,21 +284,21 @@ class VPNService:
                     uuid=uuid,
                     uri=uri,
                     status=KeyStatus.active,
-                    created_at=datetime.now(),
+                    created_at=datetime.now(timezone.utc),
                 )
                 created_keys += 1
             except Exception as e:
                 logger.warning(
-                    f"[reissue_keys] create key failed "
-                    f"user_id={user_id} server_id={server.id}: {e}"
+                    "[reissue_keys] create key failed user_id=%s server_id=%s: %s",
+                    user_id,
+                    server.id,
+                    e,
                 )
 
         if created_keys == 0:
             raise KeyCreationError("Failed to create keys on all servers")
 
         await self.session.commit()
-
-
 
     async def list_servers(self):
         return await self.server_repo.list_all()
@@ -314,11 +322,14 @@ class VPNService:
         server = servers[0]
 
         try:
+            uuid, uri = await self._create_xray_key(user_id=user_id, server=server)
             key = await self.key_repo.create(
                 user_id=user_id,
-                server=server,
-                auth_token=self.XRAY_AUTH_TOKEN,
-                label=None,
+                server_id=server.id,
+                uuid=uuid,
+                uri=uri,
+                status=KeyStatus.active,
+                created_at=datetime.now(timezone.utc),
             )
         except Exception as e:
             raise KeyCreationError(f"Failed to create key: {e}")
@@ -345,11 +356,16 @@ class VPNService:
             raise ServerNotFound("server not found")
 
         try:
+            if label:
+                logger.info("[create_key_for_user] label provided but not encoded in URI label=%s", label)
+            uuid, uri = await self._create_xray_key(user_id=user_id, server=server)
             key = await self.key_repo.create(
                 user_id=user_id,
-                server=server,
-                auth_token=self.XRAY_AUTH_TOKEN,
-                label=label,
+                server_id=server.id,
+                uuid=uuid,
+                uri=uri,
+                status=KeyStatus.active,
+                created_at=datetime.now(timezone.utc),
             )
         except Exception as e:
             raise KeyCreationError(f"Failed to create key on server {server_id}: {e}")
@@ -363,6 +379,6 @@ class VPNService:
         if not key or key.user_id != user_id:
             return False
 
-        ok = await self.key_repo.delete(key_id, auth_token=self.XRAY_AUTH_TOKEN)
+        deleted = await self.key_repo.delete_by_id(key_id)
         await self.session.commit()
-        return bool(ok)
+        return deleted > 0
