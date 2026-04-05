@@ -192,6 +192,60 @@ async def _fetch_traffic_for_server(
     return 0, 0
 
 
+async def _is_server_reachable(
+    *,
+    session: aiohttp.ClientSession,
+    base: str,
+    auth_token: str | None,
+) -> bool:
+    if not base:
+        return False
+
+    headers: dict[str, str] = {}
+    if auth_token:
+        headers["Authorization"] = f"Bearer {auth_token}"
+
+    try:
+        async with session.get(f"{base}/health", headers=headers) as _:
+            return True
+    except (aiohttp.ClientError, asyncio.TimeoutError):
+        return False
+
+
+async def _reachable_server_ids(
+    *,
+    vpn_service: VPNService,
+    server_ids: set[int],
+) -> set[int]:
+    if not server_ids:
+        return set()
+
+    servers = await vpn_service.server_repo.list_all()
+    target_servers = [s for s in servers if s.id in server_ids]
+    if not target_servers:
+        return set()
+
+    timeout = aiohttp.ClientTimeout(total=2)
+    async with aiohttp.ClientSession(timeout=timeout) as http:
+        checks = [
+            _is_server_reachable(
+                session=http,
+                base=_normalize_agent_base(getattr(server, "grpc_endpoint", "") or ""),
+                auth_token=XRAY_AUTH_TOKEN,
+            )
+            for server in target_servers
+        ]
+        results = await asyncio.gather(*checks, return_exceptions=True)
+
+    reachable_ids: set[int] = set()
+    for server, result in zip(target_servers, results):
+        if isinstance(result, Exception):
+            continue
+        if bool(result):
+            reachable_ids.add(server.id)
+    return reachable_ids
+
+
 async def _sum_user_traffic_all_servers(vpn_service: VPNService, user_id: int) -> tuple[int, int]:
     servers = await vpn_service.server_repo.list_all()
     if not servers:
@@ -545,10 +599,21 @@ async def subscription(
         return expired_subscription_response(headers=headers)
 
     ordered_servers = await vpn_service.server_repo.list_all()
-    ordered_server_ids = [s.id for s in ordered_servers if s.id in keys_by_server]
+    reachable_ids = await _reachable_server_ids(
+        vpn_service=vpn_service,
+        server_ids=set(keys_by_server.keys()),
+    )
+
+    filtered_keys_by_server = {sid: uri for sid, uri in keys_by_server.items() if sid in reachable_ids}
+
+    ordered_server_ids = [s.id for s in ordered_servers if s.id in filtered_keys_by_server]
     ordered_server_ids_set = set(ordered_server_ids)
-    remaining_ids = sorted([sid for sid in keys_by_server.keys() if sid not in ordered_server_ids_set])
-    uris = [keys_by_server[sid] for sid in ordered_server_ids + remaining_ids if keys_by_server.get(sid)]
+    remaining_ids = sorted([sid for sid in filtered_keys_by_server.keys() if sid not in ordered_server_ids_set])
+    uris = [
+        filtered_keys_by_server[sid]
+        for sid in ordered_server_ids + remaining_ids
+        if filtered_keys_by_server.get(sid)
+    ]
     if not uris:
         return expired_subscription_response(headers=headers)
 
