@@ -187,8 +187,11 @@ async def _fetch_traffic_for_server(
                 up, down = _extract_traffic_ud(data)
                 if up or down:
                     return up, down
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError):
+        except ValueError:
             continue
+        except (aiohttp.ClientError, asyncio.TimeoutError):
+            # If endpoint is unreachable/slow, do not retry param variants.
+            return 0, 0
     return 0, 0
 
 
@@ -252,7 +255,7 @@ async def _sum_user_traffic_all_servers(vpn_service: VPNService, user_id: int) -
         return 0, 0
 
     email = f"user-{user_id}@lunet"
-    timeout = aiohttp.ClientTimeout(total=4)
+    timeout = aiohttp.ClientTimeout(total=1)
     async with aiohttp.ClientSession(timeout=timeout) as http:
         tasks = [
             _fetch_traffic_for_server(

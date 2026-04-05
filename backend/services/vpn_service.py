@@ -1,4 +1,5 @@
 ﻿import base64
+import asyncio
 from datetime import datetime, timezone
 from decimal import Decimal
 from urllib.parse import urlparse
@@ -94,6 +95,19 @@ class VPNService:
 
         return str(uuid), uri
 
+    async def _is_server_reachable(self, *, session: aiohttp.ClientSession, server) -> bool:
+        agent_base = self._normalize_agent_base(getattr(server, "grpc_endpoint", "") or "")
+        if not agent_base:
+            return False
+        try:
+            async with session.get(
+                f"{agent_base}/health",
+                headers=self._xray_headers(with_json_content_type=False),
+            ):
+                return True
+        except (aiohttp.ClientError, asyncio.TimeoutError):
+            return False
+
     async def get_active_subscription(self, user_id: int):
         user = await self.user_repo.get_by_id(user_id)
         if not user:
@@ -113,6 +127,20 @@ class VPNService:
         sub = await self.get_active_subscription(user_id)
 
         servers = await self.server_repo.list_all()
+        reachable_servers = servers
+        if servers:
+            timeout = aiohttp.ClientTimeout(total=1)
+            async with aiohttp.ClientSession(timeout=timeout) as http:
+                checks = [
+                    self._is_server_reachable(session=http, server=server)
+                    for server in servers
+                ]
+                statuses = await asyncio.gather(*checks, return_exceptions=True)
+            reachable_servers = [
+                server
+                for server, is_ok in zip(servers, statuses)
+                if not isinstance(is_ok, Exception) and bool(is_ok)
+            ]
 
         existing_keys = await self.key_repo.list_by_user_id(user.id, with_server=False)
         active_keys = [k for k in existing_keys if k.status == KeyStatus.active]
@@ -123,7 +151,7 @@ class VPNService:
 
         limit = int(getattr(sub.plan, "key_limit", 0) or 0)
 
-        for server in servers:
+        for server in reachable_servers:
             if server.id in keys_by_server:
                 continue
             if limit and len(keys_by_server) >= limit:
