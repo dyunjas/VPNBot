@@ -86,9 +86,9 @@ async def mini_referral_withdraw(payload: CreateWithdrawalPayload):
     method = (payload.method or "").strip()
 
     if amount < MIN_WITHDRAW_AMOUNT:
-        raise HTTPException(400, f"����������� ����� ������: {MIN_WITHDRAW_AMOUNT} RUB")
+        raise HTTPException(400, f"Минимальная сумма вывода: {MIN_WITHDRAW_AMOUNT} RUB")
     if len(method) < 8:
-        raise HTTPException(400, "������� ������ ������ � ��������� ���������")
+        raise HTTPException(400, "Укажите способ вывода и реквизиты получателя")
 
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
@@ -112,7 +112,7 @@ async def mini_referral_withdraw(payload: CreateWithdrawalPayload):
                 "status": wd.status.value if wd.status else None,
                 "created_at": wd.created_at.isoformat() if wd.created_at else None,
             },
-            "message": "������ �� ����� ������� � ���������� �� ��������",
+            "message": "Заявка на вывод создана и передана на обработку",
         }
 
 

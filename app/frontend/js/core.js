@@ -97,7 +97,9 @@ function showBannedScreen() {
 function friendlyErrorMessage(raw) {
   const s = String(raw || "").toLowerCase();
   if (s.includes("banned")) return "🚫 Вы забанены";
-  if (s.includes("initdata is missing") || s.includes("invalid initdata")) return "Откройте мини-приложение из Telegram-бота.";
+  if (s.includes("initdata is missing") || s.includes("invalid initdata") || s.includes("initdata expired")) {
+    return "Откройте мини-приложение заново из Telegram-бота.";
+  }
   if (s.includes("user not found")) return "Пользователь не найден. Сначала зайдите в бота и зарегистрируйтесь.";
   if (s.includes("not enough balance")) return "Недостаточно средств. Пополните баланс и попробуйте снова.";
   if (s.includes("no active subscription") || s.includes("no_subscription")) return "Подписка не активна. Оформите её в разделе «Тарифы».";

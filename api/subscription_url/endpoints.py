@@ -410,6 +410,16 @@ async def subscription(
         logger.warning("[subscription] invalid token format: %s", safe_token)
         return expired_subscription_response(headers=headers)
 
+    device = _extract_device_info(request)
+    if not device.get("hwid"):
+        logger.warning(
+            "[subscription] hwid missing token=%s ip=%s ua=%s",
+            safe_token,
+            request.client.host if request.client else None,
+            request.headers.get("user-agent"),
+        )
+        return device_limit_response(headers=headers)
+
     raw_headers = dict(request.headers)
     happ_payload: dict[str, Any] = {
         "ts_utc": datetime.now(timezone.utc).isoformat(),
@@ -420,8 +430,6 @@ async def subscription(
         "query": dict(request.query_params),
         "headers": _sanitize_headers(raw_headers),
     }
-
-    device = _extract_device_info(request)
 
     logger.info(
         "[subscription] token=%s ip=%s ua=%s hwid=%s model=%s os=%s ver=%s locale=%s",
@@ -442,24 +450,9 @@ async def subscription(
         return expired_subscription_response(headers=headers)
 
     try:
-        hwid = device.get("hwid")
-        if not hwid:
-            logger.warning(
-                "[subscription] hwid missing user_id=%s token=%s ua=%s",
-                user.id,
-                safe_token,
-                happ_payload.get("user_agent"),
-            )
-            return Response(
-                content="Приложение не поддерживается, обратитесь в поддержку.",
-                media_type="text/plain; charset=utf-8",
-                headers=headers,
-                status_code=400,
-            )
-
         is_new, _ = await device_service.register_device_if_new(
             user_id=user.id,
-            hwid=hwid,
+            hwid=device.get("hwid"),
             device_model=device.get("device_model"),
             device_os=device.get("device_os"),
             os_version=device.get("os_version"),

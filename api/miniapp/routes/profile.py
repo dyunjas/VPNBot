@@ -17,7 +17,7 @@ async def mini_referral(payload: InitPayload):
         return {
             "ok": True,
             "referral_url": referral_url,
-            "hint": "���������� ������ � ��������� �����. ������ ����������� ����� ��� ��������.",
+            "hint": "Приглашайте друзей и получайте доход. Ссылка закреплена ниже для отправки.",
         }
 
 
@@ -44,7 +44,7 @@ async def mini_status(payload: InitPayload):
             return {
                 "ok": True,
                 "has_subscription": False,
-                "statusText": "��� �������� ��������.",
+                "statusText": "Нет активной подписки.",
                 "active_keys": 0,
                 "subscription_token": user.subscription_token,
                 "subscription_url": (
@@ -61,8 +61,8 @@ async def mini_status(payload: InitPayload):
 
         plan = subscription.plan
         status_text = (
-            f"�����: {plan.name} � ������: {len(active_keys)}\n"
-            f"�������� ��: {subscription.current_period_end.strftime('%d.%m.%Y %H:%M')}"
+            f"Тариф: {plan.name} | Ключей: {len(active_keys)}\n"
+            f"Действует до: {subscription.current_period_end.strftime('%d.%m.%Y %H:%M')}"
         )
 
         return {

@@ -175,7 +175,7 @@ async def mini_balance_check(payload: BalanceCheckPayload):
                 payment_system=payment_system,
             )
             if not tx:
-                return {"ok": False, "reason": "no_pending", "message": "��� ������������� ��������"}
+                return {"ok": False, "reason": "no_pending", "message": "Нет незавершенных платежей"}
             provider_id = tx.transaction_id
 
         try:
