@@ -20,6 +20,7 @@ from api.subscription_url.utils import (
     device_limit_response,
     expired_subscription_response,
     traffic_limit_response,
+    unsupported_app_response,
 )
 from backend.core.config import settings
 from backend.core.loader import bot
@@ -418,7 +419,7 @@ async def subscription(
             request.client.host if request.client else None,
             request.headers.get("user-agent"),
         )
-        return device_limit_response(headers=headers)
+        return unsupported_app_response(headers=headers)
 
     raw_headers = dict(request.headers)
     happ_payload: dict[str, Any] = {
