@@ -17,6 +17,7 @@ from backend.core.config import settings
 
 from backend.core.logger_config import logger
 
+
 class DBSessionMiddleware(BaseMiddleware):
     async def __call__(
             self,
@@ -42,12 +43,37 @@ class DBSessionMiddleware(BaseMiddleware):
                 result = await handler(event, data)
                 await session.commit()
                 return result
-            except Exception as e:
+            except Exception:
                 await session.rollback()
-                logger.error(f"Database error: {e}")
+                logger.exception("Database error while handling update")
+                await self._notify_database_error(event)
+                return None
             finally:
                 try:
                     await billing_service.close_clients()
                 except Exception:
                     pass
                 await session.close()
+
+    async def _notify_database_error(self, event: Message | CallbackQuery) -> None:
+        text = (
+            "Сервис временно недоступен из-за ошибки базы данных. "
+            "Попробуйте еще раз через несколько секунд."
+        )
+        try:
+            if isinstance(event, CallbackQuery):
+                try:
+                    await event.answer(
+                        "Ошибка сервиса. Попробуйте еще раз через несколько секунд.",
+                        show_alert=True
+                    )
+                except Exception:
+                    pass
+                if event.message:
+                    await event.message.answer(text)
+                return
+
+            if isinstance(event, Message):
+                await event.answer(text)
+        except Exception:
+            pass

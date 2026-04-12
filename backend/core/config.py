@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     DB_MAX_OVERFLOW: int = 0
     DB_POOL_TIMEOUT: int = 20
     DB_POOL_RECYCLE: int = 1800
+    DB_COMMAND_TIMEOUT: int = 20
 
     class Config:
         env_file = ".env"
