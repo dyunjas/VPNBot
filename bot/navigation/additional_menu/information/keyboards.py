@@ -7,6 +7,6 @@ def information_kb():
     builder.button(text="💬 Канал", url="https://t.me/LunetVpn")
     builder.button(text="🚀 FAQ", url="https://telegra.ph/Polzovatelskoe-soglashenie-LunetVPN-LunetVpnBot-10-27")
     builder.button(text="🚨 Поддержка", url="https://t.me/LunetVPNSupport")
-    builder.button(text="Главное меню", callback_data="main_menu")
+    builder.button(text="🪐 Главное меню", callback_data="main_menu")
     builder.adjust(1, 1, 1, 1)
     return builder.as_markup()

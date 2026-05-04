@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from sqlalchemy import select, delete, update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database.models import User, Key, ReferralAccount
-
-import uuid
+from backend.database.models import User, ReferralAccount
 
 
 class UserRepository:
@@ -48,7 +46,6 @@ class UserRepository:
             tg_id=tg_id,
             username=username,
             balance=0,
-            subscription_token=str(uuid.uuid4())
         )
         return user
     
@@ -88,47 +85,6 @@ class UserRepository:
             .values(balance=User.balance - amount)
         )
 
-    async def delete_key_by_id(self, key_id: int) -> int:
-        res = await self.session.execute(delete(Key).where(Key.id == key_id))
-        return int(res.rowcount or 0)
-
-    async def set_subscription_token(
-        self,
-        *,
-        user_id: int,
-        token: str | None = None
-    ) -> None:
-        if token is None:
-            token = str(uuid.uuid4())
-
-        await self.session.execute(
-            update(User)
-            .where(User.id == user_id, User.subscription_token.is_(None))
-            .values(subscription_token=token)
-        )
-
-    async def reissue_subscription_token(
-        self,
-        *,
-        user_id: int,
-        token: str | None = None,
-    ) -> str:
-        if token is None:
-            token = str(uuid.uuid4())
-
-        await self.session.execute(
-            update(User)
-            .where(User.id == user_id)
-            .values(subscription_token=token)
-        )
-        return token
-
-    async def get_user_by_token(self, token: str) -> User | None:
-        res = await self.session.execute(
-            select(User).where(User.subscription_token == token)
-        )
-        return res.scalar_one_or_none()
-    
     async def set_refferal_if_empty(
             self, 
             *, 
@@ -141,6 +97,41 @@ class UserRepository:
             .values(referrer_id=referrer_id)
         )
         return int(res.rowcount or 0)
+
+    async def set_subscription_url(
+        self,
+        *,
+        user_id: int,
+        subscription_url: str | None,
+    ) -> None:
+        await self.session.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(subscription_url=subscription_url)
+        )
+
+    async def set_remnawave_binding(
+        self,
+        *,
+        user_id: int,
+        remnawave_user_id: int | None = None,
+        remnawave_user_uuid: str | None = None,
+        subscription_url: str | None = None,
+    ) -> None:
+        values: dict = {}
+        if remnawave_user_id is not None:
+            values["remnawave_user_id"] = remnawave_user_id
+        if remnawave_user_uuid:
+            values["remnawave_user_uuid"] = remnawave_user_uuid
+        if subscription_url is not None:
+            values["subscription_url"] = subscription_url
+        if not values:
+            return
+        await self.session.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(**values)
+        )
     
     async def set_referrer(
             self,

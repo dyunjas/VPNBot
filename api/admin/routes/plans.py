@@ -32,7 +32,6 @@ async def admin_plans(
                 "price": int(p.price),
                 "period_days": p.period_days,
                 "gb_limit": int(getattr(p, "gb_limit", 0) or 0),
-                "device_limit": p.device_limit,
                 "created_at": _to_iso(p.created_at),
                 "subscriptions_count": sub_counts.get(p.id, 0),
             }
@@ -52,7 +51,6 @@ async def admin_plan_create(payload: PlanCreatePayload):
             price=payload.price,
             period_days=payload.period_days,
             gb_limit=payload.gb_limit,
-            device_limit=payload.device_limit,
             created_at=datetime.now(timezone.utc),
         )
         session.add(plan)
@@ -79,8 +77,6 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
             plan.period_days = payload.period_days
         if payload.gb_limit is not None:
             plan.gb_limit = payload.gb_limit
-        if payload.device_limit is not None:
-            plan.device_limit = payload.device_limit
         await session.commit()
         await session.refresh(plan)
         return {"ok": True}

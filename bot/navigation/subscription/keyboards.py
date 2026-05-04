@@ -12,9 +12,7 @@ def subscription_plans_kb(plans, page: int = 0):
     chunk = plans[start:end]
 
     for plan in chunk:
-        devices = int(getattr(plan, "device_limit", 0) or 0)
-        title = f"{plan.name} • {devices} устр."
-        builder.button(text=title, callback_data=f"plan:{plan.id}:{page}")
+        builder.button(text=plan.name, callback_data=f"plan:{plan.id}:{page}")
 
     builder.adjust(1)
 

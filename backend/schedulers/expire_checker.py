@@ -3,19 +3,23 @@ from datetime import datetime, timedelta, timezone
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from backend.core.config import settings
-from backend.core.loader import bot
 from backend.core.logger_config import logger
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
-from backend.services import BillingService, SubscriptionService, UserService, VPNService
-from backend.services.exceptions import InsufficientBalance, SubscriptionNotFound, TooEarlyToRenew, UserNotFound
+from backend.services import (
+    BillingService,
+    SubscriptionService,
+    UserService,
+    RemnaWaveService
+)
+from backend.services.exceptions import (
+    InsufficientBalance,
+    TooEarlyToRenew,
+    UserNotFound
+)
 
 
-AGENT_TOKEN = settings.XRAY_AUTH
-
-
-async def _notify_subscription_expired(tg_id: int):
+async def _notify_subscription_expired(bot, tg_id: int):
     builder = InlineKeyboardBuilder()
     builder.button(text="🌙 Продлить", callback_data="subscription")
 
@@ -25,6 +29,7 @@ async def _notify_subscription_expired(tg_id: int):
         "Доступ к ключам остановлен.\n"
         "Продлите подписку, чтобы восстановить доступ к сервису."
     )
+
     await bot.send_photo(
         tg_id,
         photo=MAIN_MENU_IMG,
@@ -34,7 +39,7 @@ async def _notify_subscription_expired(tg_id: int):
     )
 
 
-async def _notify_subscription_ending_soon(tg_id: int, hours: int):
+async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
     builder = InlineKeyboardBuilder()
     builder.button(text="🌙 Продлить", callback_data="subscription")
 
@@ -43,6 +48,7 @@ async def _notify_subscription_ending_soon(tg_id: int, hours: int):
         f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка скоро истечёт! Осталось примерно {hours} ч.\n"
         "Продлите подписку, чтобы не потерять доступ к сервису."
     )
+
     await bot.send_photo(
         tg_id,
         photo=MAIN_MENU_IMG,
@@ -52,14 +58,16 @@ async def _notify_subscription_ending_soon(tg_id: int, hours: int):
     )
 
 
-async def _notify_subscription_renewed(tg_id: int, end_dt: datetime):
+async def _notify_subscription_renewed(bot, tg_id: int, end_dt: datetime):
     text = (
         "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Подписка продлена автоматически</b>\n\n"
         f"Новый срок действия: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         "Средства списаны с вашего баланса."
     )
+
     builder = InlineKeyboardBuilder()
     builder.button(text="🌙 Подписка", callback_data="vpn_subscription")
+
     await bot.send_photo(
         tg_id,
         photo=MAIN_MENU_IMG,
@@ -69,7 +77,7 @@ async def _notify_subscription_renewed(tg_id: int, end_dt: datetime):
     )
 
 
-async def expire_checker():
+async def expire_checker(bot):
     async with async_session() as session:
         now = datetime.now(timezone.utc)
         warning_time = now + timedelta(hours=6)
@@ -77,7 +85,7 @@ async def expire_checker():
         sub_service = SubscriptionService(session)
         user_service = UserService(session)
         billing_service = BillingService(session)
-        vpn_service = VPNService(session, xray_auth_token=AGENT_TOKEN)
+        remnawave_service = RemnaWaveService(session)
 
         try:
             expired_subs = await sub_service.list_active_expired(now=now)
@@ -89,35 +97,32 @@ async def expire_checker():
             try:
                 await sub_service.mark_expired(subscription_id=sub.id)
             except Exception as e:
-                logger.error(
-                    "Expire checker: mark_expired failed sub_id=%s: %s",
-                    getattr(sub, "id", None),
-                    e,
-                )
+                logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
                 continue
-
-            try:
-                await vpn_service.delete_all_user_keys(sub.user_id)
-            except Exception as e:
-                logger.error("Expire checker: delete keys failed user_id=%s: %s", sub.user_id, e)
 
             try:
                 user = await user_service.get_by_id(sub.user_id)
             except UserNotFound:
                 continue
-            except Exception as e:
-                logger.error("Expire checker: get user failed user_id=%s: %s", sub.user_id, e)
-                continue
 
             try:
-                await _notify_subscription_expired(user.tg_id)
+                if remnawave_service.enabled:
+                    await remnawave_service.delete_user_access(user=user, subscription=sub)
             except Exception as e:
-                logger.error("Expire checker: notify expired failed tg_id=%s: %s", user.tg_id, e)
+                logger.error("remnawave delete failed user_id=%s: %s", sub.user_id, e)
+
+            try:
+                await _notify_subscription_expired(bot, user.tg_id)
+            except Exception as e:
+                logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
 
         try:
-            soon_subs = await sub_service.list_active_ending_between(start=now, end=warning_time)
+            soon_subs = await sub_service.list_active_ending_between(
+                start=now,
+                end=warning_time
+            )
         except Exception as e:
-            logger.error("Expire checker: failed to load soon subs: %s", e)
+            logger.error("failed to load soon subs: %s", e)
             soon_subs = []
 
         for sub in soon_subs:
@@ -125,10 +130,8 @@ async def expire_checker():
                 user = await user_service.get_by_id(sub.user_id)
             except UserNotFound:
                 continue
-            except Exception as e:
-                logger.error("Expire checker: get user failed user_id=%s: %s", sub.user_id, e)
-                continue
 
+            # auto renew
             if sub.auto_renew:
                 try:
                     renewed = await billing_service.buy_subscription(
@@ -136,42 +139,51 @@ async def expire_checker():
                         plan_id=sub.plan_id,
                         auto_renew=True,
                     )
-                    renewed_end = renewed.current_period_end
-                    if renewed_end and renewed_end.tzinfo is None:
-                        renewed_end = renewed_end.replace(tzinfo=timezone.utc)
-                    if renewed_end:
-                        await _notify_subscription_renewed(user.tg_id, renewed_end)
+
+                    end = renewed.current_period_end
+                    if end and end.tzinfo is None:
+                        end = end.replace(tzinfo=timezone.utc)
+
+                    if end:
+                        await _notify_subscription_renewed(bot, user.tg_id, end)
+
                     continue
+
                 except (InsufficientBalance, TooEarlyToRenew):
                     pass
                 except Exception as e:
                     logger.error(
-                        "Expire checker: auto-renew failed user_id=%s sub_id=%s: %s",
+                        "auto-renew failed user_id=%s sub_id=%s: %s",
                         sub.user_id,
                         sub.id,
                         e,
                     )
 
+            # notify soon
             try:
                 period_end = sub.current_period_end
-                if period_end and period_end.tzinfo is None:
-                    period_end = period_end.replace(tzinfo=timezone.utc)
-                elif period_end:
-                    period_end = period_end.astimezone(timezone.utc)
-                else:
+                if not period_end:
                     continue
+
+                if period_end.tzinfo is None:
+                    period_end = period_end.replace(tzinfo=timezone.utc)
+                else:
+                    period_end = period_end.astimezone(timezone.utc)
 
                 remain = period_end - now
                 hours = max(1, int(remain.total_seconds() // 3600))
-                await _notify_subscription_ending_soon(user.tg_id, hours)
+
+                await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+
             except Exception as e:
-                logger.error("Expire checker: notify soon failed tg_id=%s: %s", user.tg_id, e)
+                logger.error("notify soon failed tg_id=%s: %s", user.tg_id, e)
 
 
-async def expire_checker_loop(interval_sec: int = 300):
+async def expire_checker_loop(bot, interval_sec: int = 300):
     while True:
         try:
-            await expire_checker()
+            await expire_checker(bot)
         except Exception:
             logger.exception("Expire checker execution error")
+
         await asyncio.sleep(interval_sec)

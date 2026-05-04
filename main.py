@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import suppress
 
 from backend.core.loader import (
     setup_bot,
@@ -21,8 +22,9 @@ from backend.core.logger_config import logger
 from backend.schedulers.expire_checker import expire_checker_loop
 
 async def main():
+    bot = None
+    checker_task = None
     try:
-
         bot, dp = await setup_bot()
 
         await init_db()
@@ -33,16 +35,24 @@ async def main():
 
         dp.include_router(bot_routers.router)
 
-        asyncio.create_task(expire_checker_loop(interval_sec=15))
+        checker_task = asyncio.create_task(
+            expire_checker_loop(bot, interval_sec=15)
+        )
 
         logger.info("Bot started")
         await dp.start_polling(bot)
-
-
+    except asyncio.CancelledError:
+        logger.info("Bot polling cancelled")
+        raise
     except Exception as e:
         logger.error(f"Bot crashed: {e}")
     finally:
-        await shutdown_bot(bot)
+        if checker_task:
+            checker_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await checker_task
+        if bot:
+            await shutdown_bot(bot)
         await engine.dispose()
         logger.info("Bot stopped")
 

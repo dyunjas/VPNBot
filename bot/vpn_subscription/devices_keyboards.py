@@ -11,11 +11,11 @@ def devices_list_kb(devices: list, page: int = 0):
     end = start + DEVICES_PER_PAGE
     chunk = devices[start:end]
 
-    for dev in chunk:
-        title = dev.device_model or dev.device_os or f"Устройство #{dev.id}"
+    for idx, dev in enumerate(chunk, start=start):
+        title = dev.get("deviceModel") or dev.get("platform") or f"Устройство #{idx + 1}"
         builder.button(
             text=f"📱 {title}",
-            callback_data=f"subscription_device:{dev.id}:{page}",
+            callback_data=f"subscription_device:{idx}:{page}",
         )
 
     builder.adjust(1)

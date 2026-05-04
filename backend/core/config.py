@@ -9,7 +9,12 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
-    XRAY_AUTH: str
+    REMNAWAVE_BASE_URL: str | None = None
+    REMNAWAVE_API_TOKEN: str | None = None
+    REMNAWAVE_COOKIES: str | None = None
+    REMNAWAVE_ACTIVE_INTERNAL_SQUADS: str | None = None
+    REMNAWAVE_UPSERT_PATH: str | None = None
+    XRAY_AUTH: str | None = None
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
     CRYPTOBOT_SECRET: str
@@ -17,10 +22,6 @@ class Settings(BaseSettings):
     PALLY_SHOP_ID: str | None = None
     PALLY_SUCCESS_URL: str | None = None
     PALLY_FAIL_URL: str | None = None
-    SMTP_HOST: str
-    SMTP_PORT: int
-    SMTP_NOREPLY_USER: str
-    SMTP_NOREPLY_PASS: str
     OTP_SECRET: str
     PUBLIC_BASE_URL: str
     SECRET_KEY: str
@@ -34,6 +35,7 @@ class Settings(BaseSettings):
     DB_POOL_TIMEOUT: int = 20
     DB_POOL_RECYCLE: int = 1800
     DB_COMMAND_TIMEOUT: int = 20
+    BOT_PROXY: str
 
     class Config:
         env_file = ".env"

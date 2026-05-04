@@ -34,11 +34,6 @@ async_session = async_sessionmaker(
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        # Backward-compatible schema patch for existing deployments without migrations.
-        await conn.execute(text("ALTER TABLE vpn_servers ADD COLUMN IF NOT EXISTS display_order INTEGER"))
-        await conn.execute(text("UPDATE vpn_servers SET display_order = id WHERE display_order IS NULL"))
-        await conn.execute(text("ALTER TABLE vpn_servers ALTER COLUMN display_order SET DEFAULT 100"))
-        await conn.execute(text("ALTER TABLE vpn_servers ALTER COLUMN display_order SET NOT NULL"))
     logger.info("Database tables initialized")
 
 async def check_connection():

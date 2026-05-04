@@ -137,7 +137,6 @@ const ADMIN_MENU = [
   { key: "transactions", href: "/admin/transactions", label: "Транзакции", icon: "tx" },
   { key: "withdrawals", href: "/admin/withdrawals", label: "Заявки на вывод", icon: "wd" },
   { key: "referrals", href: "/admin/referrals", label: "Реферальная система", icon: "ref" },
-  { key: "servers", href: "/admin/servers", label: "Серверы", icon: "srv" },
   { key: "promocodes", href: "/admin/promocodes", label: "Промокоды", icon: "promo" },
   { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },

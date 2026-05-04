@@ -3,13 +3,11 @@ from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.database.models import SubStatus
 from backend.repositories.subscription_repository import SubscriptionRepository
 from backend.repositories.subscription_topup_repository import SubscriptionTopupRepository
 from backend.repositories.user_repository import UserRepository
-from backend.services.vpn_service import VPNService
 from backend.services.exceptions import (
     UserNotFound,
     SubscriptionNotFound,
@@ -23,20 +21,9 @@ class SubscriptionService:
         self.sub_repo = SubscriptionRepository(session)
         self.topup_repo = SubscriptionTopupRepository(session)
         self.user_repo = UserRepository(session)
-        self.vpn_service = VPNService(session=session, xray_auth_token=settings.XRAY_AUTH)
 
     async def _reset_user_traffic_safe(self, user_id: int) -> None:
-        try:
-            await self.vpn_service.reset_user_traffic(user_id=user_id)
-        except Exception as e:
-            logger.warning("[subscription] reset_user_traffic skipped user_id=%s: %s", user_id, e)
-
-    def _apply_device_limit_from_plan(self, sub, new_limit: int) -> None:
-        old_limit = int(getattr(sub, "devices_limit", 0) or 0)
-        old_left = int(getattr(sub, "devices_left", 0) or 0)
-        used_devices = max(old_limit - old_left, 0)
-        sub.devices_limit = int(new_limit)
-        sub.devices_left = max(int(new_limit) - used_devices, 0)
+        logger.info("[subscription] reset_user_traffic skipped user_id=%s (remnawave-only mode)", user_id)
 
     async def list_plans(self):
         return await self.sub_repo.list_plans()
@@ -116,8 +103,6 @@ class SubscriptionService:
                 current_period_end=now + period,
                 next_renewal_at=now + period,
             )
-            self._apply_device_limit_from_plan(sub, int(plan.device_limit))
-            await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
             logger.info(
                 "[biz][subscription] created user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
                 user_id,
@@ -149,9 +134,6 @@ class SubscriptionService:
                 current_period_end=end,
                 next_renewal_at=end,
             )
-            self._apply_device_limit_from_plan(sub, int(plan.device_limit))
-
-            await self.sub_repo.add_gb_left(sub, Decimal(plan.gb_limit))
             logger.info(
                 "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
                 user_id,
@@ -159,14 +141,6 @@ class SubscriptionService:
                 plan.id,
                 end,
                 plan.gb_limit,
-            )
-
-        if not user.subscription_token:
-            await self.user_repo.set_subscription_token(user_id=user.id)
-            logger.info(
-                "[biz][subscription] token_issued user_id=%s subscription_id=%s",
-                user_id,
-                sub.id,
             )
 
         await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
@@ -217,9 +191,6 @@ class SubscriptionService:
                 current_period_end=now + delta,
                 next_renewal_at=now + delta
             )
-            self._apply_device_limit_from_plan(sub, int(default_plan.device_limit))
-
-            await self.sub_repo.add_gb_left(sub, Decimal(default_plan.gb_limit))
             logger.info(
                 "[biz][subscription] renew_created_default user_id=%s subscription_id=%s period_end=%s gb_added=%s",
                 user_id,
@@ -257,14 +228,6 @@ class SubscriptionService:
                 new_end,
             )
         
-        if not user.subscription_token:
-            await self.user_repo.set_subscription_token(user_id=user_id)
-            logger.info(
-                "[biz][subscription] renew_token_issued user_id=%s subscription_id=%s",
-                user_id,
-                sub.id,
-            )
-
         await self.topup_repo.clear_for_subscription(subscription_id=sub.id)
         await self._reset_user_traffic_safe(user_id=user_id)
         await self.session.commit()
@@ -291,7 +254,6 @@ class SubscriptionService:
             raise SubscriptionNotFound("Subscription not found")
 
         await self.topup_repo.add_topup(subscription_id=sub.id, gb=gb)
-        await self.sub_repo.add_gb_left(sub, gb)
         logger.info(
             "[biz][subscription] add_traffic_completed user_id=%s subscription_id=%s gb=%s",
             user_id,

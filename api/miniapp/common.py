@@ -14,18 +14,15 @@ from backend.database.session import async_session
 from backend.services import (
     WithdrawalService,
     BillingService,
-    DeviceService,
     PromoService,
     ReferralService,
     SubscriptionService,
     TransactionService,
     UserService,
-    VPNService,
+    RemnaWaveService,
 )
 from backend.services.exceptions import (
     NotEnoughReferralBalance,
-    DeviceLimitReached,
-    DeviceNotFound,
     InsufficientBalance,
     KeyCreationError,
     PaymentNotConfirmed,
@@ -46,8 +43,6 @@ if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set in settings")
 
 XRAY_AUTH_TOKEN = settings.XRAY_AUTH
-if not XRAY_AUTH_TOKEN:
-    raise RuntimeError("XRAY_AUTH is not set in settings")
 
 PLATEGA_METHOD_CARD = 11
 PLATEGA_METHOD_SBP = 2
@@ -62,15 +57,6 @@ MINIAPP_INITDATA_MAX_AGE_SEC = max(
 
 class InitPayload(BaseModel):
     initData: Optional[str] = None
-
-
-class CreateKeyPayload(InitPayload):
-    server_id: int
-    label: str | None = None
-
-
-class DeleteKeyPayload(InitPayload):
-    key_id: int
 
 
 class DeleteDevicePayload(InitPayload):
@@ -193,11 +179,6 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=404, detail="Сервер не найден")
     if isinstance(e, KeyCreationError):
         return HTTPException(status_code=500, detail=str(e) or "Ошибка создания ключа")
-    if isinstance(e, DeviceNotFound):
-        return HTTPException(status_code=404, detail=str(e) or "Устройство не найдено")
-    if isinstance(e, DeviceLimitReached):
-        return HTTPException(status_code=409, detail=str(e) or "Превышен лимит устройств")
-
     return HTTPException(status_code=500, detail=str(e) or "Внутренняя ошибка")
 
 
@@ -214,13 +195,12 @@ __all__ = [
     "async_session",
     "BillingService",
     "WithdrawalService",
-    "DeviceService",
     "PromoService",
     "SubscriptionService",
     "TransactionService",
     "UserService",
-    "VPNService",
     "ReferralService",
+    "RemnaWaveService",
     "UserNotFound",
     "SubscriptionNotFound",
     "PlanNotFound",
@@ -235,8 +215,6 @@ __all__ = [
     "PromocodeExhausted",
     "KeyCreationError",
     "ServerNotFound",
-    "DeviceNotFound",
-    "DeviceLimitReached",
     "BOT_TOKEN",
     "XRAY_AUTH_TOKEN",
     "PLATEGA_METHOD_CARD",
@@ -244,8 +222,6 @@ __all__ = [
     "BOT_USERNAME",
     "SETUP_URL_FALLBACK",
     "InitPayload",
-    "CreateKeyPayload",
-    "DeleteKeyPayload",
     "DeleteDevicePayload",
     "BuySubscriptionPayload",
     "TopupPayload",

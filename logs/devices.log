@@ -1,1 +1,5 @@
 [2026-03-29 14:21:41] [INFO] root: [biz][device] test device log split
+[2026-05-03 15:11:01] [INFO] root: [biz][device] registered user_id=38 subscription_id=20 hwid=61eb818f98e53029
+[2026-05-03 15:11:47] [INFO] root: [biz][device] deleted_by_id user_id=38 device_id=15
+[2026-05-03 17:02:02] [INFO] root: [biz][device] registered user_id=36 subscription_id=19 hwid=874f7862-982a-4f87-99a6-ec46258317cb
+[2026-05-03 17:17:27] [INFO] root: [biz][device] registered user_id=36 subscription_id=19 hwid=61eb818f98e53029

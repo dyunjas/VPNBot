@@ -65,9 +65,8 @@ class AdminPermissionDenied(Exception):
     pass
 
 
-class DeviceLimitReached(Exception):
-    pass
 
 class DeviceNotFound(Exception):
     pass
+
 

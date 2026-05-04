@@ -35,6 +35,8 @@ class UserUpdateMiddleware(BaseMiddleware):
             data["is_new_user"] = True
             await self._grant_trial_and_notify(event, session, user.tg_id, user.id)
 
+        # Avoid lazy-loading attributes from a possibly expired ORM instance after inner commits.
+        user = await user_service.get_by_tg_id(event_user.id)
         data["user"] = user
 
         if getattr(user, "banned", False):

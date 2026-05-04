@@ -13,7 +13,6 @@ from bot.navigation.additional_menu.referral import withdraw_balance
 from bot.vpn_subscription import subscription_url
 from bot.vpn_subscription import devices
 from bot.vpn_subscription import traffic_purchase
-from bot.vpn_subscription.reissue_keys import reissue_keys
 from bot.payments import cryptobot_payment
 
 router = Router()
@@ -34,4 +33,3 @@ router.include_router(withdraw_balance.router)
 router.include_router(subscription_url.router)
 router.include_router(devices.router)
 router.include_router(traffic_purchase.router)
-router.include_router(reissue_keys.router)

@@ -15,6 +15,7 @@ from backend.payments.cryptobot import CryptoPayAPI, CurrencyType
 from backend.payments.pally import PallyPaymentAPI
 
 from backend.services.subscription_service import SubscriptionService
+from backend.services.remnawave_service import RemnaWaveService
 from backend.services.exceptions import (
     UserNotFound,
     TransactionNotFound,
@@ -36,6 +37,7 @@ class BillingService:
         self.user_repo = UserRepository(session)
         self.tx_repo = TransactionRepository(session)
         self.sub_service = SubscriptionService(session)
+        self.remnawave_service = RemnaWaveService(session)
 
         self.platega = PlategaPaymentAPI()
         self.crypto = CryptoPayAPI()
@@ -328,10 +330,30 @@ class BillingService:
         )
 
         if payment.get("error"):
+            http_status = payment.get("http_status")
+            provider_error = payment.get("error")
+            provider_message = payment.get("message") or payment.get("detail")
+            provider_response = payment.get("response")
+            payload_preview = str(payment)[:2000]
+
+            if int(http_status or 0) == 403:
+                logger.error(
+                    "[biz][billing] pally_create_http_403 user_id=%s status=%s error=%s message=%s response=%s payload=%s",
+                    user_id,
+                    http_status,
+                    provider_error,
+                    provider_message,
+                    provider_response,
+                    payload_preview,
+                )
             logger.error(
-                "[biz][billing] pally_create_api_error user_id=%s error=%s",
+                "[biz][billing] pally_create_api_error user_id=%s status=%s error=%s message=%s response=%s payload=%s",
                 user_id,
-                payment.get("error"),
+                http_status,
+                provider_error,
+                provider_message,
+                provider_response,
+                payload_preview,
             )
             raise ValueError(f"PALLY API error: {payment.get('error')}")
 
@@ -505,6 +527,36 @@ class BillingService:
             plan_id=plan_id,
             auto_renew=auto_renew,
         )
+
+        # Try syncing in Remnawave, but do not fail billing if panel is temporarily unreachable.
+        try:
+            sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+            if not sub_url:
+                logger.warning(
+                    "[biz][billing] remnawave_sync_empty_subscription_url user_id=%s subscription_id=%s plan_id=%s",
+                    user_id,
+                    sub.id,
+                    plan_id,
+                )
+        except Exception as e:
+            logger.exception(
+                "[biz][billing] remnawave_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
+                user_id,
+                sub.id,
+                plan_id,
+                e,
+            )
+
+        try:
+            await self.remnawave_service.sync_subscription_expire_at(user=user, subscription=sub)
+        except Exception as e:
+            logger.exception(
+                "[biz][billing] remnawave_expire_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
+                user_id,
+                sub.id,
+                plan_id,
+                e,
+            )
 
         await self.session.commit()
         logger.info(

@@ -87,9 +87,6 @@ class SubscriptionRepository:
         sub.current_period_end = current_period_end
         sub.next_renewal_at = next_renewal_at
 
-    async def add_gb_left(self, sub: Subscription, amount) -> None:
-        sub.gb_left = (sub.gb_left or 0) + amount
-
     async def list_active_expired(self, *, now: datetime) -> list[Subscription]:
         res = await self.session.execute(
             select(Subscription).where(
@@ -126,5 +123,13 @@ class SubscriptionRepository:
             update(Subscription)
             .where(Subscription.id == subscription_id)
             .values(auto_renew=auto_renew)
+        )
+        return int(res.rowcount or 0)
+
+    async def set_subscription_token(self, *, subscription_id: int, token: str | None) -> int:
+        res = await self.session.execute(
+            update(Subscription)
+            .where(Subscription.id == subscription_id)
+            .values(subscription_token=token)
         )
         return int(res.rowcount or 0)

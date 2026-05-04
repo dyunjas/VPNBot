@@ -14,25 +14,24 @@ async def mini_devices(payload: InitPayload):
 
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
-        device_service = DeviceService(session)
-
-        devices = await device_service.list_devices(user.id)
+        remnawave_service = RemnaWaveService(session)
+        devices = await remnawave_service.get_user_hwid_devices(user=user)
 
         return {
             "ok": True,
             "items": [
                 {
-                    "id": d.id,
-                    "hwid": d.hwid,
-                    "device_model": d.device_model,
-                    "device_os": d.device_os,
-                    "os_version": d.os_version,
-                    "device_locale": d.device_locale,
-                    "user_agent": d.user_agent,
-                    "first_seen_at": d.first_seen_at.isoformat() if d.first_seen_at else None,
-                    "last_seen_at": d.last_seen_at.isoformat() if d.last_seen_at else None,
+                    "id": i,
+                    "hwid": d.get("hwid"),
+                    "device_model": d.get("deviceModel"),
+                    "device_os": d.get("platform"),
+                    "os_version": d.get("osVersion"),
+                    "device_locale": None,
+                    "user_agent": d.get("userAgent"),
+                    "first_seen_at": d.get("createdAt"),
+                    "last_seen_at": d.get("updatedAt"),
                 }
-                for d in devices
+                for i, d in enumerate(devices)
             ],
         }
 
@@ -44,10 +43,20 @@ async def mini_device_delete(payload: DeleteDevicePayload):
 
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
-        device_service = DeviceService(session)
+        remnawave_service = RemnaWaveService(session)
 
         try:
-            await device_service.remove_device_for_user(user_id=user.id, device_id=payload.device_id)
+            devices = await remnawave_service.get_user_hwid_devices(user=user)
+            if payload.device_id < 0 or payload.device_id >= len(devices):
+                raise HTTPException(status_code=404, detail="device not found")
+            hwid = str(devices[payload.device_id].get("hwid") or "").strip()
+            if not hwid:
+                raise HTTPException(status_code=404, detail="device not found")
+            ok = await remnawave_service.delete_hwid_device(user=user, hwid=hwid)
+            if not ok:
+                raise HTTPException(status_code=502, detail="remnawave delete device failed")
+        except HTTPException:
+            raise
         except Exception as e:
             raise _map_service_error(e)
 
@@ -141,25 +150,3 @@ async def mini_referral_withdrawals(payload: InitPayload):
             ],
         }
 
-
-@router.post("/subscription/reissue")
-async def mini_subscription_reissue(payload: InitPayload):
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = tg_user["id"]
-
-    async with async_session() as session:
-        user = await _get_user_or_404(session, tg_id)
-
-        sub_service = SubscriptionService(session)
-        vpn_service = VPNService(session, xray_auth_token=XRAY_AUTH_TOKEN)
-
-        try:
-            _ = await sub_service.get_active_subscription(user.id)
-            await vpn_service.reissue_keys(user.id)
-        except Exception as e:
-            raise _map_service_error(e)
-
-        token = await UserService(session).get_subscription_token(user.id)
-        sub_url = f"https://{settings.PUBLIC_BASE_URL}/sub/{token}"
-
-        return {"ok": True, "subscription_url": sub_url}

@@ -2,17 +2,17 @@ from backend.services.user_service import UserService
 from backend.services.transaction_service import TransactionService
 from backend.services.billing_service import BillingService
 from backend.services.subscription_service import SubscriptionService
-from backend.services.vpn_service import VPNService
 from backend.services.promo_service import PromoService
 from backend.services.referral_service import ReferralService
 from backend.services.withdrawal_service import WithdrawalService
-from backend.services.admin_service import AdminService
 from backend.services.device_service import DeviceService
+from backend.services.remnawave_service import RemnaWaveService
 
 
 
 __all__ = [
     "UserService", "TransactionService", "BillingService",
-    "SubscriptionService", "VPNService", "PromoService",
-    "ReferralService", "WithdrawalService", "AdminService", "DeviceService"
+    "SubscriptionService", "PromoService",
+    "ReferralService", "WithdrawalService", "DeviceService",
+    "RemnaWaveService",
     ]

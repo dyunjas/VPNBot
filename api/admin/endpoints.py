@@ -5,7 +5,6 @@ from api.admin.routes import (
     broadcast_router,
     plans_router,
     referrals_router,
-    servers_router,
     subscriptions_router,
     transactions_router,
     users_router,
@@ -20,10 +19,8 @@ router.include_router(users_router)
 router.include_router(subscriptions_router)
 router.include_router(plans_router)
 router.include_router(transactions_router)
-router.include_router(servers_router)
 router.include_router(broadcast_router)
 router.include_router(withdrawals_router)
 router.include_router(referrals_router)
 router.include_router(logs_router)
 router.include_router(promocodes_router)
-

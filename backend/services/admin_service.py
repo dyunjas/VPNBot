@@ -19,7 +19,11 @@ class AdminService:
         self.session = session
         self.admin_repo = AdminRepository(session)
         self.server_repo = ServerRepository(session)
-        self.XRAY_AGENT_TOKEN = settings.XRAY_AUTH
+        self.XRAY_AGENT_TOKEN = (
+            (xray_agent_token or "")
+            or (getattr(settings, "XRAY_AUTH", None) or "")
+            or (getattr(settings, "REMNAWAVE_API_TOKEN", None) or "")
+        ).strip()
 
     async def ensure_admin(self, user_id: int) -> None:
         admin = await self.admin_repo.get_by_id(user_id)

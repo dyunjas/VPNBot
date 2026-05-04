@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from api.admin.endpoints import router as admin_router
+from backend.core.loader import setup_bot, shutdown_bot
 from backend.database.session import init_db, check_connection
 
 app = FastAPI(
@@ -206,6 +207,15 @@ async def unhandled_exception_json(request: Request, exc: Exception):
 async def on_startup():
     await init_db()
     await check_connection()
+    await setup_bot()
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    from backend.core import loader as bot_loader
+
+    if bot_loader.bot is not None:
+        await shutdown_bot(bot_loader.bot)
 
 
 @app.get("/health")

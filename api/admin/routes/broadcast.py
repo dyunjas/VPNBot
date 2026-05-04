@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from ..common import *
+from backend.core import loader as bot_loader
 
 router = APIRouter()
 
@@ -65,6 +66,10 @@ async def _run_broadcast_job(
         job["started_at"] = _utc_now()
 
     try:
+        runtime_bot = bot_loader.bot
+        if runtime_bot is None:
+            raise RuntimeError("Telegram bot is not initialized")
+
         async with async_session() as session:
             query = select(User.tg_id)
             if not include_banned:
@@ -99,12 +104,12 @@ async def _run_broadcast_job(
                 if image_bytes:
                     photo = BufferedInputFile(image_bytes, filename=image_name)
                     await asyncio.wait_for(
-                        bot.send_photo(chat_id=tg_id, photo=photo, caption=text, parse_mode=parse_mode),
+                        runtime_bot.send_photo(chat_id=tg_id, photo=photo, caption=text, parse_mode=parse_mode),
                         timeout=BROADCAST_SEND_TIMEOUT_SEC,
                     )
                 else:
                     await asyncio.wait_for(
-                        bot.send_message(chat_id=tg_id, text=text, parse_mode=parse_mode),
+                        runtime_bot.send_message(chat_id=tg_id, text=text, parse_mode=parse_mode),
                         timeout=BROADCAST_SEND_TIMEOUT_SEC,
                     )
                 success += 1

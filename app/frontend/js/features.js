@@ -47,7 +47,7 @@ async function loadStatusCard() {
 
     const url =
       data.subscription_url ||
-      (data.subscription_token ? `https://lunetpn.ru/sub/${data.subscription_token}` : null);
+      (data.subscription?.token ? `https://lunetpn.ru/sub/${data.subscription.token}` : null);
 
     lastSubUrl = url;
 

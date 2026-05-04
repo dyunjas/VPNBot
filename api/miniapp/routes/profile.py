@@ -34,59 +34,75 @@ async def mini_status(payload: InitPayload):
 
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
-
         sub_service = SubscriptionService(session)
-        vpn_service = VPNService(session, xray_auth_token=XRAY_AUTH_TOKEN)
-
+        remnawave_service = RemnaWaveService(session)
         try:
-            subscription = await sub_service.get_active_subscription(user.id)
+            active_sub = await sub_service.get_active_subscription(user_id=user.id)
         except SubscriptionNotFound:
             return {
                 "ok": True,
                 "has_subscription": False,
                 "statusText": "Нет активной подписки.",
                 "active_keys": 0,
-                "subscription_token": user.subscription_token,
-                "subscription_url": (
-                    f"https://{settings.PUBLIC_BASE_URL}/sub/{user.subscription_token}"
-                    if user.subscription_token
-                    else None
-                ),
+                "subscription_url": None,
             }
 
-        active_keys = await vpn_service.list_active_keys(user.id)
+        remote = await remnawave_service.get_user_snapshot(user=user)
+        if not isinstance(remote, dict):
+            return {
+                "ok": True,
+                "has_subscription": False,
+                "statusText": "Нет активной подписки.",
+                "active_keys": 0,
+                "subscription_url": None,
+            }
 
-        sub_token = user.subscription_token
-        sub_url = f"https://{settings.PUBLIC_BASE_URL}/sub/{sub_token}" if sub_token else None
+        status = str(remote.get("status") or "")
+        expire_at = remote.get("expireAt")
+        sub_url = remote.get("subscriptionUrl") or remote.get("subscription_url")
+        has_subscription = status in {"ACTIVE", "LIMITED"}
 
-        plan = subscription.plan
         status_text = (
-            f"Тариф: {plan.name} | Ключей: {len(active_keys)}\n"
-            f"Действует до: {subscription.current_period_end.strftime('%d.%m.%Y %H:%M')}"
+            f"Статус: {status or 'UNKNOWN'}\n"
+            f"Действует до: {expire_at or '—'}"
         )
 
+        devices = await remnawave_service.get_user_hwid_devices(user=user)
+        devices_used = len(devices)
+        raw_device_limit = remote.get("hwidDeviceLimit")
+        try:
+            devices_limit = max(0, int(raw_device_limit)) if raw_device_limit is not None else 0
+        except Exception:
+            devices_limit = 0
+        devices_left = max(devices_limit - devices_used, 0) if devices_limit > 0 else None
+
+        user_traffic = remote.get("userTraffic") if isinstance(remote.get("userTraffic"), dict) else {}
         return {
             "ok": True,
-            "has_subscription": True,
+            "has_subscription": bool(has_subscription),
             "statusText": status_text,
-            "active_keys": len(active_keys),
-            "subscription_token": sub_token,
+            "active_keys": 0,
             "subscription_url": sub_url,
-            "plan": {
-                "id": plan.id,
-                "name": plan.name,
-                "price": plan.price,
-                "period_days": plan.period_days,
-                "gb_limit": int(getattr(plan, "gb_limit", 0) or 0),
-                "device_limit": int(getattr(plan, "device_limit", 0) or 0),
-            },
+            "plan": None,
             "subscription": {
-                "current_period_start": subscription.current_period_start.isoformat() if subscription.current_period_start else None,
-                "current_period_end": subscription.current_period_end.isoformat() if subscription.current_period_end else None,
-                "status": subscription.status.value if subscription.status else None,
-                "gb_left": str(subscription.gb_left) if subscription.gb_left is not None else None,
-                "devices_limit": int(getattr(subscription, "devices_limit", 0) or 0),
-                "devices_left": int(getattr(subscription, "devices_left", 0) or 0),
+                "current_period_start": None,
+                "current_period_end": expire_at,
+                "status": status or None,
+                "token": getattr(active_sub, "subscription_token", None),
+                "gb_left": None,
+                "devices_limit": devices_limit,
+                "devices_used": devices_used,
+                "devices_left": devices_left,
+            },
+            "remnawave": {
+                "uuid": remote.get("uuid"),
+                "id": remote.get("id"),
+                "username": remote.get("username"),
+                "trafficLimitBytes": remote.get("trafficLimitBytes"),
+                "trafficLimitStrategy": remote.get("trafficLimitStrategy"),
+                "usedTrafficBytes": user_traffic.get("usedTrafficBytes"),
+                "lifetimeUsedTrafficBytes": user_traffic.get("lifetimeUsedTrafficBytes"),
+                "hwidDeviceLimit": remote.get("hwidDeviceLimit"),
             },
         }
 
@@ -113,7 +129,6 @@ async def mini_profile(payload: InitPayload):
                 "username": user.username,
                 "balance": user.balance,
                 "email": user.email,
-                "subscription_token": user.subscription_token,
                 "created_at": user.created_at.isoformat() if user.created_at else None,
             },
             "referral": {

@@ -9,41 +9,30 @@ from aiogram.types.input_file import BufferedInputFile
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
-from sqlalchemy import String, cast, delete, desc, func, or_, select
+from sqlalchemy import String, cast, delete, desc, func, literal, or_, select
 
 from backend.core.config import settings
-from backend.core.loader import bot
 from backend.database.models import (
-    Key,
-    KeyStatus,
     Promocode,
     PromocodeActivation,
     ReferralAccount,
     ReferralWithdrawal,
-    Server,
     SubStatus,
     Subscription,
     SubscriptionPlan,
     Transaction,
     User,
-    UserDevice,
     WithdrawalStatus,
 )
 from backend.database.session import async_session
-from backend.repositories.server_repository import ServerRepository
-from backend.services.admin_service import AdminService
-from backend.services.device_service import DeviceService
 from backend.services.exceptions import (
-    DeviceNotFound,
     InsufficientBalance,
-    KeyCreationError,
-    ServerNotFound,
     SubscriptionNotFound,
     UserNotFound,
 )
 from backend.services.subscription_service import SubscriptionService
 from backend.services.user_service import UserService
-from backend.services.vpn_service import VPNService
+from backend.services.remnawave_service import RemnaWaveService
 
 router = APIRouter(prefix="/admin-api", tags=["admin-web"])
 
@@ -170,30 +159,8 @@ class UserActionPayload(BaseModel):
         "unban",
         "add_balance",
         "sub_balance",
-        "reset_subscription_token",
-        "delete_all_keys",
-        "reissue_keys",
-        "delete_device",
     ]
     amount: int | None = None
-    device_id: int | None = None
-
-
-class ServerActionPayload(BaseModel):
-    action: Literal["health", "stats", "resync"]
-
-class ServerCreatePayload(BaseModel):
-    display_order: int = Field(default=100, ge=0, le=1000000)
-    country: str = Field(min_length=2, max_length=64)
-    inbound_tag: str = Field(min_length=1, max_length=64)
-    grpc_endpoint: str = Field(min_length=3, max_length=128)
-    public_host: str = Field(min_length=2, max_length=255)
-    port: int = Field(default=443, ge=1, le=65535)
-    sni: str = Field(default="telegram.com", min_length=1, max_length=255)
-    fp: str = Field(default="chrome", min_length=1, max_length=32)
-    pbk: str = Field(min_length=8, max_length=128)
-    short_id: str | None = Field(default=None, max_length=32)
-    note: str | None = None
 
 
 class SubscriptionCreatePayload(BaseModel):
@@ -208,8 +175,6 @@ class SubscriptionUpdatePayload(BaseModel):
     auto_renew: bool | None = None
     extend_days: int | None = None
     current_period_end: datetime | None = None
-    devices_limit: int | None = None
-    devices_left: int | None = None
 
 
 class PlanCreatePayload(BaseModel):
@@ -217,7 +182,6 @@ class PlanCreatePayload(BaseModel):
     price: int = Field(gt=0)
     period_days: int = Field(default=30, gt=0)
     gb_limit: int = Field(default=100, ge=0)
-    device_limit: int = Field(default=5, gt=0)
 
 
 class PlanUpdatePayload(BaseModel):
@@ -225,7 +189,6 @@ class PlanUpdatePayload(BaseModel):
     price: int | None = Field(default=None, gt=0)
     period_days: int | None = Field(default=None, gt=0)
     gb_limit: int | None = Field(default=None, ge=0)
-    device_limit: int | None = Field(default=None, gt=0)
 
 
 class PromocodeCreatePayload(BaseModel):
@@ -233,9 +196,6 @@ class PromocodeCreatePayload(BaseModel):
     amount: int = Field(gt=0)
     usages: int = Field(default=1, gt=0)
 
-
-class ServerUpdatePayload(BaseModel):
-    display_order: int | None = Field(default=None, ge=0, le=1000000)
 
 __all__ = [
     "asyncio",
@@ -262,37 +222,27 @@ __all__ = [
     "delete",
     "desc",
     "func",
+    "literal",
     "or_",
     "select",
     "settings",
-    "bot",
-    "Key",
-    "KeyStatus",
     "Promocode",
     "PromocodeActivation",
     "ReferralAccount",
     "ReferralWithdrawal",
-    "Server",
     "SubStatus",
     "Subscription",
     "SubscriptionPlan",
     "Transaction",
     "User",
-    "UserDevice",
     "WithdrawalStatus",
     "async_session",
-    "ServerRepository",
-    "AdminService",
-    "DeviceService",
-    "DeviceNotFound",
     "InsufficientBalance",
-    "KeyCreationError",
-    "ServerNotFound",
     "SubscriptionNotFound",
     "UserNotFound",
     "SubscriptionService",
     "UserService",
-    "VPNService",
+    "RemnaWaveService",
     "SORT_FIELDS",
     "SUB_SORT_FIELDS",
     "TX_SORT_FIELDS",
@@ -308,9 +258,6 @@ __all__ = [
     "require_admin_auth",
     "LoginPayload",
     "UserActionPayload",
-    "ServerActionPayload",
-    "ServerCreatePayload",
-    "ServerUpdatePayload",
     "SubscriptionCreatePayload",
     "SubscriptionUpdatePayload",
     "PlanCreatePayload",

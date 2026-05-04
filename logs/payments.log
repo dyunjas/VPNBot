@@ -17,3 +17,218 @@
 [2026-04-01 11:29:02] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222204
 [2026-04-01 11:29:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
 [2026-04-01 11:29:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=7222174
+[2026-05-02 23:48:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-02 23:48:18] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-02 23:48:18] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=38 balance=0 required=95
+[2026-05-02 23:51:03] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-02 23:51:03] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-02 23:51:03] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-02 23:52:03] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-02 23:52:03] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-02 23:52:03] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-02 23:52:03] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=13 plan_id=1 charged=95
+[2026-05-03 00:04:50] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 00:04:50] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 00:04:50] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=29 balance=0 required=95
+[2026-05-03 00:05:25] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 00:05:25] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 00:05:25] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 00:20:12] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-03 00:20:12] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=29 plan_id=4 seconds_left=2609113
+[2026-05-03 10:17:06] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 10:17:06] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 10:17:06] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 10:17:07] [ERROR] root: [biz][billing] remnawave_sync_failed user_id=29 subscription_id=None plan_id=1: remnawave patch user failed status=400
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 513, in buy_subscription
+    sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 272, in get_subscription_url
+    _, sub_url, _ = await self._sync_remote_user(user=user, subscription=subscription)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 250, in _sync_remote_user
+    raise RuntimeError(f"remnawave patch user failed status={status}")
+RuntimeError: remnawave patch user failed status=400
+[2026-05-03 10:30:35] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 10:30:35] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 10:30:35] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 10:30:36] [ERROR] root: [biz][billing] remnawave_sync_failed user_id=29 subscription_id=None plan_id=1: remnawave patch user failed status=400
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 513, in buy_subscription
+    sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 272, in get_subscription_url
+    "trafficLimitBytes": payload["trafficLimitBytes"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 250, in _sync_remote_user
+    return first
+RuntimeError: remnawave patch user failed status=400
+[2026-05-03 10:33:20] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 10:33:20] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 10:33:20] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 10:33:21] [ERROR] root: [biz][billing] remnawave_sync_failed user_id=29 subscription_id=None plan_id=1: remnawave patch user failed status=400 body={'statusCode': 400, 'message': 'Validation failed', 'errors': [{'code': 'custom', 'message': 'Expiration date cannot be in the past', 'path': ['expireAt']}]}
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 513, in buy_subscription
+    sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 327, in get_subscription_url
+    _, sub_url, _ = await self._sync_remote_user(user=user, subscription=subscription)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 310, in _sync_remote_user
+    raise RuntimeError(
+        f"remnawave patch user failed status={status2} body={data2}"
+    )
+RuntimeError: remnawave patch user failed status=400 body={'statusCode': 400, 'message': 'Validation failed', 'errors': [{'code': 'custom', 'message': 'Expiration date cannot be in the past', 'path': ['expireAt']}]}
+[2026-05-03 10:36:46] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 10:36:46] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 10:36:46] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 10:36:55] [ERROR] root: [biz][billing] remnawave_sync_failed user_id=29 subscription_id=None plan_id=1: 
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1532, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1148, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 513, in buy_subscription
+    sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 366, in get_subscription_url
+    _, sub_url, _ = await self._sync_remote_user(user=user, subscription=subscription)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 295, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 248, in _request_json
+    async with http.request(method, url, headers=self._headers(), **kwargs) as resp:
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 622, in _request
+    with timer:
+         ^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\helpers.py", line 685, in __exit__
+    raise asyncio.TimeoutError from exc_val
+TimeoutError
+[2026-05-03 12:04:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-03 12:04:59] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-03 12:04:59] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-03 12:04:59] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-03 15:09:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-03 15:09:57] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-03 15:09:57] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-03 15:10:06] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=1 charged=95
+[2026-05-03 20:12:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-05-03 20:12:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=2580778
+[2026-05-03 20:17:03] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 20:17:03] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 20:17:03] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 20:17:12] [ERROR] root: [biz][billing] remnawave_sync_failed_non_blocking user_id=29 subscription_id=18 plan_id=1: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/9: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/9
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 513, in buy_subscription
+    sub_url = await self.remnawave_service.get_subscription_url(user=user, subscription=sub)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 524, in get_subscription_url
+    status, remote_uuid, sub_url = await self._fetch_remote_by_id(remote_id=saved_remote_id)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 481, in _fetch_remote_by_id
+    remote = await self._fetch_remote_user_by_id(remote_id=remote_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 491, in _fetch_remote_user_by_id
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 323, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/9: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/9
+[2026-05-03 20:17:12] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-03 20:18:38] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-03 20:18:38] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-03 20:18:38] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-03 20:18:39] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=1 charged=95
+[2026-05-03 20:18:39] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-03 20:18:39] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-03 20:18:39] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-03 20:18:40] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-03 20:19:41] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-03 20:19:41] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-03 20:19:41] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-03 20:19:42] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-03 20:19:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-03 20:19:59] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-03 20:19:59] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-03 20:20:00] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=1 charged=95
+[2026-05-03 20:20:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-03 20:20:00] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-03 20:20:00] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-03 20:20:01] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-03 20:21:19] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-03 20:21:19] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=29 plan_id=4 seconds_left=2646927
+[2026-05-04 16:31:53] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-04 16:31:53] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2574292
+[2026-05-04 16:34:02] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-04 16:34:02] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-04 16:34:02] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-04 16:34:02] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-04 16:41:44] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-04 16:41:44] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-04 16:41:44] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-04 16:41:44] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-04 16:42:28] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-04 16:42:28] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-05-04 16:42:28] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-05-04 16:42:28] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=1 charged=95
+[2026-05-04 16:47:36] [INFO] root: [PALLY] Create payment tg_id=36 amount=50
+[2026-05-04 16:47:36] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-05-04 16:47:38] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 error=HTTP 403
+[2026-05-04 16:47:38] [ERROR] root: [PALLY] Payment creation failed for tg_id=36: PALLY API error: HTTP 403
+[2026-05-04 16:51:47] [INFO] root: [PALLY] Create payment tg_id=36 amount=50
+[2026-05-04 16:51:47] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-05-04 16:51:49] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.116.198'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-04 16:51:49] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.116.198'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-04 16:51:49] [ERROR] root: [PALLY] Payment creation failed for tg_id=36: PALLY API error: HTTP 403
+[2026-05-04 16:56:43] [INFO] root: [PALLY] Create payment tg_id=36 amount=50
+[2026-05-04 16:56:43] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-05-04 16:56:45] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.116.198'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-04 16:56:45] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.116.198'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-04 16:56:45] [ERROR] root: [PALLY] Payment creation failed for tg_id=36: PALLY API error: HTTP 403
+[2026-05-04 17:00:44] [INFO] root: [PALLY] Create payment tg_id=36 amount=50
+[2026-05-04 17:00:44] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-05-04 17:00:45] [INFO] root: [biz][billing] pally_created user_id=36 provider_id=k70deZMJ7q amount=50.0
+[2026-05-04 19:36:50] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-04 19:36:50] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-04 19:36:50] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-04 19:36:51] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-04 19:36:51] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=1 auto_renew=True
+[2026-05-04 19:36:51] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=95
+[2026-05-04 19:36:51] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=95
+[2026-05-04 19:36:51] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=1 charged=95
+[2026-05-04 19:55:35] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-04 19:55:35] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2702768

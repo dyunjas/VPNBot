@@ -1,4 +1,4 @@
-﻿const usersState = { page: 1, pages: 1, selectedUserId: null, hasActiveSubscription: false };
+const usersState = { page: 1, pages: 1, selectedUserId: null };
 
 function renderUsersLayout() {
   return `
@@ -6,15 +6,13 @@ function renderUsersLayout() {
       <div class="toolbar">
         <input id="search" type="text" placeholder="Поиск: Telegram ID / username / email" />
         <select id="sort_by">
-          <option value="created_at">Дата регистрации</option>
+          <option value="created_at">Дата создания</option>
           <option value="id">ID</option>
-          <option value="updated_at">Последнее обновление</option>
+          <option value="updated_at">Дата обновления</option>
           <option value="tg_id">Telegram ID</option>
           <option value="username">Username</option>
           <option value="email">Email</option>
           <option value="balance">Баланс</option>
-          <option value="active_keys_count">Активные ключи</option>
-          <option value="devices_count">Устройства</option>
           <option value="subscription_end">Дата окончания подписки</option>
         </select>
         <select id="sort_dir">
@@ -23,8 +21,8 @@ function renderUsersLayout() {
         </select>
         <select id="banned">
           <option value="all">Все</option>
-          <option value="exclude">Только не забаненные</option>
-          <option value="only">Только забаненные</option>
+          <option value="exclude">Только не заблокированные</option>
+          <option value="only">Только заблокированные</option>
         </select>
         <button id="apply" class="btn-primary">Применить</button>
       </div>
@@ -36,7 +34,7 @@ function renderUsersLayout() {
             <table>
               <thead>
                 <tr>
-                  <th>ID</th><th>TG</th><th>Пользователь</th><th>Баланс</th><th>Подписка</th><th>Ключи</th><th>Бан</th><th>Действия</th>
+                  <th>ID</th><th>TG</th><th>Пользователь</th><th>Баланс</th><th>Подписка</th><th>Бан</th><th>Действия</th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
@@ -45,13 +43,13 @@ function renderUsersLayout() {
           <div class="pager">
             <button id="prev">Назад</button>
             <span id="meta"></span>
-            <button id="next">Вперед</button>
+            <button id="next">Вперёд</button>
           </div>
         </div>
 
         <div class="content-stack">
           <div class="card">
-            <h3>Детали пользователя</h3>
+            <h3>Данные пользователя</h3>
             <div id="details" class="details-grid">Выберите пользователя из таблицы</div>
           </div>
 
@@ -59,12 +57,11 @@ function renderUsersLayout() {
             <h3>Управление</h3>
             <div class="toolbar">
               <input id="balance_amount" type="number" min="1" value="100" placeholder="Сумма" />
-              <button id="btn_add_balance" class="btn-ok">Начислить</button>
+              <button id="btn_add_balance" class="btn-ok">Пополнить</button>
               <button id="btn_sub_balance" class="btn-warn">Списать</button>
               <button id="btn_toggle_ban" class="btn-danger">Бан / Разбан</button>
-              <button id="btn_reissue">Перевыпустить ключи</button>
             </div>
-            <div class="page-sub">При бане удаляются ключи, подписка и устройства пользователя.</div>
+            <div class="page-sub">Все действия применяются к выбранному пользователю.</div>
           </div>
         </div>
       </div>
@@ -87,13 +84,11 @@ async function loadUserDetails(userId) {
 
   const u = data.user || {};
   const sub = data.subscription || {};
-  const keys = data.keys || [];
-  const devices = data.devices || [];
   const txs = data.transactions || [];
 
   q("details").innerHTML = `
     <div class="card">
-      <h4>Профиль</h4>
+      <h4>Основное</h4>
       <div>ID: <b>${safeText(u.id)}</b></div>
       <div>Telegram ID: <b>${safeText(u.tg_id)}</b></div>
       <div>Username: <b>${safeText(u.username)}</b></div>
@@ -104,35 +99,10 @@ async function loadUserDetails(userId) {
 
     <div class="card">
       <h4>Подписка</h4>
-      <div>Тариф: <b>${safeText(sub.plan_name)}</b></div>
+      <div>План: <b>${safeText(sub.plan_name)}</b></div>
       <div>Статус: ${statusBadge(sub.status || "expired")}</div>
-      <div>Действует до: <b>${formatDateTime(sub.current_period_end)}</b></div>
+      <div>Активна до: <b>${formatDateTime(sub.current_period_end)}</b></div>
       <div>Автопродление: ${sub.auto_renew ? statusBadge("yes") : statusBadge("no")}</div>
-      <div>Устройства: <b>${safeText(sub.devices_left)}/${safeText(sub.devices_limit)}</b></div>
-    </div>
-
-    <div class="card">
-      <h4>Ключи (${keys.length})</h4>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Сервер</th><th>Статус</th></tr></thead>
-          <tbody>
-            ${keys.slice(0, 8).map((k) => `<tr><td>${k.id}</td><td>${safeText(k.server_country)}</td><td>${statusBadge(k.status)}</td></tr>`).join("") || "<tr><td colspan='3'>Нет ключей</td></tr>"}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <h4>Устройства (${devices.length})</h4>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Модель</th><th>OS</th><th>Последняя активность</th></tr></thead>
-          <tbody>
-            ${devices.slice(0, 8).map((d) => `<tr><td>${d.id}</td><td>${safeText(d.device_model)}</td><td>${safeText(d.device_os)} ${safeText(d.os_version)}</td><td>${formatDateTime(d.last_seen_at)}</td></tr>`).join("") || "<tr><td colspan='4'>Нет устройств</td></tr>"}
-          </tbody>
-        </table>
-      </div>
     </div>
 
     <div class="card">
@@ -150,8 +120,6 @@ async function loadUserDetails(userId) {
 
   const toggle = q("btn_toggle_ban");
   if (toggle) toggle.textContent = u.banned ? "Разбанить" : "Забанить";
-  usersState.hasActiveSubscription = Boolean(sub.active_now);
-
   await loadUsers();
 }
 
@@ -187,7 +155,6 @@ async function loadUsers() {
       <td>${safeText(u.username)}</td>
       <td>${u.balance}</td>
       <td>${u.subscription_active ? statusBadge("active") : statusBadge("expired")}</td>
-      <td>${u.active_keys_count}</td>
       <td>${u.banned ? statusBadge("ban") : statusBadge("ok")}</td>
       <td></td>
     `;
@@ -201,7 +168,7 @@ async function loadUsers() {
 
     const row = document.createElement("div");
     row.className = "row-actions";
-    row.appendChild(actionBtn("Детали", "", () => loadUserDetails(u.id)));
+    row.appendChild(actionBtn("Открыть", "", () => loadUserDetails(u.id)));
     row.appendChild(actionBtn("+100", "btn-ok", () => userAction(u.id, "add_balance", { amount: 100 })));
     row.appendChild(actionBtn("-100", "btn-warn", () => userAction(u.id, "sub_balance", { amount: 100 })));
     row.appendChild(actionBtn(u.banned ? "Разбан" : "Бан", "btn-danger", () => userAction(u.id, u.banned ? "unban" : "ban")));
@@ -218,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderShell({
     activeKey: "users",
     title: "Пользователи",
-    subtitle: "Поиск, сортировка, действия и детальные карточки",
+    subtitle: "Поиск, фильтрация, управление балансом и статусом",
     contentHtml: renderUsersLayout(),
   });
 
@@ -248,39 +215,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   q("btn_add_balance").addEventListener("click", async (e) => {
     if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
     const amount = Number(q("balance_amount").value || "0");
-    if (amount <= 0) return alert("Укажите корректную сумму");
+    if (amount <= 0) return alert("Введите корректную сумму");
     await withButtonLoading(e.currentTarget, async () => {
       await userAction(usersState.selectedUserId, "add_balance", { amount });
-      showToast("Баланс увеличен", "success");
+      showToast("Баланс пополнен", "success");
     }).catch((err) => alert(err.message));
   });
 
   q("btn_sub_balance").addEventListener("click", async (e) => {
     if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
     const amount = Number(q("balance_amount").value || "0");
-    if (amount <= 0) return alert("Укажите корректную сумму");
+    if (amount <= 0) return alert("Введите корректную сумму");
     await withButtonLoading(e.currentTarget, async () => {
       await userAction(usersState.selectedUserId, "sub_balance", { amount });
-      showToast("Баланс уменьшен", "success");
+      showToast("Баланс списан", "success");
     }).catch((err) => alert(err.message));
   });
 
   q("btn_toggle_ban").addEventListener("click", async (e) => {
     if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
     const current = (q("btn_toggle_ban").textContent || "").toLowerCase();
-    const action = current.includes("разбан") ? "unban" : "ban";
+    const action = current.includes("разбан") ? "ban" : "unban";
     await withButtonLoading(e.currentTarget, async () => {
       await userAction(usersState.selectedUserId, action);
       showToast(action === "ban" ? "Пользователь забанен" : "Пользователь разбанен", "success");
-    }).catch((err) => alert(err.message));
-  });
-
-  q("btn_reissue").addEventListener("click", async (e) => {
-    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
-    if (!usersState.hasActiveSubscription) return alert("Нельзя перевыпустить ключи: у пользователя нет активной подписки");
-    await withButtonLoading(e.currentTarget, async () => {
-      await userAction(usersState.selectedUserId, "reissue_keys");
-      showToast("Ключи перевыпущены", "success");
     }).catch((err) => alert(err.message));
   });
 
@@ -292,6 +250,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert(e.message);
   }
 });
-
-
-

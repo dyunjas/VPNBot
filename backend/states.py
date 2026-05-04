@@ -12,10 +12,6 @@ class BroadcastStates(StatesGroup):
     waiting_for_media_choice = State()
     waiting_for_photo = State()
     waiting_for_confirmation = State()
-    
-class GbAddStates(StatesGroup):
-    waiting_for_amount = State()
-    waiting_for_purchase = State()
 
 class WithdrawBalance(StatesGroup):
     waiting_for_amount = State()

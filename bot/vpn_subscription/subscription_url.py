@@ -1,15 +1,43 @@
 ﻿from datetime import datetime, timezone
+from html import escape
 
 from aiogram import F, Router
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.core.config import settings
 from backend.images import MAIN_MENU_IMG
-from backend.services import SubscriptionService, UserService
+from backend.core.logger_config import logger
+from backend.services import RemnaWaveService, SubscriptionService, UserService
 from backend.services.exceptions import SubscriptionNotFound, UserNotFound
-from bot.vpn_subscription.keyboards import back_keys_kb, reissue_subscription_url_confirm_kb
+from bot.vpn_subscription.keyboards import back_keys_kb
 
 router = Router()
+UNEXPECTED_ERROR_TEXT = "Непредвиденная ошибка. Попробуйте позже."
+SUBSCRIPTION_INACTIVE_TEXT = "Подписка неактивна."
+
+
+async def _safe_callback_answer(
+    callback: CallbackQuery,
+    text: str | None = None,
+    *,
+    show_alert: bool = False,
+) -> None:
+    try:
+        await callback.answer(text, show_alert=show_alert)
+    except TelegramBadRequest:
+        return
+    except Exception:
+        return
+
+
+async def _safe_send_callback_message(callback: CallbackQuery, text: str) -> None:
+    try:
+        if callback.message:
+            await callback.message.answer(text)
+        else:
+            await callback.bot.send_message(chat_id=callback.from_user.id, text=text)
+    except Exception:
+        return
 
 
 def _as_aware_utc(dt: datetime | None) -> datetime | None:
@@ -24,32 +52,35 @@ async def _render_subscription_screen(
     callback: CallbackQuery,
     *,
     subscription,
-    subscription_token: str,
+    subscription_url: str,
 ):
     end_dt = _as_aware_utc(subscription.current_period_end)
     if not end_dt:
-        await callback.answer("Подписка недоступна", show_alert=True)
+        await _safe_callback_answer(callback, "Подписка недоступна", show_alert=True)
         return
 
-    url = f"https://{settings.PUBLIC_BASE_URL}/sub/{subscription_token}"
-    devices_limit = int(getattr(subscription, "devices_limit", 0) or 0)
-    devices_left = int(getattr(subscription, "devices_left", 0) or 0)
-    devices_used = max(devices_limit - devices_left, 0)
+    url = subscription_url
+    safe_url = escape(url, quote=False)
+
     auto_renew = bool(getattr(subscription, "auto_renew", False))
-    auto_renew_text = "включено" if auto_renew else "выключено"
+    auto_renew_text = escape("включено" if auto_renew else "выключено", quote=False)
 
     text = (
         "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> <b>Ваша VPN ссылка:</b>\n"
-        f"<code>{url}</code>\n\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
-        f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройства: <b>{devices_used}/{devices_limit}</b>\n"
-        f"<tg-emoji emoji-id='5877410604225924969'>🔄</tg-emoji> Автопродление: <b>{auto_renew_text}</b>\n\n"
-        "<tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Серверы уже подготовлены. Обновите подписку в приложении.\n\n"
-        "<tg-emoji emoji-id='5877318502947229960'>💻</tg-emoji>"
-        "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b>Инструкция по подключению (нажмите, чтобы перейти)</b></a>"
+        f"<code>{safe_url}</code>\n\n"
+        f"<tg-emoji emoji-id='5956148757899776734'>📅</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{auto_renew_text}</b>\n\n"
+        "<tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> Серверы уже подготовлены. Обновите подписку в приложении.\n\n"
+        "<tg-emoji emoji-id='5877318502947229960'>📖</tg-emoji>"
+        "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b>Инструкция по подключению (нажмите)</b></a>"
     )
 
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
+    media = InputMediaPhoto(
+        media=MAIN_MENU_IMG,
+        caption=text,
+        parse_mode="HTML"
+    )
+
     await callback.message.edit_media(
         media=media,
         reply_markup=back_keys_kb(url, auto_renew=auto_renew),
@@ -62,105 +93,54 @@ async def subscription_link(
     callback: CallbackQuery,
     user_service: UserService,
     subscription_service: SubscriptionService,
+    remnawave_service: RemnaWaveService,
 ):
     tg_id = callback.from_user.id
 
     try:
         user = await user_service.get_by_tg_id(tg_id=tg_id)
     except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Перезапустите бота."
-        )
+        await _safe_send_callback_message(callback, "❌ Пользователь не найден. Перезапустите бота.")
         return
 
     try:
         subscription = await subscription_service.get_active_subscription(user_id=user.id)
     except SubscriptionNotFound:
-        await callback.answer(
-            "У вас нет активной подписки. Оформите подписку, чтобы получить ссылку.",
-            show_alert=True,
-        )
+        await _safe_callback_answer(callback, SUBSCRIPTION_INACTIVE_TEXT, show_alert=True)
         return
 
     end_dt = _as_aware_utc(subscription.current_period_end)
     now = datetime.now(timezone.utc)
+
     if not end_dt or end_dt <= now:
-        await callback.answer(
-            "У вас нет активной подписки. Оформите подписку, чтобы получить ссылку.",
-            show_alert=True,
-        )
+        await _safe_callback_answer(callback, SUBSCRIPTION_INACTIVE_TEXT, show_alert=True)
         return
 
     try:
-        subscription_token = await user_service.get_subscription_token(user_id=user.id)
-    except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Перезапустите бота."
+        subscription_url = await remnawave_service.get_subscription_url(
+            user=user,
+            subscription=subscription,
         )
+    except Exception as e:
+        logger.exception(
+            "[bot][subscription] remnawave error user_id=%s tg_id=%s: %s",
+            user.id,
+            tg_id,
+            e,
+        )
+        await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
+        return
+
+    if not subscription_url:
+        await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
         return
 
     await _render_subscription_screen(
         callback,
         subscription=subscription,
-        subscription_token=subscription_token,
+        subscription_url=subscription_url,
     )
-    await callback.answer()
-
-
-@router.callback_query(F.data == "reissue_subscription_url")
-async def reissue_subscription_url_prompt(callback: CallbackQuery):
-    text = (
-        "<tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> "
-        "<b>Перевыпустить VPN-ссылку?</b>\n\n"
-        "<i>Старая ссылка перестанет работать сразу после перевыпуска. Если ваша VPN-ссылка используется третьими лицами, они потеряеют доступ к вашей подписке.</i>"
-    )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
-    await callback.message.edit_media(
-        media=media,
-        reply_markup=reissue_subscription_url_confirm_kb(),
-    )
-    await callback.answer()
-
-
-@router.callback_query(F.data == "confirm_reissue_subscription_url")
-async def confirm_reissue_subscription_url(
-    callback: CallbackQuery,
-    user_service: UserService,
-    subscription_service: SubscriptionService,
-):
-    tg_id = callback.from_user.id
-
-    try:
-        user = await user_service.get_by_tg_id(tg_id=tg_id)
-    except UserNotFound:
-        await callback.answer("Пользователь не найден", show_alert=True)
-        return
-
-    try:
-        subscription = await subscription_service.get_active_subscription(user_id=user.id)
-    except SubscriptionNotFound:
-        await callback.answer(
-            "У вас нет активной подписки. Оформите подписку, чтобы получить ссылку.",
-            show_alert=True,
-        )
-        return
-
-    end_dt = _as_aware_utc(subscription.current_period_end)
-    now = datetime.now(timezone.utc)
-    if not end_dt or end_dt <= now:
-        await callback.answer(
-            "У вас нет активной подписки. Оформите подписку, чтобы получить ссылку.",
-            show_alert=True,
-        )
-        return
-
-    token = await user_service.reissue_subscription_token(user_id=user.id)
-    await _render_subscription_screen(
-        callback,
-        subscription=subscription,
-        subscription_token=token,
-    )
-    await callback.answer("VPN-ссылка перевыпущена")
+    await _safe_callback_answer(callback)
 
 
 @router.callback_query(F.data == "toggle_auto_renew")
@@ -168,29 +148,56 @@ async def toggle_auto_renew(
     callback: CallbackQuery,
     user_service: UserService,
     subscription_service: SubscriptionService,
+    remnawave_service: RemnaWaveService,
 ):
     tg_id = callback.from_user.id
+    await _safe_callback_answer(callback)
+
     try:
         user = await user_service.get_by_tg_id(tg_id=tg_id)
     except UserNotFound:
-        await callback.answer("Пользователь не найден", show_alert=True)
+        await _safe_callback_answer(callback, "Пользователь не найден.", show_alert=True)
         return
 
     try:
         current_sub = await subscription_service.get_active_subscription(user_id=user.id)
     except SubscriptionNotFound:
-        await callback.answer("Активная подписка не найдена", show_alert=True)
+        await _safe_callback_answer(callback, "Подписка не найдена.", show_alert=True)
         return
 
     new_state = not bool(getattr(current_sub, "auto_renew", False))
+
     updated_sub = await subscription_service.set_auto_renew(
         user_id=user.id,
         auto_renew=new_state,
     )
-    token = await user_service.get_subscription_token(user_id=user.id)
+
+    try:
+        subscription_url = await remnawave_service.get_subscription_url(
+            user=user,
+            subscription=updated_sub,
+        )
+    except Exception as e:
+        logger.exception(
+            "[bot][subscription] toggle auto_renew error user_id=%s tg_id=%s: %s",
+            user.id,
+            tg_id,
+            e,
+        )
+        await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
+        return
+
+    if not subscription_url:
+        await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
+        return
+
     await _render_subscription_screen(
         callback,
         subscription=updated_sub,
-        subscription_token=token,
+        subscription_url=subscription_url,
     )
-    await callback.answer("Автопродление включено" if new_state else "Автопродление выключено")
+
+    await _safe_callback_answer(
+        callback,
+        "Автопродление включено" if new_state else "Автопродление выключено"
+    )

@@ -43,9 +43,9 @@ async def admin_stats():
             )
             or 0
         )
-        active_keys = int(await session.scalar(select(func.count(Key.id)).where(Key.status == KeyStatus.active)) or 0)
-        total_servers = int(await session.scalar(select(func.count(Server.id))) or 0)
-        total_devices = int(await session.scalar(select(func.count(UserDevice.id))) or 0)
+        active_keys = 0
+        total_servers = 0
+        total_devices = 0
         paid_tx = int(
             await session.scalar(select(func.count(Transaction.id)).where(Transaction.paid.is_(True)))
             or 0

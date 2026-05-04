@@ -206,6 +206,31 @@ function calcDaysLeft(endIso) {
   return Math.ceil(msLeft / (24 * 60 * 60 * 1000));
 }
 
+function toNonNegativeInt(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.trunc(n));
+}
+
+function formatDevicesCounter(sub, remnawave) {
+  const limit = toNonNegativeInt(sub?.devices_limit ?? remnawave?.hwidDeviceLimit);
+  const usedFromSub = sub?.devices_used;
+  const leftFromSub = sub?.devices_left;
+  let used = 0;
+
+  if (usedFromSub !== undefined && usedFromSub !== null) {
+    used = toNonNegativeInt(usedFromSub);
+  } else if (leftFromSub !== undefined && leftFromSub !== null && limit > 0) {
+    used = Math.max(limit - toNonNegativeInt(leftFromSub), 0);
+  }
+
+  return {
+    used,
+    limit,
+    text: limit > 0 ? `${used}/${limit}` : `${used}/∞`,
+  };
+}
+
 function statusBadge(status) {
   const s = String(status || "").toLowerCase();
   if (s === "approved") return '<span class="badge badge--ok">Подтвержден</span>';
@@ -239,22 +264,16 @@ async function loadStatus() {
   if (!data.has_subscription) {
     $("sub-title").textContent = "Подписка неактивна";
     $("sub-meta").textContent = "Оформите подписку в разделе «Тарифы».\nТрафик: Безлимит";
-    $("stat-keys").textContent = "0";
-    $("stat-devices").textContent = "0/0";
     $("sub-link-wrap").style.display = "none";
     state.subscriptionUrl = null;
     return;
   }
 
-  const plan = data.plan || {};
   const sub = data.subscription || {};
-  const usedDevices = Math.max((sub.devices_limit || 0) - (sub.devices_left || 0), 0);
   const daysLeft = calcDaysLeft(sub.current_period_end);
 
   $("sub-title").textContent = `Осталось дней: ${daysLeft}`;
   $("sub-meta").textContent = `Действует до: ${formatDate(sub.current_period_end)}\nТрафик: Безлимит`;
-  $("stat-keys").textContent = String(data.active_keys || 0);
-  $("stat-devices").textContent = `${usedDevices}/${sub.devices_limit || 0}`;
 
   state.subscriptionUrl = data.subscription_url || null;
   $("sub-link-wrap").style.display = state.subscriptionUrl ? "flex" : "none";
@@ -362,8 +381,8 @@ async function loadDevices() {
     ]);
 
     const sub = statusData.subscription || {};
-    const used = Math.max((sub.devices_limit || 0) - (sub.devices_left || 0), 0);
-    $("device-limit").textContent = `Лимит: ${used}/${sub.devices_limit || 0}`;
+    const devicesCounter = formatDevicesCounter(sub, statusData.remnawave || {});
+    $("device-limit").textContent = `Лимит: ${devicesCounter.text}`;
     renderDevices(devicesData.items || []);
   } catch (e) {
     $("devices-list").textContent = e.message;
@@ -607,20 +626,6 @@ async function checkPayments() {
   }
 }
 
-async function reissueKeys() {
-  haptic();
-  try {
-    const data = await api("/mini/subscription/reissue");
-    state.subscriptionUrl = data.subscription_url || state.subscriptionUrl;
-    toast("Ключи перевыпущены");
-    haptic("success");
-    await Promise.all([loadStatus(), loadDevices()]);
-  } catch (e) {
-    toast(e.message);
-    haptic("error");
-  }
-}
-
 function initEvents() {
   initTopupMethodPicker();
 
@@ -650,7 +655,6 @@ function initEvents() {
     state.withdrawalsVisible += 10;
     renderWithdrawals(state.withdrawals);
   });
-  $("btn-reissue")?.addEventListener("click", reissueKeys);
   $("btn-withdraw-create")?.addEventListener("click", createWithdrawal);
   $("btn-open-support")?.addEventListener("click", () => {
     const supportUrl = "https://t.me/LunetVPNSupport";
@@ -712,7 +716,4 @@ async function bootstrap() {
 }
 
 if (IN_TELEGRAM) bootstrap();
-
-
-
 

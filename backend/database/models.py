@@ -1,16 +1,13 @@
 from datetime import datetime, timezone
 import enum
-from decimal import Decimal
-
 from sqlalchemy import (
     String,
     BigInteger,
+    Integer,
     Boolean,
     ForeignKey,
     Enum,
-    Text,
     UniqueConstraint,
-    Numeric,
     DateTime
 )
 from sqlalchemy.orm import (
@@ -65,9 +62,9 @@ class User(Base):
 
     balance: Mapped[int] = mapped_column(default=0)
     email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
-    subscription_token: Mapped[str | None] = mapped_column(
-        String(36), unique=True, index=True, nullable=True
-    )
+    subscription_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    remnawave_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    remnawave_user_uuid: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
 
     banned: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
@@ -78,9 +75,6 @@ class User(Base):
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
 
-    keys: Mapped[list["Key"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan"
-    )
     subscriptions: Mapped[list["Subscription"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
@@ -98,46 +92,6 @@ class User(Base):
         back_populates="user",
         uselist=False,
         cascade="all, delete-orphan"
-    )
-    devices: Mapped[list["UserDevice"]] = relationship(
-        "UserDevice",
-        back_populates="user",
-        cascade="all, delete-orphan",
-    )
-
-class UserDevice(Base):
-    __tablename__ = "vpn_user_devices"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("vpn_users.id", ondelete="CASCADE"),
-        index=True,
-        nullable=False,
-    )
-
-    hwid: Mapped[str] = mapped_column(String(128), nullable=False)
-
-    device_model: Mapped[str | None] = mapped_column(String(64), nullable=True)
-    device_os: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    os_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    device_locale: Mapped[str | None] = mapped_column(String(16), nullable=True)
-    user_agent: Mapped[str | None] = mapped_column(String(128), nullable=True)
-
-    first_seen_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
-    last_seen_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
-
-    user: Mapped["User"] = relationship(
-        "User",
-        back_populates="devices",
-    )
-
-    __table_args__ = (
-        UniqueConstraint("user_id", "hwid", name="uq_vpn_user_device_hwid"),
     )
 
 class ReferralAccount(Base):
@@ -197,49 +151,6 @@ class ReferralWithdrawal(Base):
         back_populates="withdrawals"
     )
 
-class Server(Base):
-    __tablename__ = "vpn_servers"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    display_order: Mapped[int] = mapped_column(default=100, nullable=False)
-    country: Mapped[str] = mapped_column(String(64))
-    inbound_tag: Mapped[str] = mapped_column(String(64))
-    grpc_endpoint: Mapped[str] = mapped_column(String(128))
-    public_host: Mapped[str] = mapped_column(String(255))
-    port: Mapped[int] = mapped_column(default=443)
-    sni: Mapped[str] = mapped_column(String(255), default="telegram.com")
-    fp: Mapped[str] = mapped_column(String(32), default="chrome")
-    pbk: Mapped[str] = mapped_column(String(128))
-    short_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    note: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
-
-    keys: Mapped[list["Key"]] = relationship(
-        "Key", back_populates="server", cascade="all, delete-orphan"
-    )
-
-class Key(Base):
-    __tablename__ = "vpn_keys"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("vpn_users.id", ondelete="CASCADE"))
-    server_id: Mapped[int] = mapped_column(ForeignKey("vpn_servers.id", ondelete="CASCADE"))
-
-    user: Mapped["User"] = relationship(back_populates="keys")
-    server: Mapped["Server"] = relationship(back_populates="keys")
-
-    uuid: Mapped[str] = mapped_column(String(36), unique=True)
-    uri: Mapped[str | None] = mapped_column(Text, nullable=True)
-    status: Mapped[KeyStatus] = mapped_column(Enum(KeyStatus), default=KeyStatus.active)
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
-    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-
-
 class SubscriptionPlan(Base):
     __tablename__ = "vpn_subscription_plans"
 
@@ -248,7 +159,6 @@ class SubscriptionPlan(Base):
     price: Mapped[int] = mapped_column()
     period_days: Mapped[int] = mapped_column(default=30)
     gb_limit: Mapped[int] = mapped_column(default=0, nullable=False)
-    device_limit: Mapped[int] = mapped_column(default=5)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
@@ -271,9 +181,7 @@ class Subscription(Base):
 
     status: Mapped[SubStatus] = mapped_column(Enum(SubStatus), default=SubStatus.active)
     auto_renew: Mapped[bool] = mapped_column(Boolean, default=True)
-    devices_limit: Mapped[int] = mapped_column(default=5, nullable=False)
-    devices_left: Mapped[int] = mapped_column(default=5, nullable=False)
-    gb_left: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0, nullable=False)
+    subscription_token: Mapped[str | None] = mapped_column(String(128), unique=True, index=True, nullable=True)
 
     current_period_start: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
@@ -286,33 +194,6 @@ class Subscription(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
-    topups: Mapped[list["SubscriptionTopup"]] = relationship(
-        "SubscriptionTopup",
-        back_populates="subscription",
-        cascade="all, delete-orphan",
-    )
-
-
-class SubscriptionTopup(Base):
-    __tablename__ = "vpn_subscription_topups"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    subscription_id: Mapped[int] = mapped_column(
-        ForeignKey("vpn_subscriptions.id", ondelete="CASCADE"),
-        index=True,
-        nullable=False,
-    )
-    gb_added: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=0)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
-
-    subscription: Mapped["Subscription"] = relationship(
-        "Subscription",
-        back_populates="topups",
-    )
-
-
 class Transaction(Base):
     __tablename__ = "vpn_transactions"
 

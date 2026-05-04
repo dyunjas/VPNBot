@@ -1,166 +1,131 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lunet VPS</title>
+  <title>Lunet VPN</title>
   <link rel="icon" href="/miniapp/assets/favicon.ico" />
-  <link rel="stylesheet" href="/miniapp/landing.css?v=6" />
+  <link rel="stylesheet" href="/miniapp/landing.css?v=7" />
 </head>
 <body>
-  <div class="bg-glow"></div>
-  <div class="container">
-    <header class="topbar panel">
-      <div class="brand">
-        <img src="/miniapp/assets/moon.png" alt="Lunet" class="brand-logo" />
+  <div class="noise"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+
+  <div class="wrap">
+    <header class="nav">
+      <div class="logo">
+        <img src="/miniapp/assets/moon.png" alt="Lunet" />
         <div>
-          <div class="brand-title">Lunet VPS</div>
-          <div class="brand-sub">Личный VPS сервер с быстрым доступом</div>
+          <div class="logo-title">Lunet VPN</div>
+          <div class="logo-sub">быстрый и личный доступ</div>
         </div>
       </div>
-      <nav class="menu">
-        <a href="#benefits">Преимущества</a>
-        <a href="#pricing">Тарифы</a>
-        <a href="#how">Подключение</a>
+      <nav>
+        <a href="#plans">Тарифы</a>
+        <a href="#steps">Как подключить</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Попробовать</a>
+      <a class="btn ghost" href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">Поддержка</a>
     </header>
 
-    <section class="hero panel">
+    <section class="hero">
       <div class="hero-copy">
-        <p class="hero-kicker">LUNET NETWORK</p>
-        <h1>Личный VPS сервер без сложной настройки</h1>
-        <p class="hero-text">Запуск в 1 клик на телефоне и компьютере. Стабильные узлы, гибкая смена локаций и быстрый доступ через бота.</p>
-        <div class="feature-tags">
-          <span>До 10 Гбит/с</span>
-          <span>10+ локаций</span>
-          <span>iOS / Android / Windows / macOS</span>
-          <span>Подключение за 1 минуту</span>
-        </div>
+        <p class="eyebrow">LUNET NETWORK</p>
+        <h1>VPN, который подключается быстрее, чем открывается VPN-гайд</h1>
+        <p class="lead">Оформляете подписку в боте, получаете ссылку и запускаете в любимом клиенте. Без долгих настроек и ручной возни с конфигами.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Купить от 45 ₽</a>
-          <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Подключить Lite</a>
+          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Открыть бота</a>
+          <a class="btn ghost" href="#steps">Смотреть как это работает</a>
         </div>
       </div>
-      <div class="hero-image-wrap">
-        <img src="/miniapp/assets/moon.png" alt="Moon mascot" class="hero-image" />
+      <div class="hero-card">
+        <div class="hero-stat">
+          <span>Запуск</span>
+          <strong>~ 1 мин</strong>
+        </div>
+        <div class="hero-stat">
+          <span>Платформы</span>
+          <strong>iOS / Android / ПК</strong>
+        </div>
+        <div class="hero-stat">
+          <span>Управление</span>
+          <strong>через Telegram-бота</strong>
+        </div>
       </div>
     </section>
 
-    <section id="benefits" class="section">
-      <h2>Что вы получаете</h2>
-      <div class="benefits-grid">
-        <article class="panel card">
-          <h3>Стабильный доступ</h3>
-          <p>Надежные серверы с оптимальным маршрутом и минимальной задержкой.</p>
-        </article>
-        <article class="panel card">
-          <h3>Удобное подключение</h3>
-          <p>Готовый профиль и инструкции сразу после оплаты.</p>
-        </article>
-        <article class="panel card">
-          <h3>Для всех устройств</h3>
-          <p>Работает на смартфонах, ПК и ноутбуках в одной подписке.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="pricing" class="section">
+    <section id="plans" class="section">
       <h2>Тарифы</h2>
-      <div class="prices-grid">
-        <article class="panel price-card">
-          <div class="price-name">Lite</div>
-          <div class="price-value">45 ₽</div>
-          <div class="price-meta">Базовый доступ</div>
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+      <div class="plans">
+        <article class="plan">
+          <p>Lite</p>
+          <h3>45 ₽</h3>
+          <span>быстрый старт</span>
+          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
         </article>
-        <article class="panel price-card">
-          <div class="price-name">1 месяц</div>
-          <div class="price-value">105 ₽</div>
-          <div class="price-meta">Стандартный доступ</div>
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        <article class="plan">
+          <p>1 месяц</p>
+          <h3>105 ₽</h3>
+          <span>стандарт</span>
+          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
         </article>
-        <article class="panel price-card">
-          <div class="price-name">3 месяца</div>
-          <div class="price-value">275 ₽</div>
-          <div class="price-meta">Оптимальный выбор</div>
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        <article class="plan hot">
+          <p>3 месяца</p>
+          <h3>275 ₽</h3>
+          <span>оптимальный</span>
+          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
         </article>
-        <article class="panel price-card">
-          <div class="price-name">6 месяцев</div>
-          <div class="price-value">495 ₽</div>
-          <div class="price-meta">С выгодой на срок</div>
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
-        </article>
-        <article class="panel price-card featured">
-          <div class="price-name">12 месяцев</div>
-          <div class="price-value">995 ₽</div>
-          <div class="price-meta">Максимальная выгода</div>
-          <a class="btn btn-primary" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        <article class="plan">
+          <p>12 месяцев</p>
+          <h3>995 ₽</h3>
+          <span>максимальная выгода</span>
+          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
         </article>
       </div>
     </section>
 
-    <section id="how" class="section">
-      <h2>Как это работает</h2>
-      <div class="how-grid">
-        <article class="panel card">
-          <h3>1) Получите ключ</h3>
-          <p>После оплаты вы получаете ключ для подключения и подробную инструкцию.</p>
-          <div class="code" id="sub-key">https://lunetpn.ru/sub/7f9a10c5be24d1</div>
+    <section id="steps" class="section">
+      <h2>Подключение в 3 шага</h2>
+      <div class="steps">
+        <article class="step">
+          <b>1</b>
+          <h3>Оплата в боте</h3>
+          <p>Выбираете план и оплачиваете прямо внутри Telegram.</p>
         </article>
-        <article class="panel card">
-          <h3>2) Выберите локацию</h3>
-          <p>Нажмите на нужный регион. Список локаций загружается из базы серверов.</p>
-          <div id="locations" class="location-chips"></div>
-          <div class="code" id="location-selected">Локации загружаются...</div>
+        <article class="step">
+          <b>2</b>
+          <h3>Получаете ссылку</h3>
+          <p>Бот сразу выдает персональную подписку и инструкцию.</p>
+          <code id="sub-key">https://lunetpn.ru/sub/example</code>
+        </article>
+        <article class="step">
+          <b>3</b>
+          <h3>Импорт в клиент</h3>
+          <p>Вставляете ссылку в приложение и подключаетесь.</p>
         </article>
       </div>
     </section>
 
     <section id="faq" class="section">
-      <h2>Частые вопросы</h2>
-      <div class="faq-grid">
-        <details class="panel faq-item">
-          <summary>Можно менять локации без ограничений?</summary>
-          <p>Да. Переключение между серверами доступно в любой момент без доплаты.</p>
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>Когда придет доступ?</summary>
+          <p>Сразу после оплаты. Бот выдает данные автоматически.</p>
         </details>
-        <details class="panel faq-item">
-          <summary>Как быстро я получу доступ после оплаты?</summary>
-          <p>Обычно сразу. Бот выдает ключ и инструкции автоматически, без ожидания оператора.</p>
+        <details>
+          <summary>Есть поддержка?</summary>
+          <p>Да, через <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">LunetVPNSupportBot</a>.</p>
         </details>
-        <details class="panel faq-item">
-          <summary>Какие устройства поддерживаются?</summary>
-          <p>iOS, Android, Windows, macOS и Linux. Можно подключить телефон и компьютер одновременно.</p>
-        </details>
-        <details class="panel faq-item">
-          <summary>Работает через мобильную сеть?</summary>
-          <p>Да, в сетях LTE/5G и Wi‑Fi. Если оператор режет трафик, можно сменить локацию в один клик.</p>
-        </details>
-        <details class="panel faq-item">
-          <summary>Что делать, если не получается подключиться?</summary>
-          <p>Напишите в бота Lunet. Поддержка поможет с настройкой и проверит ваш ключ.</p>
-        </details>
-        <details class="panel faq-item">
-          <summary>Есть гарантия возврата?</summary>
-          <p>Если сервис не подошел, обратитесь в поддержку в боте. Поможем найти решение или оформим возврат по условиям.</p>
+        <details>
+          <summary>Можно пользоваться на телефоне и ПК?</summary>
+          <p>Да. Одна подписка подходит для разных устройств.</p>
         </details>
       </div>
     </section>
-
-    <footer class="footer panel">
-      <div class="footer-left">
-        <strong>Lunet VPS</strong>
-        <span>© 2026. Надежный VPS сервер с быстрым подключением.</span>
-      </div>
-      <div class="footer-links">
-        <a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Telegram-бот</a>
-        <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">Поддержка</a>
-        <a href="https://t.me/LunetVpn" target="_blank" rel="noopener">Статус узлов</a>
-      </div>
-    </footer>
   </div>
-  <script src="/miniapp/landing.js?v=6"></script>
+
+  <script src="/miniapp/landing.js?v=7"></script>
 </body>
 </html>

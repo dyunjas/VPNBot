@@ -1,130 +1,114 @@
-from decimal import Decimal, ROUND_UP
+﻿from decimal import Decimal, ROUND_HALF_UP
 
 from aiogram import F, Router
-from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, InputMediaPhoto, Message
+from aiogram.types import CallbackQuery, InputMediaPhoto
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from backend.images import MAIN_MENU_IMG
-from backend.services import BillingService, UserService
-from backend.services.exceptions import InsufficientBalance, SubscriptionNotFound, UserNotFound
-from backend.states import GbAddStates
+from backend.services import RemnaWaveService, SubscriptionService, UserService
+from backend.services.exceptions import SubscriptionNotFound, UserNotFound
 
 router = Router()
 
 
-def _traffic_purchase_cancel_kb():
+def _reset_traffic_confirm_kb():
     builder = InlineKeyboardBuilder()
+    builder.button(text="✅ Подтвердить", callback_data="reset_traffic_confirm")
     builder.button(text="⬅️ Назад", callback_data="vpn_subscription")
+    builder.adjust(1)
     return builder.as_markup()
 
-
-def _traffic_purchase_confirm_kb():
+def _back_sub_url_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="✅ Подтвердить", callback_data="confirm_buy_extra_traffic")
-    builder.button(text="⬅️ Назад", callback_data="cancel_buy_extra_traffic")
+    builder.button(text="⬅️К подписке", callback_data="vpn_subscription")
     builder.adjust(1)
     return builder.as_markup()
 
 
-@router.callback_query(F.data == "buy_extra_traffic")
-async def buy_extra_traffic_start(callback: CallbackQuery, state: FSMContext):
-    text = (
-        "<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Докупка трафика</b>\n\n"
-        "Введите объем докупки трафика в GB.\n"
-        "Цена: <b>0.5 RUB за 1 GB</b>.\n"
-        "Минимум: <b>5 GB</b>"
-    )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
-    await callback.message.edit_media(media=media, reply_markup=_traffic_purchase_cancel_kb())
-    await state.set_state(GbAddStates.waiting_for_amount)
-    await callback.answer()
-
-
-@router.message(GbAddStates.waiting_for_amount)
-async def buy_extra_traffic_amount(
-    message: Message,
-    state: FSMContext,
-):
-    try:
-        gb = int((message.text or "").strip())
-    except Exception:
-        await message.answer("Введите целое число ГБ, например: 5")
-        return
-
-    if gb < 5:
-        await message.answer("Минимальная докупка — 5 ГБ.")
-        return
-
-    charged_rub = int((Decimal(gb) * Decimal("0.5")).to_integral_value(rounding=ROUND_UP))
-    await state.update_data(gb=gb)
-
-    text = (
-        "<b>Подтверждение оплаты</b>\n\n"
-        f"Объем: <b>+{gb} GB</b>\n"
-        f"К списанию: <b>{charged_rub} RUB</b>\n\n"
-    )
-    await message.answer_photo(
-        photo=MAIN_MENU_IMG,
-        caption=text,
-        parse_mode="HTML",
-        reply_markup=_traffic_purchase_confirm_kb(),
-    )
-    await state.set_state(GbAddStates.waiting_for_purchase)
-
-
-@router.callback_query(F.data == "cancel_buy_extra_traffic", GbAddStates.waiting_for_purchase)
-async def cancel_buy_extra_traffic(callback: CallbackQuery, state: FSMContext):
-    await state.clear()
-    text = "<b>Покупка отменена</b>\n\nВы можете вернуться к экрану подписки."
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
-    await callback.message.edit_media(media=media, reply_markup=_traffic_purchase_cancel_kb())
-    await callback.answer()
-
-
-@router.callback_query(F.data == "confirm_buy_extra_traffic", GbAddStates.waiting_for_purchase)
-async def confirm_buy_extra_traffic(
+@router.callback_query(F.data == "reset_traffic")
+async def reset_traffic(
     callback: CallbackQuery,
-    state: FSMContext,
     user_service: UserService,
-    billing_service: BillingService,
+    subscription_service: SubscriptionService,
+    remnawave_service: RemnaWaveService,
 ):
-    data = await state.get_data()
-    gb = int(data.get("gb") or 0)
-    if gb < 5:
-        await callback.answer("Некорректный объем", show_alert=True)
-        return
-
     try:
         user = await user_service.get_by_tg_id(callback.from_user.id)
     except UserNotFound:
-        await callback.answer("Пользователь не найден", show_alert=True)
-        await state.clear()
+        await callback.answer("Пользователь не найден.", show_alert=True)
         return
 
     try:
-        sub, charged_rub = await billing_service.add_gb_to_subscription(user_id=user.id, gb=gb)
-    except InsufficientBalance:
-        await callback.answer("Недостаточно средств на балансе", show_alert=True)
-        return
+        sub = await subscription_service.get_active_subscription(user_id=user.id)
     except SubscriptionNotFound:
-        await callback.answer("Активная подписка не найдена", show_alert=True)
-        await state.clear()
-        return
-    except ValueError as e:
-        await callback.answer(str(e), show_alert=True)
-        return
-    except Exception:
-        await callback.answer("Не удалось докупить трафик", show_alert=True)
+        await callback.answer("Подписка не активна, купите подписку.", show_alert=True)
         return
 
+    if not remnawave_service.enabled:
+        await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
+        return
+
+    plan_price = int(getattr(getattr(sub, "plan", None), "price", 0) or 0)
+    charge = int((Decimal(plan_price) * Decimal("0.5")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    if charge < 1:
+        charge = 1
+
     text = (
-        "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Покупка завершена</b>\n\n"
-        f"Добавлено: <b>+{gb} GB</b>\n"
-        f"Списано: <b>{charged_rub} RUB</b>\n"
-        f"Текущий остаток: <b>{sub.gb_left} GB</b>"
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подтверждение</b>\n\n"
+        "Вы хотите обнулить трафик текущей подписки.\n"
+        f"К списанию: <b>{charge} RUB (50% от стоимости тарифа)</b>\n\n"
+        "Продолжить?"
     )
     media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
-    await callback.message.edit_media(media=media, reply_markup=_traffic_purchase_cancel_kb())
-    await state.clear()
-    await callback.answer("Трафик докуплен")
+    await callback.message.edit_media(media=media, reply_markup=_reset_traffic_confirm_kb())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "reset_traffic_confirm")
+async def reset_traffic_confirm(
+    callback: CallbackQuery,
+    user_service: UserService,
+    subscription_service: SubscriptionService,
+    remnawave_service: RemnaWaveService,
+):
+    try:
+        user = await user_service.get_by_tg_id(callback.from_user.id)
+    except UserNotFound:
+        await callback.answer("Пользователь не найден.", show_alert=True)
+        return
+
+    try:
+        sub = await subscription_service.get_active_subscription(user_id=user.id)
+    except SubscriptionNotFound:
+        await callback.answer("Подписка не активна, купите подписку.", show_alert=True)
+        return
+
+    if not remnawave_service.enabled:
+        await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
+        return
+
+    plan_price = int(getattr(getattr(sub, "plan", None), "price", 0) or 0)
+    charge = int((Decimal(plan_price) * Decimal("0.5")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    if charge < 1:
+        charge = 1
+
+    balance = int(getattr(user, "balance", 0) or 0)
+    if balance < charge:
+        await callback.answer(f"Недостаточно средств. Нужно {charge} RUB", show_alert=True)
+        return
+
+    ok = await remnawave_service.reset_user_traffic(user=user, subscription=sub)
+    if not ok:
+        await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
+        return
+
+    await user_service.sub_balance(user_id=user.id, amount=charge)
+    await callback.answer("Трафик обнулен")
+
+    text = (
+        "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Трафик обнулен</b>\n\n"
+        f"Списано: <b>{charge} RUB</b>\n"
+        "Лимиты трафика сброшены. Обновите подписку в приложении."
+    )
+    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
+    await callback.message.edit_media(media=media, reply_markup=_back_sub_url_kb())

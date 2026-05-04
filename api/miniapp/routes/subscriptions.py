@@ -24,7 +24,6 @@ async def mini_plans(payload: InitPayload):
                     "name": p.name,
                     "price": p.price,
                     "period_days": p.period_days,
-                    "device_limit": int(getattr(p, "device_limit", 0) or 0),
                     "gb_limit": int(getattr(p, "gb_limit", 0) or 0),
                     "created_at": p.created_at.isoformat() if p.created_at else None,
                 }
@@ -63,7 +62,5 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
                 "current_period_start": sub.current_period_start.isoformat(),
                 "current_period_end": sub.current_period_end.isoformat(),
                 "status": sub.status.value if hasattr(sub.status, "value") else str(sub.status),
-                "devices_limit": int(getattr(sub, "devices_limit", 0) or 0),
-                "devices_left": int(getattr(sub, "devices_left", 0) or 0),
             },
         }

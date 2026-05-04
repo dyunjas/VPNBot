@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from ..common import *
+from backend.core import loader as bot_loader
 
 router = APIRouter()
 
@@ -62,8 +63,11 @@ async def admin_withdrawal_action(withdrawal_id: int, action: Literal["approve",
             user = await session.get(User, account.user_id)
             await session.commit()
             if user and getattr(user, "tg_id", None):
+                runtime_bot = bot_loader.bot
+                if runtime_bot is None:
+                    return {"ok": True, "status": w.status.value}
                 try:
-                    await bot.send_message(
+                    await runtime_bot.send_message(
                         chat_id=user.tg_id,
                         text=(
                             "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Ваш вывод подтверждён</b>\n\n"
@@ -82,8 +86,11 @@ async def admin_withdrawal_action(withdrawal_id: int, action: Literal["approve",
         user = await session.get(User, account.user_id)
         await session.commit()
         if user and getattr(user, "tg_id", None):
+            runtime_bot = bot_loader.bot
+            if runtime_bot is None:
+                return {"ok": True, "status": w.status.value}
             try:
-                await bot.send_message(
+                await runtime_bot.send_message(
                     chat_id=user.tg_id,
                     text=(
                         "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> <b>Ваш вывод отклонён</b>\n\n"

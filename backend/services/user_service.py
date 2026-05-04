@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timezone, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -41,12 +40,6 @@ class UserService:
             raise UserNotFound(f"User with id:{tg_id} not found")
         return user
     
-    async def get_by_subscription_token(self, token: str):
-        user = await self.user_repo.get_user_by_token(token)
-        if not user:
-            raise UserNotFound("User with given subscription token not found")
-        return user
-
     async def set_username(self, user_id: int, username: str):
         user = await self.user_repo.get_by_id(user_id)
         if not user:   
@@ -102,28 +95,6 @@ class UserService:
             int(user.balance or 0),
         )
         return user.balance
-
-    async def get_subscription_token(self, user_id: int) -> str:
-        user = await self.user_repo.get_by_id(user_id)
-        if not user:
-            raise UserNotFound(f"User with id:{user_id} not found")
-        if not user.subscription_token:
-            token = str(uuid.uuid4())
-            await self.user_repo.set_subscription_token(user_id=user_id, token=token)
-            await self.session.commit()
-            logger.info("[biz][user] subscription_token_issued user_id=%s", user_id)
-            return token
-        return user.subscription_token
-
-    async def reissue_subscription_token(self, user_id: int) -> str:
-        user = await self.user_repo.get_by_id(user_id)
-        if not user:
-            raise UserNotFound(f"User with id:{user_id} not found")
-
-        token = await self.user_repo.reissue_subscription_token(user_id=user_id)
-        await self.session.commit()
-        logger.info("[biz][user] subscription_token_reissued user_id=%s", user_id)
-        return token
 
     async def set_referrer(
         self,

@@ -54,9 +54,6 @@ async def admin_subscriptions(
                 "plan_name": plan_name,
                 "status": sub.status.value if sub.status else None,
                 "auto_renew": bool(sub.auto_renew),
-                "devices_limit": sub.devices_limit,
-                "devices_left": sub.devices_left,
-                "gb_left": str(getattr(sub, "gb_left", 0) or 0),
                 "current_period_start": _to_iso(sub.current_period_start),
                 "current_period_end": _to_iso(sub.current_period_end),
                 "created_at": _to_iso(sub.created_at),
@@ -92,14 +89,13 @@ async def admin_subscription_create(payload: SubscriptionCreatePayload):
 async def admin_subscription_update(subscription_id: int, payload: SubscriptionUpdatePayload):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
+        user = _http_404_if_none(await session.get(User, sub.user_id), "user not found")
         now = datetime.now(timezone.utc)
+        period_end_changed = False
 
         if payload.plan_id is not None:
             plan = _http_404_if_none(await session.get(SubscriptionPlan, payload.plan_id), "plan not found")
             sub.plan_id = plan.id
-            if payload.devices_limit is None:
-                sub.devices_limit = int(plan.device_limit)
-                sub.devices_left = min(int(sub.devices_left or 0), int(plan.device_limit))
 
         if payload.status is not None:
             sub.status = SubStatus(payload.status)
@@ -112,23 +108,21 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
                 base_end = now
             sub.current_period_end = base_end + timedelta(days=max(payload.extend_days, 0))
             sub.next_renewal_at = sub.current_period_end
+            period_end_changed = True
 
         if payload.current_period_end is not None:
             sub.current_period_end = _as_aware_utc(payload.current_period_end)
             sub.next_renewal_at = sub.current_period_end
-
-        if payload.devices_limit is not None:
-            if payload.devices_limit <= 0:
-                raise HTTPException(status_code=400, detail="devices_limit must be > 0")
-            sub.devices_limit = payload.devices_limit
-            sub.devices_left = min(int(sub.devices_left or 0), payload.devices_limit)
-
-        if payload.devices_left is not None:
-            if payload.devices_left < 0:
-                raise HTTPException(status_code=400, detail="devices_left must be >= 0")
-            sub.devices_left = min(payload.devices_left, int(sub.devices_limit or 0))
+            period_end_changed = True
 
         await session.commit()
+        if period_end_changed:
+            remnawave_service = RemnaWaveService(session)
+            if remnawave_service.enabled:
+                try:
+                    await remnawave_service.sync_subscription_expire_at(user=user, subscription=sub)
+                except Exception:
+                    pass
         await session.refresh(sub)
         return {"ok": True}
 

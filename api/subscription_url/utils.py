@@ -64,18 +64,6 @@ def expired_subscription_response(headers: dict[str, str] | None = None) -> Resp
     return _b64_response(fake_uris, headers=headers)
 
 
-def device_limit_response(headers: dict[str, str] | None = None) -> Response:
-    fake_uris = _placeholder_vless_lines(
-        "limit",
-        [
-            "🚫 Лимит устройств исчерпан",
-            "🧹 Удалите устройство в боте",
-            f"🌙 {_BOT_REF}",
-        ],
-    )
-    return _b64_response(fake_uris, headers=headers)
-
-
 def traffic_limit_response(headers: dict[str, str] | None = None) -> Response:
     fake_uris = _placeholder_vless_lines(
         "traffic",

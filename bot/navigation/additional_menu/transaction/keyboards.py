@@ -18,7 +18,7 @@ def build_transactions_kb(transactions, page: int = 0):
     if page > 0:
         nav_buttons.append(InlineKeyboardButton(text="⬅️ Назад", callback_data=f"transactions_page:{page-1}"))
     if end < len(transactions):
-        nav_buttons.append(InlineKeyboardButton(text="⬅️ Вперёд", callback_data=f"transactions_page:{page+1}"))
+        nav_buttons.append(InlineKeyboardButton(text="➡️ Вперёд", callback_data=f"transactions_page:{page+1}"))
     
     if nav_buttons:
         builder.row(*nav_buttons)
