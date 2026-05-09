@@ -36,7 +36,7 @@ async def main():
         dp.include_router(bot_routers.router)
 
         checker_task = asyncio.create_task(
-            expire_checker_loop(bot, interval_sec=15)
+            expire_checker_loop(bot, interval_sec=7200)
         )
 
         logger.info("Bot started")

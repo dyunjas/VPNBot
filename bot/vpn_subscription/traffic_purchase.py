@@ -48,10 +48,7 @@ async def reset_traffic(
         await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
         return
 
-    plan_price = int(getattr(getattr(sub, "plan", None), "price", 0) or 0)
-    charge = int((Decimal(plan_price) * Decimal("0.5")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
-    if charge < 1:
-        charge = 1
+    charge = 75
 
     text = (
         "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подтверждение</b>\n\n"
@@ -87,10 +84,7 @@ async def reset_traffic_confirm(
         await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
         return
 
-    plan_price = int(getattr(getattr(sub, "plan", None), "price", 0) or 0)
-    charge = int((Decimal(plan_price) * Decimal("0.5")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
-    if charge < 1:
-        charge = 1
+    charge = 75
 
     balance = int(getattr(user, "balance", 0) or 0)
     if balance < charge:
