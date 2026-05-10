@@ -120,7 +120,10 @@ async def mini_profile(payload: InitPayload):
         txs = txs[:50]
 
         referral_service = ReferralService(session)
-        referral_account = await referral_service.create_account(user.id)
+        referral_account = await referral_service.get_account(user.id)
+        if not referral_account:
+            referral_account = await referral_service.create_account(user.id)
+            await session.commit()
 
         return {
             "ok": True,

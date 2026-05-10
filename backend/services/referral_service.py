@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 
 from backend.core.logger_config import logger
 from backend.repositories.referral_repository import ReferralRepository
@@ -24,11 +25,18 @@ class ReferralService:
         account = await self.referral_repo.get_account(user_id)
         if account:
             return account
-        
-        account = await self.referral_repo.create_account(user_id)
-        await self.session.flush()
-        logger.info("[biz][referral] account_created user_id=%s account_id=%s", user_id, account.id)
-        return account
+
+        try:
+            account = await self.referral_repo.create_account(user_id)
+            await self.session.flush()
+            logger.info("[biz][referral] account_created user_id=%s account_id=%s", user_id, account.id)
+            return account
+        except IntegrityError:
+            await self.session.rollback()
+            account = await self.referral_repo.get_account(user_id)
+            if account:
+                return account
+            raise
     
     async def get_account(self, user_id: int):
         return await self.referral_repo.get_account(user_id)

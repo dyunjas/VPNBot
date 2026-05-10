@@ -27,8 +27,8 @@ from backend.services.exceptions import (
 )
 
 USDT_RATE = Decimal("79")
-TRAFFIC_PRICE_PER_GB_RUB = Decimal("0.5")
-MIN_TRAFFIC_PURCHASE_GB = 5
+TRAFFIC_PRICE_PER_GB_RUB = Decimal("3")
+MIN_TRAFFIC_PURCHASE_GB = 1
 
 
 class BillingService:
@@ -527,6 +527,8 @@ class BillingService:
             plan_id=plan_id,
             auto_renew=auto_renew,
         )
+        # Make renewal bonus/topups visible to subsequent aggregate queries in this transaction.
+        await self.session.flush()
 
         # Try syncing in Remnawave, but do not fail billing if panel is temporarily unreachable.
         try:
@@ -548,10 +550,14 @@ class BillingService:
             )
 
         try:
-            await self.remnawave_service.sync_subscription_expire_at(user=user, subscription=sub)
+            await self.remnawave_service.sync_user_state(
+                user=user,
+                subscription=sub,
+                status="ACTIVE",
+            )
         except Exception as e:
             logger.exception(
-                "[biz][billing] remnawave_expire_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
+                "[biz][billing] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
                 user_id,
                 sub.id,
                 plan_id,
@@ -578,10 +584,30 @@ class BillingService:
             raise ValueError(f"Minimum traffic purchase is {MIN_TRAFFIC_PURCHASE_GB} GB")
 
         price = (Decimal(gb) * TRAFFIC_PRICE_PER_GB_RUB).to_integral_value(rounding=ROUND_UP)
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
 
         await self.charge_balance(user_id=user_id, amount=price)
 
         sub = await self.sub_service.add_traffic(user_id=user_id, gb=Decimal(gb))
+        # Ensure newly added topup row is visible for aggregate SUM in the same transaction.
+        await self.session.flush()
+
+        try:
+            await self.remnawave_service.sync_user_state(
+                user=user,
+                subscription=sub,
+                status="ACTIVE",
+            )
+        except Exception as e:
+            logger.exception(
+                "[biz][billing] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s gb=%s: %s",
+                user_id,
+                sub.id,
+                gb,
+                e,
+            )
 
         await self.session.commit()
         logger.info(

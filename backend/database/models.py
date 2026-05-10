@@ -8,7 +8,8 @@ from sqlalchemy import (
     ForeignKey,
     Enum,
     UniqueConstraint,
-    DateTime
+    DateTime,
+    Numeric,
 )
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -178,6 +179,9 @@ class Subscription(Base):
 
     user: Mapped["User"] = relationship(back_populates="subscriptions")
     plan: Mapped["SubscriptionPlan"] = relationship(back_populates="subscriptions")
+    topups: Mapped[list["SubscriptionTopup"]] = relationship(
+        back_populates="subscription", cascade="all, delete-orphan"
+    )
 
     status: Mapped[SubStatus] = mapped_column(Enum(SubStatus), default=SubStatus.active)
     auto_renew: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -194,6 +198,24 @@ class Subscription(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
+
+
+class SubscriptionTopup(Base):
+    __tablename__ = "vpn_subscription_topups"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    subscription_id: Mapped[int] = mapped_column(
+        ForeignKey("vpn_subscriptions.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    gb: Mapped[float] = mapped_column("gb_added", Numeric(10, 2), nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+    subscription: Mapped["Subscription"] = relationship(back_populates="topups")
+    
 class Transaction(Base):
     __tablename__ = "vpn_transactions"
 

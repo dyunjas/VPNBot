@@ -1,1 +1,1 @@
-MAIN_MENU_IMG = "https://s3.twcstorage.ru/c15334c8-5ea901f2-11fd-44d8-8089-115a8d0a7d27/LUNET_VPN/main_menu_NEY"
+MAIN_MENU_IMG = "https://s3.twcstorage.ru/c15334c8-5ea901f2-11fd-44d8-8089-115a8d0a7d27/LUNET_VPN/main_menu_spring"

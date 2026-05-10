@@ -72,7 +72,10 @@ async def mini_referral_info(payload: InitPayload):
         user = await _get_user_or_404(session, tg_id)
         referral_service = ReferralService(session)
 
-        account = await referral_service.create_account(user.id)
+        account = await referral_service.get_account(user.id)
+        if not account:
+            account = await referral_service.create_account(user.id)
+            await session.commit()
         referral_url = f"https://t.me/{BOT_USERNAME}?start=ref_{user.tg_id}"
 
         return {

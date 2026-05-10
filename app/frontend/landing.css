@@ -1,15 +1,15 @@
-﻿:root {
-  --bg: #f6fbf6;
-  --bg2: #eef7ff;
+:root {
+  --bg: #f7f9f6;
+  --bg2: #edf4f7;
   --line: #d8e7dc;
   --line-soft: rgba(110, 174, 142, 0.24);
   --text: #1f314d;
   --muted: #5f7698;
-  --accent: #6f9eff;
-  --accent-2: #f19bc0;
+  --accent: #5cae9b;
+  --accent-2: #8ec9bc;
   --radius-lg: 24px;
   --radius-md: 17px;
-  --shadow: 0 12px 28px rgba(111, 158, 255, 0.14);
+  --shadow: 0 10px 22px rgba(49, 99, 110, 0.12);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -19,8 +19,8 @@ body {
   color: var(--text);
   min-height: 100vh;
   background:
-    radial-gradient(520px 260px at 8% -4%, rgba(241, 155, 192, 0.22), transparent 70%),
-    radial-gradient(600px 320px at 94% 2%, rgba(130, 206, 155, 0.2), transparent 72%),
+    radial-gradient(540px 280px at 10% -2%, rgba(211, 225, 196, 0.32), transparent 72%),
+    radial-gradient(640px 320px at 90% 6%, rgba(175, 210, 218, 0.24), transparent 74%),
     linear-gradient(180deg, var(--bg), var(--bg2));
   overflow-x: hidden;
 }
@@ -34,26 +34,16 @@ body::after {
   z-index: 0;
 }
 
-/* Soft sakura-like petals layer: very light and cheap to render */
 body::before {
-  opacity: 0.18;
-  background:
-    radial-gradient(10px 6px at 12% 18%, rgba(241, 155, 192, 0.55), transparent 70%),
-    radial-gradient(9px 5px at 27% 36%, rgba(241, 155, 192, 0.48), transparent 70%),
-    radial-gradient(11px 6px at 46% 14%, rgba(241, 155, 192, 0.5), transparent 70%),
-    radial-gradient(8px 5px at 63% 32%, rgba(241, 155, 192, 0.45), transparent 70%),
-    radial-gradient(10px 6px at 78% 20%, rgba(241, 155, 192, 0.5), transparent 70%),
-    radial-gradient(9px 5px at 88% 38%, rgba(241, 155, 192, 0.45), transparent 70%);
+  opacity: 0.16;
+  background: url("/miniapp/assets/palm.png") no-repeat 2% 7% / 140px;
 }
 
 body::after {
   opacity: 0.12;
   background:
-    radial-gradient(9px 5px at 18% 72%, rgba(241, 155, 192, 0.5), transparent 72%),
-    radial-gradient(10px 6px at 34% 82%, rgba(241, 155, 192, 0.45), transparent 72%),
-    radial-gradient(8px 5px at 56% 74%, rgba(241, 155, 192, 0.5), transparent 72%),
-    radial-gradient(10px 6px at 72% 86%, rgba(241, 155, 192, 0.46), transparent 72%),
-    radial-gradient(9px 5px at 90% 76%, rgba(241, 155, 192, 0.45), transparent 72%);
+    url("/miniapp/assets/coconut.png") no-repeat 7% 92% / 74px,
+    url("/miniapp/assets/coconut.png") no-repeat 94% 84% / 60px;
 }
 
 .noise, .orb { display: none; }
@@ -110,14 +100,14 @@ body::after {
 .nav nav a:hover {
   color: var(--text);
   border-color: var(--line-soft);
-  background: #fdf4fa;
+  background: #eef6f4;
 }
 
 .btn {
-  border: 1px solid rgba(111, 158, 255, 0.34);
+  border: 1px solid rgba(92, 174, 155, 0.34);
   border-radius: 12px;
-  background: linear-gradient(160deg, #f8fbff, #e9f1ff);
-  color: #2a3f67;
+  background: linear-gradient(160deg, #f9fcfb, #e7f1ef);
+  color: #1f3955;
   min-height: 40px;
   padding: 0 14px;
   font-weight: 700;
@@ -128,12 +118,12 @@ body::after {
   transition: .18s ease;
 }
 .btn:hover {
-  border-color: rgba(111, 158, 255, 0.54);
-  background: linear-gradient(160deg, #fef7fb, #eaf2ff);
+  border-color: rgba(92, 174, 155, 0.54);
+  background: linear-gradient(160deg, #f7fbfa, #dfeceb);
 }
 .btn.solid {
   color: #fff;
-  border-color: rgba(96, 128, 206, 0.58);
+  border-color: rgba(92, 174, 155, 0.58);
   background: linear-gradient(160deg, var(--accent), var(--accent-2));
 }
 .btn.ghost { background: #fff; }
@@ -173,7 +163,7 @@ h1 {
 .hero-stat {
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-md);
-  background: #f8fbff;
+  background: #f4f8f6;
   padding: 12px;
 }
 .hero-stat span { display: block; color: var(--muted); font-size: 12px; }

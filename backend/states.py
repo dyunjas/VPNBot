@@ -17,3 +17,8 @@ class WithdrawBalance(StatesGroup):
     waiting_for_amount = State()
     waiting_for_method = State()
     waiting_for_confirmation = State()
+
+
+class TrafficPurchaseStates(StatesGroup):
+    waiting_for_gb = State()
+    waiting_for_confirmation = State()

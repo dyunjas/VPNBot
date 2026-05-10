@@ -6,7 +6,7 @@
   <title>Lunet</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f78e0'/%3E%3Cpath d='M20 34h24v4H20zM20 24h24v4H20zM20 44h16v4H20z' fill='white'/%3E%3C/svg%3E" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.v2.css?v=2" />
+  <link rel="stylesheet" href="styles.v2.css?v=3" />
 </head>
 <body>
   <div id="outside-stub" class="outside" style="display:none;">
@@ -37,7 +37,7 @@
         <div class="card glass">
           <div class="sub-head">
             <h2>Подписка</h2>
-            <img src="/miniapp/assets/moon.png" alt="Lunet Moon" class="sub-card__moon" loading="eager" decoding="async" />
+            <img src="/miniapp/assets/chare.png" alt="Summer accent" class="sub-card__moon" loading="eager" decoding="async" />
           </div>
           <div id="sub-title" class="sub-title">Проверка...</div>
           <p id="sub-meta" class="muted"></p>
@@ -45,6 +45,11 @@
             <button class="btn" id="btn-copy-sub" type="button">Скопировать ссылку</button>
             <button class="btn btn--ghost" id="btn-open-sub" type="button">Открыть</button>
           </div>
+          <div class="row row--traffic">
+            <input id="traffic-gb-input" class="input" placeholder="Докупка трафика, ГБ" inputmode="numeric" />
+            <button class="btn" id="btn-buy-traffic" type="button">Купить ГБ</button>
+          </div>
+          <p id="traffic-hint" class="muted"></p>
         </div>
 
         <div class="card glass">
@@ -203,7 +208,7 @@
     </div>
   </div>
 
-  <script src="app.v2.js?v=4"></script>
+  <script src="app.v2.js?v=5"></script>
 </body>
 </html>
 

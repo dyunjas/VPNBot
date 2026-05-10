@@ -68,6 +68,7 @@ async def _render_subscription_screen(
     text = (
         "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> <b>Ваша VPN ссылка:</b>\n"
         f"<code>{safe_url}</code>\n\n"
+        "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> Трафик расходуется <b>ТОЛЬКО</b> на серверах белых списков. Гигабайты можно докупать по цене 2 RUB / гигабайт. Гигабайты переносятся между месяцами.</blockquote>\n\n"
         f"<tg-emoji emoji-id='5956148757899776734'>📅</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{auto_renew_text}</b>\n\n"
         "<tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> Серверы уже подготовлены. Обновите подписку в приложении.\n\n"

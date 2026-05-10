@@ -67,6 +67,10 @@ class BuySubscriptionPayload(InitPayload):
     plan_id: int
 
 
+class BuyTrafficPayload(InitPayload):
+    gb: int
+
+
 class TopupPayload(InitPayload):
     amount: int
     method: str = "platega"
@@ -224,6 +228,7 @@ __all__ = [
     "InitPayload",
     "DeleteDevicePayload",
     "BuySubscriptionPayload",
+    "BuyTrafficPayload",
     "TopupPayload",
     "BalanceCheckPayload",
     "ApplyPromocodePayload",

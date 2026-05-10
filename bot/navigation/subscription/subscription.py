@@ -50,7 +50,8 @@ async def select_plan_clb(callback: CallbackQuery, subscription_service: Subscri
         f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Тариф:</b> {plan.name}\n"
         f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Стоимость:</b> {plan.price} RUB\n"
         f"<b><tg-emoji emoji-id='5843799474362652262'>🔄</tg-emoji> Период:</b> {plan.period_days} дней\n"
-        f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Трафик:</b> {gb_text}\n"
+        f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Трафик Белых списков:</b> {gb_text}\n"
+        f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Трафик обычных серверов:</b> безлимит\n"
         f"<b><tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройств:</b> 3\n\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Подключиться к VPN можно сразу после оплаты.</i>"
     )

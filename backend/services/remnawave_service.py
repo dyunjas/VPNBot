@@ -268,8 +268,15 @@ class RemnaWaveService:
 
         plan_gb = Decimal(0)
         expires_at = None
-        if subscription and getattr(subscription, "plan", None):
-            plan_gb = Decimal(getattr(subscription.plan, "gb_limit", 0) or 0)
+        if subscription:
+            plan = None
+            try:
+                plan_id = getattr(subscription, "plan_id", None)
+                if plan_id is not None:
+                    plan = await self.sub_repo.get_plan_by_id(int(plan_id))
+            except Exception:
+                plan = None
+            plan_gb = Decimal(getattr(plan, "gb_limit", 0) or 0)
             expires_at = self._iso_or_none(subscription.current_period_end)
 
         total_gb = max(Decimal(0), plan_gb + Decimal(topup_gb or 0))
@@ -282,7 +289,7 @@ class RemnaWaveService:
             "expireAt": expire_at,
             "status": "ACTIVE",
             "trafficLimitBytes": max(0, int(traffic_limit_bytes)),
-            "trafficLimitStrategy": "MONTH",
+            "trafficLimitStrategy": "NO_RESET",
             "hwidDeviceLimit": 3,
             "telegramId": int(getattr(user, "tg_id", 0) or 0) or None,
             "email": getattr(user, "email", None),
@@ -634,6 +641,28 @@ class RemnaWaveService:
             )
         return status < 400
 
+    async def enable_user_access(self, *, user, subscription=None) -> bool:
+        if not self.enabled:
+            raise RuntimeError("remnawave is not configured")
+
+        remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=subscription)
+        user_uuid = (remote_uuid or "").strip()
+        if not user_uuid and remote_id is not None:
+            remote = await self._fetch_remote_user_by_id(remote_id=int(remote_id))
+            user_uuid = self._extract_remote_user_uuid(remote) if remote else None
+        if not user_uuid:
+            return False
+
+        timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
+        async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
+            status, _ = await self._request_json(
+                http,
+                "POST",
+                f"{self.base_url}/api/users/{user_uuid}/actions/enable",
+                json={},
+            )
+        return status < 400
+
     async def delete_user_access(self, *, user, subscription=None) -> bool:
         if not self.enabled:
             raise RuntimeError("remnawave is not configured")
@@ -796,3 +825,112 @@ class RemnaWaveService:
             )
         return True
 
+    async def sync_user_traffic_limit(self, *, user, subscription) -> bool:
+        if not self.enabled:
+            raise RuntimeError("remnawave is not configured")
+        if not subscription:
+            return False
+
+        payload_source = await self._build_payload(user, subscription)
+        remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=subscription)
+
+        payload: dict[str, Any] = {
+            "status": "ACTIVE",
+            "trafficLimitBytes": int(payload_source["trafficLimitBytes"]),
+            "trafficLimitStrategy": "NO_RESET",
+            "expireAt": payload_source["expireAt"],
+        }
+        if remote_uuid:
+            payload["uuid"] = remote_uuid
+        else:
+            payload["username"] = self._build_username(user)
+
+        timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
+        async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
+            status, data = await self._request_json(
+                http,
+                "PATCH",
+                f"{self.base_url}/api/users",
+                json=payload,
+            )
+        if status >= 400:
+            raise RuntimeError(f"remnawave patch traffic limit failed status={status} body={data}")
+
+        remote = self._unwrap_response(data)
+        if isinstance(remote, dict):
+            await self._persist_binding(
+                user_id=user.id,
+                remote_id=self._extract_remote_user_id(remote) or remote_id,
+                remote_uuid=self._extract_remote_user_uuid(remote) or remote_uuid,
+                sub_url=self._extract_first_link(remote),
+            )
+        return True
+
+    async def sync_user_state(
+        self,
+        *,
+        user,
+        subscription=None,
+        status: str = "ACTIVE",
+    ) -> bool:
+        if not self.enabled:
+            raise RuntimeError("remnawave is not configured")
+
+        payload_source = await self._build_payload(user, subscription)
+        remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=subscription)
+
+        is_expired_target = str(status).upper() == "EXPIRED"
+        near_expire_at = self._iso_or_none(datetime.now(timezone.utc) + timedelta(seconds=30))
+        payload: dict[str, Any] = {
+            "trafficLimitBytes": int(payload_source["trafficLimitBytes"]),
+            "trafficLimitStrategy": "NO_RESET",
+            "expireAt": near_expire_at if is_expired_target else payload_source["expireAt"],
+            "hwidDeviceLimit": payload_source.get("hwidDeviceLimit"),
+        }
+        if not is_expired_target:
+            payload["status"] = status
+        if payload_source.get("activeInternalSquads"):
+            payload["activeInternalSquads"] = payload_source["activeInternalSquads"]
+        if remote_uuid:
+            payload["uuid"] = remote_uuid
+        else:
+            payload["username"] = self._build_username(user)
+
+        payload = self._compact_payload(payload)
+        timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
+        async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
+            patch_status, data = await self._request_json(
+                http,
+                "PATCH",
+                f"{self.base_url}/api/users",
+                json=payload,
+            )
+
+            if patch_status >= 400 and is_expired_target:
+                minimal_expired_payload: dict[str, Any] = {
+                    "trafficLimitBytes": int(payload_source["trafficLimitBytes"]),
+                    "trafficLimitStrategy": "NO_RESET",
+                    "expireAt": near_expire_at,
+                }
+                if remote_uuid:
+                    minimal_expired_payload["uuid"] = remote_uuid
+                else:
+                    minimal_expired_payload["username"] = self._build_username(user)
+                patch_status, data = await self._request_json(
+                    http,
+                    "PATCH",
+                    f"{self.base_url}/api/users",
+                    json=minimal_expired_payload,
+                )
+        if patch_status >= 400:
+            raise RuntimeError(f"remnawave patch user state failed status={patch_status} body={data}")
+
+        remote = self._unwrap_response(data)
+        if isinstance(remote, dict):
+            await self._persist_binding(
+                user_id=user.id,
+                remote_id=self._extract_remote_user_id(remote) or remote_id,
+                remote_uuid=self._extract_remote_user_uuid(remote) or remote_uuid,
+                sub_url=self._extract_first_link(remote),
+            )
+        return True

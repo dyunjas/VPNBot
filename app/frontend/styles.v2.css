@@ -1,19 +1,19 @@
-﻿:root {
+:root {
   --tg-safe-top: 0px;
-  --bg: #f6fbf6;
-  --bg2: #eef7ff;
-  --line: #d8e7dc;
-  --line-soft: rgba(110, 174, 142, 0.24);
-  --text: #1f314d;
-  --muted: #5f7698;
-  --accent: #6f9eff;
-  --accent-2: #f19bc0;
+  --bg: #f7f9f6;
+  --bg2: #edf4f7;
+  --line: #cfe7dc;
+  --line-soft: rgba(108, 186, 159, 0.26);
+  --text: #1f3955;
+  --muted: #5a7692;
+  --accent: #5cae9b;
+  --accent-2: #8ec9bc;
   --danger: #c3475b;
   --ok: #1f9e68;
   --warn: #b87a20;
   --radius-lg: 24px;
   --radius-md: 17px;
-  --shadow: 0 12px 28px rgba(111, 158, 255, 0.14);
+  --shadow: 0 10px 22px rgba(49, 99, 110, 0.12);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
@@ -23,8 +23,8 @@ body {
   color: var(--text);
   font-family: "Manrope", "Segoe UI", Arial, sans-serif;
   background:
-    radial-gradient(520px 260px at 8% -4%, rgba(241, 155, 192, 0.18), transparent 70%),
-    radial-gradient(620px 300px at 90% 4%, rgba(130, 206, 155, 0.18), transparent 72%),
+    radial-gradient(540px 280px at 10% -2%, rgba(211, 225, 196, 0.32), transparent 72%),
+    radial-gradient(640px 320px at 90% 6%, rgba(175, 210, 218, 0.24), transparent 74%),
     linear-gradient(180deg, var(--bg), var(--bg2));
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -37,13 +37,9 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.14;
+  opacity: 0.15;
   background:
-    radial-gradient(10px 6px at 10% 16%, rgba(241, 155, 192, 0.5), transparent 70%),
-    radial-gradient(9px 5px at 28% 30%, rgba(241, 155, 192, 0.45), transparent 70%),
-    radial-gradient(11px 6px at 47% 18%, rgba(241, 155, 192, 0.5), transparent 70%),
-    radial-gradient(8px 5px at 66% 28%, rgba(241, 155, 192, 0.44), transparent 70%),
-    radial-gradient(10px 6px at 84% 16%, rgba(241, 155, 192, 0.5), transparent 70%);
+    url("/miniapp/assets/palm.png") no-repeat 4% 8% / 120px;
 }
 
 body::after {
@@ -52,13 +48,10 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.1;
+  opacity: 0.14;
   background:
-    radial-gradient(9px 5px at 16% 76%, rgba(241, 155, 192, 0.48), transparent 72%),
-    radial-gradient(10px 6px at 34% 84%, rgba(241, 155, 192, 0.44), transparent 72%),
-    radial-gradient(8px 5px at 54% 74%, rgba(241, 155, 192, 0.48), transparent 72%),
-    radial-gradient(10px 6px at 74% 86%, rgba(241, 155, 192, 0.44), transparent 72%),
-    radial-gradient(9px 5px at 92% 78%, rgba(241, 155, 192, 0.44), transparent 72%);
+    url("/miniapp/assets/coconut.png") no-repeat 8% 94% / 70px,
+    url("/miniapp/assets/coconut.png") no-repeat 92% 88% / 58px;
 }
 
 .app::before,
@@ -105,7 +98,7 @@ body::after {
   border-radius: var(--radius-lg);
   padding: 20px;
   text-align: center;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
 }
@@ -124,15 +117,15 @@ body::after {
 .view--active { display: flex; }
 
 .glass {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 .glass-soft {
-  background: #f7faff;
+  background: #f4f8f6;
   border: 1px solid var(--line-soft);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .card {
@@ -159,8 +152,8 @@ body::after {
 .balance {
   padding: 9px 15px;
   border-radius: 999px;
-  border: 1px solid rgba(89, 135, 214, 0.46);
-  background: rgba(86, 136, 213, 0.26);
+  border: 1px solid rgba(43, 185, 177, 0.42);
+  background: rgba(43, 185, 177, 0.26);
   font-weight: 700;
 }
 
@@ -177,10 +170,10 @@ body::after {
   margin: 0;
 }
 .sub-card__moon {
-  width: 76px;
-  height: 76px;
+  width: 72px;
+  height: 72px;
   object-fit: contain;
-  filter: drop-shadow(0 10px 18px rgba(228, 188, 78, 0.48));
+  filter: drop-shadow(0 10px 16px rgba(255, 172, 69, 0.46));
   pointer-events: none;
   flex: 0 0 auto;
 }
@@ -210,6 +203,9 @@ body::after {
   line-height: 1;
 }
 .sub-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.row--traffic {
+  margin-top: 12px;
+}
 .payment-methods {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -218,7 +214,7 @@ body::after {
 }
 .pay-method {
   border: 1px solid var(--line-soft);
-  background: #f7faff;
+  background: #f4f8f6;
   border-radius: var(--radius-md);
   min-height: 54px;
   padding: 8px 10px;
@@ -236,7 +232,7 @@ body::after {
   height: 32px;
   border-radius: 8px;
   object-fit: cover;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   border: 1px solid var(--line-soft);
   display: block;
 }
@@ -244,11 +240,11 @@ body::after {
   font-size: 13px;
 }
 .pay-method:hover {
-  border-color: rgba(79, 123, 197, 0.45);
+  border-color: rgba(43, 185, 177, 0.45);
 }
 .pay-method--active {
-  border-color: rgba(89, 135, 214, 0.56);
-  background: rgba(86, 136, 213, 0.26);
+  border-color: rgba(43, 185, 177, 0.56);
+  background: rgba(43, 185, 177, 0.26);
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
@@ -257,7 +253,7 @@ body::after {
   min-width: 160px;
   border-radius: var(--radius-md);
   border: 1px solid var(--line-soft);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   color: var(--text);
   padding: 12px 14px;
   outline: none;
@@ -274,10 +270,10 @@ body::after {
 .select { appearance: none; }
 
 .btn, .tab {
-  border: 1px solid rgba(79, 123, 197, 0.34);
+  border: 1px solid rgba(43, 185, 177, 0.34);
   border-radius: 14px;
-  background: linear-gradient(160deg, #f8fbff, #e9f1ff);
-  color: #1e3358;
+  background: linear-gradient(160deg, #f9fcfb, #e7f1ef);
+  color: #1f3955;
   min-height: 40px;
   padding: 0 14px;
   font-weight: 700;
@@ -290,7 +286,7 @@ body::after {
   padding: 8px 6px;
 }
 .btn--ghost {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
 }
 .btn--danger {
   color: #a64757;
@@ -298,8 +294,8 @@ body::after {
   background: #fff3f5;
 }
 .btn:hover, .tab:hover {
-  border-color: rgba(79, 123, 197, 0.5);
-  background: linear-gradient(160deg, #f5f9ff, #e2ecff);
+  border-color: rgba(43, 185, 177, 0.5);
+  background: linear-gradient(160deg, #f7fbfa, #dfeceb);
   filter: none;
 }
 .btn:active, .tab:active { transform: translateY(1px) scale(0.99); }
@@ -308,7 +304,7 @@ body::after {
 .item {
   border: 1px solid var(--line-soft);
   border-radius: 18px;
-  background: #f7faff;
+  background: #f4f8f6;
   padding: 12px;
 }
 .item__title { font-weight: 700; margin-bottom: 4px; }
@@ -331,16 +327,16 @@ body::after {
 .link {
   border: 1px solid var(--line-soft);
   border-radius: 14px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   padding: 10px;
   margin-bottom: 8px;
   overflow-wrap: anywhere;
 }
 
 .glass-nav {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
   border: 1px solid var(--line);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
 }
 .bottom-nav {
@@ -362,8 +358,8 @@ body::after {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #f4f8ff;
-  border-color: rgba(76, 120, 199, 0.24);
+  background: #eefcf8;
+  border-color: rgba(43, 185, 177, 0.24);
   font-size: 12px;
 }
 .tab__label {
@@ -384,9 +380,9 @@ body::after {
   stroke-linejoin: round;
 }
 .tab--active {
-  color: #1e3358;
-  border-color: rgba(89, 135, 214, 0.58);
-  background: rgba(86, 136, 213, 0.26);
+  color: #1f3955;
+  border-color: rgba(43, 185, 177, 0.58);
+  background: rgba(43, 185, 177, 0.26);
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
@@ -397,8 +393,8 @@ body::after {
   bottom: calc(116px + env(safe-area-inset-bottom));
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: #ffffff;
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
   padding: 12px 13px;
   opacity: 0;
   transform: translateY(10px);
@@ -414,8 +410,8 @@ body::after {
   display: grid;
   place-items: center;
   z-index: 100;
-  background: rgba(238, 245, 255, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(229, 252, 246, 0.84);
+  backdrop-filter: blur(10px);
   transition: opacity .25s ease;
 }
 .app-loader--hidden {
@@ -463,3 +459,8 @@ body::after {
 
 
 
+
+.btn:disabled {
+  opacity: .65;
+  cursor: wait;
+}

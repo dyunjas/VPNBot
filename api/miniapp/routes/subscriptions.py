@@ -64,3 +64,29 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
                 "status": sub.status.value if hasattr(sub.status, "value") else str(sub.status),
             },
         }
+
+
+@router.post("/subscription/traffic/buy")
+async def mini_subscription_traffic_buy(payload: BuyTrafficPayload):
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = tg_user["id"]
+    if payload.gb <= 0:
+        raise HTTPException(400, "Введите количество ГБ больше 0")
+
+    async with async_session() as session:
+        user = await _get_user_or_404(session, tg_id)
+        billing = BillingService(session)
+        try:
+            sub, charged = await billing.add_gb_to_subscription(
+                user_id=user.id,
+                gb=int(payload.gb),
+            )
+        except Exception as e:
+            raise _map_service_error(e)
+
+        return {
+            "ok": True,
+            "subscription_id": sub.id,
+            "gb_added": int(payload.gb),
+            "charged": int(charged),
+        }

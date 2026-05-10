@@ -8,7 +8,7 @@ def back_keys_kb(url: str, auto_renew: bool = False):
 
     builder.add(InlineKeyboardButton(text="Копировать ссылку", copy_text={"text": url}))
     builder.button(text=auto_text, callback_data="toggle_auto_renew")
-    builder.button(text="♻️ Обнулить трафик", callback_data="reset_traffic")
+    builder.button(text="➕ Докупить ГБ", callback_data="reset_traffic")
     builder.button(text="📱 Устройства", callback_data="subscription_devices")
     builder.button(text="⬅️ Назад", callback_data="main_menu")
 

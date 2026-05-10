@@ -329,3 +329,249 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-05-04 19:36:51] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=1 charged=95
 [2026-05-04 19:55:35] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
 [2026-05-04 19:55:35] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2702768
+[2026-05-10 14:39:59] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=1
+[2026-05-10 14:39:59] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=3
+[2026-05-10 14:39:59] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=3
+[2026-05-10 14:39:59] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=1
+[2026-05-10 14:39:59] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=1
+[2026-05-10 14:39:59] [ERROR] root: [biz][billing] remnawave_traffic_limit_sync_failed_non_blocking user_id=29 subscription_id=18 gb=1: name 'user' is not defined
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 609, in add_gb_to_subscription
+    await self.remnawave_service.sync_user_traffic_limit(user=user, subscription=sub)
+                                                              ^^^^
+NameError: name 'user' is not defined. Did you mean: 'super'?
+[2026-05-10 14:39:59] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=1 charged=3
+[2026-05-10 14:40:28] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=1
+[2026-05-10 14:40:28] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=3
+[2026-05-10 14:40:28] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=3
+[2026-05-10 14:40:28] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=1
+[2026-05-10 14:40:28] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=1
+[2026-05-10 14:40:28] [ERROR] root: [biz][billing] remnawave_traffic_limit_sync_failed_non_blocking user_id=29 subscription_id=18 gb=1: name 'user' is not defined
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 609, in add_gb_to_subscription
+    await self.remnawave_service.sync_user_traffic_limit(user=user, subscription=sub)
+                                                              ^^^^
+NameError: name 'user' is not defined. Did you mean: 'super'?
+[2026-05-10 14:40:28] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=1 charged=3
+[2026-05-10 14:40:34] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=1
+[2026-05-10 14:40:34] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=3
+[2026-05-10 14:40:34] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=3
+[2026-05-10 14:40:34] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=1
+[2026-05-10 14:40:34] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=1
+[2026-05-10 14:40:34] [ERROR] root: [biz][billing] remnawave_traffic_limit_sync_failed_non_blocking user_id=29 subscription_id=18 gb=1: name 'user' is not defined
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 609, in add_gb_to_subscription
+    await self.remnawave_service.sync_user_traffic_limit(user=user, subscription=sub)
+                                                              ^^^^
+NameError: name 'user' is not defined. Did you mean: 'super'?
+[2026-05-10 14:40:34] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=1 charged=3
+[2026-05-10 14:43:37] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=10
+[2026-05-10 14:43:37] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=30
+[2026-05-10 14:43:37] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=30
+[2026-05-10 14:43:37] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=10
+[2026-05-10 14:43:37] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=10
+[2026-05-10 14:43:38] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=10 charged=30
+[2026-05-10 14:44:18] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 14:44:18] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 14:44:18] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 14:44:18] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 14:44:18] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 14:44:20] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-10 14:46:28] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 14:46:28] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 14:46:28] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 14:46:28] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 14:46:28] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 14:46:29] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-10 14:48:58] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 14:48:58] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 14:48:58] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 14:48:58] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 14:48:58] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 14:51:48] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 14:51:48] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 14:51:48] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 14:51:48] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 14:51:48] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 14:51:49] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-10 14:56:34] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=60
+[2026-05-10 14:56:34] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=180
+[2026-05-10 14:56:34] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=180
+[2026-05-10 14:56:34] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=60
+[2026-05-10 14:56:34] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=60
+[2026-05-10 14:56:34] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=60 charged=180
+[2026-05-10 14:57:02] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 14:57:02] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 14:57:02] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 14:57:02] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 14:57:02] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 14:57:02] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-10 14:57:20] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=40
+[2026-05-10 14:57:20] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=120
+[2026-05-10 14:57:20] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=120
+[2026-05-10 14:57:20] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=40
+[2026-05-10 14:57:20] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=40
+[2026-05-10 14:57:20] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=40 charged=120
+[2026-05-10 14:59:06] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=100
+[2026-05-10 14:59:06] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=300
+[2026-05-10 14:59:06] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=300
+[2026-05-10 14:59:06] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=100
+[2026-05-10 14:59:06] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=100
+[2026-05-10 14:59:06] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=100 charged=300
+[2026-05-10 14:59:38] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=100
+[2026-05-10 14:59:38] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=300
+[2026-05-10 14:59:38] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=300
+[2026-05-10 14:59:38] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=100
+[2026-05-10 14:59:38] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=100
+[2026-05-10 14:59:39] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=100 charged=300
+[2026-05-10 15:02:19] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:03:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:03:09] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:03:09] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:03:09] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:03:09] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:03:09.248713+00:00 gb_added=500.00
+[2026-05-10 15:03:09] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:03:10] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:16:22] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:16:55] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:16:55] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:16:55] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:16:55] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:16:55] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:16:55.600135+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:16:55] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:16:56] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:23:13] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:23:23] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:23:23] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:23:23] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:23:23] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:23:23] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:23:23.896014+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:23:23] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:23:25] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:24:09] [INFO] root: [biz][subscription] marked_expired subscription_id=20
+[2026-05-10 15:24:22] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=9 auto_renew=True
+[2026-05-10 15:24:22] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=250
+[2026-05-10 15:24:22] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=250
+[2026-05-10 15:24:22] [INFO] root: [biz][subscription] activate_requested user_id=38 plan_id=9 auto_renew=True
+[2026-05-10 15:24:22] [INFO] root: [biz][subscription] renewed user_id=38 subscription_id=20 plan_id=9 period_end=2026-08-08 10:24:22.858113+00:00 gb_added=0.00 renewal_bonus_gb=0
+[2026-05-10 15:24:22] [INFO] root: [biz][subscription] activate_completed user_id=38 subscription_id=20
+[2026-05-10 15:24:24] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=9 charged=250
+[2026-05-10 15:25:22] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:25:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:25:33] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:25:33] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:25:33] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:25:33] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:25:33.797722+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:25:33] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:25:35] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:25:55] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=130
+[2026-05-10 15:25:55] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=390
+[2026-05-10 15:25:55] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=390
+[2026-05-10 15:25:55] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=130
+[2026-05-10 15:25:55] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=130
+[2026-05-10 15:25:55] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=130 charged=390
+[2026-05-10 15:26:34] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:26:52] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:26:52] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:26:52] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:26:52] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:26:52] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:26:52.763362+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:26:52] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:26:53] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:27:37] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:27:54] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=9 auto_renew=True
+[2026-05-10 15:27:54] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=250
+[2026-05-10 15:27:54] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=250
+[2026-05-10 15:27:54] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=9 auto_renew=True
+[2026-05-10 15:27:54] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=9 period_end=2026-08-08 10:27:54.825930+00:00 gb_added=90.00 renewal_bonus_gb=90.00
+[2026-05-10 15:27:54] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:27:55] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=9 charged=250
+[2026-05-10 15:34:16] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:35:14] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:35:14] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=95
+[2026-05-10 15:35:14] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=95
+[2026-05-10 15:35:14] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=1 auto_renew=True
+[2026-05-10 15:35:14] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=1 period_end=2026-06-09 10:35:14.816319+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:35:14] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:35:15] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=1 charged=95
+[2026-05-10 15:35:34] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:37:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 15:37:09] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=0
+[2026-05-10 15:37:09] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=0
+[2026-05-10 15:37:09] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 15:37:09] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=4 period_end=2026-05-13 10:37:09.868872+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:37:09] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:37:10] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=4 charged=0
+[2026-05-10 15:37:29] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:38:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=9 auto_renew=True
+[2026-05-10 15:38:57] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=250
+[2026-05-10 15:38:57] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=250
+[2026-05-10 15:38:57] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=9 auto_renew=True
+[2026-05-10 15:38:57] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=9 period_end=2026-08-08 10:38:57.903395+00:00 gb_added=90.00 renewal_bonus_gb=90.00
+[2026-05-10 15:38:57] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:38:58] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=9 charged=250
+[2026-05-10 15:39:14] [INFO] root: [biz][subscription] marked_expired subscription_id=20
+[2026-05-10 15:39:40] [INFO] root: [biz][billing] buy_subscription_requested user_id=38 plan_id=9 auto_renew=True
+[2026-05-10 15:39:40] [INFO] root: [biz][billing] charge_balance_requested user_id=38 amount=250
+[2026-05-10 15:39:40] [INFO] root: [biz][billing] charge_balance_completed user_id=38 amount=250
+[2026-05-10 15:39:40] [INFO] root: [biz][subscription] activate_requested user_id=38 plan_id=9 auto_renew=True
+[2026-05-10 15:39:40] [INFO] root: [biz][subscription] renewed user_id=38 subscription_id=20 plan_id=9 period_end=2026-08-08 10:39:40.743369+00:00 gb_added=90.00 renewal_bonus_gb=90.00
+[2026-05-10 15:39:40] [INFO] root: [biz][subscription] activate_completed user_id=38 subscription_id=20
+[2026-05-10 15:39:41] [INFO] root: [biz][billing] buy_subscription_completed user_id=38 subscription_id=20 plan_id=9 charged=250
+[2026-05-10 15:40:07] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-10 15:48:11] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 15:48:11] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=0
+[2026-05-10 15:48:11] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=0
+[2026-05-10 15:48:11] [INFO] root: [biz][subscription] activate_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 15:48:11] [INFO] root: [biz][subscription] renewed user_id=29 subscription_id=18 plan_id=4 period_end=2026-05-13 10:48:11.129414+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-05-10 15:48:11] [INFO] root: [biz][subscription] activate_completed user_id=29 subscription_id=18
+[2026-05-10 15:48:12] [INFO] root: [biz][billing] buy_subscription_completed user_id=29 subscription_id=18 plan_id=4 charged=0
+[2026-05-10 16:20:50] [INFO] root: [biz][referral] account_created user_id=29 account_id=22
+[2026-05-10 16:20:50] [INFO] root: [biz][referral] account_created user_id=29 account_id=23
+[2026-05-10 16:20:50] [INFO] root: [biz][referral] account_created user_id=29 account_id=24
+[2026-05-10 16:21:06] [INFO] root: [biz][referral] account_created user_id=29 account_id=25
+[2026-05-10 16:21:31] [INFO] root: [biz][referral] account_created user_id=29 account_id=26
+[2026-05-10 16:21:39] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 16:21:39] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=29 plan_id=4 seconds_left=275191
+[2026-05-10 16:21:41] [INFO] root: [biz][billing] buy_subscription_requested user_id=29 plan_id=4 auto_renew=True
+[2026-05-10 16:21:41] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=29 plan_id=4 seconds_left=275189
+[2026-05-10 16:21:45] [INFO] root: [biz][referral] account_created user_id=29 account_id=27
+[2026-05-10 16:22:31] [INFO] root: [biz][referral] account_created user_id=29 account_id=28
+[2026-05-10 16:23:13] [INFO] root: [biz][referral] account_created user_id=29 account_id=29
+[2026-05-10 16:26:41] [INFO] root: [biz][billing] platega_confirm_requested provider_id=89a4193f-497e-4409-868e-9cb0441aff41
+[2026-05-10 16:26:41] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=89a4193f-497e-4409-868e-9cb0441aff41 status=CANCELED
+[2026-05-10 16:27:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=89a4193f-497e-4409-868e-9cb0441aff41
+[2026-05-10 16:27:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=89a4193f-497e-4409-868e-9cb0441aff41 status=CANCELED
+[2026-05-10 16:27:00] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=10.0 payment_method=2
+[2026-05-10 16:27:01] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=b7879d9d-ad77-4685-82f2-30d2ece6045b amount=10.0
+[2026-05-10 16:32:57] [INFO] root: [biz][referral] account_created user_id=29 account_id=30
+[2026-05-10 16:32:57] [INFO] root: [biz][referral] account_created user_id=29 account_id=31
+[2026-05-10 16:32:57] [INFO] root: [biz][referral] account_created user_id=29 account_id=32
+[2026-05-10 16:33:24] [INFO] root: [biz][referral] account_created user_id=29 account_id=33
+[2026-05-10 16:33:32] [INFO] root: [biz][referral] account_created user_id=29 account_id=34
+[2026-05-10 16:33:37] [INFO] root: [biz][referral] account_created user_id=29 account_id=35
+[2026-05-10 16:34:39] [INFO] root: [biz][referral] account_created user_id=29 account_id=36
+[2026-05-10 16:34:51] [INFO] root: [biz][referral] account_created user_id=29 account_id=37
+[2026-05-10 16:36:43] [INFO] root: [biz][referral] account_created user_id=29 account_id=38
+[2026-05-10 16:36:43] [INFO] root: [biz][referral] account_created user_id=29 account_id=39
+[2026-05-10 16:36:43] [INFO] root: [biz][referral] account_created user_id=29 account_id=40
+[2026-05-10 16:36:51] [INFO] root: [biz][billing] buy_traffic_requested user_id=29 gb=50
+[2026-05-10 16:36:51] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
+[2026-05-10 16:36:51] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
+[2026-05-10 16:36:51] [INFO] root: [biz][subscription] add_traffic_requested user_id=29 gb=50
+[2026-05-10 16:36:51] [INFO] root: [biz][subscription] add_traffic_completed user_id=29 subscription_id=18 gb=50
+[2026-05-10 16:36:51] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-10 16:36:51] [INFO] root: [biz][referral] account_created user_id=29 account_id=41
+[2026-05-10 16:36:56] [INFO] root: [biz][referral] account_created user_id=29 account_id=42
+[2026-05-10 16:36:56] [INFO] root: [biz][referral] account_created user_id=29 account_id=43
+[2026-05-10 16:36:57] [INFO] root: [biz][referral] account_created user_id=29 account_id=44
+[2026-05-10 16:37:20] [INFO] root: [biz][referral] account_created user_id=29 account_id=45
+[2026-05-10 16:37:24] [INFO] root: [biz][referral] account_created user_id=29 account_id=46
+[2026-05-10 16:37:42] [INFO] root: [biz][referral] account_created user_id=29 account_id=47
+[2026-05-10 16:37:42] [INFO] root: [biz][referral] account_created user_id=29 account_id=48
+[2026-05-10 16:37:42] [INFO] root: [biz][referral] account_created user_id=29 account_id=49
+[2026-05-10 16:37:42] [INFO] root: [biz][referral] account_created user_id=29 account_id=50
+[2026-05-10 16:37:45] [INFO] root: [biz][referral] account_created user_id=29 account_id=51
+[2026-05-10 16:38:52] [INFO] root: [biz][referral] account_created user_id=29 account_id=52
+[2026-05-10 16:39:42] [INFO] root: [biz][referral] account_created user_id=29 account_id=53
+[2026-05-10 16:44:22] [INFO] root: [biz][referral] account_created user_id=29 account_id=54

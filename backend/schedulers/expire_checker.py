@@ -107,9 +107,13 @@ async def expire_checker(bot):
 
             try:
                 if remnawave_service.enabled:
-                    await remnawave_service.delete_user_access(user=user, subscription=sub)
+                    await remnawave_service.sync_user_state(
+                        user=user,
+                        subscription=sub,
+                        status="EXPIRED",
+                    )
             except Exception as e:
-                logger.error("remnawave delete failed user_id=%s: %s", sub.user_id, e)
+                logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
 
             try:
                 await _notify_subscription_expired(bot, user.tg_id)

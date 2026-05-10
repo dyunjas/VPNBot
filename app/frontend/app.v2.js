@@ -75,6 +75,18 @@ function toast(text) {
   toast._t = setTimeout(() => toastEl.classList.remove("toast--show"), 2800);
 }
 
+function setButtonBusy(btn, busy, busyText = "Обработка...") {
+  if (!btn) return;
+  if (busy) {
+    btn.dataset.oldText = btn.textContent;
+    btn.textContent = busyText;
+    btn.disabled = true;
+    return;
+  }
+  btn.textContent = btn.dataset.oldText || btn.textContent;
+  btn.disabled = false;
+}
+
 function haptic(kind = "light") {
   try {
     if (kind === "success") tg?.HapticFeedback?.notificationOccurred("success");
@@ -273,7 +285,12 @@ async function loadStatus() {
   const daysLeft = calcDaysLeft(sub.current_period_end);
 
   $("sub-title").textContent = `Осталось дней: ${daysLeft}`;
-  $("sub-meta").textContent = `Действует до: ${formatDate(sub.current_period_end)}\nТрафик: Безлимит`;
+  const limitBytes = Number(data?.remnawave?.trafficLimitBytes || 0);
+  const usedBytes = Number(data?.remnawave?.usedTrafficBytes || 0);
+  const gb = (b) => Math.max(0, b / (1024 ** 3)).toFixed(1);
+  const limitText = limitBytes > 0 ? `${gb(limitBytes)} GB` : "Безлимит";
+  const usedText = limitBytes > 0 ? `${gb(usedBytes)} / ${limitText}` : "Безлимит";
+  $("sub-meta").textContent = `Действует до: ${formatDate(sub.current_period_end)}\nТрафик: ${usedText}`;
 
   state.subscriptionUrl = data.subscription_url || null;
   $("sub-link-wrap").style.display = state.subscriptionUrl ? "flex" : "none";
@@ -602,6 +619,37 @@ async function createTopup() {
   }
 }
 
+async function buyTraffic() {
+  const input = $("traffic-gb-input");
+  const hint = $("traffic-hint");
+  const btn = $("btn-buy-traffic");
+  const gb = Number((input?.value || "").trim());
+
+  if (!Number.isFinite(gb) || gb <= 0) {
+    const msg = "Введите количество ГБ больше 0";
+    if (hint) hint.textContent = msg;
+    return toast(msg);
+  }
+
+  setButtonBusy(btn, true, "Покупка...");
+  haptic();
+  try {
+    const data = await api("/mini/subscription/traffic/buy", { gb: Math.floor(gb) });
+    if (input) input.value = "";
+    const msg = `Добавлено ${data.gb_added} ГБ, списано ${data.charged} ₽`;
+    if (hint) hint.textContent = msg;
+    toast(msg);
+    haptic("success");
+    await Promise.all([loadStatus(), loadProfile()]);
+  } catch (e) {
+    if (hint) hint.textContent = e.message;
+    toast(e.message);
+    haptic("error");
+  } finally {
+    setButtonBusy(btn, false);
+  }
+}
+
 async function checkPayments() {
   haptic();
   try {
@@ -644,6 +692,7 @@ function initEvents() {
   });
 
   $("promo-apply")?.addEventListener("click", applyPromocode);
+  $("btn-buy-traffic")?.addEventListener("click", buyTraffic);
   $("topup-pay")?.addEventListener("click", createTopup);
   $("btn-check-payments")?.addEventListener("click", checkPayments);
   $("btn-refresh-tx")?.addEventListener("click", loadTransactions);
