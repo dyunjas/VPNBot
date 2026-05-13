@@ -367,3 +367,20 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-05-10 16:36:51] [INFO] root: [biz][billing] charge_balance_requested user_id=29 amount=150
 [2026-05-10 16:36:51] [INFO] root: [biz][billing] charge_balance_completed user_id=29 amount=150
 [2026-05-10 16:36:51] [INFO] root: [biz][billing] buy_traffic_completed user_id=29 subscription_id=18 gb=50 charged=150
+[2026-05-13 23:55:30] [INFO] root: [biz][billing] platega_confirm_requested provider_id=b7879d9d-ad77-4685-82f2-30d2ece6045b
+[2026-05-13 23:55:41] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-05-13 23:55:41] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=1910762
+[2026-05-13 23:55:42] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:42] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910761
+[2026-05-13 23:55:44] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:44] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910759
+[2026-05-13 23:55:46] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:46] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910757
+[2026-05-13 23:55:46] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:46] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910757
+[2026-05-13 23:55:47] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-13 23:55:47] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=1910756
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=2
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=6
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=6
+[2026-05-13 23:55:55] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6

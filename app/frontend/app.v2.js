@@ -87,6 +87,15 @@ function setButtonBusy(btn, busy, busyText = "Обработка...") {
   btn.disabled = false;
 }
 
+async function flashButtonDone(btn, baseText, doneText = "Обновлено") {
+  if (!btn) return;
+  btn.classList.add("btn--done");
+  btn.textContent = `✓ ${doneText}`;
+  await sleep(1100);
+  btn.classList.remove("btn--done");
+  btn.textContent = baseText;
+}
+
 function haptic(kind = "light") {
   try {
     if (kind === "success") tg?.HapticFeedback?.notificationOccurred("success");
@@ -695,7 +704,25 @@ function initEvents() {
   $("btn-buy-traffic")?.addEventListener("click", buyTraffic);
   $("topup-pay")?.addEventListener("click", createTopup);
   $("btn-check-payments")?.addEventListener("click", checkPayments);
-  $("btn-refresh-tx")?.addEventListener("click", loadTransactions);
+  $("btn-refresh-tx")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const baseText = btn?.textContent || "Обновить";
+    setButtonBusy(btn, true, "Обновляем...");
+    haptic();
+    try {
+      await loadTransactions();
+      haptic("success");
+      await flashButtonDone(btn, baseText);
+    } catch {
+      toast("Не удалось обновить транзакции");
+      haptic("error");
+      setButtonBusy(btn, false);
+    } finally {
+      if (btn && !btn.classList.contains("btn--done")) {
+        setButtonBusy(btn, false);
+      }
+    }
+  });
   $("btn-more-tx")?.addEventListener("click", () => {
     state.txVisible += 10;
     renderTransactions(state.transactions);

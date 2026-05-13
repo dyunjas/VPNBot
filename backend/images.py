@@ -1,1 +1,1 @@
-MAIN_MENU_IMG = "https://s3.twcstorage.ru/c15334c8-5ea901f2-11fd-44d8-8089-115a8d0a7d27/LUNET_VPN/main_menu_spring"
+MAIN_MENU_IMG = "https://i.ibb.co/yFdmXk96/3042790b-7f69-41d5-9f21-601d8b60bc45.png"

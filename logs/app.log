@@ -10827,3 +10827,418 @@ aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedEr
 [2026-05-10 17:09:28] [INFO] root: Bot polling cancelled
 [2026-05-10 17:09:28] [INFO] root: Bot stopped
 [2026-05-10 17:09:28] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:09:05] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:09:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:09:08] [INFO] root: Database tables initialized
+[2026-05-13 23:09:08] [INFO] root: Database connection successful
+[2026-05-13 23:09:08] [INFO] root: Bot started
+[2026-05-13 23:09:08] [INFO] aiogram.dispatcher: Start polling
+[2026-05-13 23:09:08] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-05-13 23:09:08] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:09:15] [ERROR] root: notify expired failed tg_id=6851909324: Telegram server says - Bad Request: failed to get HTTP URL content
+[2026-05-13 23:09:20] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 40, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 49, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\main_menu\main_menu.py", line 72, in start_cmd
+    await message.answer_photo(
+    ...<3 lines>...
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+        bot=bot,
+    ...<2 lines>...
+        content=raw_result,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: wrong type of the web page content
+[2026-05-13 23:09:21] [INFO] aiogram.event: Update id=891135792 is handled. Duration 261 ms by bot id=7557954606
+[2026-05-13 23:10:18] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-13 23:10:18] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-13 23:10:18] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:10:18] [INFO] root: Bot polling cancelled
+[2026-05-13 23:10:18] [INFO] root: Bot stopped
+[2026-05-13 23:10:18] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:10:23] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:10:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:10:24] [INFO] root: Database tables initialized
+[2026-05-13 23:10:24] [INFO] root: Database connection successful
+[2026-05-13 23:10:24] [INFO] root: Bot started
+[2026-05-13 23:10:24] [INFO] aiogram.dispatcher: Start polling
+[2026-05-13 23:10:25] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:10:41] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 40, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 49, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\main_menu\main_menu.py", line 72, in start_cmd
+    await message.answer_photo(
+    ...<3 lines>...
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+        bot=bot,
+    ...<2 lines>...
+        content=raw_result,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: failed to get HTTP URL content
+[2026-05-13 23:10:41] [INFO] aiogram.event: Update id=891135793 is handled. Duration 5739 ms by bot id=7557954606
+[2026-05-13 23:13:37] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-13 23:13:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-13 23:13:37] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:13:38] [INFO] root: Bot polling cancelled
+[2026-05-13 23:13:38] [INFO] root: Bot stopped
+[2026-05-13 23:13:38] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:13:42] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:13:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:13:43] [INFO] root: Database tables initialized
+[2026-05-13 23:13:43] [INFO] root: Database connection successful
+[2026-05-13 23:13:43] [INFO] root: Bot started
+[2026-05-13 23:13:43] [INFO] aiogram.dispatcher: Start polling
+[2026-05-13 23:13:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:13:51] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 40, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 49, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\main_menu\main_menu.py", line 72, in start_cmd
+    await message.answer_photo(
+    ...<3 lines>...
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+        bot=bot,
+    ...<2 lines>...
+        content=raw_result,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: invalid file HTTP URL specified: Disallowed character in URL host
+[2026-05-13 23:13:51] [INFO] aiogram.event: Update id=891135794 is handled. Duration 712 ms by bot id=7557954606
+[2026-05-13 23:14:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-13 23:14:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-13 23:14:50] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:14:50] [INFO] root: Bot polling cancelled
+[2026-05-13 23:14:50] [INFO] root: Bot stopped
+[2026-05-13 23:14:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:14:56] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:14:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:14:57] [INFO] root: Database tables initialized
+[2026-05-13 23:14:57] [INFO] root: Database connection successful
+[2026-05-13 23:14:57] [INFO] root: Bot started
+[2026-05-13 23:14:57] [INFO] aiogram.dispatcher: Start polling
+[2026-05-13 23:14:57] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:15:02] [INFO] aiogram.event: Update id=891135795 is handled. Duration 1687 ms by bot id=7557954606
+[2026-05-13 23:15:11] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 40, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 49, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\information\information.py", line 21, in information_clb
+    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=_build_information_text())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for InputMediaPhoto
+media.str
+  Input should be a valid string [type=string_type, input_value=WindowsPath('C:/Users/dyu...-9f21-601d8b60bc45.png'), input_type=WindowsPath]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+media.is-instance[InputFile]
+  Input should be an instance of InputFile [type=is_instance_of, input_value=WindowsPath('C:/Users/dyu...-9f21-601d8b60bc45.png'), input_type=WindowsPath]
+    For further information visit https://errors.pydantic.dev/2.11/v/is_instance_of
+[2026-05-13 23:15:11] [INFO] aiogram.event: Update id=891135796 is handled. Duration 47 ms by bot id=7557954606
+[2026-05-13 23:17:39] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-13 23:17:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-13 23:17:39] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:17:39] [INFO] root: Bot polling cancelled
+[2026-05-13 23:17:39] [INFO] root: Bot stopped
+[2026-05-13 23:17:39] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:17:44] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:17:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:17:44] [INFO] root: Database tables initialized
+[2026-05-13 23:17:45] [INFO] root: Database connection successful
+[2026-05-13 23:17:45] [INFO] root: Bot started
+[2026-05-13 23:17:45] [INFO] aiogram.dispatcher: Start polling
+[2026-05-13 23:17:45] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-13 23:17:49] [INFO] aiogram.event: Update id=891135797 is handled. Duration 2231 ms by bot id=7557954606
+[2026-05-13 23:18:18] [INFO] aiogram.event: Update id=891135798 is handled. Duration 254 ms by bot id=7557954606
+[2026-05-13 23:18:20] [INFO] aiogram.event: Update id=891135799 is handled. Duration 218 ms by bot id=7557954606
+[2026-05-13 23:18:22] [INFO] aiogram.event: Update id=891135800 is handled. Duration 214 ms by bot id=7557954606
+[2026-05-13 23:18:22] [INFO] aiogram.event: Update id=891135801 is handled. Duration 208 ms by bot id=7557954606
+[2026-05-13 23:18:23] [INFO] aiogram.event: Update id=891135802 is handled. Duration 259 ms by bot id=7557954606
+[2026-05-13 23:18:25] [INFO] aiogram.event: Update id=891135803 is handled. Duration 218 ms by bot id=7557954606
+[2026-05-13 23:18:27] [INFO] aiogram.event: Update id=891135804 is handled. Duration 478 ms by bot id=7557954606
+[2026-05-13 23:21:06] [INFO] aiogram.event: Update id=891135805 is handled. Duration 135 ms by bot id=7557954606
+[2026-05-13 23:21:10] [INFO] aiogram.event: Update id=891135806 is handled. Duration 313 ms by bot id=7557954606
+[2026-05-13 23:21:11] [INFO] aiogram.event: Update id=891135807 is handled. Duration 225 ms by bot id=7557954606
+[2026-05-13 23:30:51] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:30:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:30:51] [INFO] root: Database tables initialized
+[2026-05-13 23:30:51] [INFO] root: Database connection successful
+[2026-05-13 23:31:17] [INFO] aiogram.event: Update id=891135808 is not handled. Duration 74 ms by bot id=7557954606
+[2026-05-13 23:35:48] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-13 23:35:52] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-13 23:47:23] [ERROR] aiogram.dispatcher: Failed to fetch updates - IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+[2026-05-13 23:47:23] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:47:36] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-05-13 23:51:42] [INFO] root: Settings successfully loaded from .env
+[2026-05-13 23:51:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-13 23:51:42] [INFO] root: Database tables initialized
+[2026-05-13 23:51:42] [INFO] root: Database connection successful
+[2026-05-13 23:52:23] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-05-13 23:52:23] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-13 23:52:34] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-05-13 23:55:30] [INFO] root: [biz][billing] platega_confirm_requested provider_id=b7879d9d-ad77-4685-82f2-30d2ece6045b
+[2026-05-13 23:55:41] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-05-13 23:55:41] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=1910762
+[2026-05-13 23:55:42] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:42] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910761
+[2026-05-13 23:55:44] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:44] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910759
+[2026-05-13 23:55:46] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:46] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910757
+[2026-05-13 23:55:46] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-13 23:55:46] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=1910757
+[2026-05-13 23:55:47] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-13 23:55:47] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=1910756
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=2
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=6
+[2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=6
+[2026-05-13 23:55:54] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=2
+[2026-05-13 23:55:54] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2
+[2026-05-13 23:55:55] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6
+[2026-05-13 23:59:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18

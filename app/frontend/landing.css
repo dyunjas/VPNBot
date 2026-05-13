@@ -1,15 +1,20 @@
 :root {
-  --bg: #f7f9f6;
-  --bg2: #edf4f7;
-  --line: #d8e7dc;
-  --line-soft: rgba(110, 174, 142, 0.24);
-  --text: #1f314d;
-  --muted: #5f7698;
-  --accent: #5cae9b;
-  --accent-2: #8ec9bc;
+  --sky-top: #7ec8ff;
+  --sky-mid: #bfe9ff;
+  --sun-warm: #ffe9aa;
+  --grass-1: #91c63b;
+  --grass-2: #5d9825;
+  --leaf-deep: #2f6f17;
+  --leaf-mid: #4e9728;
+  --line: rgba(59, 112, 26, 0.28);
+  --line-soft: rgba(62, 125, 27, 0.2);
+  --text: #183114;
+  --muted: #4a6b37;
+  --accent: #3d7f18;
+  --accent-2: #5fa42f;
   --radius-lg: 24px;
   --radius-md: 17px;
-  --shadow: 0 10px 22px rgba(49, 99, 110, 0.12);
+  --shadow: 0 14px 34px rgba(30, 74, 16, 0.16);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -19,9 +24,8 @@ body {
   color: var(--text);
   min-height: 100vh;
   background:
-    radial-gradient(540px 280px at 10% -2%, rgba(211, 225, 196, 0.32), transparent 72%),
-    radial-gradient(640px 320px at 90% 6%, rgba(175, 210, 218, 0.24), transparent 74%),
-    linear-gradient(180deg, var(--bg), var(--bg2));
+    radial-gradient(900px 420px at 50% 44%, rgba(255, 237, 177, 0.9), rgba(255, 237, 177, 0) 64%),
+    linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 38%, #f6f3d6 58%, #a8cf4f 82%, #7dae32 100%);
   overflow-x: hidden;
 }
 
@@ -34,16 +38,21 @@ body::after {
   z-index: 0;
 }
 
+/* Fallback canopy without external images */
 body::before {
-  opacity: 0.16;
-  background: url("/miniapp/assets/palm.png") no-repeat 2% 7% / 140px;
+  opacity: 0.9;
+  background:
+    radial-gradient(220px 100px at 9% -2%, rgba(53, 119, 19, .92), transparent 78%),
+    radial-gradient(240px 120px at 92% 0%, rgba(46, 108, 17, .95), transparent 76%),
+    radial-gradient(160px 88px at -2% 17%, rgba(78, 144, 36, .82), transparent 80%),
+    radial-gradient(180px 96px at 102% 15%, rgba(78, 144, 36, .8), transparent 80%);
 }
 
+/* Detail layer without moon imitation */
 body::after {
-  opacity: 0.12;
   background:
-    url("/miniapp/assets/coconut.png") no-repeat 7% 92% / 74px,
-    url("/miniapp/assets/coconut.png") no-repeat 94% 84% / 60px;
+    radial-gradient(960px 180px at 50% 100%, rgba(97, 156, 39, .5), transparent 74%);
+  opacity: 0.6;
 }
 
 .noise, .orb { display: none; }
@@ -60,10 +69,11 @@ body::after {
 .plan,
 .step,
 .faq details {
-  background: #fff;
+  background: rgba(248, 255, 236, 0.88);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
 }
 
 .nav {
@@ -78,7 +88,7 @@ body::after {
 }
 
 .logo { display: flex; align-items: center; gap: 10px; }
-.logo img { width: 44px; height: 44px; object-fit: contain; }
+.logo img { width: 44px; height: 44px; object-fit: contain; border-radius: 50%; border: 1px solid var(--line-soft); background: rgba(255,255,240,.8); }
 .logo-title { font-weight: 800; font-size: 18px; }
 .logo-sub { color: var(--muted); font-size: 12px; }
 
@@ -100,14 +110,14 @@ body::after {
 .nav nav a:hover {
   color: var(--text);
   border-color: var(--line-soft);
-  background: #eef6f4;
+  background: rgba(230, 244, 205, 0.9);
 }
 
 .btn {
-  border: 1px solid rgba(92, 174, 155, 0.34);
+  border: 1px solid rgba(51, 108, 20, 0.38);
   border-radius: 12px;
-  background: linear-gradient(160deg, #f9fcfb, #e7f1ef);
-  color: #1f3955;
+  background: linear-gradient(160deg, #f1fadf, #d9efb4);
+  color: #214013;
   min-height: 40px;
   padding: 0 14px;
   font-weight: 700;
@@ -118,15 +128,15 @@ body::after {
   transition: .18s ease;
 }
 .btn:hover {
-  border-color: rgba(92, 174, 155, 0.54);
-  background: linear-gradient(160deg, #f7fbfa, #dfeceb);
+  border-color: rgba(51, 108, 20, 0.6);
+  background: linear-gradient(160deg, #edf8d8, #cde89b);
 }
 .btn.solid {
   color: #fff;
-  border-color: rgba(92, 174, 155, 0.58);
-  background: linear-gradient(160deg, var(--accent), var(--accent-2));
+  border-color: rgba(43, 97, 17, 0.64);
+  background: linear-gradient(160deg, var(--accent-2), var(--accent));
 }
-.btn.ghost { background: #fff; }
+.btn.ghost { background: rgba(246, 255, 234, 0.9); }
 
 .hero {
   margin-top: 12px;
@@ -163,7 +173,7 @@ h1 {
 .hero-stat {
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-md);
-  background: #f4f8f6;
+  background: rgba(243, 255, 221, 0.9);
   padding: 12px;
 }
 .hero-stat span { display: block; color: var(--muted); font-size: 12px; }
@@ -190,8 +200,8 @@ h1 {
 .plan h3 { margin: 0; font-size: 38px; line-height: 1; }
 .plan span { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 .plan.hot {
-  border-color: rgba(146, 173, 235, 0.52);
-  box-shadow: 0 14px 28px rgba(111, 158, 255, 0.18);
+  border-color: rgba(70, 133, 30, 0.52);
+  box-shadow: 0 14px 28px rgba(71, 134, 31, 0.22);
 }
 
 .steps {
@@ -199,9 +209,7 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
-.step {
-  padding: 14px;
-}
+.step { padding: 14px; }
 .step b {
   width: 30px;
   height: 30px;
@@ -209,7 +217,7 @@ h1 {
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  background: linear-gradient(160deg, var(--accent), var(--accent-2));
+  background: linear-gradient(160deg, var(--accent-2), var(--accent));
 }
 .step h3 { margin: 10px 0 8px; }
 .step p { margin: 0; color: var(--muted); line-height: 1.4; }
@@ -218,8 +226,8 @@ h1 {
   display: block;
   border: 1px solid var(--line-soft);
   border-radius: 14px;
-  background: #fff;
-  color: #264878;
+  background: rgba(253, 255, 247, 0.95);
+  color: #325117;
   padding: 10px;
   word-break: break-word;
 }
@@ -244,6 +252,3 @@ h1 {
   .hero-actions { flex-direction: column; }
   .btn { width: 100%; }
 }
-
-
-
