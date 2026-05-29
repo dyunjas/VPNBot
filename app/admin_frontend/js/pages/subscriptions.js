@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <table>
               <thead>
                 <tr>
-                  <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Устройства</th><th>Окончание</th><th>Действия</th>
+                  <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Окончание</th><th>Действия</th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
@@ -99,7 +99,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${s.plan_name || s.plan_id}</td>
         <td>${statusBadge(s.status)}</td>
         <td>${s.auto_renew ? "Да" : "Нет"}</td>
-        <td>${s.devices_left}/${s.devices_limit}</td>
         <td>${formatDateTime(s.current_period_end)}</td>
         <td class="row-actions">
           <button data-edit="${s.id}">Изменить</button>

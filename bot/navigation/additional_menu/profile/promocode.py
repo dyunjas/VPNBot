@@ -1,21 +1,18 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InputMediaPhoto
-
+﻿from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-
-from backend.states import PromocodeStates
-
-from backend.images import MAIN_MENU_IMG, MAIN_MENU_IMG
-
-from bot.navigation.additional_menu.profile.keyboards import promocode_kb
-
-from backend.services import UserService, PromoService
-from backend.services.exceptions import (
-    UserNotFound, PromocodeExhausted, 
-    PromocodeAlreadyUsed, PromocodeNotFound
-    )
+from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 
 from backend.core.logger_config import logger
+from backend.images import MAIN_MENU_IMG
+from backend.services import PromoService, UserService
+from backend.services.exceptions import (
+    PromocodeAlreadyUsed,
+    PromocodeExhausted,
+    PromocodeNotFound,
+    UserNotFound,
+)
+from backend.states import PromocodeStates
+from bot.navigation.additional_menu.profile.keyboards import promocode_kb
 
 
 router = Router()
@@ -23,19 +20,11 @@ router = Router()
 
 @router.callback_query(F.data == "activate_promocode")
 async def enter_promocode_clb(callback: CallbackQuery, state: FSMContext):
-    text = "Введите промокод:"
-    
-    content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
-        caption=text
-    )
-
-    await callback.message.edit_media(
-        media=content,
-        reply_markup=promocode_kb()
-    )
+    content = InputMediaPhoto(media=MAIN_MENU_IMG, caption="Введите промокод:")
+    await callback.message.edit_media(media=content, reply_markup=promocode_kb())
     await state.set_state(PromocodeStates.waiting_for_code)
     await callback.answer()
+
 
 @router.message(PromocodeStates.waiting_for_code)
 async def process_promocode_clb(
@@ -57,10 +46,7 @@ async def process_promocode_clb(
         return
 
     try:
-        promo = await promo_service.activate_promocode(
-            user_id=user.id,
-            code=code,
-        )
+        promo = await promo_service.activate_promocode(user_id=user.id, code=code)
     except PromocodeNotFound:
         text = "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Промокод не найден."
     except PromocodeAlreadyUsed:
@@ -76,14 +62,9 @@ async def process_promocode_clb(
         return
     else:
         text = (
-            "<tg-emoji emoji-id='5825794181183836432'>✔️</tg-emoji> <b>Промокод активирован!</b>\n\n"
+            "<tg-emoji emoji-id='5825794181183836432'>✅</tg-emoji> <b>Промокод активирован!</b>\n\n"
             f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс пополнен на <b>{promo.amount} RUB</b>."
         )
 
-    await message.answer_photo(
-        photo=MAIN_MENU_IMG,
-        caption=text,
-        reply_markup=promocode_kb(),
-    )
-
+    await message.answer_photo(photo=MAIN_MENU_IMG, caption=text, reply_markup=promocode_kb())
     await state.clear()

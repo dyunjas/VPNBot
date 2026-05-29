@@ -1,7 +1,8 @@
+import os
 from aiogram.types import WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-MINIAPP_URL = "https://7462-31-13-208-190.ngrok-free.app/miniapp/"
+MINIAPP_URL = os.getenv("MINIAPP_URL", "https://miniapp.lunetpn.ru/miniapp/")
 
 
 def main_menu_kb():

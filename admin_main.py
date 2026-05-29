@@ -21,6 +21,7 @@ app = FastAPI(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ADMIN_FRONTEND_DIR = os.path.join(BASE_DIR, "app", "admin_frontend")
+FRONTEND_DIR = os.path.join(BASE_DIR, "app", "frontend")
 print("ADMIN_FRONTEND_DIR:", ADMIN_FRONTEND_DIR)
 
 @app.get("/admin")
@@ -71,11 +72,6 @@ async def admin_withdrawals():
 @app.get("/admin/referrals")
 async def admin_referrals():
     return _admin_page("referrals")
-
-
-@app.get("/admin/servers")
-async def admin_servers():
-    return _admin_page("servers")
 
 
 @app.get("/admin/broadcast")
@@ -131,11 +127,6 @@ async def admin_referrals_html():
     return RedirectResponse(url="/admin/referrals", status_code=307)
 
 
-@app.get("/admin/servers.html")
-async def admin_servers_html():
-    return RedirectResponse(url="/admin/servers", status_code=307)
-
-
 @app.get("/admin/broadcast.html")
 async def admin_broadcast_html():
     return RedirectResponse(url="/admin/broadcast", status_code=307)
@@ -150,6 +141,7 @@ async def admin_promocodes_html():
 
 
 app.mount("/admin", StaticFiles(directory=ADMIN_FRONTEND_DIR, html=False), name="admin")
+app.mount("/miniapp", StaticFiles(directory=FRONTEND_DIR, html=False), name="miniapp_static")
 app.include_router(admin_router)
 
 

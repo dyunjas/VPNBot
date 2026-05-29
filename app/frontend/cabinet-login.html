@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Вход в кабинет</title>
+  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=6" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <h1>Вход в кабинет</h1>
+      <p class="subtitle">Выберите способ входа.</p>
+
+      <div class="auth-switch" role="tablist" aria-label="Способ входа">
+        <button id="tab_email" class="tab is-active" type="button" role="tab" aria-selected="true">Код на email</button>
+        <button id="tab_telegram" class="tab" type="button" role="tab" aria-selected="false">Код в Telegram</button>
+      </div>
+
+      <form id="form_email" class="auth-form" autocomplete="on">
+        <div class="auth-step">
+          <div class="step-title">Шаг 1. Получить код на email</div>
+          <label class="field">
+            <span>Email</span>
+            <input id="email" type="email" placeholder="user@example.com" required />
+          </label>
+          <div class="actions">
+            <button id="send_email_code" class="btn" type="button">Отправить код</button>
+          </div>
+        </div>
+
+        <div id="email_verify_block" class="auth-step is-hidden">
+          <div class="step-title">Шаг 2. Введите код из письма</div>
+          <label class="field">
+            <span>Код</span>
+            <input id="email_code" type="text" placeholder="Введите код" required />
+          </label>
+          <div class="actions">
+            <button id="verify_email" class="btn" type="button">Войти по email</button>
+          </div>
+        </div>
+      </form>
+
+      <form id="form_telegram" class="auth-form is-hidden" autocomplete="off">
+        <div class="auth-step">
+          <div class="step-title">Шаг 1. Получить код в Telegram</div>
+          <label class="field">
+            <span>Telegram ID</span>
+            <input id="tg_id" type="text" inputmode="numeric" placeholder="Например: 123456789" required />
+          </label>
+          <div class="actions">
+            <button id="send_tg_code" class="btn" type="button">Отправить код в Telegram</button>
+          </div>
+        </div>
+
+        <div id="tg_verify_block" class="auth-step is-hidden">
+          <div class="step-title">Шаг 2. Введите код из Telegram</div>
+          <label class="field">
+            <span>Код</span>
+            <input id="tg_code" type="text" placeholder="Введите код" required />
+          </label>
+          <div class="actions">
+            <button id="verify_tg" class="btn" type="button">Войти по Telegram</button>
+          </div>
+        </div>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  __API_BOOTSTRAP__
+  <script src="/miniapp/cabinet-login.js?v=3"></script>
+</body>
+</html>

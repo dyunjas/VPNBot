@@ -384,3 +384,70 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=6
 [2026-05-13 23:55:54] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=6
 [2026-05-13 23:55:55] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6
+[2026-05-28 21:19:29] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=11
+[2026-05-28 21:19:29] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f amount=50.0
+[2026-05-28 21:19:33] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 21:19:33] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=PENDING
+[2026-05-28 21:41:30] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:30] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622813
+[2026-05-28 21:41:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622810
+[2026-05-28 21:41:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622810
+[2026-05-28 21:47:41] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 21:47:41] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=PENDING
+[2026-05-28 22:13:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 22:13:25] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-28 22:13:32] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 22:13:32] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=4
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=12
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=12
+[2026-05-28 22:49:30] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=4 charged=12
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=5
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=15
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=15
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=5 charged=15
+[2026-05-28 23:07:34] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-05-28 23:07:34] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=617649
+[2026-05-28 23:07:37] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 23:07:37] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=617646
+[2026-05-28 23:39:53] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-28 23:39:53] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=615710
+[2026-05-28 23:40:46] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=20.0 ttl=600
+[2026-05-28 23:40:47] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-28 23:40:47] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=50
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=150
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=150
+[2026-05-29 14:16:57] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=50 charged=150
+[2026-05-29 14:17:04] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=1080
+[2026-05-29 14:17:04] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=3240
+[2026-05-29 14:17:04] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=36 balance=1690 required=3240
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=10
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=30
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=30
+[2026-05-29 14:17:09] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=10 charged=30
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=2
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=6
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=6
+[2026-05-29 14:21:21] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6
+[2026-05-29 15:40:09] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 15:40:10] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 15:42:10] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-29 15:42:10] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=557973
+[2026-05-29 16:17:41] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=10.0 ttl=600
+[2026-05-29 16:17:43] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-29 16:17:43] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-29 16:17:47] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=10.0 payment_method=2
+[2026-05-29 16:17:47] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=988117f4-185e-4232-88b5-eead4dad4ac5 amount=10.0
+[2026-05-29 16:18:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=988117f4-185e-4232-88b5-eead4dad4ac5
+[2026-05-29 16:18:25] [INFO] root: [biz][billing] platega_confirmed provider_id=988117f4-185e-4232-88b5-eead4dad4ac5 user_id=36 amount=10
+[2026-05-29 16:57:56] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 16:57:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:58] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 16:57:58] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 17:45:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-29 17:45:09] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=550594

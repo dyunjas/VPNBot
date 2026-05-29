@@ -1126,3 +1126,13 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-05-13 23:09:08] [INFO] root: [biz][subscription] marked_expired subscription_id=18
 [2026-05-13 23:55:54] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=2
 [2026-05-13 23:55:54] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2
+[2026-05-28 22:49:29] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=4
+[2026-05-28 22:49:29] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=4
+[2026-05-28 22:50:01] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=5
+[2026-05-28 22:50:01] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=5
+[2026-05-29 14:16:56] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=50
+[2026-05-29 14:16:56] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=50
+[2026-05-29 14:17:08] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=10
+[2026-05-29 14:17:08] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=10
+[2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=2
+[2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2

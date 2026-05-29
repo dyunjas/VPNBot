@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     DB_POOL_RECYCLE: int = 1800
     DB_COMMAND_TIMEOUT: int = 20
     BOT_PROXY: str
+    SMTP_HOST: str | None = None
+    SMTP_PORT: int = 587
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+    SMTP_FROM_EMAIL: str | None = None
 
     class Config:
         env_file = ".env"

@@ -1,0 +1,86 @@
+{
+  "admin_api": {
+    "base_path": "/admin-api",
+    "auth": "Authorization: Bearer <admin_access_token>",
+    "endpoints": [
+      {"method":"POST","path":"/auth/login","request":{"login":"string","password":"string"},"response_keys":["ok","access_token","token_type"]},
+      {"method":"GET","path":"/auth/me","response_keys":["ok","login","scope"]},
+      {"method":"GET","path":"/health","response_keys":["ok","service"]},
+      {"method":"GET","path":"/stats","response_keys":["ok","stats"]},
+      {"method":"GET","path":"/users","response_keys":["ok","items","meta"]},
+      {"method":"GET","path":"/users/{user_id}","response_keys":["ok","user","subscription","keys","devices","transactions"]},
+      {"method":"POST","path":"/users/{user_id}/action","request":{"action":"ban|unban|add_balance|sub_balance","amount":"int?"},"response_keys":["ok","action","balance?"]},
+      {"method":"GET","path":"/subscriptions","response_keys":["ok","items","meta"]},
+      {"method":"POST","path":"/subscriptions","request":{"user_id":"int","plan_id":"int","auto_renew":"bool"},"response_keys":["ok","subscription_id"]},
+      {"method":"PATCH","path":"/subscriptions/{subscription_id}","request":{"plan_id":"int?","status":"active|past_due|expired|canceled?","auto_renew":"bool?","extend_days":"int?","current_period_end":"datetime?"},"response_keys":["ok"]},
+      {"method":"DELETE","path":"/subscriptions/{subscription_id}","response_keys":["ok"]},
+      {"method":"GET","path":"/plans","response_keys":["ok","items"]},
+      {"method":"POST","path":"/plans","request":{"name":"string","price":"int","period_days":"int","gb_limit":"int"},"response_keys":["ok","plan_id"]},
+      {"method":"PATCH","path":"/plans/{plan_id}","response_keys":["ok"]},
+      {"method":"DELETE","path":"/plans/{plan_id}","response_keys":["ok"]},
+      {"method":"GET","path":"/transactions","response_keys":["ok","items","meta"]},
+      {"method":"GET","path":"/withdrawals","response_keys":["ok","items","meta"]},
+      {"method":"POST","path":"/withdrawals/{withdrawal_id}/{action}","request":{"action":"approve|reject"},"response_keys":["ok","status"]},
+      {"method":"GET","path":"/referrals","response_keys":["ok","items","meta"]},
+      {"method":"PATCH","path":"/referrals/{account_id}","query":{"referral_percent":"int?","referral_balance":"int?"},"response_keys":["ok","account"]},
+      {"method":"GET","path":"/promocodes","response_keys":["ok","items"]},
+      {"method":"POST","path":"/promocodes","request":{"code":"string","amount":"int","usages":"int"},"response_keys":["ok","promocode_id"]},
+      {"method":"DELETE","path":"/promocodes/{promocode_id}","response_keys":["ok"]},
+      {"method":"GET","path":"/logs","response_keys":["ok","items"]},
+      {"method":"GET","path":"/logs/{filename}/download","response_type":"file"},
+      {"method":"POST","path":"/broadcast/upload","request":"multipart/form-data(text, parse_mode, include_banned, image?)","response_keys":["ok","job_id","status_url"]},
+      {"method":"GET","path":"/broadcast/jobs/{job_id}","response_keys":["ok","job"]}
+    ],
+    "global_errors": [400,401,403,404,409,422,500]
+  },
+  "mini_api": {
+    "base_path": "/mini",
+    "auth": "initData in POST payload",
+    "endpoints": [
+      {"method":"POST","path":"/profile"},
+      {"method":"POST","path":"/status"},
+      {"method":"POST","path":"/setup"},
+      {"method":"POST","path":"/referral"},
+      {"method":"POST","path":"/plans"},
+      {"method":"POST","path":"/subscription/buy"},
+      {"method":"POST","path":"/subscription/traffic/buy"},
+      {"method":"POST","path":"/promocode/apply"},
+      {"method":"POST","path":"/balance/topup"},
+      {"method":"POST","path":"/balance/check"},
+      {"method":"POST","path":"/devices"},
+      {"method":"POST","path":"/device/delete"},
+      {"method":"POST","path":"/referral/info"},
+      {"method":"POST","path":"/referral/withdraw"},
+      {"method":"POST","path":"/referral/withdrawals"}
+    ],
+    "global_errors": [400,401,402,403,404,409,500]
+  },
+  "cabinet_api": {
+    "base_path": "/cabinet-api",
+    "auth": "Authorization: Bearer <cabinet_access_token>",
+    "auth_endpoints": [
+      {"method":"POST","path":"/auth/register","request":{"email":"string","tg_id":"int(required in current schema)"}},
+      {"method":"POST","path":"/auth/send-email-code","request":{"email":"string"}},
+      {"method":"POST","path":"/auth/send-telegram-code","request":{"tg_id":"int"}},
+      {"method":"POST","path":"/auth/verify-code","request":{"channel":"email|telegram","email":"string?","tg_id":"int?","code":"string"}},
+      {"method":"POST","path":"/auth/refresh","request":"uses httpOnly refresh cookie"},
+      {"method":"POST","path":"/auth/logout","request":"clears refresh cookie"},
+      {"method":"GET","path":"/auth/me"}
+    ],
+    "cabinet_feature_endpoints": [
+      {"method":"POST","path":"/profile"},
+      {"method":"POST","path":"/status"},
+      {"method":"POST","path":"/plans"},
+      {"method":"POST","path":"/subscription/buy"},
+      {"method":"POST","path":"/subscription/traffic/buy"},
+      {"method":"POST","path":"/devices"},
+      {"method":"POST","path":"/device/delete"},
+      {"method":"POST","path":"/promocode/apply"},
+      {"method":"POST","path":"/balance/topup"},
+      {"method":"POST","path":"/balance/check"},
+      {"method":"POST","path":"/referral/info"},
+      {"method":"POST","path":"/referral/withdraw"},
+      {"method":"POST","path":"/referral/withdrawals"}
+    ]
+  }
+}

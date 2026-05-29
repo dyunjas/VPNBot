@@ -22286,3 +22286,573 @@ media.is-instance[InputFile]
 [2026-05-13 23:55:54] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2
 [2026-05-13 23:55:55] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6
 [2026-05-13 23:59:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-14 00:05:00] [INFO] root: Settings successfully loaded from .env
+[2026-05-14 00:05:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-14 00:05:00] [INFO] root: Database tables initialized
+[2026-05-14 00:05:00] [INFO] root: Database connection successful
+[2026-05-24 22:03:41] [INFO] root: Settings successfully loaded from .env
+[2026-05-24 22:03:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-24 22:03:43] [INFO] root: Database tables initialized
+[2026-05-24 22:03:43] [INFO] root: Database connection successful
+[2026-05-28 21:04:30] [INFO] root: Settings successfully loaded from .env
+[2026-05-28 21:04:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-28 21:04:32] [INFO] root: Database tables initialized
+[2026-05-28 21:04:32] [INFO] root: Database connection successful
+[2026-05-28 21:07:26] [INFO] root: Settings successfully loaded from .env
+[2026-05-28 21:07:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-28 21:07:26] [INFO] root: Database tables initialized
+[2026-05-28 21:07:26] [INFO] root: Database connection successful
+[2026-05-28 21:07:47] [ERROR] asyncio: Exception in callback _ProactorBasePipeTransport._call_connection_lost()
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost()>
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-05-28 21:16:16] [INFO] root: Settings successfully loaded from .env
+[2026-05-28 21:16:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-28 21:16:17] [INFO] root: Database tables initialized
+[2026-05-28 21:16:17] [INFO] root: Database connection successful
+[2026-05-28 21:16:17] [INFO] root: Bot started
+[2026-05-28 21:16:17] [INFO] aiogram.dispatcher: Start polling
+[2026-05-28 21:16:18] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-28 21:17:39] [INFO] root: Settings successfully loaded from .env
+[2026-05-28 21:17:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-28 21:17:40] [INFO] root: Database tables initialized
+[2026-05-28 21:17:40] [INFO] root: Database connection successful
+[2026-05-28 21:18:23] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-05-28 21:18:23] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-28 21:18:34] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-05-28 21:19:29] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=11
+[2026-05-28 21:19:29] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f amount=50.0
+[2026-05-28 21:19:29] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CADEC410>
+[2026-05-28 21:19:29] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CAEA52B0>, 14205.2594436)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CADEDA90>
+[2026-05-28 21:19:33] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 21:19:33] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=PENDING
+[2026-05-28 21:19:33] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CADEE490>
+[2026-05-28 21:19:33] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CAEA5730>, 14209.258891)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CADEE0D0>
+[2026-05-28 21:25:06] [INFO] aiogram.event: Update id=891135809 is not handled. Duration 11 ms by bot id=7557954606
+[2026-05-28 21:41:30] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:30] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622813
+[2026-05-28 21:41:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622810
+[2026-05-28 21:41:33] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 21:41:33] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=622810
+[2026-05-28 21:47:41] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 21:47:41] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=PENDING
+[2026-05-28 21:47:41] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CADEEAD0>
+[2026-05-28 21:47:41] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CAEF73B0>, 15897.6101265)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CADEF610>
+[2026-05-28 22:02:12] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 22:13:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 22:13:25] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-28 22:13:25] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CAA6B250>
+[2026-05-28 22:13:25] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CAEA6330>, 17441.4731226)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CAA6BB10>
+[2026-05-28 22:13:32] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-28 22:13:32] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-28 22:13:32] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CAA6A710>
+[2026-05-28 22:13:32] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CAEA6F30>, 17448.3514206)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CAA6BB10>
+[2026-05-28 22:19:33] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-28 22:19:33] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-28 22:19:49] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-05-28 22:19:49] [WARNING] aiogram.dispatcher: Sleep for 1.248211 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-05-28 22:20:01] [INFO] aiogram.dispatcher: Connection established (tryings = 2, bot id = 7557954606)
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=4
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=12
+[2026-05-28 22:49:29] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=12
+[2026-05-28 22:49:29] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=4
+[2026-05-28 22:49:29] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=4
+[2026-05-28 22:49:30] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=4 charged=12
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=5
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=15
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=15
+[2026-05-28 22:50:01] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=5
+[2026-05-28 22:50:01] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=5
+[2026-05-28 22:50:01] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=5 charged=15
+[2026-05-28 23:07:34] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-05-28 23:07:34] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=617649
+[2026-05-28 23:07:37] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-28 23:07:37] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=617646
+[2026-05-28 23:38:53] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:38:57] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:39:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:39:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:39:11] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:39:11] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:39:53] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-28 23:39:53] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=615710
+[2026-05-28 23:40:46] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=20.0 ttl=600
+[2026-05-28 23:40:47] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-28 23:40:47] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-28 23:40:47] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000227CADEF390>
+[2026-05-28 23:40:47] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000227CC0BC470>, 22683.765737)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000227CADEEE90>
+[2026-05-28 23:41:12] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:16] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:20] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-05-28 23:41:20] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-05-28 23:41:24] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:24] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:51] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:51] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:55] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:55] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:41:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-05-28 23:42:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-28 23:42:59] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-28 23:42:59] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-28 23:42:59] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-28 23:42:59] [INFO] root: Bot polling cancelled
+[2026-05-28 23:42:59] [ERROR] sqlalchemy.pool.impl.AsyncAdaptedQueuePool: Exception closing connection <AdaptedConnection <asyncpg.connection.Connection object at 0x000002E085270B90>>
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 374, in _close_connection
+    self._dialect.do_close(connection)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 720, in do_close
+    dbapi_connection.close()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 903, in close
+    self.await_(self._connection.close())
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\asyncpg\connection.py", line 1504, in close
+    await self._protocol.close(timeout)
+  File "asyncpg\\protocol\\protocol.pyx", line 642, in close
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\proactor_events.py", line 286, in _loop_reading
+    length = fut.result()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 463, in finish_socket_func
+    return ov.getresult()
+           ~~~~~~~~~~~~^^
+ConnectionAbortedError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-05-28 23:42:59] [INFO] root: Bot stopped
+[2026-05-28 23:42:59] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 13:59:24] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 13:59:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 13:59:26] [INFO] root: Database tables initialized
+[2026-05-29 13:59:26] [INFO] root: Database connection successful
+[2026-05-29 13:59:32] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 13:59:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 13:59:32] [INFO] root: Database tables initialized
+[2026-05-29 13:59:32] [INFO] root: Database connection successful
+[2026-05-29 14:13:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 14:14:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=50
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=150
+[2026-05-29 14:16:56] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=150
+[2026-05-29 14:16:56] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=50
+[2026-05-29 14:16:56] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=50
+[2026-05-29 14:16:57] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=50 charged=150
+[2026-05-29 14:17:04] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=1080
+[2026-05-29 14:17:04] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=3240
+[2026-05-29 14:17:04] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=36 balance=1690 required=3240
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=10
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=30
+[2026-05-29 14:17:08] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=30
+[2026-05-29 14:17:08] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=10
+[2026-05-29 14:17:08] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=10
+[2026-05-29 14:17:09] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=10 charged=30
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=2
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=6
+[2026-05-29 14:21:20] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=6
+[2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=2
+[2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2
+[2026-05-29 14:21:21] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=19 gb=2 charged=6
+[2026-05-29 15:21:22] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:21:22] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:21:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:21:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:21:24] [INFO] root: Database tables initialized
+[2026-05-29 15:21:24] [INFO] root: Database connection successful
+[2026-05-29 15:21:24] [INFO] root: Bot started
+[2026-05-29 15:21:24] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 15:21:24] [INFO] root: Database tables initialized
+[2026-05-29 15:21:24] [INFO] root: Database connection successful
+[2026-05-29 15:21:24] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:21:24] [INFO] aiogram.event: Update id=891135810 is not handled. Duration 13 ms by bot id=7557954606
+[2026-05-29 15:21:24] [INFO] aiogram.event: Update id=891135812 is not handled. Duration 15 ms by bot id=7557954606
+[2026-05-29 15:21:24] [INFO] aiogram.event: Update id=891135811 is not handled. Duration 70 ms by bot id=7557954606
+[2026-05-29 15:21:28] [INFO] aiogram.event: Update id=891135813 is handled. Duration 687 ms by bot id=7557954606
+[2026-05-29 15:21:33] [INFO] aiogram.event: Update id=891135814 is handled. Duration 204 ms by bot id=7557954606
+[2026-05-29 15:21:35] [INFO] aiogram.event: Update id=891135815 is handled. Duration 200 ms by bot id=7557954606
+[2026-05-29 15:21:48] [INFO] aiogram.event: Update id=891135816 is handled. Duration 108 ms by bot id=7557954606
+[2026-05-29 15:22:41] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 15:22:41] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 15:22:41] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 15:22:41] [INFO] root: Bot polling cancelled
+[2026-05-29 15:22:41] [INFO] root: Bot stopped
+[2026-05-29 15:22:41] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:22:51] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:22:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:22:52] [INFO] root: Database tables initialized
+[2026-05-29 15:22:52] [INFO] root: Database connection successful
+[2026-05-29 15:22:52] [INFO] root: Bot started
+[2026-05-29 15:22:52] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 15:22:52] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:22:57] [INFO] aiogram.event: Update id=891135817 is handled. Duration 637 ms by bot id=7557954606
+[2026-05-29 15:22:59] [INFO] aiogram.event: Update id=891135818 is handled. Duration 350 ms by bot id=7557954606
+[2026-05-29 15:23:00] [INFO] aiogram.event: Update id=891135819 is handled. Duration 198 ms by bot id=7557954606
+[2026-05-29 15:23:01] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=SMTP is not configured
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 145, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 63, in _smtp_send_code
+    raise RuntimeError("SMTP is not configured")
+RuntimeError: SMTP is not configured
+[2026-05-29 15:23:01] [INFO] aiogram.event: Update id=891135820 is handled. Duration 105 ms by bot id=7557954606
+[2026-05-29 15:26:04] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 15:26:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 15:26:04] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 15:26:04] [INFO] root: Bot polling cancelled
+[2026-05-29 15:26:04] [INFO] root: Bot stopped
+[2026-05-29 15:26:04] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:26:10] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:26:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:26:11] [INFO] root: Database tables initialized
+[2026-05-29 15:26:11] [INFO] root: Database connection successful
+[2026-05-29 15:26:11] [INFO] root: Bot started
+[2026-05-29 15:26:11] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 15:26:11] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:26:14] [INFO] aiogram.event: Update id=891135821 is handled. Duration 582 ms by bot id=7557954606
+[2026-05-29 15:26:16] [INFO] aiogram.event: Update id=891135822 is handled. Duration 224 ms by bot id=7557954606
+[2026-05-29 15:26:18] [INFO] aiogram.event: Update id=891135823 is handled. Duration 256 ms by bot id=7557954606
+[2026-05-29 15:26:19] [INFO] aiogram.event: Update id=891135824 is handled. Duration 861 ms by bot id=7557954606
+[2026-05-29 15:26:37] [INFO] root: [biz][user] email_updated user_id=36 old=None new=vladislavisaev0507@gmail.com
+[2026-05-29 15:26:37] [INFO] aiogram.event: Update id=891135825 is handled. Duration 246 ms by bot id=7557954606
+[2026-05-29 15:26:45] [INFO] aiogram.event: Update id=891135826 is handled. Duration 212 ms by bot id=7557954606
+[2026-05-29 15:26:47] [INFO] aiogram.event: Update id=891135827 is handled. Duration 204 ms by bot id=7557954606
+[2026-05-29 15:26:48] [INFO] aiogram.event: Update id=891135828 is handled. Duration 243 ms by bot id=7557954606
+[2026-05-29 15:26:51] [INFO] aiogram.event: Update id=891135829 is handled. Duration 194 ms by bot id=7557954606
+[2026-05-29 15:26:53] [INFO] aiogram.event: Update id=891135830 is handled. Duration 222 ms by bot id=7557954606
+[2026-05-29 15:26:54] [INFO] aiogram.event: Update id=891135831 is handled. Duration 204 ms by bot id=7557954606
+[2026-05-29 15:28:31] [INFO] aiogram.event: Update id=891135832 is handled. Duration 209 ms by bot id=7557954606
+[2026-05-29 15:28:34] [INFO] aiogram.event: Update id=891135833 is handled. Duration 443 ms by bot id=7557954606
+[2026-05-29 15:29:11] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:29:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:29:11] [INFO] root: Database tables initialized
+[2026-05-29 15:29:11] [INFO] root: Database connection successful
+[2026-05-29 15:35:56] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:35:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:35:56] [INFO] root: Database tables initialized
+[2026-05-29 15:35:56] [INFO] root: Database connection successful
+[2026-05-29 15:35:56] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 15:35:56] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 15:35:56] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 15:35:56] [INFO] root: Bot polling cancelled
+[2026-05-29 15:35:56] [INFO] root: Bot stopped
+[2026-05-29 15:35:56] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:36:00] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:36:01] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:36:01] [INFO] root: Database tables initialized
+[2026-05-29 15:36:01] [INFO] root: Database connection successful
+[2026-05-29 15:36:01] [INFO] root: Bot started
+[2026-05-29 15:36:01] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 15:36:02] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:36:04] [INFO] aiogram.event: Update id=891135834 is handled. Duration 539 ms by bot id=7557954606
+[2026-05-29 15:36:05] [INFO] aiogram.event: Update id=891135835 is handled. Duration 219 ms by bot id=7557954606
+[2026-05-29 15:36:06] [INFO] aiogram.event: Update id=891135836 is handled. Duration 191 ms by bot id=7557954606
+[2026-05-29 15:36:08] [INFO] aiogram.event: Update id=891135837 is handled. Duration 219 ms by bot id=7557954606
+[2026-05-29 15:36:09] [INFO] aiogram.event: Update id=891135838 is handled. Duration 194 ms by bot id=7557954606
+[2026-05-29 15:36:14] [INFO] aiogram.event: Update id=891135839 is handled. Duration 782 ms by bot id=7557954606
+[2026-05-29 15:36:29] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-05-29 15:36:29] [INFO] aiogram.event: Update id=891135840 is handled. Duration 274 ms by bot id=7557954606
+[2026-05-29 15:38:09] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 15:38:09] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 15:38:09] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 15:38:09] [INFO] root: Bot polling cancelled
+[2026-05-29 15:38:09] [INFO] root: Bot stopped
+[2026-05-29 15:38:09] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:38:13] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:38:13] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:38:14] [INFO] root: Database tables initialized
+[2026-05-29 15:38:14] [INFO] root: Database connection successful
+[2026-05-29 15:38:14] [INFO] root: Bot started
+[2026-05-29 15:38:14] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 15:38:14] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 15:38:17] [INFO] aiogram.event: Update id=891135841 is handled. Duration 705 ms by bot id=7557954606
+[2026-05-29 15:38:18] [INFO] aiogram.event: Update id=891135842 is handled. Duration 215 ms by bot id=7557954606
+[2026-05-29 15:38:19] [INFO] aiogram.event: Update id=891135843 is handled. Duration 277 ms by bot id=7557954606
+[2026-05-29 15:38:22] [INFO] aiogram.event: Update id=891135844 is handled. Duration 733 ms by bot id=7557954606
+[2026-05-29 15:38:37] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-05-29 15:38:37] [INFO] aiogram.event: Update id=891135845 is handled. Duration 197 ms by bot id=7557954606
+[2026-05-29 15:38:41] [INFO] aiogram.event: Update id=891135846 is handled. Duration 285 ms by bot id=7557954606
+[2026-05-29 15:40:09] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 15:40:10] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 15:40:10] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EBFD723610>
+[2026-05-29 15:40:10] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EBFD87E9F0>, 6149.7041258)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EBFD722C10>
+[2026-05-29 15:40:23] [INFO] root: [biz][promo] activate_requested user_id=36 code=lunet
+[2026-05-29 15:40:29] [INFO] root: [biz][promo] activate_requested user_id=36 code=lunet
+[2026-05-29 15:41:11] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:41:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:41:11] [INFO] root: Database tables initialized
+[2026-05-29 15:41:11] [INFO] root: Database connection successful
+[2026-05-29 15:42:10] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-05-29 15:42:10] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=557973
+[2026-05-29 15:48:01] [INFO] root: [biz][promo] activate_requested user_id=36 code=34
+[2026-05-29 15:54:46] [INFO] root: [biz][promo] activate_requested user_id=36 code=4
+[2026-05-29 15:54:57] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 15:54:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 15:54:57] [INFO] root: Database tables initialized
+[2026-05-29 15:54:57] [INFO] root: Database connection successful
+[2026-05-29 15:55:04] [INFO] root: [biz][promo] activate_requested user_id=36 code=rty
+[2026-05-29 15:59:05] [INFO] aiogram.event: Update id=891135847 is not handled. Duration 72 ms by bot id=7557954606
+[2026-05-29 16:07:35] [INFO] aiogram.event: Update id=891135848 is handled. Duration 223 ms by bot id=7557954606
+[2026-05-29 16:07:37] [INFO] aiogram.event: Update id=891135849 is handled. Duration 207 ms by bot id=7557954606
+[2026-05-29 16:07:38] [INFO] aiogram.event: Update id=891135850 is handled. Duration 193 ms by bot id=7557954606
+[2026-05-29 16:07:41] [INFO] aiogram.event: Update id=891135851 is handled. Duration 226 ms by bot id=7557954606
+[2026-05-29 16:07:43] [INFO] aiogram.event: Update id=891135852 is handled. Duration 210 ms by bot id=7557954606
+[2026-05-29 16:07:48] [INFO] aiogram.event: Update id=891135853 is handled. Duration 2439 ms by bot id=7557954606
+[2026-05-29 16:08:02] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-05-29 16:08:03] [INFO] aiogram.event: Update id=891135854 is handled. Duration 129 ms by bot id=7557954606
+[2026-05-29 16:08:09] [INFO] aiogram.event: Update id=891135855 is handled. Duration 569 ms by bot id=7557954606
+[2026-05-29 16:08:10] [INFO] aiogram.event: Update id=891135856 is handled. Duration 210 ms by bot id=7557954606
+[2026-05-29 16:08:12] [INFO] aiogram.event: Update id=891135857 is handled. Duration 189 ms by bot id=7557954606
+[2026-05-29 16:08:13] [INFO] aiogram.event: Update id=891135858 is handled. Duration 314 ms by bot id=7557954606
+[2026-05-29 16:08:14] [INFO] aiogram.event: Update id=891135859 is handled. Duration 187 ms by bot id=7557954606
+[2026-05-29 16:08:15] [INFO] aiogram.event: Update id=891135860 is handled. Duration 352 ms by bot id=7557954606
+[2026-05-29 16:12:29] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:12:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:15:45] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:15:45] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:15:49] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:15:50] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:17:41] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=10.0 ttl=600
+[2026-05-29 16:17:43] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-29 16:17:43] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '144.31.235.209'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-05-29 16:17:43] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE104E9090>
+[2026-05-29 16:17:43] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1078AF90>, 8402.3396728)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE104E91D0>
+[2026-05-29 16:17:47] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=10.0 payment_method=2
+[2026-05-29 16:17:47] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=988117f4-185e-4232-88b5-eead4dad4ac5 amount=10.0
+[2026-05-29 16:17:47] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE104E9810>
+[2026-05-29 16:17:47] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1078B8F0>, 8406.4928314)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE104E8F50>
+[2026-05-29 16:18:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=988117f4-185e-4232-88b5-eead4dad4ac5
+[2026-05-29 16:18:25] [INFO] root: [biz][billing] platega_confirmed provider_id=988117f4-185e-4232-88b5-eead4dad4ac5 user_id=36 amount=10
+[2026-05-29 16:18:25] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE104E8F50>
+[2026-05-29 16:18:25] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1079CA10>, 8444.67204)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE104E9090>
+[2026-05-29 16:19:09] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:19:13] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 16:50:20] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-05-29 16:50:20] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 16:50:32] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-05-29 16:57:56] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 16:57:57] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE10437B10>
+[2026-05-29 16:57:57] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1078B470>, 10816.0199644)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE10435810>
+[2026-05-29 16:57:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:58] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 16:57:58] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE10434190>
+[2026-05-29 16:57:58] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1073A0F0>, 10816.9472409)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE10436AD0>
+[2026-05-29 16:57:58] [INFO] root: [biz][billing] platega_confirm_requested provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f
+[2026-05-29 16:57:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
+[2026-05-29 16:57:59] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001EE10434410>
+[2026-05-29 16:57:59] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000001EE1073A090>, 10818.059444)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
+[2026-05-29 17:28:13] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 17:28:13] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 17:28:13] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 17:28:14] [INFO] root: Bot polling cancelled
+[2026-05-29 17:28:14] [INFO] root: Bot stopped
+[2026-05-29 17:28:14] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 17:31:15] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 17:31:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 17:31:15] [INFO] root: Database tables initialized
+[2026-05-29 17:31:15] [INFO] root: Database connection successful
+[2026-05-29 17:34:29] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 17:34:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 17:34:29] [INFO] root: Database tables initialized
+[2026-05-29 17:34:29] [INFO] root: Database connection successful
+[2026-05-29 17:45:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-05-29 17:45:09] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=550594
+[2026-05-29 18:08:44] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:08:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:08:46] [INFO] root: Database tables initialized
+[2026-05-29 18:08:46] [INFO] root: Database connection successful
+[2026-05-29 18:16:34] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:19:39] [INFO] root: [biz][promo] activate_requested user_id=36 code=29
+[2026-05-29 18:31:46] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:31:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:31:47] [INFO] root: Database tables initialized
+[2026-05-29 18:31:47] [INFO] root: Database connection successful
+[2026-05-29 18:35:16] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:35:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:35:16] [INFO] root: Database tables initialized
+[2026-05-29 18:35:16] [INFO] root: Database connection successful
+[2026-05-29 18:35:48] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:35:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:35:49] [INFO] root: Database tables initialized
+[2026-05-29 18:35:49] [INFO] root: Database connection successful
+[2026-05-29 18:35:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:36:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:36:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-05-29 18:36:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-05-29 18:36:10] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:36:10] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:36:50] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:36:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:36:51] [INFO] root: Database tables initialized
+[2026-05-29 18:36:51] [INFO] root: Database connection successful
+[2026-05-29 18:37:09] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:37:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-05-29 18:38:40] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:38:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:38:40] [INFO] root: Database tables initialized
+[2026-05-29 18:38:40] [INFO] root: Database connection successful
+[2026-05-29 18:40:23] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:40:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:40:23] [INFO] root: Database tables initialized
+[2026-05-29 18:40:23] [INFO] root: Database connection successful
+[2026-05-29 18:40:46] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:40:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:40:47] [INFO] root: Database tables initialized
+[2026-05-29 18:40:47] [INFO] root: Database connection successful
+[2026-05-29 18:47:37] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 18:47:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 18:47:37] [INFO] root: Database tables initialized
+[2026-05-29 18:47:37] [INFO] root: Database connection successful
+[2026-05-29 19:01:15] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 19:01:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 19:01:15] [INFO] root: Database tables initialized
+[2026-05-29 19:01:15] [INFO] root: Database connection successful
+[2026-05-29 19:14:24] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 19:14:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 19:14:25] [INFO] root: Database tables initialized
+[2026-05-29 19:14:25] [INFO] root: Database connection successful
+[2026-05-29 22:11:31] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:11:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:11:32] [INFO] root: Database tables initialized
+[2026-05-29 22:11:32] [INFO] root: Database connection successful
+[2026-05-29 22:11:32] [INFO] root: Bot started
+[2026-05-29 22:11:32] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 22:11:33] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 22:11:33] [INFO] aiogram.event: Update id=891135861 is not handled. Duration 9 ms by bot id=7557954606
+[2026-05-29 22:11:59] [INFO] aiogram.event: Update id=891135862 is handled. Duration 585 ms by bot id=7557954606
+[2026-05-29 22:12:43] [INFO] aiogram.event: Update id=891135863 is handled. Duration 366 ms by bot id=7557954606
+[2026-05-29 22:12:44] [INFO] aiogram.event: Update id=891135864 is handled. Duration 216 ms by bot id=7557954606
+[2026-05-29 22:12:45] [INFO] aiogram.event: Update id=891135865 is handled. Duration 209 ms by bot id=7557954606
+[2026-05-29 22:12:46] [INFO] aiogram.event: Update id=891135866 is handled. Duration 280 ms by bot id=7557954606
+[2026-05-29 22:12:52] [INFO] aiogram.event: Update id=891135867 is handled. Duration 355 ms by bot id=7557954606
+[2026-05-29 22:12:53] [INFO] aiogram.event: Update id=891135868 is handled. Duration 125 ms by bot id=7557954606
+[2026-05-29 22:12:56] [INFO] aiogram.event: Update id=891135869 is handled. Duration 251 ms by bot id=7557954606
+[2026-05-29 22:13:05] [INFO] aiogram.event: Update id=891135870 is handled. Duration 255 ms by bot id=7557954606
+[2026-05-29 22:16:51] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 22:16:51] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 22:16:51] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 22:16:52] [INFO] root: Bot polling cancelled
+[2026-05-29 22:16:52] [INFO] root: Bot stopped
+[2026-05-29 22:16:52] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 22:17:20] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:17:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:17:21] [INFO] root: Database tables initialized
+[2026-05-29 22:17:21] [INFO] root: Database connection successful
+[2026-05-29 22:17:21] [INFO] root: Bot started
+[2026-05-29 22:17:21] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 22:17:21] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 22:17:23] [INFO] aiogram.event: Update id=891135871 is handled. Duration 1106 ms by bot id=7557954606
+[2026-05-29 22:17:28] [INFO] aiogram.event: Update id=891135872 is handled. Duration 1171 ms by bot id=7557954606
+[2026-05-29 22:17:31] [INFO] aiogram.event: Update id=891135873 is handled. Duration 321 ms by bot id=7557954606
+[2026-05-29 22:24:02] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 22:24:02] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 22:24:02] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 22:24:02] [INFO] root: Bot polling cancelled
+[2026-05-29 22:24:02] [INFO] root: Bot stopped
+[2026-05-29 22:24:02] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 22:24:15] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:24:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:24:16] [INFO] root: Database tables initialized
+[2026-05-29 22:24:16] [INFO] root: Database connection successful
+[2026-05-29 22:24:16] [INFO] root: Bot started
+[2026-05-29 22:24:16] [INFO] aiogram.dispatcher: Start polling
+[2026-05-29 22:24:17] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-05-29 22:24:22] [INFO] aiogram.event: Update id=891135874 is handled. Duration 1802 ms by bot id=7557954606
+[2026-05-29 22:24:31] [INFO] aiogram.event: Update id=891135875 is handled. Duration 231 ms by bot id=7557954606
+[2026-05-29 22:24:34] [INFO] aiogram.event: Update id=891135876 is handled. Duration 209 ms by bot id=7557954606
+[2026-05-29 22:24:35] [INFO] aiogram.event: Update id=891135877 is handled. Duration 221 ms by bot id=7557954606
+[2026-05-29 22:24:39] [INFO] aiogram.event: Update id=891135878 is handled. Duration 217 ms by bot id=7557954606
+[2026-05-29 22:24:40] [INFO] aiogram.event: Update id=891135879 is handled. Duration 217 ms by bot id=7557954606
+[2026-05-29 22:24:42] [INFO] aiogram.event: Update id=891135880 is handled. Duration 221 ms by bot id=7557954606
+[2026-05-29 22:24:43] [INFO] aiogram.event: Update id=891135881 is handled. Duration 229 ms by bot id=7557954606
+[2026-05-29 22:24:44] [INFO] aiogram.event: Update id=891135882 is handled. Duration 253 ms by bot id=7557954606
+[2026-05-29 22:24:46] [INFO] aiogram.event: Update id=891135883 is handled. Duration 255 ms by bot id=7557954606
+[2026-05-29 22:24:47] [INFO] aiogram.event: Update id=891135884 is handled. Duration 145 ms by bot id=7557954606
+[2026-05-29 22:24:48] [INFO] aiogram.event: Update id=891135885 is handled. Duration 212 ms by bot id=7557954606
+[2026-05-29 22:24:49] [INFO] aiogram.event: Update id=891135886 is handled. Duration 229 ms by bot id=7557954606
+[2026-05-29 22:29:39] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:29:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:29:39] [INFO] root: Database tables initialized
+[2026-05-29 22:29:39] [INFO] root: Database connection successful
+[2026-05-29 22:30:13] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:30:13] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:30:13] [INFO] root: Database tables initialized
+[2026-05-29 22:30:13] [INFO] root: Database connection successful
+[2026-05-29 22:34:33] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:34:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:34:34] [INFO] root: Database tables initialized
+[2026-05-29 22:34:34] [INFO] root: Database connection successful
+[2026-05-29 22:40:11] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:40:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:40:11] [INFO] root: Database tables initialized
+[2026-05-29 22:40:11] [INFO] root: Database connection successful
+[2026-05-29 22:49:43] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:49:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:49:43] [INFO] root: Database tables initialized
+[2026-05-29 22:49:43] [INFO] root: Database connection successful
+[2026-05-29 22:49:49] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:49:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:49:49] [INFO] root: Database tables initialized
+[2026-05-29 22:49:49] [INFO] root: Database connection successful
+[2026-05-29 22:49:56] [INFO] root: Settings successfully loaded from .env
+[2026-05-29 22:49:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-05-29 22:49:56] [INFO] root: Database tables initialized
+[2026-05-29 22:49:56] [INFO] root: Database connection successful
+[2026-05-29 22:57:53] [INFO] aiogram.dispatcher: Polling stopped
+[2026-05-29 22:57:53] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-05-29 22:57:53] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-05-29 22:57:53] [INFO] root: Bot polling cancelled
+[2026-05-29 22:57:53] [INFO] root: Bot stopped
+[2026-05-29 22:57:53] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

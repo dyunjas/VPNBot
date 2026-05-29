@@ -1,13 +1,40 @@
-const BACKEND_URL = window.location.origin;
+const BACKEND_URL = window.__API_BASE_URL || window.location.origin;
 const tg = window.Telegram?.WebApp ?? null;
+const queryInitData = new URLSearchParams(window.location.search || "").get("initData");
 const IN_TELEGRAM = Boolean(tg?.initDataUnsafe?.user || (navigator.userAgent || "").includes("Telegram"));
+const APP_MODE = window.__APP_MODE || (window.location.pathname.startsWith("/cabinet") ? "cabinet" : "miniapp");
+const IS_CABINET_PATH = APP_MODE === "cabinet";
+const IS_MINIAPP_PATH = !IS_CABINET_PATH;
+const CABINET_TOKEN_KEY = "cabinet_access_token";
+function getCabinetToken() {
+  return localStorage.getItem(CABINET_TOKEN_KEY) || "";
+}
+const HAS_AUTH_INITDATA = Boolean(tg?.initData || queryInitData);
+const CAN_BOOT = HAS_AUTH_INITDATA || (IS_CABINET_PATH && Boolean(getCabinetToken()));
 
 const appRoot = document.getElementById("app-root");
 const outsideStub = document.getElementById("outside-stub");
 const bannedStub = document.getElementById("banned-stub");
-const toastEl = document.getElementById("message");
-const loaderEl = document.getElementById("app-loader");
-const loaderTextEl = document.getElementById("loader-text");
+const alertsEl = document.getElementById("alerts");
+const bodyEl = document.body;
+if (bodyEl) {
+  bodyEl.classList.toggle("is-cabinet", IS_CABINET_PATH);
+  bodyEl.classList.toggle("is-miniapp", IS_MINIAPP_PATH);
+  if (IS_CABINET_PATH) {
+    requestAnimationFrame(() => bodyEl.classList.add("menu-ready"));
+  }
+}
+
+let loaderEl = null;
+let loaderTextEl = null;
+if (IS_MINIAPP_PATH) {
+  loaderEl = document.createElement("div");
+  loaderEl.id = "app-loader";
+  loaderEl.className = "app-loader";
+  loaderEl.innerHTML = `<div class="loader-card"><div class="loader-ring"></div><div id="loader-text" class="loader-text">Загружаем данные...</div></div>`;
+  document.body.appendChild(loaderEl);
+  loaderTextEl = loaderEl.querySelector("#loader-text");
+}
 
 const MIN_WITHDRAW_AMOUNT = 500;
 ["copy","cut","contextmenu","selectstart","dragstart"].forEach((evt) => {
@@ -21,7 +48,7 @@ function sleep(ms) {
 }
 
 function setLoader(visible, text = "Загружаем данные...") {
-  if (!loaderEl) return;
+  if (!IS_MINIAPP_PATH || !loaderEl) return;
   if (loaderTextEl) loaderTextEl.textContent = text;
   loaderEl.classList.toggle("app-loader--hidden", !visible);
 }
@@ -39,10 +66,11 @@ function showBannedScreen() {
   setLoader(false);
 }
 
-if (!IN_TELEGRAM) {
+if (!CAN_BOOT) {
   if (appRoot) appRoot.style.display = "none";
   if (bannedStub) bannedStub.style.display = "none";
   if (outsideStub) outsideStub.style.display = "grid";
+  if (IS_CABINET_PATH) window.location.replace("/cabinet/login");
   setLoader(false);
 } else {
   tg?.ready?.();
@@ -52,7 +80,7 @@ if (!IN_TELEGRAM) {
 }
 
 const state = {
-  initData: tg?.initData ?? null,
+  initData: tg?.initData || queryInitData || null,
   userId: null,
   subscriptionUrl: null,
   referralUrl: null,
@@ -62,17 +90,49 @@ const state = {
   withdrawals: [],
   withdrawalsVisible: 10,
 };
-const FALLBACK_AVATAR =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23dce9ff'/%3E%3Cstop offset='1' stop-color='%23c7dbfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='96' height='96' rx='48' fill='url(%23g)'/%3E%3Ccircle cx='48' cy='38' r='18' fill='%23556f97'/%3E%3Cpath d='M20 84c4-16 16-24 28-24s24 8 28 24' fill='%23556f97'/%3E%3C/svg%3E";
+
+function buildCabinetUrl() {
+  const url = new URL("https://app.lunetpn.ru/cabinet");
+  if (state.initData) {
+    url.searchParams.set("initData", state.initData);
+  }
+  const activeTab = document.querySelector(".tab.tab--active")?.dataset.tab;
+  if (activeTab) {
+    url.searchParams.set("view", activeTab);
+  }
+  return url.toString();
+}
+const FALLBACK_AVATAR = "/miniapp/assets/no-avatar.png";
 
 const $ = (id) => document.getElementById(id);
 
-function toast(text) {
-  if (!toastEl) return;
-  toastEl.textContent = text;
-  toastEl.classList.add("toast--show");
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => toastEl.classList.remove("toast--show"), 2800);
+function applyCanonicalLegalLinks() {
+  const terms = $("footer-terms-link");
+  const privacy = $("footer-privacy-link");
+  const offer = $("footer-offer-link");
+  if (terms) terms.href = "https://lunetpn.ru/terms/";
+  if (privacy) privacy.href = "https://lunetpn.ru/terms/privacy/";
+  if (offer) offer.href = "https://lunetpn.ru/terms/offer/";
+}
+applyCanonicalLegalLinks();
+
+function toast(text, kind = "error") {
+  if (!alertsEl) return;
+  const el = document.createElement("div");
+  el.className = `alert ${kind === "success" ? "alert-success" : "alert-error"}`;
+  el.innerHTML = `<div class="alert__msg"></div><button class="alert__close" type="button" aria-label="Закрыть">×</button>`;
+  el.querySelector(".alert__msg").textContent = String(text || "Событие");
+  const close = () => {
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 180);
+  };
+  el.querySelector(".alert__close").addEventListener("click", close);
+  alertsEl.appendChild(el);
+  setTimeout(close, 4200);
+}
+
+function toastSuccess(text) {
+  toast(text, "success");
 }
 
 function setButtonBusy(btn, busy, busyText = "Обработка...") {
@@ -172,11 +232,39 @@ function escapeHtml(value) {
 }
 
 async function api(path, body = {}) {
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const useCabinet = IS_CABINET_PATH && !HAS_AUTH_INITDATA;
+  const targetPath = useCabinet ? `/cabinet-api${path.replace(/^\/mini/, "")}` : path;
+  const headers = { "Content-Type": "application/json" };
+  const payload = useCabinet ? body : { initData: state.initData, ...body };
+  const cabinetToken = getCabinetToken();
+  if (useCabinet && cabinetToken) headers.Authorization = `Bearer ${cabinetToken}`;
+  let res = await fetch(`${BACKEND_URL}${targetPath}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ initData: state.initData, ...body }),
+    headers,
+    credentials: useCabinet ? "include" : "same-origin",
+    body: JSON.stringify(payload),
   });
+
+  if (useCabinet && res.status === 401) {
+    const refreshRes = await fetch(`${BACKEND_URL}/cabinet-api/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+    });
+    if (refreshRes.ok) {
+      const refreshData = await refreshRes.json().catch(() => ({}));
+      const nextToken = String(refreshData.access_token || "");
+      if (nextToken) {
+        localStorage.setItem(CABINET_TOKEN_KEY, nextToken);
+        headers.Authorization = `Bearer ${nextToken}`;
+        res = await fetch(`${BACKEND_URL}${targetPath}`, {
+          method: "POST",
+          headers,
+          credentials: "include",
+          body: JSON.stringify(payload),
+        });
+      }
+    }
+  }
 
   let data = {};
   try {
@@ -199,9 +287,23 @@ async function api(path, body = {}) {
 }
 
 function switchView(view) {
-  document.querySelectorAll(".view").forEach((el) => el.classList.remove("view--active"));
-  $(`view-${view}`)?.classList.add("view--active");
+  const current = document.querySelector(".view.view--active");
+  const next = $(`view-${view}`);
+  if (!next || next === current) return;
+
+  if (current) {
+    current.classList.add("view-leave");
+    setTimeout(() => {
+      current.classList.remove("view--active", "view-leave");
+    }, 240);
+  }
+
+  next.classList.add("view-enter");
+  next.classList.add("view--active");
+  setTimeout(() => next.classList.remove("view-enter"), 360);
+
   document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("tab--active", tab.dataset.tab === view));
+  document.querySelectorAll(".side-link[data-tab]").forEach((tab) => tab.classList.toggle("is-active", tab.dataset.tab === view));
 
   if (view === "plans") loadPlans();
   if (view === "devices") loadDevices();
@@ -274,6 +376,7 @@ async function loadProfile() {
   $("home-avatar").src = photo;
   $("home-name").textContent = name;
   $("home-id").textContent = `ID: ${user.tg_id || "-"}`;
+  $("home-id-copy")?.setAttribute("data-id", String(user.tg_id || ""));
   $("home-balance").textContent = `${user.balance || 0} ₽`;
 
   $("ref-balance").textContent = `${ref.balance || 0} ₽`;
@@ -327,7 +430,7 @@ function renderPlans(plans) {
     el.className = "item";
     el.innerHTML = `
       <div class="item__title">${plan.name}</div>
-      <div class="item__meta">${plan.period_days} дней | ${plan.device_limit || 0} устройств | Трафик: Безлимит</div>
+      <div class="item__meta">${plan.period_days} дней | 3 устройства | Трафик: Безлимит</div>
       <div class="row">
         <div class="balance">${plan.price} ₽</div>
         <button class="btn">Купить</button>
@@ -338,7 +441,7 @@ function renderPlans(plans) {
       haptic();
       try {
         await api("/mini/subscription/buy", { plan_id: plan.id });
-        toast("Подписка успешно оформлена");
+        toastSuccess("Подписка успешно оформлена");
         haptic("success");
         await Promise.all([loadStatus(), loadProfile(), loadDevices()]);
       } catch (e) {
@@ -386,7 +489,7 @@ function renderDevices(items) {
       if (!confirm("Удалить это устройство?")) return;
       try {
         await api("/mini/device/delete", { device_id: d.id });
-        toast("Устройство удалено");
+        toastSuccess("Устройство удалено");
         haptic("success");
         await Promise.all([loadDevices(), loadStatus()]);
       } catch (e) {
@@ -533,7 +636,7 @@ async function createWithdrawal() {
   try {
     const data = await api("/mini/referral/withdraw", { amount: Math.floor(amount), method });
     if (hint) hint.textContent = data.message || "Заявка отправлена";
-    toast(data.message || "Заявка на вывод создана");
+    toastSuccess(data.message || "Заявка на вывод создана");
     haptic("success");
 
     if ($("withdraw-amount")) $("withdraw-amount").value = "";
@@ -556,7 +659,7 @@ async function applyPromocode() {
     const data = await api("/mini/promocode/apply", { code });
     const hint = $("promo-hint");
     if (hint) hint.textContent = `Начислено: +${data.amount_added || 0} ₽`;
-    toast("Промокод применен");
+    toastSuccess("Промокод применен");
     haptic("success");
     await loadProfile();
   } catch (e) {
@@ -619,7 +722,7 @@ async function createTopup() {
     if (!tg?.openLink) window.open(data.payment_url, "_blank");
 
     if (hint) hint.textContent = "После оплаты нажмите «Проверить платежи».";
-    toast("Ссылка на оплату открыта");
+    toastSuccess("Ссылка на оплату открыта");
     haptic("success");
   } catch (e) {
     if (hint) hint.textContent = e.message;
@@ -647,7 +750,7 @@ async function buyTraffic() {
     if (input) input.value = "";
     const msg = `Добавлено ${data.gb_added} ГБ, списано ${data.charged} ₽`;
     if (hint) hint.textContent = msg;
-    toast(msg);
+    toastSuccess(msg);
     haptic("success");
     await Promise.all([loadStatus(), loadProfile()]);
   } catch (e) {
@@ -670,7 +773,7 @@ async function checkPayments() {
     }
 
     if (data.confirmed) {
-      toast(`Платеж подтвержден (проверено: ${data.checked || 1})`);
+      toastSuccess(`Платеж подтвержден (проверено: ${data.checked || 1})`);
       haptic("success");
     } else {
       toast(data.message || `Платеж еще не подтвержден (проверено: ${data.checked || 1})`);
@@ -687,6 +790,12 @@ function initEvents() {
   initTopupMethodPicker();
 
   document.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      haptic();
+      switchView(tab.dataset.tab);
+    });
+  });
+  document.querySelectorAll(".side-link[data-tab]").forEach((tab) => {
     tab.addEventListener("click", () => {
       haptic();
       switchView(tab.dataset.tab);
@@ -737,11 +846,58 @@ function initEvents() {
     tg?.openTelegramLink?.(supportUrl);
     if (!tg?.openTelegramLink) window.open(supportUrl, "_blank");
   });
+  $("footer-support-link")?.addEventListener("click", () => {
+    $("btn-open-support")?.click();
+  });
+  $("home-id-copy")?.addEventListener("click", async () => {
+    const rawId = $("home-id-copy")?.getAttribute("data-id") || "";
+    if (!rawId) {
+      toast("ID пользователя недоступен");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(rawId);
+      toastSuccess("ID скопирован");
+    } catch {
+      toast("Не удалось скопировать ID");
+    }
+  });
+  const closeMobileMenu = () => {
+    if (!IS_CABINET_PATH) return;
+    document.body.classList.remove("menu-open");
+  };
+  $("mobile-menu-toggle")?.addEventListener("click", () => {
+    if (!IS_CABINET_PATH) return;
+    document.body.classList.toggle("menu-open");
+  });
+  $("sidebar-close")?.addEventListener("click", closeMobileMenu);
+  $("mobile-menu-backdrop")?.addEventListener("click", closeMobileMenu);
+  document.querySelectorAll(".side-link[data-tab]").forEach((btn) => {
+    btn.addEventListener("click", closeMobileMenu);
+  });
+  $("btn-open-web")?.addEventListener("click", () => {
+    const cabinetUrl = buildCabinetUrl();
+    tg?.openLink?.(cabinetUrl);
+    if (!tg?.openLink) window.open(cabinetUrl, "_blank");
+  });
+  $("btn-open-telegram")?.addEventListener("click", () => {
+    const botUrl = "https://t.me/LunetVPNBot?startapp=cabinet";
+    tg?.openTelegramLink?.(botUrl);
+    if (!tg?.openTelegramLink) window.open(botUrl, "_blank");
+  });
+  $("btn-cabinet-logout")?.addEventListener("click", async () => {
+    if (!IS_CABINET_PATH) return;
+    try {
+      await fetch(`${BACKEND_URL}/cabinet-api/auth/logout`, { method: "POST", credentials: "include" });
+    } catch {}
+    localStorage.removeItem(CABINET_TOKEN_KEY);
+    window.location.replace("/cabinet/login");
+  });
 
   $("btn-copy-sub")?.addEventListener("click", async () => {
     if (!state.subscriptionUrl) return toast("Ссылка недоступна");
     await navigator.clipboard.writeText(state.subscriptionUrl);
-    toast("Ссылка скопирована");
+    toastSuccess("Ссылка скопирована");
   });
 
   $("btn-open-sub")?.addEventListener("click", () => {
@@ -753,7 +909,7 @@ function initEvents() {
   $("btn-copy-ref")?.addEventListener("click", async () => {
     if (!state.referralUrl) return toast("Ссылка недоступна");
     await navigator.clipboard.writeText(state.referralUrl);
-    toast("Реферальная ссылка скопирована");
+    toastSuccess("Реферальная ссылка скопирована");
   });
 
   $("btn-open-ref")?.addEventListener("click", () => {
@@ -791,5 +947,5 @@ async function bootstrap() {
   }
 }
 
-if (IN_TELEGRAM) bootstrap();
+if (CAN_BOOT) bootstrap();
 

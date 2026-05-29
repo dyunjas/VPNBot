@@ -3,129 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lunet VPS</title>
-  <link rel="icon" href="/miniapp/assets/favicon.ico" />
-  <link rel="stylesheet" href="/miniapp/landing.css?v=7" />
+  <title>Lunet</title>
+  <link rel="icon" type="image/png" href="/miniapp/assets/lunet-flavicon.png" />
+  <link rel="stylesheet" href="/miniapp/landing.css?v=10" />
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="orb orb-a"></div>
-  <div class="orb orb-b"></div>
-
-  <div class="wrap">
-    <header class="nav">
-      <div class="logo">
-        <img src="/miniapp/assets/moon.png" alt="Lunet" />
-        <div>
-          <div class="logo-title">Lunet VPS</div>
-          <div class="logo-sub">быстрый и личный VPS-доступ</div>
-        </div>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
       </div>
-      <nav>
-        <a href="#plans">Тарифы</a>
-        <a href="#steps">Как подключить</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-      <a class="btn ghost" href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">Поддержка</a>
+      <button class="landing-menu-toggle" id="landing-menu-toggle" type="button" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar__actions">
+        <a class="btn btn--ghost" href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener noreferrer">Поддержка</a>
+        <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Войти в веб-кабинет</a>
+      </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">LUNET NETWORK</p>
-        <h1>VPS, который запускается быстрее, чем открывается гайд</h1>
-        <p class="lead">Оформляете подписку в боте, получаете данные доступа и сразу запускаете VPS без лишней ручной рутины.</p>
-        <div class="hero-actions">
-          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Открыть бота</a>
-          <a class="btn ghost" href="#steps">Смотреть как это работает</a>
+    <div class="landing-menu" id="landing-menu">
+      <a href="#how">Как это работает</a>
+      <a href="#actions">Быстрые действия</a>
+      <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener noreferrer">Поддержка</a>
+      <div class="landing-menu__cta">
+        <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Войти</a>
+        <a class="btn btn--ghost" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">В Telegram</a>
+      </div>
+    </div>
+
+    <section class="hero card">
+      <div class="hero__content">
+        <p class="eyebrow">LUNET VPN</p>
+        <h1>Быстрый доступ к VPN через Telegram и веб-кабинет</h1>
+        <p class="lead">Управляйте подпиской, устройствами, платежами и реферальной системой из удобного интерфейса. Все действия синхронизированы с ботом.</p>
+        <div class="hero__actions">
+          <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Открыть Telegram-бота</a>
+          <a class="btn btn--ghost" href="https://app.lunetpn.ru/cabinet/login">Войти в веб-кабинет</a>
         </div>
       </div>
-      <div class="hero-card">
-        <div class="hero-stat">
-          <span>Запуск</span>
-          <strong>~ 1 мин</strong>
-        </div>
-        <div class="hero-stat">
-          <span>Платформы</span>
-          <strong>iOS / Android / ПК</strong>
-        </div>
-        <div class="hero-stat">
-          <span>Управление</span>
-          <strong>через Telegram-бота</strong>
-        </div>
+      <div class="hero__stats">
+        <div class="stat"><span>Управление</span><b>24/7</b></div>
+        <div class="stat"><span>Платформы</span><b>iOS / Android / PC</b></div>
+        <div class="stat"><span>Вход</span><b>Код на email / Telegram</b></div>
       </div>
     </section>
 
-    <section id="plans" class="section">
-      <h2>Тарифы</h2>
-      <div class="plans">
-        <article class="plan">
-          <p>Lite</p>
-          <h3>45 ₽</h3>
-          <span>быстрый старт</span>
-          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+    <section class="section" id="how">
+      <h2>Как это работает</h2>
+      <div class="grid grid--3">
+        <article class="card">
+          <h3>1. Откройте бота</h3>
+          <p>Перейдите в Telegram-бот Lunet и выберите тариф.</p>
         </article>
-        <article class="plan">
-          <p>1 месяц</p>
-          <h3>105 ₽</h3>
-          <span>стандарт</span>
-          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        <article class="card">
+          <h3>2. Активируйте подписку</h3>
+          <p>После оплаты подписка выдается автоматически на ваш аккаунт.</p>
         </article>
-        <article class="plan hot">
-          <p>3 месяца</p>
-          <h3>275 ₽</h3>
-          <span>оптимальный</span>
-          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
-        </article>
-        <article class="plan">
-          <p>12 месяцев</p>
-          <h3>995 ₽</h3>
-          <span>максимальная выгода</span>
-          <a class="btn solid" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener">Выбрать</a>
+        <article class="card">
+          <h3>3. Управляйте в кабинете</h3>
+          <p>В веб-кабинете доступны профиль, устройства, платежи и рефералы.</p>
         </article>
       </div>
     </section>
 
-    <section id="steps" class="section">
-      <h2>Подключение в 3 шага</h2>
-      <div class="steps">
-        <article class="step">
-          <b>1</b>
-          <h3>Оплата в боте</h3>
-          <p>Выбираете план и оплачиваете прямо внутри Telegram.</p>
-        </article>
-        <article class="step">
-          <b>2</b>
-          <h3>Получаете доступ</h3>
-          <p>Бот сразу выдает персональные данные для доступа и инструкцию.</p>
-          <code id="sub-key">vps.lunet.example</code>
-        </article>
-        <article class="step">
-          <b>3</b>
-          <h3>Запуск VPS</h3>
-          <p>Используете полученные данные и работаете с VPS на своих устройствах.</p>
-        </article>
+    <section class="section" id="actions">
+      <h2>Быстрые действия</h2>
+      <div class="grid grid--2">
+        <a class="action card" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">
+          <h3>Перейти в Telegram-бота</h3>
+          <p>Покупка и продление подписки, получение доступа.</p>
+        </a>
+        <a class="action card" href="https://app.lunetpn.ru/cabinet/login">
+          <h3>Войти в веб-кабинет</h3>
+          <p>Управление аккаунтом, устройствами и транзакциями.</p>
+        </a>
       </div>
     </section>
-
-    <section id="faq" class="section">
-      <h2>FAQ</h2>
-      <div class="faq">
-        <details>
-          <summary>Когда придет доступ к VPS?</summary>
-          <p>Сразу после оплаты. Бот выдает данные автоматически.</p>
-        </details>
-        <details>
-          <summary>Есть поддержка?</summary>
-          <p>Да, через <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener">Lunet Support Bot</a>.</p>
-        </details>
-        <details>
-          <summary>Можно управлять с телефона и ПК?</summary>
-          <p>Да. Один VPS-доступ подходит для разных устройств.</p>
-        </details>
+    <footer class="landing-footer">
+      <div class="landing-footer__grid">
+        <div>
+          <h4>Lunet</h4>
+          <p>VPN-сервис с доступом через Telegram-бота и веб-кабинет.</p>
+        </div>
+        <div>
+          <h4>Навигация</h4>
+          <a href="#how">Как это работает</a>
+          <a href="#actions">Быстрые действия</a>
+          <a href="https://app.lunetpn.ru/cabinet/login">Веб-кабинет</a>
+        </div>
+        <div>
+          <h4>Документы</h4>
+          <a href="https://lunetpn.ru/terms/" rel="noopener noreferrer">Пользовательское соглашение</a>
+          <a href="https://lunetpn.ru/terms/privacy/" rel="noopener noreferrer">Политика конфиденциальности</a>
+          <a href="https://lunetpn.ru/terms/offer/" rel="noopener noreferrer">Оферта</a>
+        </div>
+        <div>
+          <h4>Контакты</h4>
+          <a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">@LunetVpnBot</a>
+          <a href="https://t.me/LunetVPNSupport" target="_blank" rel="noopener noreferrer">@LunetVPNSupport</a>
+          <p>Почта: info.lunetpn.ru</p>
+          <p>Поддержка: 08:00–22:00 МСК</p>
+        </div>
       </div>
-    </section>
+      <div class="landing-footer__bottom">© Lunet. Все права защищены.</div>
+    </footer>
   </div>
-
-  <script src="/miniapp/landing.js?v=7"></script>
+  <script src="/miniapp/landing.js?v=1"></script>
 </body>
 </html>

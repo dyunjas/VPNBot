@@ -39,6 +39,12 @@ class UserService:
         if not user:
             raise UserNotFound(f"User with id:{tg_id} not found")
         return user
+
+    async def get_by_email(self, email: str):
+        user = await self.user_repo.get_by_email(email=email)
+        if not user:
+            raise UserNotFound(f"User with email:{email} not found")
+        return user
     
     async def set_username(self, user_id: int, username: str):
         user = await self.user_repo.get_by_id(user_id)
@@ -52,6 +58,28 @@ class UserService:
             user_id,
             prev_username,
             username,
+        )
+
+    async def set_email(self, user_id: int, email: str | None):
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+
+        normalized = (email or "").strip().lower() or None
+        prev_email = user.email
+
+        if normalized:
+            existing = await self.user_repo.get_by_email(normalized)
+            if existing and existing.id != user_id:
+                raise ValueError("email already bound to another user")
+
+        await self.user_repo.set_email(user_id=user_id, email=normalized)
+        await self.session.commit()
+        logger.info(
+            "[biz][user] email_updated user_id=%s old=%s new=%s",
+            user_id,
+            prev_email,
+            normalized,
         )
 
     async def get_balance(self, user_id: int) -> int:

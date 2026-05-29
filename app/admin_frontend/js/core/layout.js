@@ -184,10 +184,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     <div class="app">
       <aside class="sidebar">
         <div class="logo">
-          <div class="logo-badge">
-            <img src="/admin/assets/moon.png?v=26" alt="Lunet" />
-          </div>
-          <div class="logo-title">Lunet Admin</div>
+          <img class="logo-image" src="/miniapp/assets/lunet-logo-sign.png?v=1" alt="Lunet" />
         </div>
 
         <nav class="menu">${renderMenu(activeKey)}</nav>

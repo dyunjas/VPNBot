@@ -11,7 +11,7 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Название</th><th>Цена</th><th>Дней</th><th>Лимит ГБ</th><th>Устройств</th><th>Подписок</th><th>Действие</th></tr>
+                <tr><th>ID</th><th>Название</th><th>Цена</th><th>Дней</th><th>Лимит ГБ</th><th>Подписок</th><th>Действие</th></tr>
               </thead>
               <tbody id="tbody"></tbody>
             </table>
@@ -26,7 +26,6 @@
               <input id="new_price" type="number" placeholder="Цена, RUB" />
               <input id="new_days" type="number" placeholder="Период, дней" value="30" />
               <input id="new_gb" type="number" placeholder="Лимит трафика, ГБ" value="100" />
-              <input id="new_devices" type="number" placeholder="Лимит устройств" value="5" />
             </div>
             <div class="toolbar" style="margin-top:10px">
               <button id="create_plan" class="btn-primary">Создать</button>
@@ -41,7 +40,6 @@
               <input id="edit_price" type="number" placeholder="Цена" />
               <input id="edit_days" type="number" placeholder="Период, дней" />
               <input id="edit_gb" type="number" placeholder="Лимит ГБ" />
-              <input id="edit_devices" type="number" placeholder="Лимит устройств" />
             </div>
             <div class="toolbar" style="margin-top:10px">
               <button id="update_plan">Сохранить</button>
@@ -65,7 +63,6 @@
         <td>${p.price}</td>
         <td>${p.period_days}</td>
         <td>${p.gb_limit ?? 0}</td>
-        <td>${p.device_limit}</td>
         <td>${p.subscriptions_count}</td>
         <td class="row-actions">
           <button data-edit="${p.id}">Изменить</button>
@@ -105,7 +102,6 @@
           price: Number(q("new_price").value),
           period_days: Number(q("new_days").value),
           gb_limit: Number(q("new_gb").value),
-          device_limit: Number(q("new_devices").value),
         }),
       });
       await loadPlans();
@@ -122,7 +118,6 @@
     if (q("edit_price").value) payload.price = Number(q("edit_price").value);
     if (q("edit_days").value) payload.period_days = Number(q("edit_days").value);
     if (q("edit_gb").value) payload.gb_limit = Number(q("edit_gb").value);
-    if (q("edit_devices").value) payload.device_limit = Number(q("edit_devices").value);
 
     await withButtonLoading(e.currentTarget, async () => {
       await api(`/admin-api/plans/${id}`, {
@@ -136,8 +131,8 @@
 
   try {
     await renderSessionInfo();
-    bindEnterSubmit(["new_name", "new_price", "new_days", "new_gb", "new_devices"], "create_plan");
-    bindEnterSubmit(["edit_id", "edit_name", "edit_price", "edit_days", "edit_gb", "edit_devices"], "update_plan");
+    bindEnterSubmit(["new_name", "new_price", "new_days", "new_gb"], "create_plan");
+    bindEnterSubmit(["edit_id", "edit_name", "edit_price", "edit_days", "edit_gb"], "update_plan");
     await loadPlans();
   } catch (e) {
     alert(e.message);

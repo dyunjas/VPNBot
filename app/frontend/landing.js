@@ -1,13 +1,19 @@
-function randomToken(size = 18) {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let out = "";
-  for (let i = 0; i < size; i += 1) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
-}
+(() => {
+  const btn = document.getElementById("landing-menu-toggle");
+  const menu = document.getElementById("landing-menu");
+  if (!btn || !menu) return;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const keyEl = document.getElementById("sub-key");
-  if (keyEl) {
-    keyEl.textContent = `https://lunetpn.ru/sub/${randomToken(18)}`;
-  }
-});
+  const close = () => menu.classList.remove("open");
+  btn.addEventListener("click", () => menu.classList.toggle("open"));
+
+  menu.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", close);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!menu.classList.contains("open")) return;
+    if (menu.contains(e.target) || btn.contains(e.target)) return;
+    close();
+  });
+})();
+

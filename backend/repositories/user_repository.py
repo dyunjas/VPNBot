@@ -13,6 +13,10 @@ class UserRepository:
     async def get_by_tg_id(self, tg_id: int) -> User | None:
         res = await self.session.execute(select(User).where(User.tg_id == tg_id))
         return res.scalar_one_or_none()
+
+    async def get_by_email(self, email: str) -> User | None:
+        res = await self.session.execute(select(User).where(User.email == email))
+        return res.scalar_one_or_none()
     
     async def get_by_tg_id_for_update(self, tg_id: int) -> User | None:
         res = await self.session.execute(
@@ -59,6 +63,18 @@ class UserRepository:
             update(User)
             .where(User.id == user_id)
             .values(username=username)
+        )
+
+    async def set_email(
+            self,
+            *,
+            user_id: int,
+            email: str | None
+    ) -> None:
+        await self.session.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(email=email)
         )
     
     async def add_balance(

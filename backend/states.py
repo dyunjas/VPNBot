@@ -22,3 +22,8 @@ class WithdrawBalance(StatesGroup):
 class TrafficPurchaseStates(StatesGroup):
     waiting_for_gb = State()
     waiting_for_confirmation = State()
+
+
+class EmailBindStates(StatesGroup):
+    waiting_for_email = State()
+    waiting_for_code = State()
