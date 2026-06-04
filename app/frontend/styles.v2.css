@@ -696,16 +696,36 @@ body {
 
 @media (min-width: 981px) {
   .is-cabinet .cabinet-topbar {
-    left: 18px;
+    left: 20px;
     right: auto;
-    width: 380px;
+    width: 220px;
+    min-height: 52px;
+    padding: 8px 54px 8px 12px;
+    justify-content: flex-start;
   }
   .is-cabinet .sidebar {
-    left: 18px;
+    left: 20px;
     right: auto;
-    width: 380px;
-    max-width: 380px;
-    top: 70px;
+    width: 340px;
+    max-width: 340px;
+    top: 78px;
+  }
+  .is-cabinet .mobile-menu-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+  .is-cabinet .cabinet-topbar__brand {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+  .is-cabinet .cabinet-topbar__brand-logo {
+    height: 22px;
   }
 }
 

@@ -44,6 +44,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           <div class="content-stack">
             <div class="card">
+              <h3>Массовое продление</h3>
+              <div class="section-title">Продлевает срок в панели и в локальной базе, затем рассылает уведомления в Telegram.</div>
+              <div class="form-grid" style="margin-top:10px">
+                <select id="bulk_target">
+                  <option value="all">Все подписки</option>
+                  <option value="active">Только активные</option>
+                  <option value="inactive">Только неактивные</option>
+                </select>
+                <input id="bulk_days" type="number" min="1" step="1" placeholder="На сколько дней продлить" />
+              </div>
+              <div class="toolbar" style="margin-top:10px">
+                <button id="bulk_extend" class="btn-primary">Продлить выбранным</button>
+              </div>
+            </div>
+
+            <div class="card">
               <h3>Создать подписку</h3>
               <div class="form-grid">
                 <input id="new_user_id" type="number" placeholder="ID пользователя" />
@@ -188,9 +204,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     }).catch((err) => alert(err.message));
   });
 
+  q("bulk_extend").addEventListener("click", async (e) => {
+    const days = Number(q("bulk_days").value || "0");
+    const target = q("bulk_target").value || "all";
+    if (!days || days < 1) return alert("Введите количество дней");
+
+    const targetLabel = {
+      all: "всем пользователям с подписками",
+      active: "пользователям с активной подпиской",
+      inactive: "пользователям с неактивной подпиской",
+    }[target] || "выбранной группе";
+
+    if (!confirm(`Продлить подписку на ${days} дн. ${targetLabel}?`)) return;
+
+    await withButtonLoading(e.currentTarget, async () => {
+      const result = await api("/admin-api/subscriptions/bulk-extend", {
+        method: "POST",
+        body: JSON.stringify({ target, days }),
+      });
+      await loadRows();
+      const failed = Array.isArray(result.failed) ? result.failed : [];
+      showToast(
+        `Продлено: ${result.updated || 0}. Уведомления: ${result.notified || 0}. Ошибки: ${failed.length}.`,
+        failed.length ? "error" : "success",
+      );
+      if (failed.length) {
+        const preview = failed
+          .slice(0, 10)
+          .map((item) => `#${item.subscription_id} / user ${item.user_id}: ${item.error}`)
+          .join("\n");
+        alert(`Часть подписок не обработана:\n${preview}`);
+      }
+    }).catch((err) => alert(err.message));
+  });
+
   try {
     await renderSessionInfo();
     bindEnterSubmit(["search"], "apply");
+    bindEnterSubmit(["bulk_days"], "bulk_extend");
     bindEnterSubmit(["new_user_id", "new_plan_id"], "create_sub");
     bindEnterSubmit(["edit_sub_id", "edit_plan_id", "edit_extend_days"], "update_sub");
     await loadRows();

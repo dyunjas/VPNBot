@@ -22856,3 +22856,24 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-05-29 22:57:53] [INFO] root: Bot polling cancelled
 [2026-05-29 22:57:53] [INFO] root: Bot stopped
 [2026-05-29 22:57:53] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-04 19:49:05] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:49:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-04 19:49:06] [INFO] root: Database tables initialized
+[2026-06-04 19:49:06] [INFO] root: Database connection successful
+[2026-06-04 19:52:33] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:52:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-04 19:52:33] [INFO] root: Database tables initialized
+[2026-06-04 19:52:33] [INFO] root: Database connection successful
+[2026-06-04 19:52:53] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:52:54] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-04 19:52:54] [INFO] root: Database tables initialized
+[2026-06-04 19:52:54] [INFO] root: Database connection successful
+[2026-06-04 19:52:54] [INFO] root: Bot started
+[2026-06-04 19:52:54] [INFO] aiogram.dispatcher: Start polling
+[2026-06-04 19:52:55] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-04 19:52:55] [INFO] aiogram.event: Update id=891135888 is handled. Duration 649 ms by bot id=7557954606
+[2026-06-04 19:53:01] [INFO] aiogram.event: Update id=891135889 is handled. Duration 365 ms by bot id=7557954606
+[2026-06-04 19:54:08] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:54:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-04 19:54:08] [INFO] root: Database tables initialized
+[2026-06-04 19:54:08] [INFO] root: Database connection successful

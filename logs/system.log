@@ -7542,3 +7542,16 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-05-29 22:49:56] [INFO] root: Database connection successful
 [2026-05-29 22:57:53] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
 [2026-05-29 22:57:53] [INFO] root: Bot stopped
+[2026-06-04 19:49:05] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:49:06] [INFO] root: Database tables initialized
+[2026-06-04 19:49:06] [INFO] root: Database connection successful
+[2026-06-04 19:52:33] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:52:33] [INFO] root: Database tables initialized
+[2026-06-04 19:52:33] [INFO] root: Database connection successful
+[2026-06-04 19:52:53] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:52:54] [INFO] root: Database tables initialized
+[2026-06-04 19:52:54] [INFO] root: Database connection successful
+[2026-06-04 19:52:54] [INFO] root: Bot started
+[2026-06-04 19:54:08] [INFO] root: Settings successfully loaded from .env
+[2026-06-04 19:54:08] [INFO] root: Database tables initialized
+[2026-06-04 19:54:08] [INFO] root: Database connection successful

@@ -1,7 +1,51 @@
-from fastapi import APIRouter
+﻿from fastapi import APIRouter
 from ..common import *
+from aiogram import Bot
+from aiogram.client.session.aiohttp import AiohttpSession
+from backend.core.loader import bot as runtime_bot
+from backend.core.logger_config import logger
 
 router = APIRouter()
+
+
+async def _notify_bulk_extend(users: list[tuple[User, datetime]], days: int) -> int:
+    if not users:
+        return 0
+
+    sent = 0
+    bot_instance = runtime_bot
+    temp_bot: Bot | None = None
+    if bot_instance is None:
+        bot_token = (settings.BOT_TOKEN or "").strip()
+        if not bot_token:
+            logger.warning("[admin][subscriptions] bulk_extend notify skipped: BOT_TOKEN missing")
+            return 0
+        proxy_url = (settings.BOT_PROXY or "").strip() or None
+        session = AiohttpSession(proxy=proxy_url) if proxy_url else AiohttpSession()
+        temp_bot = Bot(token=bot_token, session=session)
+        bot_instance = temp_bot
+
+    try:
+        for user, expire_at in users:
+            if not user.tg_id:
+                continue
+            text = (
+                f"<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Срок действия подписки продлен на {days} дн.</b>\n\n"
+                f"Новая дата окончания: <b>{expire_at:%d.%m.%Y %H:%M}</b>"
+            )
+            try:
+                await bot_instance.send_message(chat_id=user.tg_id, text=text, parse_mode="HTML")
+                sent += 1
+            except Exception:
+                logger.exception(
+                    "[admin][subscriptions] bulk_extend notify failed user_id=%s tg_id=%s",
+                    user.id,
+                    user.tg_id,
+                )
+    finally:
+        if temp_bot is not None:
+            await temp_bot.session.close()
+    return sent
 
 @router.get("/subscriptions", dependencies=[Depends(require_admin_auth)])
 async def admin_subscriptions(
@@ -127,6 +171,73 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         return {"ok": True}
 
 
+@router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_admin_auth)])
+async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload):
+    async with async_session() as session:
+        now = datetime.now(timezone.utc)
+        stmt = select(Subscription, User).join(User, User.id == Subscription.user_id)
+        if payload.target == "active":
+            stmt = stmt.where(
+                Subscription.status == SubStatus.active,
+                Subscription.current_period_end.is_not(None),
+                Subscription.current_period_end >= now,
+            )
+        elif payload.target == "inactive":
+            stmt = stmt.where(
+                or_(
+                    Subscription.status != SubStatus.active,
+                    Subscription.current_period_end.is_(None),
+                    Subscription.current_period_end < now,
+                )
+            )
+
+        rows = (await session.execute(stmt.order_by(Subscription.id.asc()))).all()
+        remnawave_service = RemnaWaveService(session)
+        updated = 0
+        failed: list[dict[str, str | int]] = []
+        notify_queue: list[tuple[User, datetime]] = []
+
+        for sub, user in rows:
+            try:
+                base_end = _as_aware_utc(sub.current_period_end) or now
+                if base_end < now:
+                    base_end = now
+                    sub.current_period_start = now
+
+                new_end = base_end + timedelta(days=payload.days)
+                sub.current_period_end = new_end
+                sub.next_renewal_at = new_end
+                sub.status = SubStatus.active
+
+                await session.flush()
+                if remnawave_service.enabled:
+                    await remnawave_service.sync_user_state(
+                        user=user,
+                        subscription=sub,
+                        status="ACTIVE",
+                    )
+                await session.commit()
+                updated += 1
+                notify_queue.append((user, new_end))
+            except Exception as exc:
+                await session.rollback()
+                failed.append(
+                    {
+                        "subscription_id": sub.id,
+                        "user_id": user.id,
+                        "error": str(exc)[:240],
+                    }
+                )
+
+        notified = await _notify_bulk_extend(notify_queue, payload.days)
+        return {
+            "ok": True,
+            "updated": updated,
+            "notified": notified,
+            "failed": failed,
+        }
+
+
 @router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_admin_auth)])
 async def admin_subscription_delete(subscription_id: int):
     async with async_session() as session:
@@ -134,5 +245,6 @@ async def admin_subscription_delete(subscription_id: int):
         await session.delete(sub)
         await session.commit()
         return {"ok": True}
+
 
 

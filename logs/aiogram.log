@@ -2531,3 +2531,7 @@ AttributeError: 'Settings' object has no attribute 'XRAY_AUTH'
 [2026-05-29 22:57:53] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-05-29 22:57:53] [INFO] root: Bot polling cancelled
 [2026-05-29 22:57:53] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-04 19:52:54] [INFO] aiogram.dispatcher: Start polling
+[2026-06-04 19:52:55] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-04 19:52:55] [INFO] aiogram.event: Update id=891135888 is handled. Duration 649 ms by bot id=7557954606
+[2026-06-04 19:53:01] [INFO] aiogram.event: Update id=891135889 is handled. Duration 365 ms by bot id=7557954606

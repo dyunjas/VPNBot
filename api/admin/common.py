@@ -177,6 +177,11 @@ class SubscriptionUpdatePayload(BaseModel):
     current_period_end: datetime | None = None
 
 
+class SubscriptionBulkExtendPayload(BaseModel):
+    target: Literal["all", "active", "inactive"]
+    days: int = Field(gt=0, le=3650)
+
+
 class PlanCreatePayload(BaseModel):
     name: str = Field(min_length=2, max_length=64)
     price: int = Field(gt=0)
@@ -260,6 +265,7 @@ __all__ = [
     "UserActionPayload",
     "SubscriptionCreatePayload",
     "SubscriptionUpdatePayload",
+    "SubscriptionBulkExtendPayload",
     "PlanCreatePayload",
     "PlanUpdatePayload",
     "PromocodeCreatePayload",
