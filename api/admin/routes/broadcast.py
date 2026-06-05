@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from ..common import *
+from aiogram import Bot
+from aiogram.client.session.aiohttp import AiohttpSession
 from backend.core import loader as bot_loader
+from backend.core.logger_config import logger
 
 router = APIRouter()
 
@@ -38,6 +41,21 @@ def _job_public(job: dict) -> dict:
     }
 
 
+async def _resolve_broadcast_bot() -> tuple[Bot, Bot | None]:
+    runtime_bot = bot_loader.bot
+    if runtime_bot is not None:
+        return runtime_bot, None
+
+    bot_token = (settings.BOT_TOKEN or "").strip()
+    if not bot_token:
+        raise RuntimeError("BOT_TOKEN is not configured")
+
+    proxy_url = (settings.BOT_PROXY or "").strip() or None
+    session = AiohttpSession(proxy=proxy_url) if proxy_url else AiohttpSession()
+    temp_bot = Bot(token=bot_token, session=session)
+    return temp_bot, temp_bot
+
+
 async def _cleanup_jobs() -> None:
     cutoff = _utc_now() - timedelta(hours=BROADCAST_KEEP_HOURS)
     async with BROADCAST_JOBS_LOCK:
@@ -66,82 +84,85 @@ async def _run_broadcast_job(
         job["started_at"] = _utc_now()
 
     try:
-        runtime_bot = bot_loader.bot
-        if runtime_bot is None:
-            raise RuntimeError("Telegram bot is not initialized")
+        runtime_bot, temp_bot = await _resolve_broadcast_bot()
 
-        async with async_session() as session:
-            query = select(User.tg_id)
-            if not include_banned:
-                query = query.where(User.banned.is_(False))
-            user_tg_ids = [int(row[0]) for row in (await session.execute(query)).all()]
+        try:
+            async with async_session() as session:
+                query = select(User.tg_id).where(User.tg_id.is_not(None))
+                if not include_banned:
+                    query = query.where(User.banned.is_(False))
+                user_tg_ids = [int(row[0]) for row in (await session.execute(query)).all()]
 
-        total = len(user_tg_ids)
-        success = 0
-        failed = 0
-        failed_samples: list[dict] = []
+            total = len(user_tg_ids)
+            success = 0
+            failed = 0
+            failed_samples: list[dict] = []
 
-        async with BROADCAST_JOBS_LOCK:
-            job = BROADCAST_JOBS.get(job_id)
-            if not job:
+            async with BROADCAST_JOBS_LOCK:
+                job = BROADCAST_JOBS.get(job_id)
+                if not job:
+                    return
+                job["total"] = total
+
+            if total == 0:
+                async with BROADCAST_JOBS_LOCK:
+                    job = BROADCAST_JOBS.get(job_id)
+                    if not job:
+                        return
+                    job["status"] = "completed"
+                    job["processed"] = 0
+                    job["success"] = 0
+                    job["failed"] = 0
+                    job["finished_at"] = _utc_now()
                 return
-            job["total"] = total
 
-        if total == 0:
+            for idx, tg_id in enumerate(user_tg_ids, start=1):
+                try:
+                    if image_bytes:
+                        photo = BufferedInputFile(image_bytes, filename=image_name)
+                        await asyncio.wait_for(
+                            runtime_bot.send_photo(chat_id=tg_id, photo=photo, caption=text, parse_mode=parse_mode),
+                            timeout=BROADCAST_SEND_TIMEOUT_SEC,
+                        )
+                    else:
+                        await asyncio.wait_for(
+                            runtime_bot.send_message(chat_id=tg_id, text=text, parse_mode=parse_mode),
+                            timeout=BROADCAST_SEND_TIMEOUT_SEC,
+                        )
+                    success += 1
+                except asyncio.TimeoutError:
+                    failed += 1
+                    if len(failed_samples) < 30:
+                        failed_samples.append({"tg_id": tg_id, "error": "timeout while sending"})
+                except Exception as exc:
+                    failed += 1
+                    if len(failed_samples) < 30:
+                        failed_samples.append({"tg_id": tg_id, "error": str(exc)[:140]})
+                    logger.warning("[admin][broadcast] send failed tg_id=%s error=%s", tg_id, str(exc)[:200])
+                finally:
+                    async with BROADCAST_JOBS_LOCK:
+                        job = BROADCAST_JOBS.get(job_id)
+                        if not job:
+                            return
+                        job["processed"] = idx
+                        job["success"] = success
+                        job["failed"] = failed
+                        job["failed_samples"] = list(failed_samples)
+                    await asyncio.sleep(0.05)
+
             async with BROADCAST_JOBS_LOCK:
                 job = BROADCAST_JOBS.get(job_id)
                 if not job:
                     return
                 job["status"] = "completed"
-                job["processed"] = 0
-                job["success"] = 0
-                job["failed"] = 0
+                job["processed"] = total
+                job["success"] = success
+                job["failed"] = failed
+                job["failed_samples"] = list(failed_samples)
                 job["finished_at"] = _utc_now()
-            return
-
-        for idx, tg_id in enumerate(user_tg_ids, start=1):
-            try:
-                if image_bytes:
-                    photo = BufferedInputFile(image_bytes, filename=image_name)
-                    await asyncio.wait_for(
-                        runtime_bot.send_photo(chat_id=tg_id, photo=photo, caption=text, parse_mode=parse_mode),
-                        timeout=BROADCAST_SEND_TIMEOUT_SEC,
-                    )
-                else:
-                    await asyncio.wait_for(
-                        runtime_bot.send_message(chat_id=tg_id, text=text, parse_mode=parse_mode),
-                        timeout=BROADCAST_SEND_TIMEOUT_SEC,
-                    )
-                success += 1
-            except asyncio.TimeoutError:
-                failed += 1
-                if len(failed_samples) < 30:
-                    failed_samples.append({"tg_id": tg_id, "error": "timeout while sending"})
-            except Exception as exc:
-                failed += 1
-                if len(failed_samples) < 30:
-                    failed_samples.append({"tg_id": tg_id, "error": str(exc)[:140]})
-            finally:
-                async with BROADCAST_JOBS_LOCK:
-                    job = BROADCAST_JOBS.get(job_id)
-                    if not job:
-                        return
-                    job["processed"] = idx
-                    job["success"] = success
-                    job["failed"] = failed
-                    job["failed_samples"] = list(failed_samples)
-                await asyncio.sleep(0.05)
-
-        async with BROADCAST_JOBS_LOCK:
-            job = BROADCAST_JOBS.get(job_id)
-            if not job:
-                return
-            job["status"] = "completed"
-            job["processed"] = total
-            job["success"] = success
-            job["failed"] = failed
-            job["failed_samples"] = list(failed_samples)
-            job["finished_at"] = _utc_now()
+        finally:
+            if temp_bot is not None:
+                await temp_bot.session.close()
     except Exception as exc:
         async with BROADCAST_JOBS_LOCK:
             job = BROADCAST_JOBS.get(job_id)

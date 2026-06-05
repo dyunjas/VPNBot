@@ -22877,3 +22877,31 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-06-04 19:54:08] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-06-04 19:54:08] [INFO] root: Database tables initialized
 [2026-06-04 19:54:08] [INFO] root: Database connection successful
+[2026-06-06 00:21:00] [INFO] root: Settings successfully loaded from .env
+[2026-06-06 00:21:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-06 00:21:02] [INFO] root: Database tables initialized
+[2026-06-06 00:21:02] [INFO] root: Database connection successful
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_field with data[42:61]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_value with data[63:85]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_data with data[89:90]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_field with data[134:153]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_value with data[155:183]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_data with data[187:191]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_field with data[235:254]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_value with data[256:288]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_data with data[292:297]
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_end with no data
+[2026-06-06 00:22:37] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
+[2026-06-06 00:22:38] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
