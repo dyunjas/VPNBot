@@ -1,10 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
-
 :root {
   --bg: #f3f5f9;
   --card: #ffffff;
   --line: #d9e1ec;
-  --line-strong: #bccbe0;
   --text: #16202f;
   --muted: #5a6b83;
   --brand: #1f6feb;
@@ -15,8 +12,9 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
+
 body {
-  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text);
   background:
     radial-gradient(1000px 400px at 95% -20%, #e7eefc, transparent 65%),
@@ -30,17 +28,54 @@ body {
   place-items: center;
 }
 
-.auth-card {
+.auth-layout {
   width: min(560px, 100%);
+  display: grid;
+  gap: 14px;
+}
+
+.auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.auth-brand img {
+  height: 28px;
+  width: auto;
+}
+
+.auth-card {
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--card);
   box-shadow: 0 16px 36px rgba(15, 30, 55, 0.1);
   padding: 22px;
+  display: grid;
+  gap: 12px;
 }
 
-h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spacing: -0.01em; }
-.subtitle { margin: 10px 0 16px; color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 48ch; }
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(34px, 5vw, 48px); }
+h2 { font-size: clamp(30px, 4vw, 40px); }
+
+.subtitle {
+  margin: 10px 0 16px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 48ch;
+}
 
 .auth-switch {
   display: grid;
@@ -67,6 +102,7 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
 
 .auth-form { display: grid; gap: 12px; }
 .auth-form.is-hidden { display: none; }
+
 .auth-step {
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -75,7 +111,9 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
   display: grid;
   gap: 10px;
 }
+
 .auth-step.is-hidden { display: none; }
+
 .step-title {
   font-size: 14px;
   font-weight: 700;
@@ -84,6 +122,7 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
 
 .field { display: grid; gap: 6px; }
 .field span { color: var(--muted); font-size: 13px; }
+
 .field input {
   min-height: 44px;
   border: 1px solid var(--line);
@@ -95,7 +134,9 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
   font-size: 15px;
   line-height: 1.35;
 }
+
 .field input::placeholder { color: #8193ab; }
+
 .field input:focus {
   outline: none;
   border-color: #76a6ec;
@@ -103,6 +144,7 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
 }
 
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
 .btn {
   min-height: 42px;
   border-radius: 12px;
@@ -115,6 +157,7 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
   cursor: pointer;
   letter-spacing: 0.01em;
 }
+
 .btn:hover { filter: brightness(1.08); }
 .btn:disabled { opacity: .55; pointer-events: none; }
 
@@ -126,11 +169,54 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spac
   font-weight: 600;
   color: var(--muted);
 }
+
 .status.success { color: var(--ok); }
 .status.error { color: var(--err); }
+
+.auth-footer {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+  box-shadow: 0 16px 36px rgba(15, 30, 55, 0.08);
+  padding: 16px 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.auth-footer__top,
+.auth-footer__links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.auth-footer__dot {
+  opacity: .6;
+}
+
+.auth-footer__link {
+  color: var(--brand);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
 
 @media (max-width: 560px) {
   .auth-page { padding: 12px; }
   .auth-card { border-radius: 14px; padding: 16px; }
   h1 { font-size: 39px; }
+  .auth-footer {
+    border-radius: 14px;
+    padding: 12px;
+  }
+  .auth-footer__top,
+  .auth-footer__links {
+    justify-content: flex-start;
+    gap: 6px;
+    font-size: 12px;
+  }
 }

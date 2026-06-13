@@ -1136,3 +1136,9 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-05-29 14:17:08] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=10
 [2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=2
 [2026-05-29 14:21:20] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=19 gb=2
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] renewed user_id=36 subscription_id=19 plan_id=4 period_end=2026-06-16 11:07:55.837559+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-06-13 16:07:55] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_completed user_id=36 subscription_id=19
+[2026-06-13 16:34:41] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-06-13 16:34:50] [INFO] root: [biz][subscription] marked_expired subscription_id=21

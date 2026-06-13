@@ -95,7 +95,7 @@ class UserUpdateMiddleware(BaseMiddleware):
     async def _notify_banned(self, event: TelegramObject, tg_id: int) -> None:
         text = (
             "<b>🚫 Ваш аккаунт заблокирован.</b>\n\n"
-            "Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupportBot."
+            "Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupport."
         )
         try:
             if isinstance(event, Message):

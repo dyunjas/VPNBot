@@ -451,3 +451,31 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-05-29 16:57:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=f0c32614-0982-413a-b29b-b3d385bbe65f status=CANCELED
 [2026-05-29 17:45:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
 [2026-05-29 17:45:09] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=550594
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=0
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=0
+[2026-06-13 16:07:56] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=4 charged=0
+[2026-06-13 16:07:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:57] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195

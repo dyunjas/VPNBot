@@ -11861,3 +11861,78 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-06-06 00:22:35] [DEBUG] python_multipart.multipart: Calling on_end with no data
 [2026-06-06 00:22:37] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
 [2026-06-06 00:22:38] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
+[2026-06-13 15:42:05] [INFO] root: Settings successfully loaded from .env
+[2026-06-13 15:42:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-13 15:42:07] [INFO] root: Database tables initialized
+[2026-06-13 15:42:07] [INFO] root: Database connection successful
+[2026-06-13 15:43:41] [INFO] root: Settings successfully loaded from .env
+[2026-06-13 15:43:41] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-13 15:43:41] [INFO] root: Database tables initialized
+[2026-06-13 15:43:41] [INFO] root: Database connection successful
+[2026-06-13 15:43:55] [INFO] root: Settings successfully loaded from .env
+[2026-06-13 15:43:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-13 15:43:55] [INFO] root: Database tables initialized
+[2026-06-13 15:43:55] [INFO] root: Database connection successful
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=0
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=0
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] renewed user_id=36 subscription_id=19 plan_id=4 period_end=2026-06-16 11:07:55.837559+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-06-13 16:07:55] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_completed user_id=36 subscription_id=19
+[2026-06-13 16:07:56] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=4 charged=0
+[2026-06-13 16:07:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:57] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:34:41] [INFO] root: Settings successfully loaded from .env
+[2026-06-13 16:34:41] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-13 16:34:41] [INFO] root: Database tables initialized
+[2026-06-13 16:34:41] [INFO] root: Database connection successful
+[2026-06-13 16:34:41] [INFO] root: Bot started
+[2026-06-13 16:34:41] [INFO] aiogram.dispatcher: Start polling
+[2026-06-13 16:34:41] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-06-13 16:34:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-13 16:34:45] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/9 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/9
+[2026-06-13 16:34:47] [INFO] aiogram.event: Update id=891135890 is handled. Duration 1398 ms by bot id=7557954606
+[2026-06-13 16:34:50] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/9 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/9
+[2026-06-13 16:34:50] [ERROR] root: remnawave expired status sync failed user_id=29: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/9: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/9
+[2026-06-13 16:34:50] [INFO] root: [biz][subscription] marked_expired subscription_id=21
+[2026-06-13 16:34:53] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/956 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-06-13 16:34:57] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/956 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/956
+[2026-06-13 16:34:57] [ERROR] root: remnawave expired status sync failed user_id=39: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/956: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/956
+[2026-06-13 16:34:57] [INFO] aiogram.event: Update id=891135892 is handled. Duration 1602 ms by bot id=7557954606
+[2026-06-13 16:34:58] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-06-13 16:35:02] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-06-13 16:35:02] [WARNING] root: [remnawave] get by-id failed user_id=36 remote_id=18 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/18: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-06-13 16:35:04] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-06-13 16:35:08] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-06-13 16:35:08] [WARNING] root: [remnawave] sync failed user_id=36 err=remnawave request failed method=POST url=https://panel.lunetpn.ru/api/users: Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-06-13 16:35:08] [WARNING] root: [remnawave] using cached subscription_url user_id=36
+[2026-06-13 16:35:09] [INFO] aiogram.event: Update id=891135891 is handled. Duration 15004 ms by bot id=7557954606
+[2026-06-13 16:35:14] [INFO] aiogram.event: Update id=891135893 is handled. Duration 311 ms by bot id=7557954606
+[2026-06-13 16:35:16] [INFO] aiogram.event: Update id=891135894 is handled. Duration 208 ms by bot id=7557954606
+[2026-06-13 16:37:09] [INFO] root: Settings successfully loaded from .env
+[2026-06-13 16:37:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-13 16:37:10] [INFO] root: Database tables initialized
+[2026-06-13 16:37:10] [INFO] root: Database connection successful

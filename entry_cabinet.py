@@ -31,9 +31,9 @@ def _render_shell(app_mode: str) -> HTMLResponse:
     bootstrap = (
         f"<script>window.__APP_MODE={app_mode!r};</script>"
         f"<script>window.__API_BASE_URL={api_base!r};</script>"
-        '<script src="/miniapp/app.v2.js?v=15"></script>'
+        '<script defer src="/miniapp/app.v2.js?v=16"></script>'
     )
-    rendered = html.replace("__APP_BOOTSTRAP__", bootstrap).replace("__APP_ENTRY__", "/miniapp/app.v2.js?v=15")
+    rendered = html.replace("__APP_BOOTSTRAP__", bootstrap).replace("__APP_ENTRY__", "/miniapp/app.v2.js?v=16")
     return HTMLResponse(
         content=rendered,
         headers={
@@ -94,7 +94,7 @@ async def favicon():
 
 @app.get("/__APP_ENTRY__")
 async def legacy_app_entry():
-    return RedirectResponse(url="/miniapp/app.v2.js?v=15", status_code=307)
+    return RedirectResponse(url="/miniapp/app.v2.js?v=16", status_code=307)
 
 
 @app.get("/health")

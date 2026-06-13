@@ -682,3 +682,36 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-05-29 17:45:09] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
 [2026-05-29 17:45:09] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=550594
 [2026-05-29 18:19:39] [INFO] root: [biz][promo] activate_requested user_id=36 code=29
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=0
+[2026-06-13 16:07:55] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=0
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] renewed user_id=36 subscription_id=19 plan_id=4 period_end=2026-06-16 11:07:55.837559+00:00 gb_added=30.00 renewal_bonus_gb=30.00
+[2026-06-13 16:07:55] [INFO] root: [biz][subscription] activate_completed user_id=36 subscription_id=19
+[2026-06-13 16:07:56] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=19 plan_id=4 charged=0
+[2026-06-13 16:07:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:57] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277197
+[2026-06-13 16:07:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277196
+[2026-06-13 16:07:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:07:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-13 16:34:41] [INFO] root: [biz][subscription] marked_expired subscription_id=18
+[2026-06-13 16:34:50] [INFO] root: [biz][subscription] marked_expired subscription_id=21

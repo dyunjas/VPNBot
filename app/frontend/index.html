@@ -3,30 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Lunet</title>
+  <title>Lunet — веб-кабинет</title>
+  <meta name="description" content="Веб-кабинет Lunet для управления подпиской, устройствами, платежами и реферальной системой." />
   <link rel="icon" type="image/png" href="/miniapp/assets/lunet-flavicon.png" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="/miniapp/styles.v2.css?v=29" />
+  <script defer src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="/miniapp/styles.v2.css?v=30" />
 </head>
 <body>
   <div id="outside-stub" class="outside" style="display:none;">
     <div class="outside__card">
       <div class="outside__title">Mini App доступен только в Telegram</div>
-      <p>Откройте приложение через бота Lunet.</p>
+      <p>Откройте приложение через бота Lunet, чтобы продолжить.</p>
     </div>
   </div>
 
   <div id="banned-stub" class="outside" style="display:none;">
     <div class="outside__card">
-      <div class="outside__title">Вы забанены</div>
-      <p>Доступ к мини-приложению ограничен. Обратитесь в поддержку.</p>
+      <div class="outside__title">Доступ ограничен</div>
+      <p>Если это выглядит как ошибка, напишите в поддержку.</p>
     </div>
   </div>
 
   <div id="app-root" class="app">
     <div id="alerts" class="alerts" aria-live="polite" aria-atomic="true"></div>
+
     <div class="cabinet-topbar">
-      <div class="cabinet-topbar__brand"><img class="cabinet-topbar__brand-logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" /></div>
+      <div class="cabinet-topbar__brand">
+        <img class="cabinet-topbar__brand-logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
+      </div>
       <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Открыть меню">
         <span></span><span></span><span></span>
       </button>
@@ -57,56 +61,79 @@
 
       <main id="view-host" class="view-host">
         <section class="view view--active" id="view-home">
-          <div class="card profile-card glass">
-            <img id="home-avatar" class="avatar" alt="avatar" />
-            <div class="profile-card__meta">
-              <div id="home-name" class="profile-card__name">Пользователь</div>
-              <div class="profile-card__id-wrap">
-                <div id="home-id" class="profile-card__id">ID: -</div>
-                <button class="profile-id-copy" id="home-id-copy" type="button">Копировать ID</button>
+          <div class="home-grid">
+            <div class="home-stack">
+              <div class="card profile-card glass">
+                <img id="home-avatar" class="avatar" alt="avatar" />
+                <div class="profile-card__meta">
+                  <div id="home-name" class="profile-card__name">Пользователь</div>
+                  <div class="profile-card__id-wrap">
+                    <div id="home-id" class="profile-card__id">ID: -</div>
+                    <button class="profile-id-copy" id="home-id-copy" type="button">Копировать ID</button>
+                  </div>
+                </div>
+                <div id="home-balance" class="balance">0 ₽</div>
+              </div>
+
+              <div class="card glass">
+                <div class="card-head">
+                  <div>
+                    <h2>Подписка</h2>
+                    <p class="mini-note">Основная информация и быстрые действия по подключению.</p>
+                  </div>
+                </div>
+                <div id="sub-title" class="sub-title">Проверка...</div>
+                <p id="sub-meta" class="muted"></p>
+                <div id="sub-link-wrap" class="sub-actions" style="display:none;">
+                  <button class="btn" id="btn-copy-sub" type="button">Скопировать ссылку</button>
+                  <button class="btn btn--ghost" id="btn-open-sub" type="button">Открыть</button>
+                </div>
+                <div class="row row--traffic">
+                  <input id="traffic-gb-input" class="input" placeholder="Докупка трафика, ГБ" inputmode="numeric" />
+                  <button class="btn" id="btn-buy-traffic" type="button">Купить ГБ</button>
+                </div>
+                <p id="traffic-hint" class="muted"></p>
               </div>
             </div>
-            <div id="home-balance" class="balance">0 ₽</div>
-          </div>
 
-          <div class="card glass">
-            <h2>Подписка</h2>
-            <div id="sub-title" class="sub-title">Проверка...</div>
-            <p id="sub-meta" class="muted"></p>
-            <div id="sub-link-wrap" class="sub-actions" style="display:none;">
-              <button class="btn" id="btn-copy-sub" type="button">Скопировать ссылку</button>
-              <button class="btn btn--ghost" id="btn-open-sub" type="button">Открыть</button>
-            </div>
-            <div class="row row--traffic">
-              <input id="traffic-gb-input" class="input" placeholder="Докупка трафика, ГБ" inputmode="numeric" />
-              <button class="btn" id="btn-buy-traffic" type="button">Купить ГБ</button>
-            </div>
-            <p id="traffic-hint" class="muted"></p>
-          </div>
-
-          <div class="card glass">
-            <h2>Реферальная сводка</h2>
-            <div class="grid-two stat-grid">
-              <div class="stat glass-soft"><span>Реф. баланс</span><b id="ref-balance">0 ₽</b></div>
-              <div class="stat glass-soft"><span>Приглашено</span><b id="ref-invited">0</b></div>
-            </div>
-            <div class="actions-row">
-              <button class="btn" data-open="referral" type="button">Реферальная система</button>
+            <div class="home-stack">
+              <div class="card glass">
+                <h2>Краткая сводка</h2>
+                <div class="grid-two stat-grid">
+                  <div class="stat glass-soft"><span>Реф. баланс</span><b id="ref-balance">0 ₽</b></div>
+                  <div class="stat glass-soft"><span>Приглашено</span><b id="ref-invited">0</b></div>
+                </div>
+                <div class="info-strip">
+                  <span>Ключевые разделы находятся в боковом меню. Поддержка и выход доступны без прокрутки вниз.</span>
+                </div>
+                <div class="actions-row">
+                  <button class="btn" data-open="referral" type="button">Открыть реферальный раздел</button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         <section class="view" id="view-plans">
           <div class="card glass">
-            <h2>Тарифы</h2>
+            <div class="card-head">
+              <div>
+                <h2>Тарифы</h2>
+                <p class="mini-note">Выберите подходящий план и оформите подписку без переходов на отдельные страницы.</p>
+              </div>
+            </div>
             <div id="plans-list" class="list">Загрузка...</div>
           </div>
         </section>
 
         <section class="view" id="view-devices">
           <div class="card glass">
-            <h2>Устройства</h2>
-            <p class="muted">Удаляйте старые устройства, чтобы освободить слот.</p>
+            <div class="card-head">
+              <div>
+                <h2>Устройства</h2>
+                <p class="mini-note">Удаляйте старые устройства, чтобы освободить слот и не копить мусор.</p>
+              </div>
+            </div>
             <div id="device-limit" class="muted">Лимит: -</div>
             <div id="devices-list" class="list">Загрузка...</div>
           </div>
@@ -114,7 +141,12 @@
 
         <section class="view" id="view-profile">
           <div class="card glass">
-            <h2>Связанные входы</h2>
+            <div class="card-head">
+              <div>
+                <h2>Связанные входы</h2>
+                <p class="mini-note">Быстрые переходы между браузером и Telegram.</p>
+              </div>
+            </div>
             <div class="row actions-row">
               <button class="btn" id="btn-open-web" type="button">Открыть в вебе</button>
               <button class="btn btn--ghost" id="btn-open-telegram" type="button">Открыть в Telegram</button>
@@ -131,7 +163,12 @@
           </div>
 
           <div class="card glass">
-            <h2>Пополнение</h2>
+            <div class="card-head">
+              <div>
+                <h2>Пополнение</h2>
+                <p class="mini-note">Выберите сумму и удобный способ оплаты.</p>
+              </div>
+            </div>
             <div class="row">
               <input id="topup-input" class="input" placeholder="Сумма в рублях" inputmode="numeric" />
             </div>
@@ -160,7 +197,12 @@
           </div>
 
           <div class="card glass">
-            <h2>Транзакции</h2>
+            <div class="card-head">
+              <div>
+                <h2>Транзакции</h2>
+                <p class="mini-note">Проверка платежей и список последних операций.</p>
+              </div>
+            </div>
             <div class="row">
               <button id="btn-check-payments" class="btn" type="button">Проверить платежи</button>
               <button id="btn-refresh-tx" class="btn btn--ghost" type="button">Обновить</button>
@@ -174,7 +216,12 @@
 
         <section class="view" id="view-referral">
           <div class="card glass">
-            <h2>Реферальная ссылка</h2>
+            <div class="card-head">
+              <div>
+                <h2>Реферальная ссылка</h2>
+                <p class="mini-note">Копируйте и отправляйте ссылку прямо из кабинета.</p>
+              </div>
+            </div>
             <div id="ref-link" class="mono link">-</div>
             <div class="row">
               <button id="btn-copy-ref" class="btn" type="button">Скопировать</button>
@@ -184,12 +231,17 @@
           </div>
 
           <div class="card glass">
-            <h2>Вывод реферального баланса</h2>
+            <div class="card-head">
+              <div>
+                <h2>Вывод реферального баланса</h2>
+                <p class="mini-note">Создайте заявку, если накопили минимальную сумму.</p>
+              </div>
+            </div>
             <div class="row">
               <input id="withdraw-amount" class="input" inputmode="numeric" placeholder="Сумма (минимум 500 ₽)" />
             </div>
             <div class="row">
-              <input id="withdraw-method" class="input" placeholder="Реквизиты: карта/СБП/USDT TRC20" />
+              <input id="withdraw-method" class="input" placeholder="Реквизиты: карта / СБП / USDT TRC20" />
             </div>
             <div class="row">
               <button id="btn-withdraw-create" class="btn" type="button">Вывести</button>
@@ -208,45 +260,31 @@
       </main>
     </div>
 
-    <nav class="bottom-nav glass-nav">
-      <button class="tab tab--active" data-tab="home" type="button">
-        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1Z"/></svg></span>
-        <span class="tab__label">Главная</span>
-      </button>
-      <button class="tab" data-tab="plans" type="button">
-        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 9.2 8.8 2 10l5.3 5-1.3 7 6-3.3 6 3.3-1.3-7 5.3-5-7.2-1.2Z"/></svg></span>
-        <span class="tab__label">Тарифы</span>
-      </button>
-      <button class="tab" data-tab="devices" type="button">
-        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
-        <span class="tab__label">Устройства</span>
-      </button>
-      <button class="tab" data-tab="profile" type="button">
-        <span class="tab__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.8-4 4.5-6 8-6s6.2 2 8 6"/></svg></span>
-        <span class="tab__label">Профиль</span>
-      </button>
-    </nav>
-
     <footer class="cabinet-footer">
       <div class="cabinet-footer__inner">
         <div class="cabinet-footer__top">
-          <span>&copy; Lunet</span>
-          <span class="cabinet-footer__dot">&bull;</span>
+          <span>© Lunet</span>
+          <span class="cabinet-footer__dot">•</span>
           <span>Веб-кабинет</span>
-          <span class="cabinet-footer__dot">&bull;</span>
-          <span>08:00–22:00 МСК</span>
+          <span class="cabinet-footer__dot">•</span>
+          <span>Поддержка 08:00–22:00 МСК</span>
         </div>
         <div class="cabinet-footer__links">
           <button class="cabinet-footer__link" id="footer-support-link" type="button">Техподдержка</button>
-          <span class="cabinet-footer__dot">&bull;</span>
-          <a class="cabinet-footer__link" id="footer-terms-link" href="https://lunetpn.ru/terms/" rel="noopener noreferrer">Пользовательское соглашение</a>
-          <span class="cabinet-footer__dot">&bull;</span>
-          <a class="cabinet-footer__link" id="footer-privacy-link" href="https://lunetpn.ru/terms/privacy/" rel="noopener noreferrer">Политика конфиденциальности</a>
-          <span class="cabinet-footer__dot">&bull;</span>
-          <a class="cabinet-footer__link" id="footer-offer-link" href="https://lunetpn.ru/terms/offer/" rel="noopener noreferrer">Оферта</a>
+          <a class="cabinet-footer__link" id="footer-terms-link" href="/terms/" rel="noopener noreferrer">Пользовательское соглашение</a>
+          <a class="cabinet-footer__link" id="footer-privacy-link" href="/terms/privacy/" rel="noopener noreferrer">Политика конфиденциальности</a>
+          <a class="cabinet-footer__link" id="footer-offer-link" href="/terms/offer/" rel="noopener noreferrer">Оферта</a>
         </div>
       </div>
     </footer>
+
+    <nav class="bottom-nav" aria-label="Нижняя навигация">
+      <button class="tab tab--active" data-tab="home" type="button">Главная</button>
+      <button class="tab" data-tab="plans" type="button">Тарифы</button>
+      <button class="tab" data-tab="devices" type="button">Устройства</button>
+      <button class="tab" data-tab="profile" type="button">Профиль</button>
+      <button class="tab" data-tab="referral" type="button">Рефералы</button>
+    </nav>
   </div>
 
   __APP_BOOTSTRAP__
