@@ -152,6 +152,52 @@ class ReferralWithdrawal(Base):
         back_populates="withdrawals"
     )
 
+
+class PartnerLink(Base):
+    __tablename__ = "vpn_partner_links"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    code: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+    attributions: Mapped[list["PartnerAttribution"]] = relationship(
+        "PartnerAttribution",
+        back_populates="partner_link",
+        cascade="all, delete-orphan",
+    )
+
+
+class PartnerAttribution(Base):
+    __tablename__ = "vpn_partner_attributions"
+    __table_args__ = (
+        UniqueConstraint("user_id", name="uq_partner_attributions_user_id"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    partner_link_id: Mapped[int] = mapped_column(
+        ForeignKey("vpn_partner_links.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("vpn_users.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+    partner_link: Mapped["PartnerLink"] = relationship(
+        "PartnerLink",
+        back_populates="attributions",
+    )
+    user: Mapped["User"] = relationship("User")
+
 class SubscriptionPlan(Base):
     __tablename__ = "vpn_subscription_plans"
 

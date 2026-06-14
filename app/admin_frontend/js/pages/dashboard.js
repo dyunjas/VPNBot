@@ -2,6 +2,17 @@ const dashboardState = {
   chartPeriod: "14d",
 };
 
+function dashboardIcon(kind) {
+  const icons = {
+    users: "<circle cx='12' cy='8.5' r='3'/><path d='M5.5 18c1-3 3.7-4.7 6.5-4.7s5.5 1.7 6.5 4.7'/><path d='M18.5 11.5c1 .1 1.8.9 1.8 1.9s-.8 1.8-1.8 1.9'/>",
+    banned: "<circle cx='12' cy='12' r='7.25'/><path d='M8.5 8.5l7 7M15.5 8.5l-7 7'/><path d='M12 4.75v2.5M12 16.75v2.5M4.75 12h2.5M16.75 12h2.5'/>",
+    subs: "<path d='M5.5 8h13v8h-13z'/><path d='M8 6v4M16 6v4M8 12h8'/><path d='M9 15h5'/>",
+    paid: "<rect x='5.5' y='7' width='13' height='10' rx='2'/><path d='M5.5 11h13'/><path d='M8 15h3'/>",
+    revenue: "<circle cx='12' cy='12' r='7'/><path d='M12 8v8'/><path d='M9.5 10.2c0-1.1 1.1-2 2.5-2s2.5.9 2.5 2-.9 1.7-2.5 2.2-2.5 1.2-2.5 2.3 1.1 2 2.5 2 2.5-.9 2.5-2'/>",
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[kind] || icons.users}</svg>`;
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   ensureAuthOrRedirect();
   renderShell({
@@ -58,18 +69,21 @@ async function loadDashboard() {
     const s = data.stats || {};
 
     const cards = [
-      ["Пользователи", s.total_users || 0],
-      ["Забаненные", s.banned_users || 0],
-      ["Активные подписки", s.active_subscriptions || 0],
-      ["Оплаченные транзакции", s.paid_transactions || 0],
-      ["Оборот за месяц", `${s.month_revenue || 0} ₽`],
+      ["Пользователи", s.total_users || 0, "users"],
+      ["Забаненные", s.banned_users || 0, "banned"],
+      ["Активные подписки", s.active_subscriptions || 0, "subs"],
+      ["Оплаченные транзакции", s.paid_transactions || 0, "paid"],
+      ["Оборот за месяц", `${s.month_revenue || 0} ₽`, "revenue"],
     ];
 
     q("stats").innerHTML = cards
-      .map(([label, val]) => `
+      .map(([label, val, icon]) => `
         <div class="stat-card dashboard-stat-card">
-          <div class="stat-label">${label}</div>
-          <div class="stat-value">${val}</div>
+          <div class="stat-icon">${dashboardIcon(icon)}</div>
+          <div class="stat-copy">
+            <div class="stat-label">${safeText(label)}</div>
+            <div class="stat-value">${safeText(val)}</div>
+          </div>
         </div>
       `)
       .join("");
@@ -167,7 +181,7 @@ function renderPaymentsChart(items, period) {
         return `
           <div class="payments-chart__col">
             <div class="payments-chart__value">${amount ? formatMoney(amount) : "0 ₽"}</div>
-            <div class="payments-chart__bar-wrap" title="${label} · ${formatMoney(amount)} · ${count} платежей">
+            <div class="payments-chart__bar-wrap" title="${safeText(label)} · ${safeText(formatMoney(amount))} · ${safeText(count)} платежей">
               <div class="payments-chart__bar" style="height:${barHeight}px"></div>
             </div>
             <div class="payments-chart__count">${count}</div>

@@ -131,7 +131,7 @@ async def create_device(data: CreateUserHwidDeviceRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/devices/delete", dependencies=[Depends(require_hwid_auth)])
+@router.post("/devices/delete", dependencies=[Depends(require_admin_auth)])
 async def delete_device(data: DeleteUserHwidDeviceRequestDto):
     async with async_session() as session:
         service = HwidService(session)
@@ -155,7 +155,7 @@ async def delete_device(data: DeleteUserHwidDeviceRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/devices/delete-all", dependencies=[Depends(require_hwid_auth)])
+@router.post("/devices/delete-all", dependencies=[Depends(require_admin_auth)])
 async def delete_all_devices(data: DeleteAllUserHwidDevicesRequestDto):
     async with async_session() as session:
         service = HwidService(session)
@@ -177,7 +177,7 @@ async def delete_all_devices(data: DeleteAllUserHwidDevicesRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/stats", dependencies=[Depends(require_hwid_auth)])
+@router.get("/devices/stats", dependencies=[Depends(require_admin_auth)])
 async def get_stats():
     async with async_session() as session:
         service = HwidService(session)
@@ -188,7 +188,7 @@ async def get_stats():
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/top-users", dependencies=[Depends(require_hwid_auth)])
+@router.get("/devices/top-users", dependencies=[Depends(require_admin_auth)])
 async def get_top_users(
     size: int = Query(10, ge=1, le=100),
     start: int = Query(0, ge=0),
@@ -207,7 +207,7 @@ async def get_top_users(
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/{userUuid}", dependencies=[Depends(require_hwid_auth)])
+@router.get("/devices/{userUuid}", dependencies=[Depends(require_admin_auth)])
 async def get_user_devices(userUuid: str):
     async with async_session() as session:
         service = HwidService(session)

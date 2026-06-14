@@ -30,6 +30,18 @@ async def landing():
     return FileResponse(os.path.join(FRONTEND_DIR, "landing.html"))
 
 
+@app.get("/cabinet")
+@app.get("/cabinet/")
+async def cabinet_redirect():
+    return RedirectResponse(url="https://app.lunetpn.ru/cabinet", status_code=307)
+
+
+@app.get("/cabinet/login")
+@app.get("/cabinet/login/")
+async def cabinet_login_redirect():
+    return RedirectResponse(url="https://app.lunetpn.ru/cabinet/login", status_code=307)
+
+
 @app.get("/terms")
 @app.get("/terms/")
 async def terms():

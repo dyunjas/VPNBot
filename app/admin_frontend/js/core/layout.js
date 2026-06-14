@@ -21,6 +21,7 @@ function statusBadge(status) {
     pending: "На проверке",
     approved: "Подтверждена",
     rejected: "Отклонена",
+    disabled: "Отключена",
   };
 
   const label = dict[s] || String(status || "—");
@@ -30,10 +31,19 @@ function statusBadge(status) {
   return `<span class="badge warn">${label}</span>`;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function safeText(v) {
   if (v === null || v === undefined || v === "") return "—";
   if (typeof v === "object") return "объект";
-  return String(v);
+  return escapeHtml(v);
 }
 
 function formatDateTime(value) {
@@ -137,6 +147,7 @@ const ADMIN_MENU = [
   { key: "transactions", href: "/admin/transactions", label: "Транзакции", icon: "tx" },
   { key: "withdrawals", href: "/admin/withdrawals", label: "Заявки на вывод", icon: "wd" },
   { key: "referrals", href: "/admin/referrals", label: "Реферальная система", icon: "ref" },
+  { key: "partners", href: "/admin/partners", label: "Партнерка", icon: "partner" },
   { key: "promocodes", href: "/admin/promocodes", label: "Промокоды", icon: "promo" },
   { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
@@ -144,16 +155,16 @@ const ADMIN_MENU = [
 
 function menuIcon(kind) {
   const map = {
-    overview: "<rect x='4' y='5' width='6' height='6' rx='1.5'/><rect x='14' y='5' width='6' height='4' rx='1.5'/><rect x='14' y='11' width='6' height='8' rx='1.5'/><rect x='4' y='13' width='6' height='6' rx='1.5'/>",
-    users: "<circle cx='12' cy='8' r='3.2'/><path d='M5.5 18.5c1.2-3.1 4-4.8 6.5-4.8s5.3 1.7 6.5 4.8'/>",
-    subs: "<path d='M6 8h12v8H6z'/><path d='M9 6v4M15 6v4M9 14v4M15 14v4'/>",
-    plans: "<path d='M5 18h14M7 15V9M12 15V6M17 15v-4'/>",
-    tx: "<path d='M7 8h10M7 8l2-2M7 8l2 2'/><path d='M17 16H7M17 16l-2-2M17 16l-2 2'/>",
-    wd: "<path d='M12 5v10'/><path d='M8.5 11.5L12 15l3.5-3.5'/><path d='M6 19h12'/>",
+    overview: "<path d='M4.5 6.5h6v6h-6z'/><path d='M13.5 6.5h6v3h-6z'/><path d='M13.5 12.5h6v6h-6z'/><path d='M4.5 14.5h6v4h-6z'/>",
+    users: "<circle cx='12' cy='8.5' r='2.4'/><path d='M6 18c1.1-2.9 3.6-4.6 6-4.6s4.9 1.7 6 4.6'/><path d='M18.5 11.5c1.1 0 2 .8 2 1.8 0 1-.9 1.8-2 1.8'/>",
+    subs: "<path d='M5.5 7.5h13v9h-13z'/><path d='M8 5.5v4M16 5.5v4M8 12h8M8 15h5'/>",
+    plans: "<path d='M5.5 16.5h13'/><path d='M8 15V9.5M12 15V6.5M16 15v-3.5'/><path d='M6.5 8.5h2M10.5 7h2M14.5 10h2'/>",
+    tx: "<path d='M6.5 8.5h11'/><path d='M6.5 8.5l2-2M6.5 8.5l2 2'/><path d='M17.5 15.5h-11'/><path d='M17.5 15.5l-2-2M17.5 15.5l-2 2'/>",
+    wd: "<path d='M12 5.5v9'/><path d='M8.5 11.5L12 15l3.5-3.5'/><path d='M6.5 19.5h11'/>",
     ref: "<circle cx='7.5' cy='8.5' r='2'/><circle cx='16.5' cy='8.5' r='2'/><circle cx='12' cy='15.5' r='2.2'/><path d='M9 9.5l2 4M15 9.5l-2 4'/>",
-    srv: "<rect x='5' y='6' width='14' height='4' rx='1.2'/><rect x='5' y='14' width='14' height='4' rx='1.2'/><circle cx='8' cy='8' r='0.8'/><circle cx='8' cy='16' r='0.8'/>",
+    partner: "<path d='M9 7h6a3 3 0 0 1 0 6H9a3 3 0 0 1 0-6Z'/><path d='M7 12h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6Z'/>",
     promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
-    mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='1.8'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
+    mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='2'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
     logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7a1.5 1.5 0 0 1 1.5-1.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
   const icon = map[kind] || map.overview;
@@ -164,7 +175,7 @@ function renderMenu(activeKey) {
   return ADMIN_MENU.map((item) => `
     <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
       <span class="menu-ico">${menuIcon(item.icon)}</span>
-      <span>${item.label}</span>
+      <span class="menu-label">${item.label}</span>
     </a>
   `).join("");
 }
@@ -183,8 +194,9 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
 
     <div class="app">
       <aside class="sidebar">
-        <div class="logo">
+        <div class="sidebar-head">
           <img class="logo-image" src="/miniapp/assets/lunet-logo-sign.png?v=1" alt="Lunet" />
+          <div class="sidebar-subtitle">Панель управления</div>
         </div>
 
         <nav class="menu">${renderMenu(activeKey)}</nav>

@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from backend.core.logger_config import logger
 from backend.repositories.referral_repository import ReferralRepository
 from backend.repositories.user_repository import UserRepository
+from backend.services.remnawave_service import RemnaWaveService
 from backend.services.subscription_service import SubscriptionService
 from backend.services.exceptions import UserNotFound
 
@@ -16,6 +17,7 @@ class ReferralService:
         self.referral_repo = ReferralRepository(session)
         self.user_repo = UserRepository(session)
         self.sub_service = SubscriptionService(session)
+        self.remnawave_service = RemnaWaveService(session)
 
     async def create_account(self, user_id: int):
         user = await self.user_repo.get_by_id(user_id)
@@ -65,10 +67,29 @@ class ReferralService:
         if updated:
             await self.referral_repo.increase_invited_count(referrer_id)
 
-            await self.sub_service.renew_subscription(
+            sub = await self.sub_service.renew_subscription(
                 user_id=referrer_id,
                 duration_hours=REF_BONUS_HOURS,
             )
+
+            try:
+                await self.remnawave_service.get_subscription_url(
+                    user=referrer_user,
+                    subscription=sub,
+                )
+                await self.remnawave_service.sync_user_state(
+                    user=referrer_user,
+                    subscription=sub,
+                    status="ACTIVE",
+                )
+            except Exception as e:
+                logger.exception(
+                    "[biz][referral] remnawave_bonus_sync_failed user_id=%s referrer_id=%s subscription_id=%s: %s",
+                    user_id,
+                    referrer_id,
+                    getattr(sub, "id", None),
+                    e,
+                )
 
             await self.session.commit()
             logger.info(

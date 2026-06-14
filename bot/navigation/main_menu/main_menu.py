@@ -7,8 +7,10 @@ from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from backend.images import MAIN_MENU_IMG
 from backend.services import UserService
 from backend.services.exceptions import UserNotFound
+from backend.services.partner_service import PartnerService
 from backend.services.referral_service import ReferralService
 from bot.navigation.main_menu.keyboards import main_menu_kb
+from bot.utils.html import html_escape
 
 router = Router()
 
@@ -27,6 +29,7 @@ async def start_cmd(
     command: CommandObject,
     user_service: UserService,
     referral_service: ReferralService,
+    partner_service: PartnerService,
     is_new_user: bool = False,
 ):
     tg_id = message.from_user.id
@@ -38,6 +41,14 @@ async def start_cmd(
         return
 
     args = (command.args or "").strip()
+    if args.startswith("partner_") and is_new_user:
+        partner_code = args.split("_", 1)[1].strip()
+        if partner_code:
+            try:
+                await partner_service.attach_user(user_id=user.id, code=partner_code)
+            except ValueError:
+                pass
+
     if args.startswith("ref_") and is_new_user and getattr(user, "referrer_id", None) is None:
         ref_str = args.split("_", 1)[1]
         if ref_str.isdigit():
@@ -51,9 +62,9 @@ async def start_cmd(
                     )
                     if linked:
                         referral_name = (
-                            f"@{message.from_user.username}"
+                            f"@{html_escape(message.from_user.username)}"
                             if message.from_user.username
-                            else (message.from_user.full_name or str(tg_id))
+                            else html_escape(message.from_user.full_name or str(tg_id))
                         )
                         await message.bot.send_message(
                             chat_id=referrer.tg_id,
@@ -65,9 +76,6 @@ async def start_cmd(
                         )
                 except UserNotFound:
                     pass
-
-    if is_new_user:
-        return
 
     await message.answer_photo(
         photo=MAIN_MENU_IMG,

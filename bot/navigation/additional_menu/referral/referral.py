@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from backend.images import MAIN_MENU_IMG
 from bot.navigation.additional_menu.referral.keyboards import referral_kb
+from bot.utils.html import html_escape
 
 from backend.services import ReferralService, UserService
 from backend.services.exceptions import UserNotFound
@@ -39,7 +40,7 @@ async def referral_clb(callback: CallbackQuery, referral_service: ReferralServic
         f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс: {referral_account.referral_balance} RUB\n\n"
 
         "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ваша ссылка:\n"
-        f"<code>{referral_url}</code>\n"
+        f"<code>{html_escape(referral_url)}</code>\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Совет: делитесь ссылкой с друзьями, публикуйте в чатах и соцсетях</i>"
     )
 

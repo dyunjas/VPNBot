@@ -15,6 +15,7 @@ from backend.services import UserService
 from backend.services.exceptions import UserNotFound
 from backend.states import EmailBindStates
 from bot.navigation.additional_menu.profile.keyboards import profile_kb, email_bind_kb
+from bot.utils.html import html_escape
 
 
 router = Router()
@@ -84,14 +85,14 @@ def _smtp_send_code(email: str, code: str) -> None:
 async def _render_profile(callback: CallbackQuery, user_service: UserService) -> None:
     tg_id = callback.from_user.id
     user = await user_service.get_by_tg_id(tg_id)
-    username = "-" if user.username is None else f"@{user.username}"
+    username = "-" if user.username is None else f"@{html_escape(user.username)}"
     email = user.email or "не привязана"
 
     text = (
         f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Пользователь №{user.id}:</b>\n"
         f"<b><tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Юзернейм:</b> {username}\n"
         f"<b><tg-emoji emoji-id='5874948844935974490'>⭐️</tg-emoji> ID:</b> <code>{user.tg_id}</code>\n"
-        f"<b><tg-emoji emoji-id='5879785854284599288'>✉️</tg-emoji> Почта:</b> {email}\n"
+        f"<b><tg-emoji emoji-id='5879785854284599288'>✉️</tg-emoji> Почта:</b> {html_escape(email)}\n"
         f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс:</b> {user.balance} RUB"
     )
 
@@ -121,7 +122,7 @@ async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, u
         )
         return
 
-    current_email = user.email or "-"
+    current_email = html_escape(user.email or "-")
     text = (
         "<b><tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Привязка почты</b>\n"
         f"Текущая почта: <code>{current_email}</code>\n\n"
@@ -197,5 +198,5 @@ async def profile_email_bind_verify_code(message: Message, state: FSMContext, us
         return
 
     await state.clear()
-    text = f"<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji><b>Почта успешно привязана: <code>{email}</code></b>"
+    text = f"<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji><b>Почта успешно привязана: <code>{html_escape(email)}</code></b>"
     await message.answer(text=text, reply_markup=email_bind_kb())

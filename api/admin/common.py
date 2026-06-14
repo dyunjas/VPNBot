@@ -13,6 +13,8 @@ from sqlalchemy import String, cast, delete, desc, func, literal, or_, select
 
 from backend.core.config import settings
 from backend.database.models import (
+    PartnerAttribution,
+    PartnerLink,
     Promocode,
     PromocodeActivation,
     ReferralAccount,
@@ -33,6 +35,7 @@ from backend.services.exceptions import (
 from backend.services.subscription_service import SubscriptionService
 from backend.services.user_service import UserService
 from backend.services.remnawave_service import RemnaWaveService
+from backend.services.partner_service import PartnerService
 
 router = APIRouter(prefix="/admin-api", tags=["admin-web"])
 
@@ -202,6 +205,15 @@ class PromocodeCreatePayload(BaseModel):
     usages: int = Field(default=1, gt=0)
 
 
+class PartnerLinkCreatePayload(BaseModel):
+    name: str = Field(min_length=1, max_length=128)
+    code: str | None = Field(default=None, min_length=3, max_length=64)
+
+
+class PartnerLinkUpdatePayload(BaseModel):
+    is_active: bool
+
+
 __all__ = [
     "asyncio",
     "uuid",
@@ -231,6 +243,8 @@ __all__ = [
     "or_",
     "select",
     "settings",
+    "PartnerAttribution",
+    "PartnerLink",
     "Promocode",
     "PromocodeActivation",
     "ReferralAccount",
@@ -248,6 +262,7 @@ __all__ = [
     "SubscriptionService",
     "UserService",
     "RemnaWaveService",
+    "PartnerService",
     "SORT_FIELDS",
     "SUB_SORT_FIELDS",
     "TX_SORT_FIELDS",
@@ -269,4 +284,6 @@ __all__ = [
     "PlanCreatePayload",
     "PlanUpdatePayload",
     "PromocodeCreatePayload",
+    "PartnerLinkCreatePayload",
+    "PartnerLinkUpdatePayload",
 ]

@@ -7586,3 +7586,32 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-06-13 16:37:09] [INFO] root: Settings successfully loaded from .env
 [2026-06-13 16:37:10] [INFO] root: Database tables initialized
 [2026-06-13 16:37:10] [INFO] root: Database connection successful
+[2026-06-13 16:46:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-06-13 16:46:45] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-06-14 13:58:30] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 13:58:32] [INFO] root: Database tables initialized
+[2026-06-14 13:58:32] [INFO] root: Database connection successful
+[2026-06-14 14:00:31] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:00:31] [INFO] root: Database tables initialized
+[2026-06-14 14:00:31] [INFO] root: Database connection successful
+[2026-06-14 14:10:06] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:10:07] [INFO] root: Database tables initialized
+[2026-06-14 14:10:07] [INFO] root: Database connection successful
+[2026-06-14 14:10:07] [INFO] root: Bot started
+[2026-06-14 14:17:47] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-14 14:17:47] [INFO] root: Bot stopped
+[2026-06-14 14:17:54] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:17:55] [INFO] root: Database tables initialized
+[2026-06-14 14:17:55] [INFO] root: Database connection successful
+[2026-06-14 14:17:55] [INFO] root: Bot started
+[2026-06-14 14:18:06] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:18:07] [INFO] root: Database tables initialized
+[2026-06-14 14:18:07] [INFO] root: Database connection successful
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_http_403 user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_api_error user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [PALLY] Payment creation failed for tg_id=46: PALLY API error: HTTP 403
+[2026-06-14 15:17:14] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 15:17:15] [INFO] root: Database tables initialized
+[2026-06-14 15:17:15] [INFO] root: Database connection successful
+[2026-06-14 15:20:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-14 15:20:50] [INFO] root: Bot stopped

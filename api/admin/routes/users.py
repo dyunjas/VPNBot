@@ -1,7 +1,38 @@
+from aiogram import Bot
+from aiogram.client.session.aiohttp import AiohttpSession
 from fastapi import APIRouter
 from ..common import *
+from backend.core.loader import bot as runtime_bot
+from backend.core.logger_config import logger
 
 router = APIRouter()
+
+
+async def _send_user_status_change_notification(*, tg_id: int, action: str) -> None:
+    bot_instance = runtime_bot
+    temp_bot: Bot | None = None
+    if bot_instance is None:
+        bot_token = (settings.BOT_TOKEN or "").strip()
+        if not bot_token:
+            logger.warning("[admin][users] status notify skipped: BOT_TOKEN missing")
+            return
+        proxy_url = (settings.BOT_PROXY or "").strip() or None
+        session = AiohttpSession(proxy=proxy_url) if proxy_url else AiohttpSession()
+        temp_bot = Bot(token=bot_token, session=session)
+        bot_instance = temp_bot
+
+    text = (
+        "⛔️ Ваш аккаунт заблокирован администратором. Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupport."
+        if action == "ban"
+        else "✅ Ваш аккаунт разблокирован."
+    )
+    try:
+        await bot_instance.send_message(chat_id=tg_id, text=text)
+    except Exception:
+        logger.exception("[admin][users] status notify failed tg_id=%s action=%s", tg_id, action)
+    finally:
+        if temp_bot is not None:
+            await temp_bot.session.close()
 
 @router.get("/users", dependencies=[Depends(require_admin_auth)])
 async def admin_users(
@@ -189,13 +220,31 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
                 user.banned = True
                 if remnawave_service.enabled:
                     await remnawave_service.disable_user_access(user=user)
-                await session.execute(delete(Subscription).where(Subscription.user_id == user_id))
                 await session.commit()
+                if user.tg_id:
+                    await _send_user_status_change_notification(tg_id=int(user.tg_id), action="ban")
                 return {"ok": True, "action": payload.action}
 
             if payload.action == "unban":
                 user.banned = False
+                active_sub = (
+                    await session.execute(
+                        select(Subscription)
+                        .where(Subscription.user_id == user_id)
+                        .order_by(Subscription.current_period_end.desc())
+                        .limit(1)
+                    )
+                ).scalar_one_or_none()
+                if remnawave_service.enabled and active_sub:
+                    try:
+                        await remnawave_service.enable_user_access(user=user, subscription=active_sub)
+                        if active_sub.status == SubStatus.active:
+                            await remnawave_service.sync_user_state(user=user, subscription=active_sub, status="ACTIVE")
+                    except Exception:
+                        logger.exception("[admin][users] remnawave re-enable failed user_id=%s", user_id)
                 await session.commit()
+                if user.tg_id:
+                    await _send_user_status_change_notification(tg_id=int(user.tg_id), action="unban")
                 return {"ok": True, "action": payload.action}
 
             if payload.action == "add_balance":

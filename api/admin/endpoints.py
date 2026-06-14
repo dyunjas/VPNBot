@@ -10,6 +10,7 @@ from api.admin.routes import (
     users_router,
     withdrawals_router,
     logs_router,
+    partners_router,
     promocodes_router,
 )
 
@@ -24,3 +25,4 @@ router.include_router(withdrawals_router)
 router.include_router(referrals_router)
 router.include_router(logs_router)
 router.include_router(promocodes_router)
+router.include_router(partners_router)

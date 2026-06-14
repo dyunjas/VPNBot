@@ -52,6 +52,8 @@ REFRESH_TTL_DAYS = 30
 REFRESH_COOKIE = "cabinet_refresh_token"
 
 _OTP_STORE: dict[str, dict] = {}
+_OTP_LAST_SENT: dict[str, float] = {}
+_OTP_SEND_COOLDOWN_SEC = 30
 
 
 class SendEmailCodePayload(BaseModel):
@@ -72,7 +74,7 @@ class VerifyCodePayload(BaseModel):
 
 class RegisterPayload(BaseModel):
     email: str
-    tg_id: int | None = None
+    initData: str | None = None
 
 
 class InitPayload(BaseModel):
@@ -178,11 +180,19 @@ def _cleanup_otp() -> None:
 
 def _put_otp(channel: str, identity: str, user_id: int, code: str) -> None:
     _cleanup_otp()
-    _OTP_STORE[_otp_key(channel, identity)] = {
+    key = _otp_key(channel, identity)
+    _OTP_STORE[key] = {
         "user_id": user_id,
         "code": code,
         "expires_at": int(time.time()) + OTP_TTL_SEC,
     }
+    _OTP_LAST_SENT[key] = time.time()
+
+
+def _otp_send_allowed(channel: str, identity: str) -> bool:
+    key = _otp_key(channel, identity)
+    last_sent = float(_OTP_LAST_SENT.get(key, 0) or 0)
+    return (time.time() - last_sent) >= _OTP_SEND_COOLDOWN_SEC
 
 
 def _pop_otp(channel: str, identity: str, code: str) -> int | None:
@@ -271,21 +281,21 @@ async def cabinet_register(payload: RegisterPayload):
     email = payload.email.strip().lower()
     if not email:
         raise HTTPException(status_code=400, detail="email is required")
-    if payload.tg_id is None:
-        raise HTTPException(status_code=400, detail="tg_id is required by current backend schema")
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = int(tg_user["id"])
 
     async with async_session() as session:
         existing_email = await session.execute(select(User).where(User.email == email))
         if existing_email.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="email already registered")
 
-        existing_tg = await session.execute(select(User).where(User.tg_id == payload.tg_id))
+        existing_tg = await session.execute(select(User).where(User.tg_id == tg_id))
         user = existing_tg.scalar_one_or_none()
         if user:
             user.email = email
         else:
             user = User(
-                tg_id=int(payload.tg_id),
+                tg_id=tg_id,
                 email=email,
                 username=None,
                 balance=0,
@@ -309,6 +319,8 @@ async def cabinet_send_email_code(payload: SendEmailCodePayload):
         user = res.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="user with this email not found")
+    if not _otp_send_allowed("email", email):
+        raise HTTPException(status_code=429, detail="code already sent recently")
 
     code = f"{secrets.randbelow(1000000):06d}"
     _put_otp("email", email, user.id, code)
@@ -323,6 +335,8 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
         user = res.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="user with this tg_id not found")
+    if not _otp_send_allowed("telegram", str(payload.tg_id)):
+        raise HTTPException(status_code=429, detail="code already sent recently")
 
     code = f"{secrets.randbelow(1000000):06d}"
     _put_otp("telegram", str(payload.tg_id), user.id, code)
@@ -367,7 +381,7 @@ async def cabinet_verify_code(payload: VerifyCodePayload):
         key=REFRESH_COOKIE,
         value=refresh_token,
         httponly=True,
-        secure=False,
+        secure=str(settings.PUBLIC_BASE_URL or "").strip().startswith("https://"),
         samesite="lax",
         max_age=REFRESH_TTL_DAYS * 24 * 3600,
         path="/",
@@ -688,4 +702,3 @@ async def cabinet_balance_check(payload: BalanceCheckPayload, user_id: int = Dep
         tx = await tx_service.get_by_provider_id(provider_id)
         fresh_user = await user_service.get_by_id(user.id)
         return {"ok": True, "confirmed": True, "method": method, "transaction": {"id": tx.id, "provider_id": tx.transaction_id, "amount": int(tx.amount) if tx.amount is not None else None, "paid": True, "status_raw": "CONFIRMED"}, "balance": fresh_user.balance}
-

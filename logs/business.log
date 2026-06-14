@@ -715,3 +715,41 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
 [2026-06-13 16:34:41] [INFO] root: [biz][subscription] marked_expired subscription_id=18
 [2026-06-13 16:34:50] [INFO] root: [biz][subscription] marked_expired subscription_id=21
+[2026-06-14 14:02:43] [INFO] root: [biz][partner] link_created id=1 code=1f6824ee82 name=dyunjais
+[2026-06-14 14:11:55] [INFO] root: [biz][user] created user_id=41 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] activate_requested user_id=41 plan_id=9 auto_renew=False
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] created user_id=41 subscription_id=None plan_id=9 period_end=2026-09-12 09:11:55.376313+00:00 gb_added=90.00
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] activate_completed user_id=41 subscription_id=None
+[2026-06-14 14:11:55] [INFO] root: [biz][partner] attach_skipped user_id=41 code=1f6824ee82 reason=link_not_found
+[2026-06-14 14:15:28] [INFO] root: [biz][user] created user_id=42 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] activate_requested user_id=42 plan_id=9 auto_renew=False
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] created user_id=42 subscription_id=None plan_id=9 period_end=2026-09-12 09:15:28.745236+00:00 gb_added=90.00
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] activate_completed user_id=42 subscription_id=None
+[2026-06-14 14:15:28] [INFO] root: [biz][partner] user_attached user_id=42 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:18:19] [INFO] root: [biz][user] created user_id=43 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] activate_requested user_id=43 plan_id=9 auto_renew=False
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] created user_id=43 subscription_id=None plan_id=9 period_end=2026-09-12 09:18:19.893529+00:00 gb_added=90.00
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] activate_completed user_id=43 subscription_id=None
+[2026-06-14 14:18:19] [INFO] root: [biz][partner] user_attached user_id=43 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:19:06] [INFO] root: [biz][user] created user_id=44 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] activate_requested user_id=44 plan_id=9 auto_renew=False
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] created user_id=44 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:06.222206+00:00 gb_added=90.00
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] activate_completed user_id=44 subscription_id=None
+[2026-06-14 14:19:06] [INFO] root: [biz][partner] attach_skipped user_id=44 code=1f6824ee82 reason=inactive
+[2026-06-14 14:19:23] [INFO] root: [biz][user] created user_id=45 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] activate_requested user_id=45 plan_id=9 auto_renew=False
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] created user_id=45 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:23.870027+00:00 gb_added=90.00
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] activate_completed user_id=45 subscription_id=None
+[2026-06-14 14:19:23] [INFO] root: [biz][partner] attach_skipped user_id=45 code=1f6824ee82 reason=inactive
+[2026-06-14 14:19:36] [INFO] root: [biz][user] created user_id=46 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] activate_requested user_id=46 plan_id=9 auto_renew=False
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] created user_id=46 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:36.736688+00:00 gb_added=90.00
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] activate_completed user_id=46 subscription_id=None
+[2026-06-14 14:19:36] [INFO] root: [biz][partner] user_attached user_id=46 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:19:50] [INFO] root: [biz][billing] pally_create_requested user_id=46 amount=5.0 ttl=600
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_http_403 user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_api_error user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_create_requested user_id=46 amount=5.0 payment_method=2
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_created user_id=46 provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 amount=5.0
+[2026-06-14 14:20:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4
+[2026-06-14 14:20:56] [INFO] root: [biz][billing] platega_confirmed provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 user_id=46 amount=5

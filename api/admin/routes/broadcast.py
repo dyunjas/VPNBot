@@ -11,6 +11,7 @@ BROADCAST_JOBS: dict[str, dict] = {}
 BROADCAST_JOBS_LOCK = asyncio.Lock()
 BROADCAST_KEEP_HOURS = 12
 BROADCAST_SEND_TIMEOUT_SEC = 12
+MAX_BROADCAST_IMAGE_BYTES = 8 * 1024 * 1024
 
 
 def _utc_now() -> datetime:
@@ -187,9 +188,13 @@ async def admin_broadcast_upload(
     image_bytes: bytes | None = None
     image_name = "broadcast.jpg"
     if image is not None:
+        if image.content_type and not str(image.content_type).startswith("image/"):
+            raise HTTPException(status_code=400, detail="only image uploads are allowed")
         image_bytes = await image.read()
         if not image_bytes:
             raise HTTPException(status_code=400, detail="image is empty")
+        if len(image_bytes) > MAX_BROADCAST_IMAGE_BYTES:
+            raise HTTPException(status_code=400, detail="image is too large")
         image_name = image.filename or image_name
 
     await _cleanup_jobs()

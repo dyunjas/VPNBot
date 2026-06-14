@@ -110,7 +110,7 @@ function friendlyErrorMessage(raw) {
 }
 
 async function apiRequest(path, body = {}) {
-  if (!IN_TELEGRAM) throw new Error("Это приложение работает только внутри Telegram");
+  if (!IN_TELEGRAM) throw new Error("Мини приложение доступно только в Telegram");
   if (bannedLocked) throw new Error("🚫 Вы забанены");
 
   const payload = { initData: initData || null, ...body };

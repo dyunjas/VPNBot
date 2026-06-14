@@ -1,4 +1,4 @@
-﻿const txState = { page: 1, pages: 1 };
+const txState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
   ensureAuthOrRedirect();
@@ -45,25 +45,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       payment_system: q("payment_system").value || "",
       search: q("search").value || "",
     });
+
     const data = await api(`/admin-api/transactions?${params.toString()}`);
     const items = data.items || [];
     const meta = data.meta || { page: 1, pages: 1, total: 0 };
     txState.pages = meta.pages;
 
     q("tbody").innerHTML = "";
-    items.forEach((t) => {
+    items.forEach((transaction) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${t.id}</td>
-        <td>${t.user_id}</td>
-        <td>${safeText(t.tg_id)}</td>
-        <td>${safeText(t.username)}</td>
-        <td>${safeText(t.transaction_id)}</td>
-        <td>${safeText(t.amount)} RUB</td>
-        <td>${safeText(t.payment_system)}</td>
-        <td>${statusBadge(t.paid ? "paid" : "unpaid")}</td>
-        <td>${formatDateTime(t.created_at)}</td>
-        <td>${formatDateTime(t.paid_at)}</td>
+        <td>${safeText(transaction.id)}</td>
+        <td>${safeText(transaction.user_id)}</td>
+        <td>${safeText(transaction.tg_id)}</td>
+        <td>${safeText(transaction.username)}</td>
+        <td>${safeText(transaction.transaction_id)}</td>
+        <td>${safeText(transaction.amount)} RUB</td>
+        <td>${safeText(transaction.payment_system)}</td>
+        <td>${statusBadge(transaction.paid ? "paid" : "unpaid")}</td>
+        <td>${formatDateTime(transaction.created_at)}</td>
+        <td>${formatDateTime(transaction.paid_at)}</td>
       `;
       q("tbody").appendChild(tr);
     });
@@ -71,34 +72,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderPager(meta, q("prev"), q("next"), q("meta"));
   }
 
-  q("apply").addEventListener("click", async (e) => {
-    await withButtonLoading(e.currentTarget, async () => {
+  q("apply").addEventListener("click", async (event) => {
+    await withButtonLoading(event.currentTarget, async () => {
       txState.page = 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("prev").addEventListener("click", async (e) => {
+  q("prev").addEventListener("click", async (event) => {
     if (txState.page <= 1) return;
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       txState.page -= 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("next").addEventListener("click", async (e) => {
+  q("next").addEventListener("click", async (event) => {
     if (txState.page >= txState.pages) return;
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       txState.page += 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
   try {
     await renderSessionInfo();
     bindEnterSubmit(["search", "payment_system"], "apply");
     await loadRows();
-  } catch (e) {
-    alert(e.message);
+  } catch (error) {
+    alert(error.message);
   }
 });

@@ -95,6 +95,11 @@ async def admin_promocodes():
     return _render_admin_page("promocodes")
 
 
+@app.get("/admin/partners")
+async def admin_partners():
+    return _render_admin_page("partners")
+
+
 @app.get("/admin/login.html")
 async def admin_login_html():
     return RedirectResponse(url="/admin/login", status_code=307)
@@ -148,6 +153,11 @@ async def admin_logs_html():
 @app.get("/admin/promocodes.html")
 async def admin_promocodes_html():
     return RedirectResponse(url="/admin/promocodes", status_code=307)
+
+
+@app.get("/admin/partners.html")
+async def admin_partners_html():
+    return RedirectResponse(url="/admin/partners", status_code=307)
 
 
 @app.get("/health")

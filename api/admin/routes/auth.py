@@ -1,7 +1,28 @@
 from fastapi import APIRouter
+from fastapi import Request
+import time
 from ..common import *
 
 router = APIRouter()
+_LOGIN_ATTEMPTS: dict[str, list[float]] = {}
+_LOGIN_WINDOW_SEC = 300
+_LOGIN_MAX_ATTEMPTS = 5
+
+
+def _login_rate_key(request: Request, login: str) -> str:
+    client_host = request.client.host if request.client else "unknown"
+    return f"{client_host}:{login.strip().lower()}"
+
+
+def _login_allowed(key: str) -> bool:
+    now = time.time()
+    attempts = [ts for ts in _LOGIN_ATTEMPTS.get(key, []) if now - ts < _LOGIN_WINDOW_SEC]
+    if len(attempts) >= _LOGIN_MAX_ATTEMPTS:
+        _LOGIN_ATTEMPTS[key] = attempts
+        return False
+    attempts.append(now)
+    _LOGIN_ATTEMPTS[key] = attempts
+    return True
 
 
 def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
@@ -11,7 +32,7 @@ def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
     return dt.replace(year=year, month=month, day=1, hour=0, minute=0, second=0, microsecond=0)
 
 @router.post("/auth/login")
-async def admin_auth_login(payload: LoginPayload):
+async def admin_auth_login(payload: LoginPayload, request: Request):
     expected_login = (settings.ADMIN_WEB_LOGIN or "").strip()
     expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
     if not expected_login or not expected_password:
@@ -19,6 +40,10 @@ async def admin_auth_login(payload: LoginPayload):
             status_code=503,
             detail="ADMIN_WEB_LOGIN and ADMIN_WEB_PASSWORD must be configured",
         )
+    if payload.login != expected_login:
+        key = _login_rate_key(request, payload.login)
+        if not _login_allowed(key):
+            raise HTTPException(status_code=429, detail="Too many login attempts")
     if payload.login != expected_login or payload.password != expected_password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = _create_admin_access_token(payload.login)

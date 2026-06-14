@@ -479,3 +479,13 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
 [2026-06-13 16:08:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
 [2026-06-13 16:08:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=277195
+[2026-06-14 14:19:50] [INFO] root: [PALLY] Create payment tg_id=46 amount=5
+[2026-06-14 14:19:50] [INFO] root: [biz][billing] pally_create_requested user_id=46 amount=5.0 ttl=600
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_http_403 user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_api_error user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [PALLY] Payment creation failed for tg_id=46: PALLY API error: HTTP 403
+[2026-06-14 14:19:57] [INFO] root: [PLATEGA] Create payment tg_id=46 amount=5 method=СБП
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_create_requested user_id=46 amount=5.0 payment_method=2
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_created user_id=46 provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 amount=5.0
+[2026-06-14 14:20:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4
+[2026-06-14 14:20:56] [INFO] root: [biz][billing] platega_confirmed provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 user_id=46 amount=5

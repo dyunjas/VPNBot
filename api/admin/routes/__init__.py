@@ -8,6 +8,7 @@ from .withdrawals import router as withdrawals_router
 from .referrals import router as referrals_router
 from .logs import router as logs_router
 from .promocodes import router as promocodes_router
+from .partners import router as partners_router
 
 __all__ = [
     "auth_router",
@@ -20,4 +21,5 @@ __all__ = [
     "referrals_router",
     "logs_router",
     "promocodes_router",
+    "partners_router",
 ]

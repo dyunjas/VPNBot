@@ -1,7 +1,7 @@
 const BACKEND_URL = window.__API_BASE_URL || window.location.origin;
 const tg = window.Telegram?.WebApp ?? null;
 const queryInitData = new URLSearchParams(window.location.search || "").get("initData");
-const IN_TELEGRAM = Boolean(tg?.initDataUnsafe?.user || (navigator.userAgent || "").includes("Telegram"));
+const IN_TELEGRAM = Boolean(tg?.initData || tg?.initDataUnsafe?.user || (navigator.userAgent || "").includes("Telegram"));
 const APP_MODE = window.__APP_MODE || (window.location.pathname.startsWith("/cabinet") ? "cabinet" : "miniapp");
 const IS_CABINET_PATH = APP_MODE === "cabinet";
 const IS_MINIAPP_PATH = !IS_CABINET_PATH;
@@ -169,7 +169,7 @@ function friendlyErrorMessage(raw) {
 
   if (s.includes("banned")) return "Доступ к мини-приложению ограничен";
   if (s.includes("payment required") || s === "http 402") return "Недостаточно средств для покупки подписки";
-  if (s.includes("invalid initdata") || s.includes("initdata is missing")) return "Откройте приложение через Telegram-бота";
+  if (s.includes("invalid initdata") || s.includes("initdata is missing")) return "Мини приложение доступно только в Telegram";
   if (s.includes("user not found")) return "Пользователь не найден. Сначала зайдите в бота";
   if (s.includes("not enough referral balance")) return "Недостаточно реферального баланса";
   if (s.includes("not enough balance")) return "Недостаточно средств";

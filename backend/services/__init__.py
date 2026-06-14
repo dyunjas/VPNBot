@@ -7,6 +7,7 @@ from backend.services.referral_service import ReferralService
 from backend.services.withdrawal_service import WithdrawalService
 from backend.services.device_service import DeviceService
 from backend.services.remnawave_service import RemnaWaveService
+from backend.services.partner_service import PartnerService
 
 
 
@@ -14,5 +15,5 @@ __all__ = [
     "UserService", "TransactionService", "BillingService",
     "SubscriptionService", "PromoService",
     "ReferralService", "WithdrawalService", "DeviceService",
-    "RemnaWaveService",
+    "RemnaWaveService", "PartnerService",
     ]

@@ -22980,3 +22980,114 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-06-13 16:37:10] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-06-13 16:37:10] [INFO] root: Database tables initialized
 [2026-06-13 16:37:10] [INFO] root: Database connection successful
+[2026-06-13 16:46:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-06-13 16:46:34] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-06-13 16:46:45] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-06-14 13:58:30] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 13:58:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 13:58:32] [INFO] root: Database tables initialized
+[2026-06-14 13:58:32] [INFO] root: Database connection successful
+[2026-06-14 14:00:31] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:00:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 14:00:31] [INFO] root: Database tables initialized
+[2026-06-14 14:00:31] [INFO] root: Database connection successful
+[2026-06-14 14:02:43] [INFO] root: [biz][partner] link_created id=1 code=1f6824ee82 name=dyunjais
+[2026-06-14 14:10:06] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:10:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 14:10:07] [INFO] root: Database tables initialized
+[2026-06-14 14:10:07] [INFO] root: Database connection successful
+[2026-06-14 14:10:07] [INFO] root: Bot started
+[2026-06-14 14:10:07] [INFO] aiogram.dispatcher: Start polling
+[2026-06-14 14:10:08] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-14 14:10:30] [INFO] aiogram.event: Update id=891135895 is handled. Duration 616 ms by bot id=7557954606
+[2026-06-14 14:11:55] [INFO] root: [biz][user] created user_id=41 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] activate_requested user_id=41 plan_id=9 auto_renew=False
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] created user_id=41 subscription_id=None plan_id=9 period_end=2026-09-12 09:11:55.376313+00:00 gb_added=90.00
+[2026-06-14 14:11:55] [INFO] root: [subscription] reset_user_traffic skipped user_id=41 (remnawave-only mode)
+[2026-06-14 14:11:55] [INFO] root: [biz][subscription] activate_completed user_id=41 subscription_id=None
+[2026-06-14 14:11:55] [INFO] root: [biz][partner] attach_skipped user_id=41 code=1f6824ee82 reason=link_not_found
+[2026-06-14 14:11:55] [INFO] aiogram.event: Update id=891135896 is handled. Duration 42 ms by bot id=7557954606
+[2026-06-14 14:15:28] [INFO] root: [biz][user] created user_id=42 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] activate_requested user_id=42 plan_id=9 auto_renew=False
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] created user_id=42 subscription_id=None plan_id=9 period_end=2026-09-12 09:15:28.745236+00:00 gb_added=90.00
+[2026-06-14 14:15:28] [INFO] root: [subscription] reset_user_traffic skipped user_id=42 (remnawave-only mode)
+[2026-06-14 14:15:28] [INFO] root: [biz][subscription] activate_completed user_id=42 subscription_id=None
+[2026-06-14 14:15:28] [INFO] root: [biz][partner] user_attached user_id=42 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:15:28] [INFO] aiogram.event: Update id=891135897 is handled. Duration 32 ms by bot id=7557954606
+[2026-06-14 14:15:47] [INFO] aiogram.event: Update id=891135898 is handled. Duration 120 ms by bot id=7557954606
+[2026-06-14 14:17:00] [INFO] aiogram.event: Update id=891135899 is handled. Duration 197 ms by bot id=7557954606
+[2026-06-14 14:17:01] [INFO] aiogram.event: Update id=891135900 is handled. Duration 219 ms by bot id=7557954606
+[2026-06-14 14:17:47] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-14 14:17:47] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-14 14:17:47] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-06-14 14:17:47] [INFO] root: Bot polling cancelled
+[2026-06-14 14:17:47] [INFO] root: Bot stopped
+[2026-06-14 14:17:47] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-14 14:17:54] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:17:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 14:17:55] [INFO] root: Database tables initialized
+[2026-06-14 14:17:55] [INFO] root: Database connection successful
+[2026-06-14 14:17:55] [INFO] root: Bot started
+[2026-06-14 14:17:55] [INFO] aiogram.dispatcher: Start polling
+[2026-06-14 14:17:56] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-14 14:18:06] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 14:18:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 14:18:07] [INFO] root: Database tables initialized
+[2026-06-14 14:18:07] [INFO] root: Database connection successful
+[2026-06-14 14:18:19] [INFO] root: [biz][user] created user_id=43 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] activate_requested user_id=43 plan_id=9 auto_renew=False
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] created user_id=43 subscription_id=None plan_id=9 period_end=2026-09-12 09:18:19.893529+00:00 gb_added=90.00
+[2026-06-14 14:18:19] [INFO] root: [subscription] reset_user_traffic skipped user_id=43 (remnawave-only mode)
+[2026-06-14 14:18:19] [INFO] root: [biz][subscription] activate_completed user_id=43 subscription_id=None
+[2026-06-14 14:18:19] [INFO] root: [biz][partner] user_attached user_id=43 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:18:20] [INFO] aiogram.event: Update id=891135901 is handled. Duration 691 ms by bot id=7557954606
+[2026-06-14 14:18:52] [INFO] aiogram.event: Update id=891135902 is handled. Duration 167 ms by bot id=7557954606
+[2026-06-14 14:19:06] [INFO] root: [biz][user] created user_id=44 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] activate_requested user_id=44 plan_id=9 auto_renew=False
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] created user_id=44 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:06.222206+00:00 gb_added=90.00
+[2026-06-14 14:19:06] [INFO] root: [subscription] reset_user_traffic skipped user_id=44 (remnawave-only mode)
+[2026-06-14 14:19:06] [INFO] root: [biz][subscription] activate_completed user_id=44 subscription_id=None
+[2026-06-14 14:19:06] [INFO] root: [biz][partner] attach_skipped user_id=44 code=1f6824ee82 reason=inactive
+[2026-06-14 14:19:06] [INFO] aiogram.event: Update id=891135903 is handled. Duration 133 ms by bot id=7557954606
+[2026-06-14 14:19:10] [INFO] aiogram.event: Update id=891135904 is handled. Duration 210 ms by bot id=7557954606
+[2026-06-14 14:19:11] [INFO] aiogram.event: Update id=891135905 is handled. Duration 196 ms by bot id=7557954606
+[2026-06-14 14:19:23] [INFO] root: [biz][user] created user_id=45 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] activate_requested user_id=45 plan_id=9 auto_renew=False
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] created user_id=45 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:23.870027+00:00 gb_added=90.00
+[2026-06-14 14:19:23] [INFO] root: [subscription] reset_user_traffic skipped user_id=45 (remnawave-only mode)
+[2026-06-14 14:19:23] [INFO] root: [biz][subscription] activate_completed user_id=45 subscription_id=None
+[2026-06-14 14:19:23] [INFO] root: [biz][partner] attach_skipped user_id=45 code=1f6824ee82 reason=inactive
+[2026-06-14 14:19:24] [INFO] aiogram.event: Update id=891135906 is handled. Duration 150 ms by bot id=7557954606
+[2026-06-14 14:19:36] [INFO] root: [biz][user] created user_id=46 tg_id=7875834910 username=LunetVpnSupport
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] activate_requested user_id=46 plan_id=9 auto_renew=False
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] created user_id=46 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:36.736688+00:00 gb_added=90.00
+[2026-06-14 14:19:36] [INFO] root: [subscription] reset_user_traffic skipped user_id=46 (remnawave-only mode)
+[2026-06-14 14:19:36] [INFO] root: [biz][subscription] activate_completed user_id=46 subscription_id=None
+[2026-06-14 14:19:36] [INFO] root: [biz][partner] user_attached user_id=46 partner_link_id=1 code=1f6824ee82
+[2026-06-14 14:19:36] [INFO] aiogram.event: Update id=891135907 is handled. Duration 246 ms by bot id=7557954606
+[2026-06-14 14:19:47] [INFO] aiogram.event: Update id=891135908 is handled. Duration 306 ms by bot id=7557954606
+[2026-06-14 14:19:48] [INFO] aiogram.event: Update id=891135909 is handled. Duration 211 ms by bot id=7557954606
+[2026-06-14 14:19:49] [INFO] aiogram.event: Update id=891135910 is handled. Duration 111 ms by bot id=7557954606
+[2026-06-14 14:19:50] [INFO] root: [PALLY] Create payment tg_id=46 amount=5
+[2026-06-14 14:19:50] [INFO] root: [biz][billing] pally_create_requested user_id=46 amount=5.0 ttl=600
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_http_403 user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [biz][billing] pally_create_api_error user_id=46 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '5.3.126.196'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-14 14:19:55] [ERROR] root: [PALLY] Payment creation failed for tg_id=46: PALLY API error: HTTP 403
+[2026-06-14 14:19:55] [INFO] aiogram.event: Update id=891135911 is handled. Duration 4791 ms by bot id=7557954606
+[2026-06-14 14:19:57] [INFO] root: [PLATEGA] Create payment tg_id=46 amount=5 method=СБП
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_create_requested user_id=46 amount=5.0 payment_method=2
+[2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_created user_id=46 provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 amount=5.0
+[2026-06-14 14:19:57] [INFO] aiogram.event: Update id=891135912 is handled. Duration 454 ms by bot id=7557954606
+[2026-06-14 14:20:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4
+[2026-06-14 14:20:56] [INFO] root: [biz][billing] platega_confirmed provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 user_id=46 amount=5
+[2026-06-14 14:20:56] [INFO] aiogram.event: Update id=891135913 is handled. Duration 452 ms by bot id=7557954606
+[2026-06-14 15:17:14] [INFO] root: Settings successfully loaded from .env
+[2026-06-14 15:17:14] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-14 15:17:15] [INFO] root: Database tables initialized
+[2026-06-14 15:17:15] [INFO] root: Database connection successful
+[2026-06-14 15:20:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-14 15:20:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-14 15:20:50] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-06-14 15:20:50] [INFO] root: Bot polling cancelled
+[2026-06-14 15:20:50] [INFO] root: Bot stopped
+[2026-06-14 15:20:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

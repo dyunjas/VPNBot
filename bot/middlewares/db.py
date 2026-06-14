@@ -10,7 +10,8 @@ from backend.database.session import async_session
 from backend.services import (
     UserService, TransactionService, BillingService, 
     SubscriptionService, PromoService,
-    ReferralService, WithdrawalService, DeviceService, RemnaWaveService
+    ReferralService, WithdrawalService, DeviceService, RemnaWaveService,
+    PartnerService,
 )
 
 from backend.core.logger_config import logger
@@ -35,6 +36,7 @@ class DBSessionMiddleware(BaseMiddleware):
             data["withdrawal_service"] = WithdrawalService(session)
             data["device_service"] = DeviceService(session)
             data["remnawave_service"] = RemnaWaveService(session)
+            data["partner_service"] = PartnerService(session)
 
             try:
                 result = await handler(event, data)
