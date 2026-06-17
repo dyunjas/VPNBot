@@ -134,17 +134,13 @@ class SubscriptionService:
                 current_period_end=end,
                 next_renewal_at=end,
             )
-            bonus_gb = Decimal(getattr(plan, "gb_limit", 0) or 0)
-            if bonus_gb > 0:
-                await self.topup_repo.add_topup(subscription_id=sub.id, gb=bonus_gb)
             logger.info(
-                "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s renewal_bonus_gb=%s",
+                "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_limit=%s",
                 user_id,
                 sub.id,
                 plan.id,
                 end,
                 plan.gb_limit,
-                bonus_gb,
             )
 
         await self._reset_user_traffic_safe(user_id=user_id)
