@@ -47,11 +47,11 @@ def _render_app_shell(app_mode: str) -> HTMLResponse:
         html = f.read()
     bootstrap = (
         f"<script>window.__APP_MODE={app_mode!r};</script>"
-        '<script defer src="/miniapp/app.v2.js?v=17"></script>'
+        '<script defer src="/miniapp/app.v2.js?v=18"></script>'
     )
     rendered = html.replace("__APP_BOOTSTRAP__", bootstrap)
     # Backward-compatibility: some templates may still contain old placeholder.
-    rendered = rendered.replace("__APP_ENTRY__", "/miniapp/app.v2.js?v=17")
+    rendered = rendered.replace("__APP_ENTRY__", "/miniapp/app.v2.js?v=18")
     return HTMLResponse(
         content=rendered,
         headers={
@@ -115,7 +115,7 @@ async def favicon():
 
 @app.get("/__APP_ENTRY__")
 async def legacy_app_entry():
-    return RedirectResponse(url="/miniapp/app.v2.js?v=17", status_code=307)
+    return RedirectResponse(url="/miniapp/app.v2.js?v=18", status_code=307)
 
 @app.get("/health")
 async def health():

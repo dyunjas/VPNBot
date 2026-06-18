@@ -561,7 +561,7 @@ body {
   position: sticky;
   bottom: 0;
   display: none;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-top: 14px;
   padding: 8px;
@@ -584,6 +584,23 @@ body {
   border-color: #9fc0ef;
   background: #eaf2ff;
   color: #1b3560;
+}
+
+.tab__icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.tab__label {
+  display: block;
+  font-size: 12px;
+  line-height: 1;
 }
 
 .cabinet-footer {
@@ -632,6 +649,70 @@ body {
 }
 
 .cabinet-footer__link:hover { text-decoration: underline; }
+
+.is-miniapp .app {
+  width: min(820px, 100%);
+  min-height: 100dvh;
+  padding: calc(16px + var(--tg-safe-top)) 12px 104px;
+}
+
+.is-miniapp .cabinet-topbar,
+.is-miniapp .sidebar,
+.is-miniapp .cabinet-footer,
+.is-miniapp .mobile-menu-toggle,
+.is-miniapp .mobile-menu-backdrop {
+  display: none !important;
+}
+
+.is-miniapp .cabinet-shell {
+  display: block;
+}
+
+.is-miniapp .view-host {
+  gap: 12px;
+}
+
+.is-miniapp .view {
+  gap: 12px;
+}
+
+.is-miniapp .bottom-nav {
+  display: grid;
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  padding: 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 36px rgba(15, 30, 55, 0.18);
+}
+
+.is-miniapp .tab {
+  min-height: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  background: rgba(248, 250, 252, 0.96);
+  color: #49607c;
+}
+
+.is-miniapp .tab--active {
+  color: #1b3560;
+}
+
+.is-miniapp .tab__icon {
+  width: 22px;
+  height: 22px;
+}
+
+.is-miniapp .card {
+  border-radius: 18px;
+}
 
 .is-miniapp .app-loader {
   position: fixed;
@@ -701,6 +782,11 @@ body {
   .is-cabinet .profile-card__name { font-size: 22px; }
   .is-cabinet .cabinet-footer { margin-top: 14px; }
   .bottom-nav { display: none; }
+
+  .is-miniapp .app {
+    width: 100%;
+    padding-bottom: 102px;
+  }
 }
 
 @media (max-width: 780px) {
@@ -708,6 +794,10 @@ body {
 }
 
 @media (max-width: 640px) {
+  .is-miniapp .app {
+    padding: calc(14px + var(--tg-safe-top)) 10px 98px;
+  }
+
   .is-cabinet .app { padding: 60px 10px 14px; }
   .is-cabinet .view-host,
   .is-cabinet .view,
@@ -735,6 +825,19 @@ body {
   .cabinet-footer__links {
     justify-content: flex-start;
     gap: 6px;
+  }
+
+  .is-miniapp .bottom-nav {
+    left: 10px;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .is-miniapp .tab {
+    min-height: 58px;
+    padding: 7px 4px;
   }
 }
 

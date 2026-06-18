@@ -24,6 +24,7 @@ if (bodyEl) {
     requestAnimationFrame(() => bodyEl.classList.add("menu-ready"));
   }
 }
+document.title = IS_CABINET_PATH ? "Lunet кабинет" : "Lunet";
 
 let loaderEl = null;
 let loaderTextEl = null;
