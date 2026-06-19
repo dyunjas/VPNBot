@@ -7621,3 +7621,245 @@ connector: <aiohttp.connector.TCPConnector object at 0x000001EE104342D0>
 [2026-06-18 15:03:22] [INFO] root: Database connection successful
 [2026-06-18 15:03:22] [INFO] root: Database tables initialized
 [2026-06-18 15:03:22] [INFO] root: Database connection successful
+[2026-06-19 08:58:36] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 08:58:39] [INFO] root: Database tables initialized
+[2026-06-19 08:58:39] [INFO] root: Database connection successful
+[2026-06-19 08:58:39] [INFO] root: Bot started
+[2026-06-19 09:01:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 09:01:58] [INFO] root: Bot stopped
+[2026-06-19 09:02:07] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:02:08] [INFO] root: Database tables initialized
+[2026-06-19 09:02:08] [INFO] root: Database connection successful
+[2026-06-19 09:02:08] [INFO] root: Bot started
+[2026-06-19 09:06:42] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 09:06:43] [INFO] root: Bot stopped
+[2026-06-19 09:06:50] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:06:51] [INFO] root: Database tables initialized
+[2026-06-19 09:06:51] [INFO] root: Database connection successful
+[2026-06-19 09:06:51] [INFO] root: Bot started
+[2026-06-19 09:10:40] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 09:10:41] [INFO] root: Bot stopped
+[2026-06-19 09:10:49] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:10:49] [INFO] root: Database tables initialized
+[2026-06-19 09:10:49] [INFO] root: Database connection successful
+[2026-06-19 09:10:49] [INFO] root: Bot started
+[2026-06-19 09:11:11] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 28, in __call__
+    user = await user_service.get_by_tg_id(event_user.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\user_service.py", line 40, in get_by_tg_id
+    raise UserNotFound(f"User with id:{tg_id} not found")
+backend.services.exceptions.UserNotFound: User with id:7875834910 not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 42, in __call__
+    result = await handler(event, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 31, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\main_menu\main_menu.py", line 311, in captcha_answer
+    user_id=user.id,
+            ^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-06-19 09:17:06] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 09:17:06] [INFO] root: Bot stopped
+[2026-06-19 09:17:29] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:17:30] [INFO] root: Database tables initialized
+[2026-06-19 09:17:30] [INFO] root: Database connection successful
+[2026-06-19 09:17:30] [INFO] root: Bot started
+[2026-06-19 09:17:46] [ERROR] root: Database error while handling update
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\db.py", line 43, in __call__
+    await session.commit()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 1000, in commit
+    await greenlet_spawn(self.sync_session.commit)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 190, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 101, in _go
+    self._raise_for_prerequisite_state(fn.__name__, current_state)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 971, in _raise_for_prerequisite_state
+    raise sa_exc.PendingRollbackError(
+    ...<6 lines>...
+    )
+sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.NotNullViolationError'>: значение NULL в столбце "gb_left" отношения "vpn_subscriptions" нарушает ограничение NOT NULL
+DETAIL:  Ошибочная строка содержит (60, 77, 9, null, active, f, 2026-06-19 09:17:46.679361, 2026-09-17 09:17:46.679361, 2026-09-17 09:17:46.679361, 2026-06-19 09:17:46.681929, 5, 5, null).
+[SQL: INSERT INTO vpn_subscriptions (user_id, plan_id, status, auto_renew, subscription_token, current_period_start, current_period_end, next_renewal_at, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::substatus, $4::BOOLEAN, $5::VARCHAR, $6::TIMESTAMP WITH TIME ZONE, $7::TIMESTAMP WITH TIME ZONE, $8::TIMESTAMP WITH TIME ZONE, $9::TIMESTAMP WITH TIME ZONE) RETURNING vpn_subscriptions.id]
+[parameters: (77, 9, 'active', False, None, datetime.datetime(2026, 6, 19, 4, 17, 46, 679361, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 9, 17, 4, 17, 46, 679361, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 9, 17, 4, 17, 46, 679361, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 6, 19, 4, 17, 46, 681929, tzinfo=datetime.timezone.utc))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+[2026-06-19 09:32:55] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 09:32:55] [INFO] root: Bot stopped
+[2026-06-19 09:33:03] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:33:04] [INFO] root: Database tables initialized
+[2026-06-19 09:33:04] [INFO] root: Database connection successful
+[2026-06-19 09:33:04] [INFO] root: Bot started
+[2026-06-19 09:56:21] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 09:56:21] [INFO] root: Database tables initialized
+[2026-06-19 09:56:21] [INFO] root: Database connection successful
+[2026-06-19 10:01:42] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 10:01:42] [INFO] root: Bot stopped
+[2026-06-19 10:01:57] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 10:01:57] [INFO] root: Database tables initialized
+[2026-06-19 10:01:57] [INFO] root: Database connection successful
+[2026-06-19 10:01:57] [INFO] root: Bot started
+[2026-06-19 10:06:01] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 10:06:01] [INFO] root: Bot stopped
+[2026-06-19 10:06:09] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 10:06:09] [INFO] root: Database tables initialized
+[2026-06-19 10:06:09] [INFO] root: Database connection successful
+[2026-06-19 10:06:09] [INFO] root: Bot started
+[2026-06-19 10:07:11] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 10:07:11] [INFO] root: Bot stopped
+[2026-06-19 10:07:19] [INFO] root: Settings successfully loaded from .env
+[2026-06-19 10:07:19] [INFO] root: Database tables initialized
+[2026-06-19 10:07:19] [INFO] root: Database connection successful
+[2026-06-19 10:07:19] [INFO] root: Bot started
+[2026-06-19 10:51:14] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-19 10:51:14] [INFO] root: Bot stopped

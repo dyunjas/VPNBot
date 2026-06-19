@@ -240,6 +240,7 @@ class Subscription(Base):
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
     next_renewal_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    gb_left: Mapped[int] = mapped_column(default=0, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

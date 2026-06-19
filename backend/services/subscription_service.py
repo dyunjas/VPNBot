@@ -103,6 +103,7 @@ class SubscriptionService:
                 current_period_end=now + period,
                 next_renewal_at=now + period,
             )
+            await self.session.flush()
             logger.info(
                 "[biz][subscription] created user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_added=%s",
                 user_id,
@@ -134,6 +135,7 @@ class SubscriptionService:
                 current_period_end=end,
                 next_renewal_at=end,
             )
+            await self.session.flush()
             logger.info(
                 "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_limit=%s",
                 user_id,
@@ -190,6 +192,7 @@ class SubscriptionService:
                 current_period_end=now + delta,
                 next_renewal_at=now + delta
             )
+            await self.session.flush()
             logger.info(
                 "[biz][subscription] renew_created_default user_id=%s subscription_id=%s period_end=%s gb_added=%s",
                 user_id,
@@ -220,6 +223,7 @@ class SubscriptionService:
                 current_period_end=new_end,
                 next_renewal_at=new_end,
             )
+            await self.session.flush()
             logger.info(
                 "[biz][subscription] renew_extended user_id=%s subscription_id=%s new_period_end=%s",
                 user_id,
@@ -228,7 +232,6 @@ class SubscriptionService:
             )
         
         await self._reset_user_traffic_safe(user_id=user_id)
-        await self.session.commit()
         logger.info(
             "[biz][subscription] renew_completed user_id=%s subscription_id=%s",
             user_id,

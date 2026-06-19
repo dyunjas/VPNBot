@@ -27,3 +27,7 @@ class TrafficPurchaseStates(StatesGroup):
 class EmailBindStates(StatesGroup):
     waiting_for_email = State()
     waiting_for_code = State()
+
+
+class CaptchaStates(StatesGroup):
+    waiting_for_answer = State()

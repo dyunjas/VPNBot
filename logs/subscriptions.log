@@ -1166,3 +1166,56 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-06-14 14:19:36] [INFO] root: [biz][subscription] created user_id=46 subscription_id=None plan_id=9 period_end=2026-09-12 09:19:36.736688+00:00 gb_added=90.00
 [2026-06-14 14:19:36] [INFO] root: [subscription] reset_user_traffic skipped user_id=46 (remnawave-only mode)
 [2026-06-14 14:19:36] [INFO] root: [biz][subscription] activate_completed user_id=46 subscription_id=None
+[2026-06-19 09:11:11] [INFO] root: [biz][subscription] activate_requested user_id=76 plan_id=9 auto_renew=False
+[2026-06-19 09:11:11] [INFO] root: [biz][subscription] created user_id=76 subscription_id=None plan_id=9 period_end=2026-09-17 04:11:11.513771+00:00 gb_added=90.00
+[2026-06-19 09:11:11] [INFO] root: [subscription] reset_user_traffic skipped user_id=76 (remnawave-only mode)
+[2026-06-19 09:11:11] [INFO] root: [biz][subscription] activate_completed user_id=76 subscription_id=None
+[2026-06-19 09:17:46] [INFO] root: [biz][subscription] activate_requested user_id=77 plan_id=9 auto_renew=False
+[2026-06-19 09:33:16] [INFO] root: [biz][subscription] activate_requested user_id=78 plan_id=9 auto_renew=False
+[2026-06-19 09:33:16] [INFO] root: [biz][subscription] created user_id=78 subscription_id=61 plan_id=9 period_end=2026-09-17 04:33:16.775638+00:00 gb_added=90.00
+[2026-06-19 09:33:16] [INFO] root: [subscription] reset_user_traffic skipped user_id=78 (remnawave-only mode)
+[2026-06-19 09:33:16] [INFO] root: [biz][subscription] activate_completed user_id=78 subscription_id=61
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] activate_requested user_id=79 plan_id=9 auto_renew=False
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] created user_id=79 subscription_id=62 plan_id=9 period_end=2026-09-17 04:33:47.762937+00:00 gb_added=90.00
+[2026-06-19 09:33:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=79 (remnawave-only mode)
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] activate_completed user_id=79 subscription_id=62
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] renew_requested user_id=36 duration_hours=72
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-07-01 08:50:24.843594+00:00
+[2026-06-19 09:33:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-06-19 09:33:47] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
+[2026-06-19 09:55:50] [INFO] root: [biz][subscription] activate_requested user_id=80 plan_id=9 auto_renew=False
+[2026-06-19 09:55:50] [INFO] root: [biz][subscription] created user_id=80 subscription_id=63 plan_id=9 period_end=2026-09-17 04:55:50.719289+00:00 gb_added=90.00
+[2026-06-19 09:55:50] [INFO] root: [subscription] reset_user_traffic skipped user_id=80 (remnawave-only mode)
+[2026-06-19 09:55:50] [INFO] root: [biz][subscription] activate_completed user_id=80 subscription_id=63
+[2026-06-19 09:58:06] [INFO] root: [biz][subscription] activate_requested user_id=81 plan_id=9 auto_renew=False
+[2026-06-19 09:58:06] [INFO] root: [biz][subscription] created user_id=81 subscription_id=64 plan_id=9 period_end=2026-09-17 04:58:06.185194+00:00 gb_added=90.00
+[2026-06-19 09:58:06] [INFO] root: [subscription] reset_user_traffic skipped user_id=81 (remnawave-only mode)
+[2026-06-19 09:58:06] [INFO] root: [biz][subscription] activate_completed user_id=81 subscription_id=64
+[2026-06-19 10:02:02] [INFO] root: [biz][subscription] activate_requested user_id=82 plan_id=9 auto_renew=False
+[2026-06-19 10:02:02] [INFO] root: [biz][subscription] created user_id=82 subscription_id=65 plan_id=9 period_end=2026-09-17 05:02:02.914471+00:00 gb_added=90.00
+[2026-06-19 10:02:02] [INFO] root: [subscription] reset_user_traffic skipped user_id=82 (remnawave-only mode)
+[2026-06-19 10:02:02] [INFO] root: [biz][subscription] activate_completed user_id=82 subscription_id=65
+[2026-06-19 10:07:26] [INFO] root: [biz][subscription] activate_requested user_id=83 plan_id=9 auto_renew=False
+[2026-06-19 10:07:26] [INFO] root: [biz][subscription] created user_id=83 subscription_id=66 plan_id=9 period_end=2026-09-17 05:07:26.364263+00:00 gb_added=90.00
+[2026-06-19 10:07:26] [INFO] root: [subscription] reset_user_traffic skipped user_id=83 (remnawave-only mode)
+[2026-06-19 10:07:26] [INFO] root: [biz][subscription] activate_completed user_id=83 subscription_id=66
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=9 auto_renew=False
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] created user_id=84 subscription_id=67 plan_id=9 period_end=2026-09-17 05:08:18.296791+00:00 gb_added=90.00
+[2026-06-19 10:08:18] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] activate_requested user_id=85 plan_id=9 auto_renew=False
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] created user_id=85 subscription_id=68 plan_id=9 period_end=2026-09-17 05:08:18.832863+00:00 gb_added=90.00
+[2026-06-19 10:08:18] [INFO] root: [subscription] reset_user_traffic skipped user_id=85 (remnawave-only mode)
+[2026-06-19 10:08:18] [INFO] root: [biz][subscription] activate_completed user_id=85 subscription_id=68
+[2026-06-19 10:50:40] [INFO] root: [biz][subscription] activate_requested user_id=86 plan_id=9 auto_renew=False
+[2026-06-19 10:50:40] [INFO] root: [biz][subscription] created user_id=86 subscription_id=69 plan_id=9 period_end=2026-09-17 05:50:40.147215+00:00 gb_added=90.00
+[2026-06-19 10:50:40] [INFO] root: [subscription] reset_user_traffic skipped user_id=86 (remnawave-only mode)
+[2026-06-19 10:50:40] [INFO] root: [biz][subscription] activate_completed user_id=86 subscription_id=69
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] activate_requested user_id=87 plan_id=9 auto_renew=False
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] created user_id=87 subscription_id=70 plan_id=9 period_end=2026-09-17 05:51:03.275481+00:00 gb_added=90.00
+[2026-06-19 10:51:03] [INFO] root: [subscription] reset_user_traffic skipped user_id=87 (remnawave-only mode)
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] activate_completed user_id=87 subscription_id=70
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_requested user_id=36 duration_hours=72
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-07-04 13:50:24.843594+00:00
+[2026-06-19 10:51:03] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49

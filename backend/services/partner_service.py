@@ -70,7 +70,7 @@ class PartnerService:
             return "already_attributed"
 
         self.session.add(PartnerAttribution(partner_link_id=link.id, user_id=user_id))
-        await self.session.commit()
+        await self.session.flush()
         logger.info("[biz][partner] user_attached user_id=%s partner_link_id=%s code=%s", user_id, link.id, link.code)
         return "attached"
 

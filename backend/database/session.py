@@ -19,7 +19,7 @@ engine = create_async_engine(
     pool_timeout=max(1, int(settings.DB_POOL_TIMEOUT)),
     pool_recycle=max(60, int(settings.DB_POOL_RECYCLE)),
     pool_use_lifo=True,
-    pool_pre_ping=True,
+    pool_pre_ping=False,
     echo=False,
     future=True,
 )

@@ -91,7 +91,7 @@ class ReferralService:
                     e,
                 )
 
-            await self.session.commit()
+            await self.session.flush()
             logger.info(
                 "[biz][referral] referrer_attached user_id=%s referrer_id=%s bonus_hours=%s",
                 user_id,

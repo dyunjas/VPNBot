@@ -64,7 +64,8 @@ class SubscriptionRepository:
             auto_renew=auto_renew,
             current_period_start=current_period_start,
             current_period_end=current_period_end,
-            next_renewal_at=next_renewal_at
+            next_renewal_at=next_renewal_at,
+            gb_left=0,
         )
         self.session.add(sub)
         return sub

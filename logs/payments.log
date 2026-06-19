@@ -489,3 +489,5 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-14 14:19:57] [INFO] root: [biz][billing] platega_created user_id=46 provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 amount=5.0
 [2026-06-14 14:20:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4
 [2026-06-14 14:20:56] [INFO] root: [biz][billing] platega_confirmed provider_id=fd9c72ae-8767-4962-bf17-8f3d9062b8e4 user_id=46 amount=5
+[2026-06-19 09:58:20] [INFO] root: [biz][billing] buy_subscription_requested user_id=81 plan_id=1 auto_renew=True
+[2026-06-19 09:58:20] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=81 plan_id=1 seconds_left=7793986
