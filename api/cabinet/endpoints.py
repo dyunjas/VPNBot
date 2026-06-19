@@ -19,6 +19,7 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.core.loader import bot
+from backend.email_templates import render_code_email
 from backend.database.models import User
 from backend.database.session import async_session
 from backend.services import (
@@ -207,7 +208,7 @@ def _pop_otp(channel: str, identity: str, code: str) -> int | None:
     return int(rec.get("user_id"))
 
 
-def _smtp_send_code(email: str, code: str) -> None:
+def _smtp_send_code(email: str, code: str, purpose: str = "login") -> None:
     host = (os.getenv("SMTP_HOST") or getattr(settings, "SMTP_HOST", None) or "").strip()
     user = (os.getenv("SMTP_USER") or getattr(settings, "SMTP_USER", None) or "").strip()
     password = (os.getenv("SMTP_PASSWORD") or getattr(settings, "SMTP_PASSWORD", None) or "").strip()
@@ -224,11 +225,15 @@ def _smtp_send_code(email: str, code: str) -> None:
         )
         raise HTTPException(status_code=503, detail="SMTP is not configured")
 
+    html_body, plain_body = render_code_email(code, purpose=purpose)
+    from_header = f"Lunet <{from_email}>"
+
     msg = EmailMessage()
-    msg["Subject"] = "Lunet cabinet login code"
-    msg["From"] = from_email
+    msg["Subject"] = "Код подтверждения Lunet" if purpose == "bind" else "Код входа Lunet"
+    msg["From"] = from_header
     msg["To"] = email
-    msg.set_content(f"Ваш код входа: {code}\nКод действует {OTP_TTL_SEC // 60} минут.")
+    msg.set_content(plain_body)
+    msg.add_alternative(html_body, subtype="html")
 
     if port == 465:
         with smtplib.SMTP_SSL(host, port, timeout=15) as server:
@@ -307,7 +312,7 @@ async def cabinet_register(payload: RegisterPayload):
 
     code = f"{secrets.randbelow(1000000):06d}"
     _put_otp("email", email, user.id, code)
-    _smtp_send_code(email, code)
+    _smtp_send_code(email, code, purpose="bind")
     return {"ok": True, "message": "verification code sent"}
 
 
@@ -324,7 +329,7 @@ async def cabinet_send_email_code(payload: SendEmailCodePayload):
 
     code = f"{secrets.randbelow(1000000):06d}"
     _put_otp("email", email, user.id, code)
-    _smtp_send_code(email, code)
+    _smtp_send_code(email, code, purpose="login")
     return {"ok": True}
 
 

@@ -812,3 +812,5 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-07-04 13:50:24.843594+00:00
 [2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
 [2026-06-19 10:51:03] [INFO] root: [biz][referral] referrer_attached user_id=87 referrer_id=36 bonus_hours=72
+[2026-06-20 00:26:29] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-06-20 00:28:58] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com

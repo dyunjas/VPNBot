@@ -10,6 +10,7 @@ from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 
 from backend.core.config import settings
 from backend.core.logger_config import logger
+from backend.email_templates import render_code_email
 from backend.images import MAIN_MENU_IMG
 from backend.services import UserService
 from backend.services.exceptions import UserNotFound
@@ -53,7 +54,7 @@ def _verify_code(tg_id: int, code: str) -> tuple[bool, str | None]:
     return True, str(rec.get("email") or "")
 
 
-def _smtp_send_code(email: str, code: str) -> None:
+def _smtp_send_code(email: str, code: str, purpose: str = "bind") -> None:
     host = (getattr(settings, "SMTP_HOST", None) or "").strip()
     user = (getattr(settings, "SMTP_USER", None) or "").strip()
     password = (getattr(settings, "SMTP_PASSWORD", None) or "").strip()
@@ -63,11 +64,15 @@ def _smtp_send_code(email: str, code: str) -> None:
     if not host or not from_email:
         raise RuntimeError("SMTP is not configured")
 
+    html_body, plain_body = render_code_email(code, purpose=purpose)
+    from_header = f"Lunet <{from_email}>"
+
     msg = EmailMessage()
-    msg["Subject"] = "Код подтверждения Lunet"
-    msg["From"] = from_email
+    msg["Subject"] = "Код подтверждения Lunet" if purpose == "bind" else "Код входа Lunet"
+    msg["From"] = from_header
     msg["To"] = email
-    msg.set_content(f"Код подтверждения: {code}\nКод действует {OTP_TTL_SEC // 60} минут.")
+    msg.set_content(plain_body)
+    msg.add_alternative(html_body, subtype="html")
 
     if port == 465:
         with smtplib.SMTP_SSL(host, port, timeout=15) as server:
