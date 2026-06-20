@@ -1,6 +1,6 @@
 :root {
   --tg-safe-top: 0px;
-  --bg: #f3f5f9;
+  --bg: #f4f7fc;
   --bg-soft: #f8fafc;
   --card: #ffffff;
   --card-2: #f8fafc;
@@ -13,10 +13,10 @@
   --danger: #b42336;
   --ok: #1b8f58;
   --warn: #a66912;
-  --radius-xl: 18px;
+  --radius-xl: 20px;
   --radius-lg: 12px;
   --radius-md: 10px;
-  --shadow: 0 16px 36px rgba(15, 30, 55, 0.1);
+  --shadow: 0 18px 42px rgba(15, 30, 55, 0.1);
   --shadow-soft: 0 8px 20px rgba(15, 30, 55, 0.08);
 }
 
@@ -29,6 +29,7 @@ body {
   background:
     radial-gradient(1000px 400px at 95% -20%, #e7eefc, transparent 65%),
     radial-gradient(760px 260px at -8% 8%, #edf4ff, transparent 62%),
+    radial-gradient(640px 240px at 50% 100%, rgba(231, 239, 252, 0.55), transparent 60%),
     var(--bg);
 }
 
@@ -72,7 +73,7 @@ body {
   min-height: 48px;
   padding: 8px 10px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 16px;
   background: #fff;
   box-shadow: var(--shadow);
 }

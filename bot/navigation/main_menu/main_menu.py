@@ -7,7 +7,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from backend.images import MAIN_MENU_IMG
 from backend.services import UserService
-from backend.services.exceptions import UserNotFound
+from backend.services.exceptions import UserNotFound, BannedUser
 from backend.services.partner_service import PartnerService
 from backend.services.referral_service import ReferralService
 from backend.services.subscription_service import SubscriptionService
@@ -178,10 +178,13 @@ async def _process_post_registration_links(
         except UserNotFound:
             return
 
-        linked = await referral_service.attach_referrer(
-            user_id=user_id,
-            referrer_id=referrer.id,
-        )
+        try:
+            linked = await referral_service.attach_referrer(
+                user_id=user_id,
+                referrer_id=referrer.id,
+            )
+        except BannedUser:
+            return
         if not linked:
             return
 

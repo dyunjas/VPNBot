@@ -31,6 +31,63 @@ def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
     month = month_index % 12 + 1
     return dt.replace(year=year, month=month, day=1, hour=0, minute=0, second=0, microsecond=0)
 
+
+def _build_chart_buckets(chart_start: datetime, chart_mode: str, bucket_count: int) -> dict[str, dict[str, int | str]]:
+    buckets: dict[str, dict[str, int | str]] = {}
+    if chart_mode == "month":
+        for offset in range(bucket_count):
+            month_dt = _shift_month_start(chart_start, offset)
+            key = f"{month_dt.year:04d}-{month_dt.month:02d}"
+            buckets[key] = {
+                "key": key,
+                "label": month_dt.strftime("%m.%y"),
+                "count": 0,
+                "amount": 0,
+            }
+        return buckets
+
+    for offset in range(bucket_count):
+        day = chart_start + timedelta(days=offset)
+        key = day.date().isoformat()
+        buckets[key] = {
+            "key": key,
+            "label": day.strftime("%d.%m"),
+            "count": 0,
+            "amount": 0,
+        }
+    return buckets
+
+
+def _chart_key_for_dt(dt: datetime, chart_mode: str) -> str:
+    if chart_mode == "month":
+        return f"{dt.year:04d}-{dt.month:02d}"
+    return dt.date().isoformat()
+
+
+def _fill_count_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_mode: str) -> None:
+    for row_dt in rows:
+        dt = _as_aware_utc(row_dt)
+        if not dt:
+            continue
+        key = _chart_key_for_dt(dt, chart_mode)
+        bucket = buckets.get(key)
+        if not bucket:
+            continue
+        bucket["count"] = int(bucket["count"]) + 1
+
+
+def _fill_amount_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_mode: str) -> None:
+    for paid_at, amount in rows:
+        dt = _as_aware_utc(paid_at)
+        if not dt:
+            continue
+        key = _chart_key_for_dt(dt, chart_mode)
+        bucket = buckets.get(key)
+        if not bucket:
+            continue
+        bucket["amount"] = int(bucket["amount"]) + int(amount or 0)
+        bucket["count"] = int(bucket["count"]) + 1
+
 @router.post("/auth/login")
 async def admin_auth_login(payload: LoginPayload, request: Request):
     expected_login = (settings.ADMIN_WEB_LOGIN or "").strip()
@@ -111,7 +168,11 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
             )
             or 0
         )
-        chart_rows = (
+        user_rows = (await session.execute(select(User.created_at).where(User.created_at >= chart_start))).scalars().all()
+        subscription_rows = (
+            await session.execute(select(Subscription.created_at).where(Subscription.created_at >= chart_start))
+        ).scalars().all()
+        payment_rows = (
             await session.execute(
                 select(Transaction.paid_at, Transaction.amount).where(
                     Transaction.paid.is_(True),
@@ -121,38 +182,22 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
             )
         ).all()
 
-    payments_buckets: dict[str, dict[str, str | int]] = {}
-    if chart_mode == "month":
-        for offset in range(bucket_count):
-            month_dt = _shift_month_start(chart_start, offset)
-            key = f"{month_dt.year:04d}-{month_dt.month:02d}"
-            payments_buckets[key] = {
-                "key": key,
-                "label": month_dt.strftime("%m.%y"),
-                "amount": 0,
-                "count": 0,
-            }
-    else:
-        for offset in range(bucket_count):
-            day = chart_start + timedelta(days=offset)
-            key = day.date().isoformat()
-            payments_buckets[key] = {
-                "key": key,
-                "label": day.strftime("%d.%m"),
-                "amount": 0,
-                "count": 0,
-            }
+    users_buckets = _build_chart_buckets(chart_start, chart_mode, bucket_count)
+    subscriptions_buckets = _build_chart_buckets(chart_start, chart_mode, bucket_count)
+    payments_buckets = _build_chart_buckets(chart_start, chart_mode, bucket_count)
 
-    for paid_at, amount in chart_rows:
-        paid_dt = _as_aware_utc(paid_at)
-        if not paid_dt:
-            continue
-        key = f"{paid_dt.year:04d}-{paid_dt.month:02d}" if chart_mode == "month" else paid_dt.date().isoformat()
-        if key not in payments_buckets:
-            continue
-        payments_buckets[key]["amount"] = int(payments_buckets[key]["amount"]) + int(amount or 0)
-        payments_buckets[key]["count"] = int(payments_buckets[key]["count"]) + 1
+    _fill_count_buckets(user_rows, users_buckets, chart_mode)
+    _fill_count_buckets(subscription_rows, subscriptions_buckets, chart_mode)
+    _fill_amount_buckets(payment_rows, payments_buckets, chart_mode)
 
+    users_chart = [
+        {"key": key, "label": str(values["label"]), "count": int(values["count"])}
+        for key, values in users_buckets.items()
+    ]
+    subscriptions_chart = [
+        {"key": key, "label": str(values["label"]), "count": int(values["count"])}
+        for key, values in subscriptions_buckets.items()
+    ]
     payments_chart = [
         {
             "key": key,
@@ -162,6 +207,20 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
         }
         for key, values in payments_buckets.items()
     ]
+    activation_chart = []
+    for key in users_buckets.keys():
+        users_count = int(users_buckets[key]["count"])
+        subs_count = int(subscriptions_buckets[key]["count"])
+        rate = round((subs_count / users_count) * 100, 1) if users_count else 0.0
+        activation_chart.append(
+            {
+                "key": key,
+                "label": str(users_buckets[key]["label"]),
+                "rate": rate,
+                "users": users_count,
+                "subscriptions": subs_count,
+            }
+        )
 
     return {
         "ok": True,
@@ -176,7 +235,10 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
             "total_revenue": total_revenue,
             "month_revenue": month_revenue,
             "month_start": month_start.isoformat(),
+            "users_chart": users_chart,
+            "subscriptions_chart": subscriptions_chart,
             "payments_chart": payments_chart,
+            "activation_chart": activation_chart,
             "payments_chart_period": chart_period,
             "payments_chart_mode": chart_mode,
         },

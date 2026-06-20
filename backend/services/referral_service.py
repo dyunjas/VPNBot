@@ -6,7 +6,7 @@ from backend.repositories.referral_repository import ReferralRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.subscription_service import SubscriptionService
-from backend.services.exceptions import UserNotFound
+from backend.services.exceptions import UserNotFound, BannedUser
 
 
 REF_BONUS_HOURS = 72
@@ -55,9 +55,14 @@ class ReferralService:
         referrer_user = await self.user_repo.get_by_id(referrer_id)
         if not referrer_user:
             raise UserNotFound(f"Referrer with id:{referrer_id} not found")
+        if bool(getattr(user, "banned", False)):
+            logger.warning("[biz][referral] attach_banned_user_blocked user_id=%s referrer_id=%s", user_id, referrer_id)
+            raise BannedUser("User is banned")
+        if bool(getattr(referrer_user, "banned", False)):
+            logger.warning("[biz][referral] attach_banned_referrer_blocked user_id=%s referrer_id=%s", user_id, referrer_id)
+            return False
 
         await self.create_account(user_id)
-        await self.create_account(referrer_id)
 
         updated = await self.referral_repo.set_referrer_if_empty(
             user_id=user_id,
@@ -116,11 +121,25 @@ class ReferralService:
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
+        if bool(getattr(user, "banned", False)):
+            logger.info("[biz][referral] purchase_reward_skipped user_id=%s reason=payer_banned", user_id)
+            return 0
         
         if not user.referrer_id:
             return 0
         
         referrer_id = user.referrer_id
+
+        referrer_user = await self.user_repo.get_by_id(referrer_id)
+        if not referrer_user:
+            return 0
+        if bool(getattr(referrer_user, "banned", False)):
+            logger.info(
+                "[biz][referral] purchase_reward_skipped user_id=%s referrer_id=%s reason=referrer_banned",
+                user_id,
+                referrer_id,
+            )
+            return 0
 
         ref_account = await self.create_account(referrer_id)
         percent = ref_account.referral_percent

@@ -8,6 +8,7 @@ from backend.services.withdrawal_service import WithdrawalService
 from backend.services.device_service import DeviceService
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.partner_service import PartnerService
+from backend.services.exceptions import BannedUser
 
 
 
@@ -16,4 +17,5 @@ __all__ = [
     "SubscriptionService", "PromoService",
     "ReferralService", "WithdrawalService", "DeviceService",
     "RemnaWaveService", "PartnerService",
+    "BannedUser",
     ]

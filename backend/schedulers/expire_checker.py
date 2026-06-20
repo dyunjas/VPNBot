@@ -135,6 +135,10 @@ async def expire_checker(bot):
             except UserNotFound:
                 continue
 
+            if bool(getattr(user, "banned", False)):
+                logger.info("[scheduler][expire] skip banned user_id=%s sub_id=%s", user.id, sub.id)
+                continue
+
             # auto renew
             if sub.auto_renew:
                 try:

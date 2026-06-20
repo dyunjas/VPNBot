@@ -10,6 +10,7 @@ from backend.repositories.subscription_topup_repository import SubscriptionTopup
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import (
     UserNotFound,
+    BannedUser,
     SubscriptionNotFound,
     PlanNotFound, TooEarlyToRenew
 )
@@ -49,6 +50,11 @@ class SubscriptionService:
 
         return sub
 
+    @staticmethod
+    def _ensure_user_not_banned(user) -> None:
+        if bool(getattr(user, "banned", False)):
+            raise BannedUser("User is banned")
+
     async def activate_subscription(
         self,
         user_id: int,
@@ -65,6 +71,7 @@ class SubscriptionService:
         if not user:
             logger.warning("[biz][subscription] activate_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
+        self._ensure_user_not_banned(user)
 
         plan = await self.get_plan(plan_id)
 
@@ -171,6 +178,7 @@ class SubscriptionService:
         if not user:
             logger.warning("[biz][subscription] renew_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
+        self._ensure_user_not_banned(user)
         
         now = datetime.now(timezone.utc)
         delta = timedelta(hours=duration_hours)
@@ -249,6 +257,7 @@ class SubscriptionService:
         if not user:
             logger.warning("[biz][subscription] add_traffic_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
+        self._ensure_user_not_banned(user)
         sub = await self.get_active_subscription(user_id)
         if not sub:
             logger.warning("[biz][subscription] add_traffic_sub_not_found user_id=%s", user_id)

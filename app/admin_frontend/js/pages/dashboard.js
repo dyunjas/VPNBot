@@ -13,12 +13,138 @@ function dashboardIcon(kind) {
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[kind] || icons.users}</svg>`;
 }
 
+function formatNumber(value) {
+  return Number(value || 0).toLocaleString("ru-RU");
+}
+
+function formatMoney(value) {
+  return `${formatNumber(value)} ₽`;
+}
+
+function formatPercent(value) {
+  return `${Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 1 })}%`;
+}
+
+function chartWindowLabel(period) {
+  if (period === "30d") return "30 дней";
+  if (period === "12m") return "12 месяцев";
+  return "14 дней";
+}
+
+function chartSubtitle(period, kind) {
+  const windowLabel = chartWindowLabel(period);
+  const map = {
+    payments: `Последние ${windowLabel} по пополнениям`,
+    new_users: `Последние ${windowLabel} по новым пользователям`,
+    subscriptions: `Последние ${windowLabel} по купленным подпискам`,
+    activation: `Купленные подписки / новые пользователи за ${windowLabel}`,
+  };
+  return map[kind] || `Последние ${windowLabel}`;
+}
+
+function chartCardHtml({ prefix, title, subtitle, controls = "" }) {
+  return `
+    <div class="card dashboard-card dashboard-chart-card">
+      <div class="dashboard-chart-head">
+        <div>
+          <h3>${title}</h3>
+          <div id="${prefix}_subtitle" class="section-title">${subtitle}</div>
+        </div>
+        <div class="dashboard-chart-tools">
+          ${controls}
+          <div id="${prefix}_total" class="dashboard-chart-total">—</div>
+        </div>
+      </div>
+      <div id="${prefix}" class="payments-chart">Загрузка...</div>
+    </div>
+  `;
+}
+
+function renderMetricChart({
+  hostId,
+  totalId,
+  subtitleId,
+  period,
+  items,
+  valueGetter,
+  valueFormatter,
+  totalFormatter,
+  countFormatter = valueFormatter,
+  tooltipBuilder,
+  showCountBelow = false,
+  totalValue,
+  emptyText = "Нет данных",
+}) {
+  const host = q(hostId);
+  if (!host) return;
+
+  const totalEl = totalId ? q(totalId) : null;
+  const subtitleEl = subtitleId ? q(subtitleId) : null;
+  if (subtitleEl) subtitleEl.textContent = chartSubtitle(period, hostId.replace("_chart", ""));
+
+  if (!Array.isArray(items) || !items.length) {
+    host.textContent = emptyText;
+    if (totalEl) totalEl.textContent = totalFormatter(0);
+    return;
+  }
+
+  const values = items.map((item) => Number(valueGetter(item) || 0));
+  const maxValue = Math.max(...values, 1);
+  const total = typeof totalValue === "number" ? totalValue : values.reduce((sum, value) => sum + value, 0);
+
+  if (totalEl) totalEl.textContent = totalFormatter(total);
+
+  host.innerHTML = `
+    <div class="payments-chart__grid" style="grid-template-columns: repeat(${items.length}, minmax(0, 1fr));">
+      ${items
+        .map((item, index) => {
+          const value = Number(values[index] || 0);
+          const barHeight = Math.max(10, Math.round((value / maxValue) * 132));
+          const label = String(item.label || item.key || "");
+          const tooltip = tooltipBuilder ? tooltipBuilder(item, value) : `${label} · ${valueFormatter(value)}`;
+          const countBlock = showCountBelow
+            ? `<div class="payments-chart__count">${countFormatter(item.count || 0)}</div>`
+            : "";
+
+          return `
+            <div class="payments-chart__col">
+              <div class="payments-chart__value">${valueFormatter(value)}</div>
+              <div class="payments-chart__bar-wrap" title="${safeText(tooltip)}">
+                <div class="payments-chart__bar" style="height:${barHeight}px"></div>
+              </div>
+              ${countBlock}
+              <div class="payments-chart__label">${safeText(label)}</div>
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+}
+
+function buildActivationSeries(usersSeries, subscriptionsSeries) {
+  const subscriptionsByKey = new Map((subscriptionsSeries || []).map((item) => [String(item.key), item]));
+
+  return (usersSeries || []).map((item) => {
+    const users = Number(item.count || 0);
+    const subscriptions = Number(subscriptionsByKey.get(String(item.key))?.count || 0);
+    const rate = users > 0 ? (subscriptions / users) * 100 : 0;
+    return {
+      key: item.key,
+      label: item.label,
+      users,
+      subscriptions,
+      rate,
+    };
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   ensureAuthOrRedirect();
   renderShell({
     activeKey: "dashboard",
     title: "Обзор",
-    subtitle: "Пользователи, подписки, транзакции и состояние системы",
+    subtitle: "Пользователи, подписки, пополнения и состояние системы",
     contentHtml: `
       <div class="dashboard-grid-stats" id="stats"></div>
       <div class="dashboard-layout">
@@ -31,22 +157,34 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div id="health">Загрузка...</div>
         </div>
       </div>
-      <div class="card dashboard-card">
-        <div class="dashboard-chart-head">
-          <div>
-            <h3>График платежей</h3>
-            <div id="payments_chart_subtitle" class="section-title">Загрузка...</div>
-          </div>
-          <div class="dashboard-chart-tools">
+      <div class="dashboard-charts-grid">
+        ${chartCardHtml({
+          prefix: "payments_chart",
+          title: "График платежей",
+          subtitle: "Загрузка...",
+          controls: `
             <div id="payments_chart_periods" class="chart-periods">
               <button class="chart-period is-active" data-period="14d" type="button">14 дней</button>
               <button class="chart-period" data-period="30d" type="button">30 дней</button>
               <button class="chart-period" data-period="12m" type="button">12 месяцев</button>
             </div>
-            <div id="payments_chart_total" class="dashboard-chart-total">—</div>
-          </div>
-        </div>
-        <div id="payments_chart" class="payments-chart">Загрузка...</div>
+          `,
+        })}
+        ${chartCardHtml({
+          prefix: "new_users_chart",
+          title: "Новые пользователи",
+          subtitle: "Загрузка...",
+        })}
+        ${chartCardHtml({
+          prefix: "subscriptions_chart",
+          title: "Купленные подписки",
+          subtitle: "Загрузка...",
+        })}
+        ${chartCardHtml({
+          prefix: "activation_chart",
+          title: "Конверсия в подписку",
+          subtitle: "Загрузка...",
+        })}
       </div>
       <div class="card dashboard-card">
         <h3>Оперативные индикаторы</h3>
@@ -115,7 +253,66 @@ async function loadDashboard() {
       <div class="signal-row"><span>Пользователей в бане</span><b>${s.banned_users || 0}</b></div>
     `;
 
-    renderPaymentsChart(s.payments_chart || [], s.payments_chart_period || dashboardState.chartPeriod);
+    const paymentsSeries = s.payments_chart || [];
+    const usersSeries = s.users_chart || [];
+    const subscriptionsSeries = s.subscriptions_chart || [];
+    const activationSeries = buildActivationSeries(usersSeries, subscriptionsSeries);
+
+    renderMetricChart({
+      hostId: "payments_chart",
+      totalId: "payments_chart_total",
+      subtitleId: "payments_chart_subtitle",
+      period: dashboardState.chartPeriod,
+      items: paymentsSeries,
+      valueGetter: (item) => Number(item.amount || 0),
+      valueFormatter: formatMoney,
+      totalFormatter: formatMoney,
+      countFormatter: formatNumber,
+      tooltipBuilder: (item, value) => `${item.label} · ${formatMoney(value)} · ${Number(item.count || 0)} платежей`,
+      showCountBelow: true,
+    });
+
+    renderMetricChart({
+      hostId: "new_users_chart",
+      totalId: "new_users_chart_total",
+      subtitleId: "new_users_chart_subtitle",
+      period: dashboardState.chartPeriod,
+      items: usersSeries,
+      valueGetter: (item) => Number(item.count || 0),
+      valueFormatter: formatNumber,
+      totalFormatter: formatNumber,
+      tooltipBuilder: (item, value) => `${item.label} · ${formatNumber(value)} новых пользователей`,
+    });
+
+    renderMetricChart({
+      hostId: "subscriptions_chart",
+      totalId: "subscriptions_chart_total",
+      subtitleId: "subscriptions_chart_subtitle",
+      period: dashboardState.chartPeriod,
+      items: subscriptionsSeries,
+      valueGetter: (item) => Number(item.count || 0),
+      valueFormatter: formatNumber,
+      totalFormatter: formatNumber,
+      tooltipBuilder: (item, value) => `${item.label} · ${formatNumber(value)} купленных подписок`,
+    });
+
+    const totalActivationUsers = usersSeries.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    const totalActivationSubs = subscriptionsSeries.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    const totalActivationRate = totalActivationUsers > 0 ? (totalActivationSubs / totalActivationUsers) * 100 : 0;
+
+    renderMetricChart({
+      hostId: "activation_chart",
+      totalId: "activation_chart_total",
+      subtitleId: "activation_chart_subtitle",
+      period: dashboardState.chartPeriod,
+      items: activationSeries,
+      valueGetter: (item) => Number(item.rate || 0),
+      valueFormatter: formatPercent,
+      totalFormatter: formatPercent,
+      totalValue: totalActivationRate,
+      tooltipBuilder: (item, value) => `${item.label} · ${formatPercent(value)} · ${item.subscriptions} / ${item.users}`,
+    });
+
     syncChartPeriodButtons();
   } catch (e) {
     alert(e.message);
@@ -140,55 +337,4 @@ function syncChartPeriodButtons() {
   document.querySelectorAll(".chart-period").forEach((btn) => {
     btn.classList.toggle("is-active", btn.dataset.period === dashboardState.chartPeriod);
   });
-}
-
-function formatMoney(value) {
-  return `${Number(value || 0).toLocaleString("ru-RU")} ₽`;
-}
-
-function chartSubtitle(period) {
-  if (period === "30d") return "Последние 30 дней по оплаченным пополнениям";
-  if (period === "12m") return "Последние 12 месяцев по оплаченным пополнениям";
-  return "Последние 14 дней по оплаченным пополнениям";
-}
-
-function renderPaymentsChart(items, period) {
-  const host = q("payments_chart");
-  const totalEl = q("payments_chart_total");
-  const subtitleEl = q("payments_chart_subtitle");
-  if (!host) return;
-
-  if (subtitleEl) subtitleEl.textContent = chartSubtitle(period);
-
-  if (!Array.isArray(items) || !items.length) {
-    host.textContent = "Нет данных по платежам";
-    if (totalEl) totalEl.textContent = "0 ₽";
-    return;
-  }
-
-  const maxAmount = Math.max(...items.map((item) => Number(item.amount || 0)), 1);
-  const total = items.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  if (totalEl) totalEl.textContent = formatMoney(total);
-
-  const cols = items.length;
-  host.innerHTML = `
-    <div class="payments-chart__grid" style="grid-template-columns: repeat(${cols}, minmax(0, 1fr));">
-      ${items.map((item) => {
-        const amount = Number(item.amount || 0);
-        const count = Number(item.count || 0);
-        const barHeight = Math.max(10, Math.round((amount / maxAmount) * 132));
-        const label = item.label || String(item.key || "");
-        return `
-          <div class="payments-chart__col">
-            <div class="payments-chart__value">${amount ? formatMoney(amount) : "0 ₽"}</div>
-            <div class="payments-chart__bar-wrap" title="${safeText(label)} · ${safeText(formatMoney(amount))} · ${safeText(count)} платежей">
-              <div class="payments-chart__bar" style="height:${barHeight}px"></div>
-            </div>
-            <div class="payments-chart__count">${count}</div>
-            <div class="payments-chart__label">${label}</div>
-          </div>
-        `;
-      }).join("")}
-    </div>
-  `;
 }

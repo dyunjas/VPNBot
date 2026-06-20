@@ -39,6 +39,7 @@ from backend.services.exceptions import (
     PromocodeExhausted,
     PromocodeNotFound,
     PurchaseInProgress,
+    BannedUser,
     SubscriptionNotFound,
     TooEarlyToRenew,
     TransactionNotFound,
@@ -257,6 +258,8 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=404, detail="Подписка не найдена")
     if isinstance(e, TooEarlyToRenew):
         return HTTPException(status_code=409, detail="Продление доступно за 3 дня до окончания подписки")
+    if isinstance(e, BannedUser):
+        return HTTPException(status_code=403, detail="banned")
     if isinstance(e, PurchaseInProgress):
         return HTTPException(status_code=409, detail="Покупка уже обрабатывается")
     if isinstance(e, TransactionNotFound):

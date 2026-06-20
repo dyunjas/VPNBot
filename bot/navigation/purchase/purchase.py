@@ -7,7 +7,8 @@ from bot.navigation.purchase.keyboards import fail_purchase_kb, success_purchase
 from backend.services import UserService, BillingService, SubscriptionService
 from backend.services.exceptions import (
     UserNotFound, InsufficientBalance, 
-    PlanNotFound, TooEarlyToRenew
+    PlanNotFound, TooEarlyToRenew,
+    BannedUser
 )
 from backend.core.logger_config import logger
 
@@ -56,6 +57,10 @@ async def purchase_plan_clb(
     
     except TooEarlyToRenew:
         await callback.answer("Подписку нельзя продлить раньше, чем за 3 дня до её окончания", show_alert=True)
+        return
+
+    except BannedUser:
+        await callback.answer("Ваш аккаунт заблокирован. Покупка недоступна.", show_alert=True)
         return
 
     except Exception as e:

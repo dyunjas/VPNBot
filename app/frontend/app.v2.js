@@ -876,16 +876,6 @@ function initEvents() {
   document.querySelectorAll(".side-link[data-tab]").forEach((btn) => {
     btn.addEventListener("click", closeMobileMenu);
   });
-  $("btn-open-web")?.addEventListener("click", () => {
-    const cabinetUrl = buildCabinetUrl();
-    tg?.openLink?.(cabinetUrl);
-    if (!tg?.openLink) window.open(cabinetUrl, "_blank");
-  });
-  $("btn-open-telegram")?.addEventListener("click", () => {
-    const botUrl = "https://t.me/LunetVPNBot?startapp=cabinet";
-    tg?.openTelegramLink?.(botUrl);
-    if (!tg?.openTelegramLink) window.open(botUrl, "_blank");
-  });
   $("btn-cabinet-logout")?.addEventListener("click", async () => {
     if (!IS_CABINET_PATH) return;
     try {

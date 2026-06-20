@@ -4,6 +4,9 @@ class ServiceError(Exception):
 class UserNotFound(ServiceError):
     pass
 
+class BannedUser(ServiceError):
+    pass
+
 class SubscriptionNotFound(ServiceError):
     pass
 

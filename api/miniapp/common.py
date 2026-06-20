@@ -28,6 +28,7 @@ from backend.services.exceptions import (
     PaymentNotConfirmed,
     PlanNotFound,
     PurchaseInProgress,
+    BannedUser,
     PromocodeAlreadyUsed,
     PromocodeExhausted,
     PromocodeNotFound,
@@ -160,6 +161,8 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=409, detail=str(e) or "Платеж еще не подтвержден")
     if isinstance(e, PurchaseInProgress):
         return HTTPException(status_code=409, detail=str(e) or "Покупка уже обрабатывается")
+    if isinstance(e, BannedUser):
+        return HTTPException(status_code=403, detail="banned")
 
     if isinstance(e, PlanNotFound):
         return HTTPException(status_code=404, detail=str(e) or "Тариф не найден")

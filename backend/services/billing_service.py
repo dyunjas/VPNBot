@@ -17,6 +17,7 @@ from backend.payments.pally import PallyPaymentAPI
 from backend.services.subscription_service import SubscriptionService
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.exceptions import (
+    BannedUser,
     UserNotFound,
     TransactionNotFound,
     InsufficientBalance,
@@ -497,6 +498,9 @@ class BillingService:
         if not user:
             logger.warning("[biz][billing] buy_subscription_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
+        if bool(getattr(user, "banned", False)):
+            logger.warning("[biz][billing] buy_subscription_banned user_id=%s plan_id=%s", user_id, plan_id)
+            raise BannedUser("User is banned")
 
         plan = await self.sub_service.get_plan(plan_id)
 
@@ -587,6 +591,9 @@ class BillingService:
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
+        if bool(getattr(user, "banned", False)):
+            logger.warning("[biz][billing] buy_traffic_banned user_id=%s gb=%s", user_id, gb)
+            raise BannedUser("User is banned")
 
         await self.charge_balance(user_id=user_id, amount=price)
 

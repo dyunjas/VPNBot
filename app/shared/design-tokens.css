@@ -1,8 +1,8 @@
 :root {
   --tg-safe-top: 0px;
 
-  --bg: #edf2f8;
-  --bg-soft: #f7faff;
+  --bg: #f4f7fc;
+  --bg-soft: #f8fbff;
 
   --surface: #ffffff;
   --surface-elevated: #ffffff;
@@ -38,10 +38,10 @@
   --danger-soft: #fff3f5;
   --danger-line: #e7b8bf;
 
-  --shadow: 0 18px 44px rgba(15, 30, 55, 0.12);
-  --shadow-soft: 0 10px 24px rgba(15, 30, 55, 0.08);
+  --shadow: 0 18px 42px rgba(15, 30, 55, 0.1);
+  --shadow-soft: 0 10px 24px rgba(15, 30, 55, 0.07);
 
-  --radius-xl: 22px;
+  --radius-xl: 20px;
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 10px;

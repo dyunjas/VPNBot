@@ -137,6 +137,14 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         now = datetime.now(timezone.utc)
         period_end_changed = False
 
+        if bool(getattr(user, "banned", False)):
+            if (
+                payload.extend_days is not None
+                or payload.current_period_end is not None
+                or payload.status == "active"
+            ):
+                raise HTTPException(status_code=400, detail="cannot extend or activate subscription for banned user")
+
         if payload.plan_id is not None:
             plan = _http_404_if_none(await session.get(SubscriptionPlan, payload.plan_id), "plan not found")
             sub.plan_id = plan.id
@@ -198,6 +206,13 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
         notify_queue: list[tuple[User, datetime]] = []
 
         for sub, user in rows:
+            if bool(getattr(user, "banned", False)):
+                logger.info(
+                    "[admin][subscriptions] bulk_extend_skipped_banned user_id=%s subscription_id=%s",
+                    user.id,
+                    sub.id,
+                )
+                continue
             try:
                 base_end = _as_aware_utc(sub.current_period_end) or now
                 if base_end < now:
@@ -245,6 +260,4 @@ async def admin_subscription_delete(subscription_id: int):
         await session.delete(sub)
         await session.commit()
         return {"ok": True}
-
-
 
