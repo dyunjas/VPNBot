@@ -28,7 +28,7 @@ from backend.services.exceptions import (
 )
 
 USDT_RATE = Decimal("79")
-TRAFFIC_PRICE_PER_GB_RUB = Decimal("3")
+TRAFFIC_PRICE_PER_GB_RUB = Decimal("2")
 MIN_TRAFFIC_PURCHASE_GB = 1
 
 

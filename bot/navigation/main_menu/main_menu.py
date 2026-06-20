@@ -198,7 +198,7 @@ async def _process_post_registration_links(
             text=(
                 "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> У вас новый реферал!\n"
                 f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> {referral_name}\n"
-                "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> Начислено: 3 дня VPN"
+                "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> Начислено: 1 день VPN"
             ),
         )
 

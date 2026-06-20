@@ -108,7 +108,7 @@ class ReferralAccount(Base):
 
     invited_count: Mapped[int] = mapped_column(default=0)
     referral_balance: Mapped[int] = mapped_column(default=0)
-    referral_percent: Mapped[int] = mapped_column(default=50)
+    referral_percent: Mapped[int] = mapped_column(default=25)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

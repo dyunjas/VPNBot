@@ -9,7 +9,7 @@ from backend.services.subscription_service import SubscriptionService
 from backend.services.exceptions import UserNotFound, BannedUser
 
 
-REF_BONUS_HOURS = 72
+REF_BONUS_HOURS = 24
 
 class ReferralService:
     def __init__(self, session: AsyncSession):

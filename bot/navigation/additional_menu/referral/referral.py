@@ -32,7 +32,7 @@ async def referral_clb(callback: CallbackQuery, referral_service: ReferralServic
 
     text = (
         "<b>Приглашайте друзей и зарабатывайте\n</b>"
-        "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> +3 дня VPN \n"
+        "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> +1 день VPN \n"
         f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> +{referral_account.referral_percent}% с каждого пополнения друга\n\n"
 
         "<tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Ваша статистика:\n"
