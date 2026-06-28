@@ -1,35 +1,46 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Вход в Lunet Admin</title>
+  <title>Вход в админку | Lunet</title>
   <link rel="icon" type="image/png" href="/miniapp/assets/lunet-flavicon.png" />
-  <link rel="stylesheet" href="/admin/styles.css?v=30" />
+  <link rel="stylesheet" href="/admin/styles.css?v=36" />
 </head>
-<body>
-  <div class="login-wrap">
-    <div class="login-card">
-      <h1>Вход в Lunet Admin</h1>
-      <input id="login" type="text" placeholder="Логин" />
-      <input id="password" type="password" placeholder="Пароль" />
-      <button id="submit" class="btn-primary">Войти</button>
-      <div id="error" class="page-sub"></div>
-    </div>
-  </div>
+<body class="admin-login-page">
+  <main class="login-shell">
+    <section class="login-card login-card--admin" aria-label="Авторизация">
+      <div class="login-card__head">
+        <div class="login-card__eyebrow">Авторизация</div>
+      </div>
 
-  <script src="/admin/js/core/api.js?v=26"></script>
-  <script src="/admin/js/pages/login.js?v=26"></script>
+      <label class="login-field" for="login">
+        <span>Логин</span>
+        <input id="login" type="text" placeholder="Введите логин" autocomplete="username" spellcheck="false" />
+      </label>
+
+      <label class="login-field" for="password">
+        <span>Пароль</span>
+        <div class="password-field">
+          <input id="password" type="password" placeholder="Введите пароль" autocomplete="current-password" />
+          <button id="toggle_password" class="password-toggle" type="button" aria-label="Показать пароль">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2.5 12s3.9-6.5 9.5-6.5S21.5 12 21.5 12s-3.9 6.5-9.5 6.5S2.5 12 2.5 12Z" />
+              <circle cx="12" cy="12" r="3.2" />
+            </svg>
+          </button>
+        </div>
+      </label>
+
+      <div class="login-actions">
+        <button id="submit" class="btn-primary btn-primary--wide" type="button">Войти</button>
+      </div>
+
+      <div id="error" class="login-error" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="/admin/js/core/api.js?v=28"></script>
+  <script src="/admin/js/pages/login.js?v=28"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

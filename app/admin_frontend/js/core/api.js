@@ -65,6 +65,36 @@ function extractApiErrorMessage(detail) {
   return String(detail);
 }
 
+function friendlyAdminErrorMessage(detail, context = {}) {
+  const raw = extractApiErrorMessage(detail);
+  const s = raw.toLowerCase();
+  const path = String(context.path || "");
+
+  if (!raw) return "Произошла ошибка";
+  if (s.includes("failed to fetch") || s.includes("networkerror") || s.includes("load failed")) {
+    return "Не удалось подключиться к серверу";
+  }
+  if (s.includes("request entity too large")) {
+    return "Файл слишком большой";
+  }
+  if (s.includes("unauthorized") || s.includes("invalid token") || s.includes("token expired")) {
+    return "Сессия истекла. Войдите заново.";
+  }
+  if (path.includes("/auth/login") && (
+    s.includes("incorrect") ||
+    s.includes("invalid credentials") ||
+    s.includes("wrong password") ||
+    s.includes("wrong login") ||
+    s.includes("unauthorized") ||
+    s.includes("not found")
+  )) {
+    return "Неверный логин или пароль";
+  }
+  if (s.includes("forbidden") || s.includes("access denied")) return "Доступ запрещён";
+  if (s.includes("validation") || s.includes("invalid input")) return "Проверьте введённые данные";
+  return raw;
+}
+
 function toErrorMessage(err, fallback = "Произошла ошибка") {
   if (!err) return fallback;
   if (typeof err === "string") return err;
@@ -128,12 +158,12 @@ async function api(path, options = {}) {
     if (!window.location.pathname.endsWith("/login")) {
       window.location.replace("/admin/login");
     }
-    throw new Error("Требуется вход в систему");
+    throw new Error(path.includes("/auth/login") ? "Неверный логин или пароль" : "Требуется вход в систему");
   }
 
   if (!res.ok) {
     const detail = data?.error?.message || data?.detail || data?.message || data;
-    let err = extractApiErrorMessage(detail) || `HTTP ${res.status}`;
+    let err = friendlyAdminErrorMessage(detail, { path }) || `HTTP ${res.status}`;
     if (res.status === 413 || String(err).toLowerCase().includes("request entity too large")) {
       err = "Файл слишком большой для загрузки. Уменьшите размер изображения или увеличьте лимит client_max_body_size в nginx.";
     }

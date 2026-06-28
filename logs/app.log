@@ -12557,3 +12557,154 @@ DETAIL:  Ошибочная строка содержит (60, 77, 9, null, acti
 [2026-06-20 12:10:21] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-06-20 12:10:21] [INFO] root: Database tables initialized
 [2026-06-20 12:10:21] [INFO] root: Database connection successful
+[2026-06-27 23:19:31] [INFO] root: Settings successfully loaded from .env
+[2026-06-27 23:19:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-27 23:19:34] [INFO] root: Database tables initialized
+[2026-06-27 23:19:34] [INFO] root: Database connection successful
+[2026-06-27 23:19:34] [INFO] root: Bot started
+[2026-06-27 23:19:34] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:19:35] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-27 23:20:35] [INFO] aiogram.event: Update id=891136198 is handled. Duration 664 ms by bot id=7557954606
+[2026-06-27 23:20:37] [INFO] aiogram.event: Update id=891136199 is handled. Duration 252 ms by bot id=7557954606
+[2026-06-27 23:20:38] [INFO] aiogram.event: Update id=891136200 is handled. Duration 549 ms by bot id=7557954606
+[2026-06-27 23:20:38] [INFO] aiogram.event: Update id=891136201 is handled. Duration 234 ms by bot id=7557954606
+[2026-06-27 23:20:39] [INFO] aiogram.event: Update id=891136202 is handled. Duration 611 ms by bot id=7557954606
+[2026-06-27 23:23:24] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-06-27 23:23:24] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-06-27 23:23:30] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-06-27 23:23:30] [WARNING] aiogram.dispatcher: Sleep for 1.280792 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-06-27 23:23:35] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:23:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-27 23:23:35] [WARNING] aiogram.dispatcher: Sleep for 1.639191 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-06-27 23:23:35] [INFO] root: Bot polling cancelled
+[2026-06-27 23:23:35] [INFO] root: Bot stopped
+[2026-06-27 23:23:35] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-27 23:28:47] [INFO] root: Settings successfully loaded from .env
+[2026-06-27 23:28:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-27 23:28:48] [INFO] root: Database tables initialized
+[2026-06-27 23:28:48] [INFO] root: Database connection successful
+[2026-06-27 23:28:48] [INFO] root: Bot started
+[2026-06-27 23:28:48] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:29:20] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:29:21] [INFO] root: Bot polling cancelled
+[2026-06-27 23:29:21] [INFO] root: Bot stopped
+[2026-06-27 23:29:21] [ERROR] asyncio: Task exception was never retrieved
+future: <Task finished name='Task-5' coro=<Dispatcher._polling() done, defined at C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py:354> exception=TelegramNetworkError('HTTP Client says - ServerDisconnectedError: Server disconnected')>
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-27 23:29:28] [INFO] root: Settings successfully loaded from .env
+[2026-06-27 23:29:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-27 23:29:29] [INFO] root: Database tables initialized
+[2026-06-27 23:29:29] [INFO] root: Database connection successful
+[2026-06-27 23:29:29] [INFO] root: Bot started
+[2026-06-27 23:29:29] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:29:36] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:29:36] [INFO] root: Bot polling cancelled
+[2026-06-27 23:29:36] [INFO] root: Bot stopped
+[2026-06-27 23:29:36] [ERROR] asyncio: Task exception was never retrieved
+future: <Task finished name='Task-5' coro=<Dispatcher._polling() done, defined at C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py:354> exception=TelegramNetworkError('HTTP Client says - ServerDisconnectedError: Server disconnected')>
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-28 20:24:35] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 20:24:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 20:24:36] [INFO] root: Database tables initialized
+[2026-06-28 20:24:36] [INFO] root: Database connection successful
+[2026-06-28 20:24:41] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 20:24:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 20:24:42] [INFO] root: Database tables initialized
+[2026-06-28 20:24:42] [INFO] root: Database connection successful
+[2026-06-28 20:24:48] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 20:24:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 20:24:48] [INFO] root: Database tables initialized
+[2026-06-28 20:24:48] [INFO] root: Database connection successful
+[2026-06-28 21:03:37] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:03:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:03:37] [INFO] root: Database tables initialized
+[2026-06-28 21:03:37] [INFO] root: Database connection successful
+[2026-06-28 21:03:43] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:03:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:03:43] [INFO] root: Database tables initialized
+[2026-06-28 21:03:43] [INFO] root: Database connection successful
+[2026-06-28 21:09:34] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:09:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:09:34] [INFO] root: Database tables initialized
+[2026-06-28 21:09:34] [INFO] root: Database connection successful
+[2026-06-28 21:18:37] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:18:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:18:37] [INFO] root: Database tables initialized
+[2026-06-28 21:18:37] [INFO] root: Database connection successful
+[2026-06-28 21:18:44] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:18:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:18:44] [INFO] root: Database tables initialized
+[2026-06-28 21:18:44] [INFO] root: Database connection successful
+[2026-06-28 21:47:16] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:47:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:47:16] [INFO] root: Database tables initialized
+[2026-06-28 21:47:16] [INFO] root: Database connection successful
+[2026-06-28 21:48:56] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:48:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:48:56] [INFO] root: Database tables initialized
+[2026-06-28 21:48:56] [INFO] root: Database connection successful
+[2026-06-28 21:58:25] [INFO] root: Settings successfully loaded from .env
+[2026-06-28 21:58:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-06-28 21:58:25] [INFO] root: Database tables initialized
+[2026-06-28 21:58:25] [INFO] root: Database connection successful
+[2026-06-28 21:59:03] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-06-28 21:59:06] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.13.70'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-28 21:59:06] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.13.70'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-28 21:59:06] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002CFDA0F9F90>
+[2026-06-28 21:59:06] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002CFDA22E090>, 10635.1327083)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002CFDA0FA490>
+[2026-06-28 21:59:08] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-06-28 21:59:13] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=70.0 payment_method=2
+[2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=71e9feaf-45a3-48cd-80e3-229aaadd26ea amount=70.0
+[2026-06-28 21:59:25] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002CFDA0FBD90>
+[2026-06-28 21:59:25] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002CFDA22EF30>, 10654.7150075)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002CFDA0F9A90>
+[2026-06-28 22:00:02] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002CFDA0FA990>
+[2026-06-28 22:00:02] [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002CFDA1E4550>

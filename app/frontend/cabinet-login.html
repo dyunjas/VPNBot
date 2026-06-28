@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Вход в кабинет — Lunet</title>
+  <title>Вход в кабинет | Lunet</title>
   <meta name="description" content="Вход в веб-кабинет Lunet по коду из email или Telegram." />
-  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=8" />
+  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=12" />
 </head>
 <body>
   <main class="auth-page">
     <section class="auth-layout">
-      <section class="auth-card">
-        <a class="auth-brand" href="/">
-          <img src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
-        </a>
-        <h1>Вход в кабинет</h1>
-        <p class="subtitle">Выберите способ входа и подтвердите код.</p>
+      <section class="auth-card" aria-label="Авторизация">
+        <div class="auth-card__brand">
+          <img class="auth-card__logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
+        </div>
+        <div class="auth-card__head">
+          <div class="auth-card__eyebrow">Авторизация</div>
+          <h2>Войти в кабинет</h2>
+          <p class="subtitle">Подтвердите вход удобным способом и получите доступ к кабинету.</p>
+        </div>
 
         <div class="auth-switch" role="tablist" aria-label="Способ входа">
           <button id="tab_email" class="tab is-active" type="button" role="tab" aria-selected="true">Код на email</button>
@@ -72,26 +75,26 @@
 
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </section>
-
-      <footer class="auth-footer">
-        <div class="auth-footer__top">
-          <span>© Lunet</span>
-          <span class="auth-footer__dot">•</span>
-          <span>Веб-кабинет</span>
-          <span class="auth-footer__dot">•</span>
-          <span>Поддержка 08:00–22:00 МСК</span>
-        </div>
-        <div class="auth-footer__links">
-          <a href="https://t.me/LunetVPNSupportBot" class="auth-footer__link" target="_blank" rel="noopener noreferrer">Техподдержка</a>
-          <a href="/terms/" class="auth-footer__link">Пользовательское соглашение</a>
-          <a href="/terms/privacy/" class="auth-footer__link">Политика конфиденциальности</a>
-          <a href="/terms/offer/" class="auth-footer__link">Оферта</a>
-        </div>
-      </footer>
     </section>
+
+    <footer class="auth-footer">
+      <div class="auth-footer__top">
+        <span>© Lunet</span>
+        <span class="auth-footer__dot">•</span>
+        <span>Веб-кабинет</span>
+        <span class="auth-footer__dot">•</span>
+        <span>Поддержка 08:00–22:00 МСК</span>
+      </div>
+      <div class="auth-footer__links">
+        <a href="https://t.me/LunetVPNSupportBot" class="auth-footer__link" target="_blank" rel="noopener noreferrer">Техподдержка</a>
+        <a href="/terms/" class="auth-footer__link">Пользовательское соглашение</a>
+        <a href="/terms/privacy/" class="auth-footer__link">Политика конфиденциальности</a>
+        <a href="/terms/offer/" class="auth-footer__link">Оферта</a>
+      </div>
+    </footer>
   </main>
 
   __API_BOOTSTRAP__
-  <script defer src="/miniapp/cabinet-login.js?v=3"></script>
+  <script defer src="/miniapp/cabinet-login.js?v=4"></script>
 </body>
 </html>

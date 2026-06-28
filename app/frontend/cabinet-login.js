@@ -13,6 +13,7 @@ const emailVerifyBlock = q("email_verify_block");
 const tgVerifyBlock = q("tg_verify_block");
 
 function setStatus(text, type = "") {
+  if (!statusEl) return;
   statusEl.textContent = String(text || "");
   statusEl.classList.remove("success", "error");
   if (type) statusEl.classList.add(type);
@@ -20,11 +21,17 @@ function setStatus(text, type = "") {
 
 function mapErrorMessage(err) {
   const raw = String(err || "").toLowerCase();
+  if (!raw) return "Не удалось выполнить запрос.";
+  if (raw.includes("invalid credentials") || raw.includes("wrong password") || raw.includes("wrong login") || raw.includes("неверный")) {
+    return "Неверный логин или код.";
+  }
   if (raw.includes("http 404") || raw.includes("not found")) return "Пользователь не найден.";
   if (raw.includes("invalid or expired code")) return "Неверный или просроченный код.";
+  if (raw.includes("invalid code") || raw.includes("code expired") || raw.includes("code is invalid")) return "Неверный или просроченный код.";
   if (raw.includes("unauthorized")) return "Сессия недействительна. Войдите повторно.";
   if (raw.includes("smtp")) return "Проблема с отправкой письма. Проверьте SMTP на сервере.";
   if (raw.includes("http 503")) return "Сервис временно недоступен.";
+  if (raw.includes("failed to fetch") || raw.includes("networkerror") || raw.includes("load failed")) return "Не удалось подключиться к серверу.";
   return String(err || "Не удалось выполнить запрос.");
 }
 
@@ -36,7 +43,16 @@ async function post(path, body) {
     body: JSON.stringify(body || {}),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.detail || `HTTP ${res.status}`);
+
+  if (!res.ok) {
+    const detail = data?.detail || data?.message || data?.error || `HTTP ${res.status}`;
+    const detailText = String(detail).toLowerCase();
+    if (res.status === 400 && detailText.includes("email")) throw new Error("Введите корректный email.");
+    if (res.status === 400 && detailText.includes("telegram")) throw new Error("Введите корректный Telegram ID.");
+    if (res.status === 401) throw new Error("Неверный логин или код.");
+    throw new Error(detail);
+  }
+
   return data;
 }
 
@@ -61,6 +77,7 @@ function setMode(mode) {
 async function sendEmailCode() {
   const email = (q("email").value || "").trim();
   if (!email) throw new Error("Введите email.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Введите корректный email.");
   await post("/cabinet-api/auth/send-email-code", { email });
   emailVerifyBlock.classList.remove("is-hidden");
   q("email_code").focus();
@@ -101,16 +118,16 @@ async function runAction(action) {
     setStatus("");
     await action();
   } catch (e) {
-    setStatus(mapErrorMessage(e.message), "error");
+    setStatus(mapErrorMessage(e?.message || e), "error");
   }
 }
 
-tabEmail.addEventListener("click", () => setMode("email"));
-tabTelegram.addEventListener("click", () => setMode("telegram"));
-q("send_email_code").addEventListener("click", () => runAction(sendEmailCode));
-q("verify_email").addEventListener("click", () => runAction(verifyEmail));
-q("send_tg_code").addEventListener("click", () => runAction(sendTelegramCode));
-q("verify_tg").addEventListener("click", () => runAction(verifyTelegram));
+tabEmail?.addEventListener("click", () => setMode("email"));
+tabTelegram?.addEventListener("click", () => setMode("telegram"));
+q("send_email_code")?.addEventListener("click", () => runAction(sendEmailCode));
+q("verify_email")?.addEventListener("click", () => runAction(verifyEmail));
+q("send_tg_code")?.addEventListener("click", () => runAction(sendTelegramCode));
+q("verify_tg")?.addEventListener("click", () => runAction(verifyTelegram));
 
 resetSteps();
 setMode("email");

@@ -2747,3 +2747,71 @@ AttributeError: 'Settings' object has no attribute 'XRAY_AUTH'
 [2026-06-20 00:29:05] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-06-20 00:29:05] [INFO] root: Bot polling cancelled
 [2026-06-20 00:29:05] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-27 23:19:34] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:19:35] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-27 23:20:35] [INFO] aiogram.event: Update id=891136198 is handled. Duration 664 ms by bot id=7557954606
+[2026-06-27 23:20:37] [INFO] aiogram.event: Update id=891136199 is handled. Duration 252 ms by bot id=7557954606
+[2026-06-27 23:20:38] [INFO] aiogram.event: Update id=891136200 is handled. Duration 549 ms by bot id=7557954606
+[2026-06-27 23:20:38] [INFO] aiogram.event: Update id=891136201 is handled. Duration 234 ms by bot id=7557954606
+[2026-06-27 23:20:39] [INFO] aiogram.event: Update id=891136202 is handled. Duration 611 ms by bot id=7557954606
+[2026-06-27 23:23:24] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-06-27 23:23:24] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-06-27 23:23:30] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-06-27 23:23:30] [WARNING] aiogram.dispatcher: Sleep for 1.280792 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-06-27 23:23:35] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:23:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-27 23:23:35] [WARNING] aiogram.dispatcher: Sleep for 1.639191 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-06-27 23:23:35] [INFO] root: Bot polling cancelled
+[2026-06-27 23:23:35] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-06-27 23:28:48] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:29:20] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:29:21] [INFO] root: Bot polling cancelled
+[2026-06-27 23:29:21] [ERROR] asyncio: Task exception was never retrieved
+future: <Task finished name='Task-5' coro=<Dispatcher._polling() done, defined at C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py:354> exception=TelegramNetworkError('HTTP Client says - ServerDisconnectedError: Server disconnected')>
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-06-27 23:29:29] [INFO] aiogram.dispatcher: Start polling
+[2026-06-27 23:29:36] [INFO] aiogram.dispatcher: Polling stopped
+[2026-06-27 23:29:36] [INFO] root: Bot polling cancelled
+[2026-06-27 23:29:36] [ERROR] asyncio: Task exception was never retrieved
+future: <Task finished name='Task-5' coro=<Dispatcher._polling() done, defined at C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py:354> exception=TelegramNetworkError('HTTP Client says - ServerDisconnectedError: Server disconnected')>
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected

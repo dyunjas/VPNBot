@@ -814,3 +814,10 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-19 10:51:03] [INFO] root: [biz][referral] referrer_attached user_id=87 referrer_id=36 bonus_hours=72
 [2026-06-20 00:26:29] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
 [2026-06-20 00:28:58] [INFO] root: [biz][user] email_updated user_id=36 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-06-28 21:59:03] [INFO] root: [biz][billing] pally_create_requested user_id=36 amount=50.0 ttl=600
+[2026-06-28 21:59:06] [ERROR] root: [biz][billing] pally_create_http_403 user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.13.70'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-28 21:59:06] [ERROR] root: [biz][billing] pally_create_api_error user_id=36 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.13.70'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-06-28 21:59:08] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-06-28 21:59:13] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=70.0 payment_method=2
+[2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=71e9feaf-45a3-48cd-80e3-229aaadd26ea amount=70.0
