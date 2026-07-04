@@ -15,6 +15,7 @@ from fastapi.responses import JSONResponse
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
 from sqlalchemy import select
+from sqlalchemy.exc import DBAPIError
 
 from api.miniapp.common import _get_tg_user
 from backend.core.config import settings
@@ -56,6 +57,8 @@ REFRESH_COOKIE = "cabinet_refresh_token"
 _OTP_STORE: dict[str, dict] = {}
 _OTP_LAST_SENT: dict[str, float] = {}
 _OTP_SEND_COOLDOWN_SEC = 30
+_INT32_MIN = -(2**31)
+_INT32_MAX = 2**31 - 1
 
 
 class SendEmailCodePayload(BaseModel):
@@ -291,7 +294,12 @@ def _map_service_error(e: Exception) -> HTTPException:
 
 
 async def _get_user(session, user_id: int) -> User:
-    user = await session.get(User, user_id)
+    user = None
+    if _INT32_MIN <= int(user_id) <= _INT32_MAX:
+        try:
+            user = await session.get(User, user_id)
+        except DBAPIError:
+            user = None
     if not user:
         result = await session.execute(select(User).where(User.tg_id == user_id))
         user = result.scalar_one_or_none()
