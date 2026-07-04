@@ -8,7 +8,8 @@ function renderPlans(plans) {
   host.innerHTML = "";
   plans.forEach((plan) => {
     const isFree = Number(plan.price || 0) <= 0;
-    const trafficText = /test|тест/i.test(String(plan.name || "")) ? "30 ГБ" : "Безлимит";
+    const limitValue = Number(plan.gb_limit || 0);
+    const trafficText = limitValue > 0 ? `${limitValue} ГБ` : "Безлимит";
     const el = document.createElement("div");
     el.className = "item plan-card";
     el.innerHTML = `

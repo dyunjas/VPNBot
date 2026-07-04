@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Response
-from fastapi import Request
 import time
+import hmac
+from fastapi import APIRouter, Request, Response
 from ..common import *
 
 router = APIRouter()
@@ -98,12 +98,14 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
             status_code=503,
             detail="ADMIN_WEB_LOGIN and ADMIN_WEB_PASSWORD must be configured",
         )
-    if payload.login != expected_login:
-        key = _login_rate_key(request, payload.login)
-        if not _login_allowed(key):
-            raise HTTPException(status_code=429, detail="Too many login attempts")
-    if payload.login != expected_login or payload.password != expected_password:
+    key = _login_rate_key(request, payload.login)
+    if not _login_allowed(key):
+        raise HTTPException(status_code=429, detail="Too many login attempts")
+    login_ok = hmac.compare_digest(payload.login, expected_login)
+    password_ok = hmac.compare_digest(payload.password, expected_password)
+    if not login_ok or not password_ok:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    _LOGIN_ATTEMPTS.pop(key, None)
     access_token = _create_admin_access_token(payload.login)
     max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
     response.set_cookie(

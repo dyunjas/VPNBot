@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from backend.core.logger_config import logger
 
@@ -29,10 +29,10 @@ class Settings(BaseSettings):
     OTP_SECRET: str
     PUBLIC_BASE_URL: str
     SECRET_KEY: str
+    ADMIN_API_BASE_URL: str | None = None
     ADMIN_WEB_LOGIN: str | None = None
     ADMIN_WEB_PASSWORD: str | None = None
     ADMIN_WEB_JWT_EXPIRE_HOURS: int = 12
-    SUPPORT_FORUM_CHAT_ID: int | None = None
     DB_POOL_SIZE: int = 2
     DB_MAX_OVERFLOW: int = 0
     DB_POOL_TIMEOUT: int = 20
@@ -45,11 +45,23 @@ class Settings(BaseSettings):
     SMTP_USER: str | None = None
     SMTP_PASSWORD: str | None = None
     SMTP_FROM_EMAIL: str | None = None
+    API_CORS_ORIGINS: str = (
+        "http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003,"
+        "http://127.0.0.1:8011,http://localhost:8001,http://localhost:8002,"
+        "http://localhost:8003,http://localhost:8011"
+    )
+    TRUSTED_HOSTS: str
+    UVICORN_HOST: str = "0.0.0.0"
+    UVICORN_RELOAD: bool = False
+    UVICORN_FORWARDED_ALLOW_IPS: str = "127.0.0.1"
+    FRONTEND_PROXY_TIMEOUT_SEC: int = 60
+    MINIAPP_INITDATA_MAX_AGE_SEC: int = 3600
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     @property
     def POSTGRES_ASYNC_URL(self) -> str:
@@ -65,11 +77,31 @@ class Settings(BaseSettings):
             return None
         proxy_url = (self.BOT_PROXY or "").strip()
         return proxy_url or None
-        
+
+    @property
+    def API_PROXY_BASE_URL(self) -> str:
+        return (self.API_BASE_URL or "http://127.0.0.1:8004").rstrip("/")
+
+    @property
+    def API_BASE_URL_JS(self) -> str:
+        return (self.API_BASE_URL or "").strip()
+
+    @property
+    def ADMIN_API_BASE_URL_JS(self) -> str:
+        return (self.ADMIN_API_BASE_URL or self.API_BASE_URL or "http://127.0.0.1:8004").strip()
+
+    @property
+    def API_CORS_ORIGINS_LIST(self) -> list[str]:
+        return [origin.strip() for origin in self.API_CORS_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def TRUSTED_HOSTS_LIST(self) -> list[str]:
+        hosts = [host.strip() for host in self.TRUSTED_HOSTS.split(",") if host.strip()]
+        return hosts or ["*"]
+
 try:
     settings = Settings()
     logger.info("Settings successfully loaded from .env")
 except Exception as e:
-    logger.error(f"Error loadding settings from .env")
-    raise                                                                                       
-                                                                                                  
+    logger.error("Error loading settings from .env")
+    raise

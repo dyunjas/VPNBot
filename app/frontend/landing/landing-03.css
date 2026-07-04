@@ -32,6 +32,47 @@
     margin-left: auto;
   }
 
+  .landing-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 75;
+    border: 0;
+    background: rgba(10, 20, 35, .35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+  }
+
+  body.landing-menu-open .landing-menu-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .landing-menu {
+    position: fixed;
+    left: 50%;
+    top: 92px;
+    z-index: 80;
+    width: min(420px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 112px);
+    overflow: auto;
+    margin-top: 0;
+    transform: translate(-50%, -12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .28s ease, opacity .22s ease;
+  }
+
+  body.landing-menu-open .landing-menu {
+    display: grid;
+    gap: 8px;
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .brand__logo {
     height: 42px;
   }

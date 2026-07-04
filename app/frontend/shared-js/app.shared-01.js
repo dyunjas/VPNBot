@@ -273,6 +273,9 @@ function friendlyErrorMessage(raw) {
   if (s.includes("payment required") || s === "http 402") {
     return "Недостаточно средств для покупки подписки.";
   }
+  if (s.includes("недостаточно средств") || s.includes("insufficient balance")) {
+    return "Недостаточно средств на балансе. Пополните баланс.";
+  }
   if (s.includes("invalid initdata") || s.includes("initdata is missing")) {
     return "Сессия истекла. Откройте кабинет заново.";
   }

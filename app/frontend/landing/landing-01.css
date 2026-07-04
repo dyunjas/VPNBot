@@ -159,6 +159,10 @@ a {
   box-shadow: var(--shadow-md);
 }
 
+.landing-menu-backdrop {
+  display: none;
+}
+
 .landing-menu.open {
   display: grid;
   gap: 8px;
@@ -175,6 +179,18 @@ a {
 
 .landing-menu a.btn {
   color: #fff;
+  border-color: #7ca7fb;
+  background: linear-gradient(180deg, #3670ef 0%, #295fdd 100%);
+  box-shadow: 0 14px 28px rgba(47, 104, 234, 0.22);
+}
+
+.landing-menu a.btn:hover {
+  color: #fff;
+  filter: brightness(1.03);
+}
+
+body.landing-menu-open {
+  overflow: hidden;
 }
 
 .btn {

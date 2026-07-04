@@ -21,10 +21,6 @@ def _resolve_msk_timezone():
             logger.warning("[scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00")
     return timezone(timedelta(hours=3), name="MSK")
 
-
-MSK_TZ = _resolve_msk_timezone()
-
-
 def _parse_sync_times(raw: str) -> list[tuple[int, int]]:
     items: list[tuple[int, int]] = []
     for chunk in (raw or "").split(","):
@@ -66,11 +62,12 @@ async def run_remnawave_sync_once() -> None:
 async def remnawave_sync_loop(poll_interval_sec: int = 30) -> None:
     executed_keys: set[str] = set()
     schedule = _parse_sync_times(settings.REMNAWAVE_AUTO_SYNC_TIMES)
+    msk_tz = _resolve_msk_timezone()
     logger.info("[scheduler][remnawave_sync] enabled times=%s", ",".join(f"{h:02d}:{m:02d}" for h, m in schedule))
 
     while True:
         try:
-            now_msk = datetime.now(MSK_TZ)
+            now_msk = datetime.now(msk_tz)
             current_key = now_msk.strftime("%Y-%m-%d %H:%M")
             matching = any(now_msk.hour == hour and now_msk.minute == minute for hour, minute in schedule)
             if matching and current_key not in executed_keys:

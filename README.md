@@ -1,41 +1,51 @@
-# Frontend/API Sync Notes
+# VPNBot
 
-## Entry points
-- `/admin` -> admin panel
-- `/cabinet` -> web cabinet (serves existing mini-app UI)
-- `/cabinet/login` -> web login by one-time code
-- `/tg-app` -> Telegram mini-app entry redirect to `/miniapp/`
-- `/` -> public landing
-- Telegram -> Web bridge: mini-app button opens `/cabinet?initData=...`
+Сервис разделен на отдельные процессы:
 
-## Backend SSOT inventory
-- Full API inventory: [docs/api_schema.json](/c:/Users/dyunj/VPNBot/docs/api_schema.json)
-- Admin frontend now uses only endpoints connected in `api/admin/endpoints.py`.
+- `landing` - публичный лендинг
+- `miniapp` - Telegram Mini App frontend
+- `cabinet` - web cabinet frontend
+- `admin` - админский frontend
+- `api` - общий FastAPI backend
+- `bot` - Telegram bot
 
-## Removed as dead admin feature
-- Removed admin `servers` UI route and page:
-  - deleted `/admin/servers` page mapping
-  - deleted `app/admin_frontend/servers.html`
-  - deleted `app/admin_frontend/js/pages/servers.js`
-- Reason: `servers` router is not included in active `/admin-api` aggregate router.
+## Быстрый старт
 
-## Admin UI updates
-- Added theme switch support (light/dark) in shared layout via `localStorage` key `admin_theme`.
-- Navigation excludes sections without active API wiring.
+```powershell
+python manage.py bootstrap
+```
 
-## Acceptance behavior
-- UI surface only includes backend-backed sections.
-- If backend endpoint/field is removed, related UI should be removed/hidden in follow-up sync; no fake data paths remain in removed sections.
+После установки зависимости и виртуальное окружение будут подготовлены автоматически.
 
-## Important auth note
-- Added backend cabinet auth and API endpoints under `/cabinet-api`.
-- Login methods:
-  - email + code
-  - telegram id + code (code delivered by bot)
-- Session:
-  - short-lived access token in browser storage (`cabinet_access_token`)
-  - refresh token in httpOnly cookie
-  - refresh endpoint: `POST /cabinet-api/auth/refresh`
-  - logout endpoint: `POST /cabinet-api/auth/logout`
-- SMTP env required for email-code flow: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`.
-- Current DB schema still requires `tg_id` for registration (enforced at API level).
+## Запуск сервисов
+
+```powershell
+python manage.py run landing
+python manage.py run miniapp
+python manage.py run cabinet
+python manage.py run admin
+python manage.py run api
+python manage.py run bot
+```
+
+## Архитектура
+
+- Старые `entry_*.py` оставлены как тонкие точки входа.
+- Реальная сборка приложений вынесена в `backend/apps/`.
+- Общий runtime и uvicorn-настройки вынесены в `backend/core/runtime.py`.
+- Общие frontend helper'ы и proxy-логика вынесены в `backend/apps/common.py`.
+
+## Базовая безопасность
+
+- Mini App API проверяет подпись `initData` от Telegram и ограничивает срок ее жизни.
+- Cabinet использует короткоживущий access token и refresh token в `httpOnly` cookie.
+- Admin использует JWT со scope `admin:web`, cookie `httpOnly` и rate limit на логин.
+- Bot API теперь принимает только отдельный `BOT_API_TOKEN`; fallback на `SECRET_KEY` убран.
+- Для всех HTTP-приложений включены `TrustedHostMiddleware` и базовые security headers.
+
+## Что нужно настроить в production
+
+- `TRUSTED_HOSTS` - реальные домены приложения.
+- `API_CORS_ORIGINS` - только допустимые frontend origin'ы.
+- `UVICORN_FORWARDED_ALLOW_IPS` - IP вашего reverse proxy.
+- HTTPS на уровне reverse proxy, чтобы `secure` cookie и HSTS работали корректно.

@@ -26,8 +26,8 @@ from backend.services.exceptions import (
 
 class BotApiClient:
     def __init__(self, base_url: str | None = None, token: str | None = None):
-        self.base_url = (base_url or settings.API_BASE_URL or "http://127.0.0.1:8004").rstrip("/")
-        self.token = (token or settings.BOT_API_TOKEN or settings.SECRET_KEY or "").strip()
+        self.base_url = (base_url or settings.API_PROXY_BASE_URL).rstrip("/")
+        self.token = (token or settings.BOT_API_TOKEN or "").strip()
         self._session: aiohttp.ClientSession | None = None
         self._timeout = aiohttp.ClientTimeout(total=20, connect=5, sock_connect=5, sock_read=15)
 
@@ -37,9 +37,10 @@ class BotApiClient:
         return self._session
 
     def _headers(self) -> dict[str, str]:
+        if not self.token:
+            raise RuntimeError("BOT_API_TOKEN is not configured")
         headers = {"Content-Type": "application/json"}
-        if self.token:
-            headers["X-Bot-Token"] = self.token
+        headers["X-Bot-Token"] = self.token
         return headers
 
     async def close(self) -> None:

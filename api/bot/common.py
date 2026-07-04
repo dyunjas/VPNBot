@@ -42,7 +42,7 @@ MIN_WITHDRAW_AMOUNT = 500
 
 
 def _bot_token() -> str:
-    token = (settings.BOT_API_TOKEN or settings.SECRET_KEY or "").strip()
+    token = (settings.BOT_API_TOKEN or "").strip()
     if not token:
         raise HTTPException(status_code=503, detail="BOT_API_TOKEN is not configured")
     return token

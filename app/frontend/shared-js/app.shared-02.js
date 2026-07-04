@@ -43,14 +43,17 @@ async function api(path, body = {}) {
   }
 
   if (!res.ok) {
+    const rawDetail = normalizeErrorDetail(data.detail || data.error || `HTTP ${res.status}`);
+    const rawStr = String(rawDetail || "").toLowerCase();
+    if (rawStr.includes("недостаточно средств") || rawStr.includes("insufficient balance")) {
+      throw new Error("Недостаточно средств на балансе. Пополните баланс.");
+    }
     if (res.status >= 500) {
       const err = new Error("\u0421\u0435\u0440\u0432\u0435\u0440 \u043d\u0435 \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d. \u0418\u0434\u0443\u0442 \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0440\u0430\u0431\u043e\u0442\u044b.");
       err.code = "SERVER_UNAVAILABLE";
       showUnavailableScreen();
       throw err;
     }
-    const rawDetail = normalizeErrorDetail(data.detail || data.error || `HTTP ${res.status}`);
-    const rawStr = String(rawDetail || "").toLowerCase();
     if (res.status === 403 && rawStr.includes("banned")) {
       const err = new Error("BANNED");
       err.code = "BANNED";

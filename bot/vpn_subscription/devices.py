@@ -3,16 +3,31 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
 from backend.images import MAIN_MENU_IMG
-from bot.vpn_subscription.devices_keyboards import devices_list_kb, device_detail_kb
+from bot.vpn_subscription.devices_keyboards import device_detail_kb, devices_list_kb
 
 router = Router()
 
 
-async def _safe_callback_answer(callback: CallbackQuery, text: str | None = None, *, show_alert: bool = False) -> None:
+async def _safe_callback_answer(
+    callback: CallbackQuery,
+    text: str | None = None,
+    *,
+    show_alert: bool = False,
+) -> None:
     try:
         await callback.answer(text, show_alert=show_alert)
     except TelegramBadRequest:
         return
+
+
+def _device_title(device: dict, device_id: int) -> str:
+    return (
+        device.get("device_model")
+        or device.get("deviceModel")
+        or device.get("device_os")
+        or device.get("platform")
+        or f"Устройство {device_id + 1}"
+    )
 
 
 def _render_devices_text(devices: list[dict]) -> str:
@@ -28,7 +43,7 @@ def _render_device_detail(device: dict, device_id: int) -> str:
     os_version = device.get("os_version") or device.get("osVersion") or "—"
     user_agent = device.get("user_agent") or device.get("userAgent") or "—"
     return (
-        f"<b>Устройство #{device_id + 1}</b>\n\n"
+        f"<b>{_device_title(device, device_id)}</b>\n\n"
         f"<b>Модель:</b> {model}\n"
         f"<b>Платформа:</b> {platform}\n"
         f"<b>Версия ОС:</b> {os_version}\n"
@@ -43,10 +58,9 @@ async def _load_devices(bot_api, tg_id: int) -> list[dict]:
 
 async def _render_list(callback: CallbackQuery, bot_api, *, page: int = 0) -> None:
     devices = await _load_devices(bot_api, callback.from_user.id)
-    caption = _render_devices_text(devices)
     content = InputMediaPhoto(
         media=MAIN_MENU_IMG,
-        caption=caption,
+        caption=_render_devices_text(devices),
     )
     await callback.message.edit_media(
         media=content,

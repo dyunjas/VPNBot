@@ -153,8 +153,10 @@ async def _get_user_or_404(session: AsyncSession, tg_id: int):
 
 
 def _map_service_error(e: Exception) -> HTTPException:
+    if isinstance(e, HTTPException):
+        return e
     if isinstance(e, InsufficientBalance):
-        return HTTPException(status_code=402, detail="Недостаточно средств на балансе")
+        return HTTPException(status_code=409, detail="Недостаточно средств на балансе. Пополните баланс.")
     if isinstance(e, NotEnoughReferralBalance):
         return HTTPException(status_code=402, detail="Недостаточно реферального баланса")
     if isinstance(e, PaymentNotConfirmed):

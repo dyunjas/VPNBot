@@ -4,6 +4,15 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 DEVICES_PER_PAGE = 6
 
 
+def _device_title(dev: dict, index: int) -> str:
+    model = (dev.get("device_model") or dev.get("deviceModel") or "").strip()
+    platform = (dev.get("device_os") or dev.get("platform") or "").strip()
+    hwid = (dev.get("hwid") or "").strip()
+
+    title = model or platform or hwid or f"Устройство {index + 1}"
+    return title[:40]
+
+
 def devices_list_kb(devices: list, page: int = 0):
     builder = InlineKeyboardBuilder()
 
@@ -12,9 +21,8 @@ def devices_list_kb(devices: list, page: int = 0):
     chunk = devices[start:end]
 
     for idx, dev in enumerate(chunk, start=start):
-        title = dev.get("deviceModel") or dev.get("platform") or f"Устройство #{idx + 1}"
         builder.button(
-            text=f"📱 {title}",
+            text=f"📱 {_device_title(dev, idx)}",
             callback_data=f"subscription_device:{idx}:{page}",
         )
 
