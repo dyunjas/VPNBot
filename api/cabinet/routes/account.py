@@ -23,6 +23,7 @@ from api.cabinet.common import (
     require_optional_cabinet_auth,
     settings,
 )
+from backend.services.exceptions import InsufficientBalance
 
 router = APIRouter()
 
@@ -128,6 +129,8 @@ async def cabinet_subscription_buy(payload: BuySubscriptionPayload, user_id: int
         billing = BillingService(session)
         try:
             sub = await billing.buy_subscription(user_id=user.id, plan_id=payload.plan_id, auto_renew=True)
+        except InsufficientBalance:
+            raise HTTPException(status_code=409, detail="Недостаточно средств на балансе. Пополните баланс.")
         except Exception as e:
             raise _map_service_error(e)
         finally:
