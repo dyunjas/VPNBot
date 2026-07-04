@@ -50,7 +50,6 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8011,http://localhost:8001,http://localhost:8002,"
         "http://localhost:8003,http://localhost:8011"
     )
-    TRUSTED_HOSTS: str
     UVICORN_HOST: str = "0.0.0.0"
     UVICORN_RELOAD: bool = False
     UVICORN_FORWARDED_ALLOW_IPS: str = "127.0.0.1"
@@ -93,11 +92,6 @@ class Settings(BaseSettings):
     @property
     def API_CORS_ORIGINS_LIST(self) -> list[str]:
         return [origin.strip() for origin in self.API_CORS_ORIGINS.split(",") if origin.strip()]
-
-    @property
-    def TRUSTED_HOSTS_LIST(self) -> list[str]:
-        hosts = [host.strip() for host in self.TRUSTED_HOSTS.split(",") if host.strip()]
-        return hosts or ["*"]
 
 try:
     settings = Settings()

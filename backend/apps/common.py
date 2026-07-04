@@ -7,7 +7,6 @@ from typing import AsyncIterator, Callable
 
 import aiohttp
 from fastapi import FastAPI, Request, Response
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -57,8 +56,6 @@ def create_db_lifespan() -> Callable[[FastAPI], AsyncIterator[None]]:
 
 
 def apply_common_hardening(app: FastAPI) -> None:
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.TRUSTED_HOSTS_LIST)
-
     @app.middleware("http")
     async def add_security_headers(request: Request, call_next):
         response = await call_next(request)
