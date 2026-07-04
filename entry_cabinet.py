@@ -1,9 +1,13 @@
 import os
+import asyncio
 import uvicorn
+import aiohttp
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi import Request, Response
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from backend.core.maintenance import MAINTENANCE_MESSAGE, enable_auto_maintenance, get_maintenance_state
 from backend.database.session import init_db, check_connection
 
 app = FastAPI(
@@ -16,6 +20,18 @@ app = FastAPI(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, "app", "frontend")
 LEGAL_DIR = os.path.join(FRONTEND_DIR, "legal")
+HOP_BY_HOP_HEADERS = {
+    "connection",
+    "keep-alive",
+    "proxy-authenticate",
+    "proxy-authorization",
+    "te",
+    "trailers",
+    "transfer-encoding",
+    "upgrade",
+    "host",
+    "content-length",
+}
 
 @app.on_event("startup")
 async def on_startup():
@@ -23,17 +39,52 @@ async def on_startup():
     await check_connection()
 
 
-def _render_shell(app_mode: str) -> HTMLResponse:
-    shell_path = os.path.join(FRONTEND_DIR, "index.html")
+def _render_shell() -> HTMLResponse:
+    shell_path = os.path.join(FRONTEND_DIR, "shell.html")
+    app_shell_path = os.path.join(FRONTEND_DIR, "shell", "app-shell.html")
+    sidebar_path = os.path.join(FRONTEND_DIR, "shell", "sidebar.html")
+    main_path = os.path.join(FRONTEND_DIR, "shell", "main.html")
+    footer_nav_path = os.path.join(FRONTEND_DIR, "shell", "footer-nav.html")
     with open(shell_path, "r", encoding="utf-8") as f:
         html = f.read()
-    api_base = os.getenv("API_BASE_URL", "http://127.0.0.1:8004")
-    bootstrap = (
-        f"<script>window.__APP_MODE={app_mode!r};</script>"
-        f"<script>window.__API_BASE_URL={api_base!r};</script>"
-        '<script defer src="/miniapp/app.v2.js?v=18"></script>'
+    with open(app_shell_path, "r", encoding="utf-8") as f:
+        app_shell = f.read()
+    with open(sidebar_path, "r", encoding="utf-8") as f:
+        sidebar = f.read()
+    with open(main_path, "r", encoding="utf-8") as f:
+        main = f.read()
+    with open(footer_nav_path, "r", encoding="utf-8") as f:
+        footer_nav = f.read()
+    api_base = (os.getenv("API_BASE_URL") or "").strip()
+    styles = (
+        '<link rel="stylesheet" href="/miniapp/shared-tokens.css?v=1" />'
+        '<link rel="stylesheet" href="/miniapp/shared-ui.css?v=4" />'
+        '<link rel="stylesheet" href="/miniapp/cabinet.css?v=6" />'
     )
-    rendered = html.replace("__APP_BOOTSTRAP__", bootstrap).replace("__APP_ENTRY__", "/miniapp/app.v2.js?v=18")
+    head_scripts = ""
+    bootstrap = (
+        f"<script>window.__API_BASE_URL={api_base!r};</script>"
+        '<script defer src="/miniapp/cabinet-app.js?v=3"></script>'
+        '<script defer src="/miniapp/shared-js/app.shared-01.js?v=5"></script>'
+        '<script defer src="/miniapp/shared-js/app.shared-02.js?v=5"></script>'
+        '<script defer src="/miniapp/shared-js/app.shared-03.js?v=5"></script>'
+        '<script defer src="/miniapp/shared-js/app.shared-04.js?v=5"></script>'
+        '<script defer src="/miniapp/shared-js/app.shared-05.js?v=5"></script>'
+    )
+    rendered = (
+        html
+        .replace(
+            "__APP_SHELL__",
+            app_shell
+            .replace("__SHELL_SIDEBAR__", sidebar)
+            .replace("__SHELL_MAIN__", main)
+            .replace("__SHELL_FOOTER_NAV__", footer_nav),
+        )
+        .replace("__SURFACE_STYLES__", styles)
+        .replace("__HEAD_SCRIPTS__", head_scripts)
+        .replace("__APP_BOOTSTRAP__", bootstrap)
+        .replace("__APP_ENTRY__", "/miniapp/app.shared.js?v=3")
+    )
     return HTMLResponse(
         content=rendered,
         headers={
@@ -47,7 +98,7 @@ def _render_shell(app_mode: str) -> HTMLResponse:
 @app.get("/cabinet")
 @app.get("/cabinet/")
 async def cabinet():
-    return _render_shell("cabinet")
+    return _render_shell()
 
 
 @app.get("/cabinet/login")
@@ -56,7 +107,7 @@ async def cabinet_login():
     login_path = os.path.join(FRONTEND_DIR, "cabinet-login.html")
     with open(login_path, "r", encoding="utf-8") as f:
         html = f.read()
-    api_base = os.getenv("API_BASE_URL", "http://127.0.0.1:8004")
+    api_base = (os.getenv("API_BASE_URL") or "").strip()
     bootstrap = f"<script>window.__API_BASE_URL={api_base!r};</script>"
     rendered = html.replace("__API_BOOTSTRAP__", bootstrap)
     return HTMLResponse(
@@ -87,6 +138,54 @@ async def terms_offer():
     return FileResponse(os.path.join(LEGAL_DIR, "offer.html"))
 
 
+async def _proxy_api(request: Request, path: str) -> Response:
+    maintenance = get_maintenance_state()
+    if maintenance.get("enabled"):
+        return JSONResponse(
+            status_code=503,
+            content={"detail": maintenance.get("message") or MAINTENANCE_MESSAGE, "maintenance": True},
+        )
+    api_base = (os.getenv("API_BASE_URL") or "http://127.0.0.1:8004").rstrip("/")
+    target_url = f"{api_base}/api/{path}"
+    if request.url.query:
+        target_url = f"{target_url}?{request.url.query}"
+
+    body = await request.body()
+    headers = {
+        key: value
+        for key, value in request.headers.items()
+        if key.lower() not in HOP_BY_HOP_HEADERS
+    }
+
+    timeout = aiohttp.ClientTimeout(total=60)
+    try:
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.request(
+                request.method,
+                target_url,
+                data=body or None,
+                headers=headers,
+                allow_redirects=False,
+            ) as upstream:
+                payload = await upstream.read()
+                response = Response(content=payload, status_code=upstream.status)
+                for key, value in upstream.headers.items():
+                    if key.lower() not in HOP_BY_HOP_HEADERS:
+                        response.headers.append(key, value)
+                return response
+    except (aiohttp.ClientError, asyncio.TimeoutError):
+        enable_auto_maintenance(source="cabinet_proxy", message=MAINTENANCE_MESSAGE)
+        return JSONResponse(
+            status_code=503,
+            content={"detail": MAINTENANCE_MESSAGE, "maintenance": True},
+        )
+
+
+@app.api_route("/api/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def proxy_api(request: Request, path: str):
+    return await _proxy_api(request, path)
+
+
 @app.get("/favicon.ico")
 async def favicon():
     return RedirectResponse(url="/miniapp/assets/lunet-flavicon.png?v=2", status_code=307)
@@ -94,7 +193,7 @@ async def favicon():
 
 @app.get("/__APP_ENTRY__")
 async def legacy_app_entry():
-    return RedirectResponse(url="/miniapp/app.v2.js?v=18", status_code=307)
+    return RedirectResponse(url="/miniapp/app.shared.js?v=3", status_code=307)
 
 
 @app.get("/health")

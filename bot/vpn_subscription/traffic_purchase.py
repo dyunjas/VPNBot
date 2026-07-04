@@ -1,10 +1,9 @@
-﻿from aiogram import F, Router
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from backend.images import MAIN_MENU_IMG
-from backend.services import BillingService, RemnaWaveService, SubscriptionService, UserService
 from backend.services.exceptions import InsufficientBalance, SubscriptionNotFound, UserNotFound
 from backend.states import TrafficPurchaseStates
 
@@ -31,21 +30,17 @@ def _back_sub_url_kb():
 async def buy_traffic_start(
     callback: CallbackQuery,
     state: FSMContext,
-    user_service: UserService,
-    subscription_service: SubscriptionService,
-    remnawave_service: RemnaWaveService,
+    bot_api,
 ):
     try:
-        user = await user_service.get_by_tg_id(callback.from_user.id)
-        await subscription_service.get_active_subscription(user_id=user.id)
+        await bot_api.get_subscription_url(tg_id=callback.from_user.id)
     except UserNotFound:
         await callback.answer("Пользователь не найден.", show_alert=True)
         return
     except SubscriptionNotFound:
         await callback.answer("Подписка не активна, купите подписку.", show_alert=True)
         return
-
-    if not remnawave_service.enabled:
+    except Exception:
         await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
         return
 
@@ -93,10 +88,7 @@ async def buy_traffic_enter_gb(message: Message, state: FSMContext):
 async def buy_traffic_confirm(
     callback: CallbackQuery,
     state: FSMContext,
-    user_service: UserService,
-    billing_service: BillingService,
-    subscription_service: SubscriptionService,
-    remnawave_service: RemnaWaveService,
+    bot_api,
 ):
     data = await state.get_data()
     gb = int(data.get("traffic_gb") or 0)
@@ -106,8 +98,7 @@ async def buy_traffic_confirm(
         return
 
     try:
-        user = await user_service.get_by_tg_id(callback.from_user.id)
-        await subscription_service.get_active_subscription(user_id=user.id)
+        await bot_api.get_subscription_url(tg_id=callback.from_user.id)
     except UserNotFound:
         await callback.answer("Пользователь не найден.", show_alert=True)
         return
@@ -115,19 +106,10 @@ async def buy_traffic_confirm(
         await callback.answer("Подписка не активна, купите подписку.", show_alert=True)
         return
 
-    if not remnawave_service.enabled:
-        await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
-        return
-
-    balance = int(getattr(user, "balance", 0) or 0)
-    if balance < price:
-        await callback.answer(f"Недостаточно средств. Нужно {price} RUB", show_alert=True)
-        return
-
     try:
-        _, charged = await billing_service.add_gb_to_subscription(user_id=user.id, gb=gb)
+        result = await bot_api.buy_traffic(tg_id=callback.from_user.id, gb=gb)
     except InsufficientBalance:
-        await callback.answer(f"Недостаточно средств. Нужно {price} RUB", show_alert=True)
+        await callback.answer("Недостаточно средств на балансе для покупки трафика.", show_alert=True)
         return
     except Exception:
         await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
@@ -139,7 +121,7 @@ async def buy_traffic_confirm(
     text = (
         "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Трафик докуплен</b>\n\n"
         f"Добавлено: <b>+{gb} GB</b>\n"
-        f"Списано: <b>{charged} RUB</b>\n"
+        f"Списано: <b>{result.get('charged', price)} RUB</b>\n"
         "Лимит трафика обновлен. Обновите подписку в приложении."
     )
     media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")

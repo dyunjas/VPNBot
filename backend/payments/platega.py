@@ -1,6 +1,8 @@
+import asyncio
 import aiohttp
 from typing import Optional, Dict, Any
 from backend.core.config import settings
+from backend.core.logger_config import logger
 
 
 class PlategaPaymentAPI:
@@ -36,23 +38,41 @@ class PlategaPaymentAPI:
         }
 
     async def _request(self, method: str, path: str, **kwargs) -> Dict[str, Any]:
-        session = await self._get_session()
         url = f"{self.BASE_URL}{path}"
-
         headers = self._auth_headers()
         extra_headers = kwargs.pop("headers", None)
         if extra_headers:
             headers.update(extra_headers)
 
-        async with session.request(method, url, headers=headers, **kwargs) as resp:
+        attempts = 3
+        last_exc: Exception | None = None
+        for attempt in range(1, attempts + 1):
+            session = await self._get_session()
             try:
-                data = await resp.json()
-            except aiohttp.ContentTypeError:
-                data = {"error": await resp.text()}
-            data["http_status"] = resp.status
-            if resp.status >= 400 and "error" not in data:
-                data["error"] = f"HTTP {resp.status}"
-            return data
+                async with session.request(method, url, headers=headers, **kwargs) as resp:
+                    try:
+                        data = await resp.json()
+                    except aiohttp.ContentTypeError:
+                        data = {"error": await resp.text()}
+                    data["http_status"] = resp.status
+                    if resp.status >= 400 and "error" not in data:
+                        data["error"] = f"HTTP {resp.status}"
+                    return data
+            except (aiohttp.ClientError, asyncio.TimeoutError) as exc:
+                last_exc = exc
+                logger.warning(
+                    "[platega] request retry method=%s url=%s attempt=%s/%s err=%s",
+                    method,
+                    url,
+                    attempt,
+                    attempts,
+                    exc,
+                )
+                if attempt == attempts:
+                    break
+                await asyncio.sleep(0.5 * attempt)
+
+        raise RuntimeError(f"Platega request failed: {last_exc}")
 
     async def create_payment(
         self,

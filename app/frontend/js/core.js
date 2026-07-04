@@ -115,7 +115,8 @@ async function apiRequest(path, body = {}) {
 
   const payload = { initData: initData || null, ...body };
 
-  const res = await fetch(BACKEND_URL + path, {
+  const apiPath = path.replace(/^\/mini/, "/api");
+  const res = await fetch(BACKEND_URL + apiPath, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -341,7 +342,7 @@ let lastSubUrl = null;
 
 async function loadProfileAndBalance() {
   try {
-    const data = await apiRequest("/mini/profile");
+    const data = await apiRequest("/api/profile");
     const bal = data.user?.balance ?? 0;
     if (homeBalanceEl) homeBalanceEl.textContent = `${bal} ₽`;
     return data;

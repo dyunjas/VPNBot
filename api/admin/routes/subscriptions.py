@@ -1,9 +1,9 @@
 ﻿from fastapi import APIRouter
 from ..common import *
 from aiogram import Bot
-from aiogram.client.session.aiohttp import AiohttpSession
 from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
+from backend.core.telegram import create_telegram_session
 
 router = APIRouter()
 
@@ -20,8 +20,7 @@ async def _notify_bulk_extend(users: list[tuple[User, datetime]], days: int) -> 
         if not bot_token:
             logger.warning("[admin][subscriptions] bulk_extend notify skipped: BOT_TOKEN missing")
             return 0
-        proxy_url = (settings.BOT_PROXY or "").strip() or None
-        session = AiohttpSession(proxy=proxy_url) if proxy_url else AiohttpSession()
+        session = create_telegram_session()
         temp_bot = Bot(token=bot_token, session=session)
         bot_instance = temp_bot
 
@@ -260,4 +259,3 @@ async def admin_subscription_delete(subscription_id: int):
         await session.delete(sub)
         await session.commit()
         return {"ok": True}
-

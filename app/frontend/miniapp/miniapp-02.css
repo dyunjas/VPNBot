@@ -1,0 +1,217 @@
+.is-miniapp [data-tab="settings"] {
+  display: none !important;
+}
+
+.is-miniapp .row {
+  gap: 10px;
+}
+
+.is-miniapp .row--traffic {
+  flex-direction: column;
+}
+
+.is-miniapp .row--traffic .input,
+.is-miniapp .row--traffic .btn {
+  width: 100%;
+}
+
+.is-miniapp .topup-panel {
+  gap: 16px;
+}
+
+.is-miniapp .payment-methods {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.is-miniapp .pay-method {
+  min-height: 78px;
+  border-radius: 18px;
+  background: #fff;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.is-miniapp .pay-method--active {
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.14);
+}
+
+.is-miniapp .btn,
+.is-miniapp .pay-method,
+.is-miniapp .link-button {
+  transform-origin: center;
+  will-change: transform, box-shadow;
+}
+
+.is-miniapp .btn:active,
+.is-miniapp .pay-method:active,
+.is-miniapp .link-button:active {
+  transform: scale(.975);
+}
+
+.is-miniapp .topup-panel__actions .btn,
+.is-miniapp #btn-check-payments,
+.is-miniapp #btn-refresh-tx {
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.14);
+}
+
+.is-miniapp .topup-panel__actions .btn:hover,
+.is-miniapp #btn-check-payments:hover,
+.is-miniapp #btn-refresh-tx:hover,
+.is-miniapp .pay-method:hover {
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.18);
+}
+
+.is-miniapp .sub-link-wrap .row,
+.is-miniapp .topup-panel__actions,
+.is-miniapp #view-profile .row:not(.row--more) {
+  flex-wrap: wrap;
+}
+
+.is-miniapp .sub-link-wrap .row .btn,
+.is-miniapp .topup-panel__actions .btn,
+.is-miniapp #view-profile .row:not(.row--more) .btn {
+  flex: 1 1 100%;
+}
+
+.is-miniapp .bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  padding: 8px;
+  gap: 8px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 42px rgba(15, 30, 55, 0.16);
+}
+
+.is-miniapp .tab {
+  min-height: 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border-radius: 18px;
+  background: #f8fbff;
+  color: #55708e;
+}
+
+.is-miniapp .tab--active {
+  color: #19407b;
+  background: linear-gradient(180deg, #eff5ff 0%, #e7f0ff 100%);
+  box-shadow: inset 0 0 0 1px #c8dafe;
+}
+
+.is-miniapp .tab__icon {
+  width: 22px;
+  height: 22px;
+}
+
+.is-miniapp .tab__label {
+  font-size: 11px;
+}
+
+.is-miniapp .app-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(9, 12, 22, 0.62);
+  backdrop-filter: blur(5px);
+  transition: opacity .24s ease;
+}
+
+.is-miniapp .app-loader--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.is-miniapp .loader-card {
+  width: min(280px, calc(100% - 40px));
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  padding: 18px;
+  text-align: center;
+}
+
+.is-miniapp .loader-ring {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 10px;
+  border: 3px solid rgba(47, 131, 255, 0.24);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.is-miniapp .loader-text {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  .is-miniapp .app {
+    width: 100%;
+    padding-bottom: 108px;
+  }
+}
+
+@media (max-width: 640px) {
+  .is-miniapp .app {
+    padding: calc(14px + var(--tg-safe-top)) 10px 102px;
+  }
+
+  .is-miniapp .view-host,
+  .is-miniapp .view,
+  .is-miniapp .cabinet-home {
+    gap: 14px;
+  }
+
+  .is-miniapp .cabinet-hero,
+  .is-miniapp .cabinet-panel {
+    padding: 18px;
+  }
+
+  .is-miniapp .subscription-kpi__meta {
+    grid-template-columns: 1fr;
+  }
+
+  .is-miniapp .cabinet-connect__btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 56px;
+    font-size: 17px;
+    border-radius: 18px;
+  }
+
+  .is-miniapp .traffic-ring {
+    width: 204px;
+    height: 204px;
+  }
+
+  .is-miniapp .traffic-ring__inner {
+    width: 176px;
+    height: 176px;
+  }
+
+  .is-miniapp .bottom-nav {
+    left: 10px;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 7px;
+    gap: 6px;
+  }
+
+  .is-miniapp .tab {
+    min-height: 60px;
+    padding: 7px 4px;
+  }
+}

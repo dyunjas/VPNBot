@@ -12,7 +12,6 @@ from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.email_templates import render_code_email
 from backend.images import MAIN_MENU_IMG
-from backend.services import UserService
 from backend.services.exceptions import UserNotFound
 from backend.states import EmailBindStates
 from bot.navigation.additional_menu.profile.keyboards import profile_kb, email_bind_kb
@@ -87,18 +86,19 @@ def _smtp_send_code(email: str, code: str, purpose: str = "bind") -> None:
             server.send_message(msg)
 
 
-async def _render_profile(callback: CallbackQuery, user_service: UserService) -> None:
+async def _render_profile(callback: CallbackQuery, bot_api) -> None:
     tg_id = callback.from_user.id
-    user = await user_service.get_by_tg_id(tg_id)
-    username = "-" if user.username is None else f"@{html_escape(user.username)}"
-    email = user.email or "не привязана"
+    resp = await bot_api.get_user_by_tg_id(tg_id)
+    user = resp.get("user") if isinstance(resp, dict) else resp
+    username = "-" if not user.get("username") else f"@{html_escape(user.get('username'))}"
+    email = user.get("email") or "не привязана"
 
     text = (
-        f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Пользователь №{user.id}:</b>\n"
+        f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Пользователь №{user.get('id')}:</b>\n"
         f"<b><tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Юзернейм:</b> {username}\n"
-        f"<b><tg-emoji emoji-id='5874948844935974490'>⭐️</tg-emoji> ID:</b> <code>{user.tg_id}</code>\n"
+        f"<b><tg-emoji emoji-id='5874948844935974490'>⭐️</tg-emoji> ID:</b> <code>{user.get('tg_id')}</code>\n"
         f"<b><tg-emoji emoji-id='5879785854284599288'>✉️</tg-emoji> Почта:</b> {html_escape(email)}\n"
-        f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс:</b> {user.balance} RUB"
+        f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс:</b> {user.get('balance')} RUB"
     )
 
     media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
@@ -106,9 +106,9 @@ async def _render_profile(callback: CallbackQuery, user_service: UserService) ->
 
 
 @router.callback_query(F.data == "profile")
-async def profile_clb(callback: CallbackQuery, user_service: UserService):
+async def profile_clb(callback: CallbackQuery, bot_api):
     try:
-        await _render_profile(callback, user_service)
+        await _render_profile(callback, bot_api)
     except UserNotFound:
         await callback.message.answer(
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
@@ -118,16 +118,17 @@ async def profile_clb(callback: CallbackQuery, user_service: UserService):
 
 
 @router.callback_query(F.data == "profile_email_bind")
-async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, user_service: UserService):
+async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, bot_api):
     try:
-        user = await user_service.get_by_tg_id(callback.from_user.id)
+        resp = await bot_api.get_user_by_tg_id(callback.from_user.id)
+        user = resp.get("user") if isinstance(resp, dict) else resp
     except UserNotFound:
         await callback.message.answer(
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
         )
         return
 
-    current_email = html_escape(user.email or "-")
+    current_email = html_escape(user.get("email") or "-")
     text = (
         "<b><tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Привязка почты</b>\n"
         f"Текущая почта: <code>{current_email}</code>\n\n"
@@ -141,20 +142,11 @@ async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, u
 
 
 @router.message(EmailBindStates.waiting_for_email)
-async def profile_email_bind_enter_email(message: Message, state: FSMContext, user_service: UserService):
+async def profile_email_bind_enter_email(message: Message, state: FSMContext, bot_api):
     email = (message.text or "").strip().lower()
     if not EMAIL_RE.match(email):
         await message.answer("Введите корректный email адрес.")
         return
-
-    try:
-        existing = await user_service.get_by_email(email)
-        current = await user_service.get_by_tg_id(message.from_user.id)
-        if existing.id != current.id:
-            await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Эта почта уже привязана к другому аккаунту.")
-            return
-    except UserNotFound:
-        pass
 
     code = f"{secrets.randbelow(1000000):06d}"
     try:
@@ -179,7 +171,7 @@ async def profile_email_bind_enter_email(message: Message, state: FSMContext, us
 
 
 @router.message(EmailBindStates.waiting_for_code)
-async def profile_email_bind_verify_code(message: Message, state: FSMContext, user_service: UserService):
+async def profile_email_bind_verify_code(message: Message, state: FSMContext, bot_api):
     raw_code = (message.text or "").strip()
     if not raw_code.isdigit() or len(raw_code) != 6:
         await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Введите корректный 6-значный код.")
@@ -191,8 +183,9 @@ async def profile_email_bind_verify_code(message: Message, state: FSMContext, us
         return
 
     try:
-        user = await user_service.get_by_tg_id(message.from_user.id)
-        await user_service.set_email(user.id, email)
+        user = await bot_api.get_user_by_tg_id(message.from_user.id)
+        user_data = user.get("user") if isinstance(user, dict) else user
+        await bot_api.update_email(user_id=int(user_data["id"]), email=email)
     except ValueError:
         await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Эта почта уже привязана к другому аккаунту.")
         await state.clear()

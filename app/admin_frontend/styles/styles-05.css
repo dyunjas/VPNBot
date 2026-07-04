@@ -1,0 +1,277 @@
+.chart-period.is-active {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.dashboard-chart-total {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.payments-chart {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fbfcfd;
+  padding: 14px 12px 12px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.payments-chart__grid {
+  display: grid;
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+  min-height: 220px;
+}
+
+.payments-chart__col {
+  display: grid;
+  gap: 6px;
+  align-items: end;
+}
+
+.payments-chart__value,
+.payments-chart__count,
+.payments-chart__label {
+  font-size: 11px;
+  text-align: center;
+}
+
+.payments-chart__value {
+  color: #31568a;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.payments-chart__count {
+  color: var(--muted);
+}
+
+.payments-chart__label {
+  color: var(--muted);
+}
+
+.payments-chart__bar-wrap {
+  min-height: 140px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.payments-chart__bar {
+  width: 100%;
+  max-width: 34px;
+  border-radius: 11px 11px 5px 5px;
+  border: 1px solid #8eb8ef;
+  background: linear-gradient(180deg, #5ca0ff 0%, #1f6feb 100%);
+  box-shadow: 0 10px 18px rgba(31, 111, 235, 0.16);
+}
+
+.metric-chart {
+  display: grid;
+  gap: 12px;
+}
+
+.metric-chart__svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 23 / 6;
+  max-height: 240px;
+  display: block;
+}
+
+.metric-chart__grid line {
+  stroke: rgba(91, 117, 150, 0.14);
+  stroke-width: 1;
+  shape-rendering: geometricPrecision;
+}
+
+.metric-chart__area {
+  fill: url(#metric-area-gradient);
+}
+
+.metric-chart__line {
+  fill: none;
+  stroke: url(#metric-line-gradient);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.metric-chart__axis text {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.metric-chart__point-dot {
+  fill: #1f6feb;
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.metric-chart__point-halo {
+  fill: rgba(31, 111, 235, 0.12);
+}
+
+.metric-chart__legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 8px;
+}
+
+.metric-chart__legend-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px 11px;
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.metric-chart__legend-label {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric-chart__legend-value {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.metric-chart__legend-meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.admin-login-page {
+  min-height: 100dvh;
+  background:
+    radial-gradient(900px 380px at 50% 0%, rgba(31, 111, 235, 0.06), transparent 62%),
+    linear-gradient(180deg, #f1f4f9 0%, #f3f6fb 100%);
+  color: var(--text);
+}
+
+.login-shell {
+  min-height: 100dvh;
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 24px 18px;
+  display: grid;
+  place-items: center;
+}
+
+.login-card--admin {
+  width: 100%;
+  max-width: 460px;
+  padding: 28px 28px 24px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border-color: #cbd8e7;
+  box-shadow: 0 20px 44px rgba(15, 30, 55, 0.12);
+}
+
+.login-card__head {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.login-card__eyebrow {
+  color: #335a8f;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.login-card--admin h2 {
+  font-size: clamp(28px, 3.8vw, 38px);
+  margin: 0;
+}
+
+.login-field {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.login-field span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-field.is-invalid .password-field,
+.login-field.is-invalid input {
+  border-color: #e5aeb7;
+  box-shadow: 0 0 0 3px rgba(180, 35, 54, 0.08);
+}
+
+.password-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border: 1px solid #d8dfe8;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  overflow: hidden;
+}
+
+.password-field input {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.password-toggle {
+  width: 44px;
+  border: 0;
+  border-left: 1px solid #d8dfe8;
+  background: linear-gradient(180deg, #fbfdff 0%, #f5f9fd 100%);
+  color: #5a6b83;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.password-toggle:hover { color: #2b4f80; }
+
+.login-actions {
+  margin-top: 10px;
+  display: grid;
+}
+
+.btn-primary--wide {
+  width: 100%;
+  min-height: 48px;
+  box-shadow: 0 12px 24px rgba(31, 111, 235, 0.2);
+}
+

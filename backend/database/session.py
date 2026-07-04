@@ -34,6 +34,12 @@ async_session = async_sessionmaker(
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_users "
+                "ADD COLUMN IF NOT EXISTS traffic_limit_bytes BIGINT NOT NULL DEFAULT 0"
+            )
+        )
     logger.info("Database tables initialized")
 
 async def check_connection():

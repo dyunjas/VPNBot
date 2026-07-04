@@ -1219,3 +1219,108 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-07-04 13:50:24.843594+00:00
 [2026-06-19 10:51:03] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
 [2026-06-19 10:51:03] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
+[2026-07-02 22:21:19] [INFO] root: [biz][subscription] activate_requested user_id=90 plan_id=9 auto_renew=False
+[2026-07-02 22:21:19] [INFO] root: [biz][subscription] created user_id=90 subscription_id=71 plan_id=9 period_end=2026-09-30 17:21:19.696222+00:00 gb_added=90.00
+[2026-07-02 22:21:19] [INFO] root: [subscription] reset_user_traffic skipped user_id=90 (remnawave-only mode)
+[2026-07-02 22:21:19] [INFO] root: [biz][subscription] activate_completed user_id=90 subscription_id=71
+[2026-07-02 22:21:36] [ERROR] root: [bot][subscription] subscription url error tg_id=8854825267: Internal Server Error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 207, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Internal Server Error
+[2026-07-02 22:22:04] [ERROR] root: [bot][subscription] subscription url error tg_id=8854825267: Internal Server Error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 207, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Internal Server Error
+[2026-07-02 22:26:19] [INFO] root: [biz][subscription] activate_requested user_id=91 plan_id=9 auto_renew=False
+[2026-07-02 22:26:19] [INFO] root: [biz][subscription] created user_id=91 subscription_id=72 plan_id=9 period_end=2026-09-30 17:26:19.316490+00:00 gb_added=90.00
+[2026-07-02 22:26:19] [INFO] root: [subscription] reset_user_traffic skipped user_id=91 (remnawave-only mode)
+[2026-07-02 22:26:19] [INFO] root: [biz][subscription] activate_completed user_id=91 subscription_id=72
+[2026-07-02 22:31:24] [INFO] root: [biz][subscription] activate_requested user_id=92 plan_id=9 auto_renew=False
+[2026-07-02 22:31:24] [INFO] root: [biz][subscription] created user_id=92 subscription_id=73 plan_id=9 period_end=2026-09-30 17:31:24.942418+00:00 gb_added=90.00
+[2026-07-02 22:31:24] [INFO] root: [subscription] reset_user_traffic skipped user_id=92 (remnawave-only mode)
+[2026-07-02 22:31:24] [INFO] root: [biz][subscription] activate_completed user_id=92 subscription_id=73
+[2026-07-03 00:57:26] [INFO] root: [biz][subscription] activate_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-03 00:57:26] [INFO] root: [biz][subscription] renewed user_id=36 subscription_id=49 plan_id=1 period_end=2026-08-03 18:50:24.843594+00:00 gb_limit=30.00
+[2026-07-03 00:57:26] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-07-03 00:57:26] [INFO] root: [biz][subscription] activate_completed user_id=36 subscription_id=49
+[2026-07-03 14:35:17] [ERROR] root: [bot][subscription] subscription url error tg_id=1237947229: Timeout on reading data from socket
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 214, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 61, in _request_json
+    async with session.request(method, self._url(path), json=json, headers=self._headers()) as resp:
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+    await resp.start(conn)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+    message, payload = await protocol.read()  # type: ignore[union-attr]
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+    await self._waiter
+aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socket
+[2026-07-03 22:15:22] [INFO] root: [biz][subscription] auto_renew_changed user_id=36 subscription_id=49 auto_renew=False
+[2026-07-03 22:15:27] [INFO] root: [biz][subscription] auto_renew_changed user_id=36 subscription_id=49 auto_renew=True
+[2026-07-03 23:26:31] [INFO] root: [biz][subscription] add_traffic_requested user_id=36 gb=100
+[2026-07-03 23:26:31] [INFO] root: [biz][subscription] add_traffic_completed user_id=36 subscription_id=49 gb=100
+[2026-07-04 00:27:26] [INFO] root: [biz][subscription] activate_requested user_id=93 plan_id=9 auto_renew=False
+[2026-07-04 00:27:26] [INFO] root: [biz][subscription] created user_id=93 subscription_id=74 plan_id=9 period_end=2026-10-01 19:27:26.495791+00:00 gb_added=90.00
+[2026-07-04 00:27:26] [INFO] root: [subscription] reset_user_traffic skipped user_id=93 (remnawave-only mode)
+[2026-07-04 00:27:26] [INFO] root: [biz][subscription] activate_completed user_id=93 subscription_id=74
+[2026-07-04 00:27:27] [INFO] root: [biz][subscription] renew_requested user_id=36 duration_hours=24
+[2026-07-04 00:27:27] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-08-04 23:50:24.843594+00:00
+[2026-07-04 00:27:27] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-07-04 00:27:27] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
+[2026-07-04 00:29:43] [INFO] root: [biz][subscription] activate_requested user_id=94 plan_id=9 auto_renew=False
+[2026-07-04 00:29:43] [INFO] root: [biz][subscription] created user_id=94 subscription_id=75 plan_id=9 period_end=2026-10-01 19:29:43.239640+00:00 gb_added=90.00
+[2026-07-04 00:29:43] [INFO] root: [subscription] reset_user_traffic skipped user_id=94 (remnawave-only mode)
+[2026-07-04 00:29:43] [INFO] root: [biz][subscription] activate_completed user_id=94 subscription_id=75
+[2026-07-04 00:36:26] [INFO] root: [biz][subscription] activate_requested user_id=95 plan_id=9 auto_renew=False
+[2026-07-04 00:36:26] [INFO] root: [biz][subscription] created user_id=95 subscription_id=76 plan_id=9 period_end=2026-10-01 19:36:26.798729+00:00 gb_added=90.00
+[2026-07-04 00:36:26] [INFO] root: [subscription] reset_user_traffic skipped user_id=95 (remnawave-only mode)
+[2026-07-04 00:36:26] [INFO] root: [biz][subscription] activate_completed user_id=95 subscription_id=76
+[2026-07-04 00:37:24] [INFO] root: [biz][subscription] activate_requested user_id=96 plan_id=9 auto_renew=False
+[2026-07-04 00:37:24] [INFO] root: [biz][subscription] created user_id=96 subscription_id=77 plan_id=9 period_end=2026-10-01 19:37:24.902178+00:00 gb_added=90.00
+[2026-07-04 00:37:24] [INFO] root: [subscription] reset_user_traffic skipped user_id=96 (remnawave-only mode)
+[2026-07-04 00:37:24] [INFO] root: [biz][subscription] activate_completed user_id=96 subscription_id=77
+[2026-07-04 00:39:39] [INFO] root: [biz][subscription] activate_requested user_id=97 plan_id=9 auto_renew=False
+[2026-07-04 00:39:39] [INFO] root: [biz][subscription] created user_id=97 subscription_id=78 plan_id=9 period_end=2026-10-01 19:39:39.774805+00:00 gb_added=90.00
+[2026-07-04 00:39:39] [INFO] root: [subscription] reset_user_traffic skipped user_id=97 (remnawave-only mode)
+[2026-07-04 00:39:39] [INFO] root: [biz][subscription] activate_completed user_id=97 subscription_id=78
+[2026-07-04 00:52:56] [INFO] root: [biz][subscription] marked_expired subscription_id=77
+[2026-07-04 01:06:14] [INFO] root: [biz][subscription] marked_expired subscription_id=77
+[2026-07-04 01:11:42] [INFO] root: [biz][subscription] marked_expired subscription_id=77
+[2026-07-04 01:17:44] [INFO] root: [biz][subscription] marked_expired subscription_id=77
+[2026-07-04 01:26:18] [INFO] root: [biz][subscription] marked_expired subscription_id=77
+[2026-07-04 01:28:23] [INFO] root: [biz][subscription] activate_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-04 01:28:23] [INFO] root: [biz][subscription] renewed user_id=96 subscription_id=77 plan_id=1 period_end=2026-08-02 20:28:23.937427+00:00 gb_limit=30.00
+[2026-07-04 01:28:23] [INFO] root: [subscription] reset_user_traffic skipped user_id=96 (remnawave-only mode)
+[2026-07-04 01:28:23] [INFO] root: [biz][subscription] activate_completed user_id=96 subscription_id=77
+[2026-07-04 15:52:02] [INFO] root: [biz][subscription] activate_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:52:02] [INFO] root: [biz][subscription] renewed user_id=97 subscription_id=78 plan_id=4 period_end=2026-07-07 10:52:02.749907+00:00 gb_limit=30.00
+[2026-07-04 15:52:02] [INFO] root: [subscription] reset_user_traffic skipped user_id=97 (remnawave-only mode)
+[2026-07-04 15:52:02] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=97 subscription_id=78 traffic_limit_bytes=32212254720
+[2026-07-04 15:52:02] [INFO] root: [biz][subscription] activate_completed user_id=97 subscription_id=78

@@ -48,6 +48,13 @@ class SupportMessageDirection(str, enum.Enum):
     support = "support"
 
 
+class BroadcastJobStatus(str, enum.Enum):
+    queued = "queued"
+    running = "running"
+    completed = "completed"
+    failed = "failed"
+
+
 class User(Base):
     __tablename__ = "vpn_users"
 
@@ -62,6 +69,7 @@ class User(Base):
     )
 
     balance: Mapped[int] = mapped_column(default=0)
+    traffic_limit_bytes: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
     email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
     subscription_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     remnawave_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
@@ -315,6 +323,33 @@ class PromocodeActivation(Base):
     __table_args__ = (
         UniqueConstraint("promocode_id", "user_id", name="uq_vpn_promocode_user"),
     )
+
+
+class BroadcastHistory(Base):
+    __tablename__ = "vpn_broadcast_history"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    job_id: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    text: Mapped[str] = mapped_column(String(4096), nullable=False)
+    parse_mode: Mapped[str] = mapped_column(String(32), nullable=False, default="HTML")
+    include_banned: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    has_image: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    image_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    status: Mapped[BroadcastJobStatus] = mapped_column(
+        Enum(BroadcastJobStatus),
+        default=BroadcastJobStatus.queued,
+        nullable=False,
+    )
+    total: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    processed: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    success: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    failed: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    error: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 class Admin(Base):
     __tablename__ = "vpn_admins"

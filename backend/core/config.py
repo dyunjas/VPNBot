@@ -4,6 +4,8 @@ from backend.core.logger_config import logger
 
 class Settings(BaseSettings):
     BOT_TOKEN: str
+    BOT_API_TOKEN: str | None = None
+    API_BASE_URL: str | None = None
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
@@ -14,6 +16,8 @@ class Settings(BaseSettings):
     REMNAWAVE_COOKIES: str | None = None
     REMNAWAVE_ACTIVE_INTERNAL_SQUADS: str | None = None
     REMNAWAVE_UPSERT_PATH: str | None = None
+    REMNAWAVE_AUTO_SYNC_ENABLED: bool = False
+    REMNAWAVE_AUTO_SYNC_TIMES: str = "03:00"
     XRAY_AUTH: str | None = None
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
@@ -25,7 +29,6 @@ class Settings(BaseSettings):
     OTP_SECRET: str
     PUBLIC_BASE_URL: str
     SECRET_KEY: str
-    ADMIN_WEB_TOKEN: str | None = None
     ADMIN_WEB_LOGIN: str | None = None
     ADMIN_WEB_PASSWORD: str | None = None
     ADMIN_WEB_JWT_EXPIRE_HOURS: int = 12
@@ -35,7 +38,8 @@ class Settings(BaseSettings):
     DB_POOL_TIMEOUT: int = 20
     DB_POOL_RECYCLE: int = 1800
     DB_COMMAND_TIMEOUT: int = 20
-    BOT_PROXY: str
+    BOT_PROXY: str | None = None
+    BOT_PROXY_ENABLED: bool = False
     SMTP_HOST: str | None = None
     SMTP_PORT: int = 587
     SMTP_USER: str | None = None
@@ -54,6 +58,13 @@ class Settings(BaseSettings):
     @property
     def POSTGRES_SYNC_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+    @property
+    def TELEGRAM_PROXY_URL(self) -> str | None:
+        if not self.BOT_PROXY_ENABLED:
+            return None
+        proxy_url = (self.BOT_PROXY or "").strip()
+        return proxy_url or None
         
 try:
     settings = Settings()

@@ -1,7 +1,7 @@
 ﻿const refState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "referrals",
     title: "Реферальная система",
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       page_size: "25",
       search: q("search").value || "",
     });
-    const data = await api(`/admin-api/referrals?${params.toString()}`);
+    const data = await api(`/api/admin/referrals?${params.toString()}`);
     const items = data.items || [];
     const meta = data.meta || { page: 1, pages: 1, total: 0 };
     refState.pages = meta.pages;
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           referral_balance: b.value,
         });
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/referrals/${r.id}?${params.toString()}`, { method: "PATCH" });
+          await api(`/api/admin/referrals/${r.id}?${params.toString()}`, { method: "PATCH" });
           await loadRows();
           showToast("Реферальные данные обновлены", "success");
         }).catch((err) => alert(err.message));

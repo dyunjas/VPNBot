@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "plans",
     title: "Тарифы",
@@ -51,7 +51,7 @@
   });
 
   async function loadPlans() {
-    const data = await api("/admin-api/plans");
+    const data = await api("/api/admin/plans");
     const items = data.items || [];
     q("tbody").innerHTML = "";
 
@@ -85,7 +85,7 @@
         if (!confirm(`Удалить тариф #${planId}? Действие необратимо.`)) return;
 
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/plans/${planId}`, { method: "DELETE" });
+          await api(`/api/admin/plans/${planId}`, { method: "DELETE" });
           await loadPlans();
           showToast("Тариф удален", "success");
         }).catch((err) => alert(err.message));
@@ -95,7 +95,7 @@
 
   q("create_plan").addEventListener("click", async (e) => {
     await withButtonLoading(e.currentTarget, async () => {
-      await api("/admin-api/plans", {
+      await api("/api/admin/plans", {
         method: "POST",
         body: JSON.stringify({
           name: q("new_name").value.trim(),
@@ -120,7 +120,7 @@
     if (q("edit_gb").value) payload.gb_limit = Number(q("edit_gb").value);
 
     await withButtonLoading(e.currentTarget, async () => {
-      await api(`/admin-api/plans/${id}`, {
+      await api(`/api/admin/plans/${id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
       });

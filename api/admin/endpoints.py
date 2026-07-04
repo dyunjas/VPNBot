@@ -12,9 +12,10 @@ from api.admin.routes import (
     logs_router,
     partners_router,
     promocodes_router,
+    system_router,
 )
 
-router = APIRouter(prefix="/admin-api", tags=["admin-web"])
+router = APIRouter(prefix="/api/admin", tags=["admin-web"])
 router.include_router(auth_router)
 router.include_router(users_router)
 router.include_router(subscriptions_router)
@@ -26,3 +27,4 @@ router.include_router(referrals_router)
 router.include_router(logs_router)
 router.include_router(promocodes_router)
 router.include_router(partners_router)
+router.include_router(system_router)

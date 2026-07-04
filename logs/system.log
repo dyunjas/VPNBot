@@ -7983,3 +7983,663 @@ connector: <aiohttp.connector.TCPConnector object at 0x000002CFDA0FA490>
 [2026-06-28 21:59:25] [ERROR] asyncio: Unclosed connector
 connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002CFDA22EF30>, 10654.7150075)])']
 connector: <aiohttp.connector.TCPConnector object at 0x000002CFDA0F9A90>
+[2026-06-29 22:37:55] [INFO] root: Settings successfully loaded from .env
+[2026-06-29 22:37:56] [INFO] root: Database tables initialized
+[2026-06-29 22:37:56] [INFO] root: Database connection successful
+[2026-06-29 22:41:28] [INFO] root: Settings successfully loaded from .env
+[2026-06-29 22:41:28] [INFO] root: Database tables initialized
+[2026-06-29 22:41:28] [INFO] root: Database connection successful
+[2026-06-29 22:46:19] [INFO] root: Settings successfully loaded from .env
+[2026-06-29 22:46:19] [INFO] root: Database tables initialized
+[2026-06-29 22:46:19] [INFO] root: Database connection successful
+[2026-07-02 22:13:27] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:13:30] [INFO] root: Bot started
+[2026-07-02 22:15:00] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:15:01] [INFO] root: Database tables initialized
+[2026-07-02 22:15:01] [INFO] root: Database connection successful
+[2026-07-02 22:15:22] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:15:22] [INFO] root: Bot stopped
+[2026-07-02 22:15:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:15:29] [INFO] root: Bot started
+[2026-07-02 22:17:00] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:17:00] [INFO] root: Bot stopped
+[2026-07-02 22:17:08] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:17:08] [INFO] root: Bot started
+[2026-07-02 22:17:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:17:41] [INFO] root: Database tables initialized
+[2026-07-02 22:17:41] [INFO] root: Database connection successful
+[2026-07-02 22:21:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:21:06] [INFO] root: Database tables initialized
+[2026-07-02 22:21:07] [INFO] root: Database connection successful
+[2026-07-02 22:21:36] [ERROR] root: [bot][subscription] subscription url error tg_id=8854825267: Internal Server Error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 207, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Internal Server Error
+[2026-07-02 22:22:04] [ERROR] root: [bot][subscription] subscription url error tg_id=8854825267: Internal Server Error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 207, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Internal Server Error
+[2026-07-02 22:24:21] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:24:21] [INFO] root: Bot stopped
+[2026-07-02 22:24:27] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:24:27] [INFO] root: Bot started
+[2026-07-02 22:24:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:24:35] [INFO] root: Database tables initialized
+[2026-07-02 22:24:35] [INFO] root: Database connection successful
+[2026-07-02 22:30:50] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:30:51] [INFO] root: Database tables initialized
+[2026-07-02 22:30:51] [INFO] root: Database connection successful
+[2026-07-02 22:37:13] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:37:14] [INFO] root: Database tables initialized
+[2026-07-02 22:37:14] [INFO] root: Database connection successful
+[2026-07-02 22:37:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:37:17] [INFO] root: Bot stopped
+[2026-07-02 22:37:20] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:37:20] [INFO] root: Bot started
+[2026-07-02 22:38:56] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:38:57] [INFO] root: Database tables initialized
+[2026-07-02 22:38:57] [INFO] root: Database connection successful
+[2026-07-02 22:38:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:38:58] [INFO] root: Bot stopped
+[2026-07-02 22:39:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:39:05] [INFO] root: Bot started
+[2026-07-02 22:44:56] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:44:57] [INFO] root: Bot stopped
+[2026-07-02 22:45:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:45:06] [INFO] root: Bot started
+[2026-07-02 22:45:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:45:16] [INFO] root: Database tables initialized
+[2026-07-02 22:45:16] [INFO] root: Database connection successful
+[2026-07-02 22:47:03] [ERROR] root: [biz][billing] pally_create_http_403 user_id=92 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.6.136'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-07-02 22:47:03] [ERROR] root: [biz][billing] pally_create_api_error user_id=92 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.6.136'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-07-02 22:47:03] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002BCDE75E810>, 17988.1317794)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002BCDE744690>
+[2026-07-02 22:47:03] [ERROR] root: [PALLY] Payment creation failed for tg_id=8854825267: PALLY API error: HTTP 403
+[2026-07-02 22:47:10] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002BCDE75E9F0>, 17995.6583375)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002BCDE745090>
+[2026-07-02 22:47:13] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002BCDE75FC50>, 17998.7126505)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002BCDE7456D0>
+[2026-07-02 22:47:13] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:47:21] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002BCDE75FFB0>, 18006.4505402)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002BCDE745E50>
+[2026-07-02 22:47:21] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:47:52] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x000002BCDE7941D0>, 18037.6474813)])']
+connector: <aiohttp.connector.TCPConnector object at 0x000002BCDE745D10>
+[2026-07-02 22:47:52] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:51:08] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:51:08] [INFO] root: Database tables initialized
+[2026-07-02 22:51:08] [INFO] root: Database connection successful
+[2026-07-02 22:51:08] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 22:51:09] [INFO] root: Bot stopped
+[2026-07-02 22:51:13] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 22:51:14] [INFO] root: Bot started
+[2026-07-02 22:52:04] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000210435E27B0>, 18289.1850474)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000210435C8B90>
+[2026-07-02 22:52:05] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000210435E3AD0>, 18290.7903523)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000210435C8B90>
+[2026-07-02 22:52:05] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:29] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x0000021043610F50>, 18314.6096507)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000210435C9310>
+[2026-07-02 22:52:29] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:29] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000210435E3AD0>, 18314.7767349)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000210435C8B90>
+[2026-07-02 22:52:29] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:31] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000210436100B0>, 18316.7102655)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000210435CA710>
+[2026-07-02 22:52:31] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 23:03:43] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-02 23:03:43] [INFO] root: Bot stopped
+[2026-07-02 23:03:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:03:50] [INFO] root: Bot started
+[2026-07-02 23:03:56] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:03:56] [INFO] root: Database tables initialized
+[2026-07-02 23:03:56] [INFO] root: Database connection successful
+[2026-07-02 23:04:00] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x0000020045418110>, 19004.9464881)])']
+connector: <aiohttp.connector.TCPConnector object at 0x00000200453401A0>
+[2026-07-02 23:04:08] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x0000020045418470>, 19013.170618)])']
+connector: <aiohttp.connector.TCPConnector object at 0x0000020045408410>
+[2026-07-02 23:05:01] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x00000200454186B0>, 19065.9551655)])']
+connector: <aiohttp.connector.TCPConnector object at 0x0000020045408410>
+[2026-07-02 23:05:35] [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x0000020045419E50>, 19100.492655)])']
+connector: <aiohttp.connector.TCPConnector object at 0x0000020045408A50>
+[2026-07-02 23:05:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:05:48] [INFO] root: Database tables initialized
+[2026-07-02 23:05:48] [INFO] root: Database connection successful
+[2026-07-02 23:06:29] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:06:30] [INFO] root: Database tables initialized
+[2026-07-02 23:06:30] [INFO] root: Database connection successful
+[2026-07-02 23:27:33] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:27:33] [INFO] root: Database tables initialized
+[2026-07-02 23:27:33] [INFO] root: Database connection successful
+[2026-07-02 23:32:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:32:11] [INFO] root: Database tables initialized
+[2026-07-02 23:32:11] [INFO] root: Database connection successful
+[2026-07-02 23:43:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:43:40] [INFO] root: Database tables initialized
+[2026-07-02 23:43:40] [INFO] root: Database connection successful
+[2026-07-02 23:43:53] [INFO] root: Settings successfully loaded from .env
+[2026-07-02 23:43:53] [INFO] root: Database tables initialized
+[2026-07-02 23:43:53] [INFO] root: Database connection successful
+[2026-07-03 00:09:47] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:09:47] [INFO] root: Database tables initialized
+[2026-07-03 00:09:47] [INFO] root: Database connection successful
+[2026-07-03 00:19:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:19:44] [INFO] root: Database tables initialized
+[2026-07-03 00:19:44] [INFO] root: Database connection successful
+[2026-07-03 00:23:51] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:23:51] [INFO] root: Database tables initialized
+[2026-07-03 00:23:51] [INFO] root: Database connection successful
+[2026-07-03 00:26:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:26:59] [INFO] root: Database tables initialized
+[2026-07-03 00:26:59] [INFO] root: Database connection successful
+[2026-07-03 00:30:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:30:12] [INFO] root: Database tables initialized
+[2026-07-03 00:30:12] [INFO] root: Database connection successful
+[2026-07-03 00:34:54] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:34:54] [INFO] root: Database tables initialized
+[2026-07-03 00:34:54] [INFO] root: Database connection successful
+[2026-07-03 00:36:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:36:57] [INFO] root: Database tables initialized
+[2026-07-03 00:36:57] [INFO] root: Database connection successful
+[2026-07-03 00:39:25] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 00:39:25] [INFO] root: Database tables initialized
+[2026-07-03 00:39:25] [INFO] root: Database connection successful
+[2026-07-03 01:07:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 01:07:07] [INFO] root: Database tables initialized
+[2026-07-03 01:07:07] [INFO] root: Database connection successful
+[2026-07-03 01:30:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-03 01:30:34] [INFO] root: Bot stopped
+[2026-07-03 12:01:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:01:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:01:14] [INFO] root: Bot started
+[2026-07-03 12:01:14] [INFO] root: Database tables initialized
+[2026-07-03 12:01:14] [INFO] root: Database connection successful
+[2026-07-03 12:01:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:01:15] [INFO] root: Database tables initialized
+[2026-07-03 12:01:15] [INFO] root: Database connection successful
+[2026-07-03 12:09:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:09:48] [INFO] root: Database tables initialized
+[2026-07-03 12:09:48] [INFO] root: Database connection successful
+[2026-07-03 12:44:54] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:44:54] [INFO] root: Database tables initialized
+[2026-07-03 12:44:54] [INFO] root: Database connection successful
+[2026-07-03 12:56:23] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 12:56:23] [INFO] root: Database tables initialized
+[2026-07-03 12:56:23] [INFO] root: Database connection successful
+[2026-07-03 13:44:32] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 13:44:32] [INFO] root: Database tables initialized
+[2026-07-03 13:44:32] [INFO] root: Database connection successful
+[2026-07-03 13:50:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 13:50:25] [INFO] root: Database tables initialized
+[2026-07-03 13:50:25] [INFO] root: Database connection successful
+[2026-07-03 14:01:38] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:01:38] [INFO] root: Database tables initialized
+[2026-07-03 14:01:38] [INFO] root: Database connection successful
+[2026-07-03 14:01:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:01:49] [INFO] root: Database tables initialized
+[2026-07-03 14:01:49] [INFO] root: Database connection successful
+[2026-07-03 14:16:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:16:42] [INFO] root: Database tables initialized
+[2026-07-03 14:16:42] [INFO] root: Database connection successful
+[2026-07-03 14:16:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:16:48] [INFO] root: Database tables initialized
+[2026-07-03 14:16:48] [INFO] root: Database connection successful
+[2026-07-03 14:21:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:23:22] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:23:22] [INFO] root: Database tables initialized
+[2026-07-03 14:23:22] [INFO] root: Database connection successful
+[2026-07-03 14:24:52] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:26:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:26:58] [INFO] root: Database tables initialized
+[2026-07-03 14:26:58] [INFO] root: Database connection successful
+[2026-07-03 14:29:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:30:13] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:30:13] [INFO] root: Database tables initialized
+[2026-07-03 14:30:13] [INFO] root: Database connection successful
+[2026-07-03 14:33:12] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:12] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:17] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:17] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:24] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:35] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:35] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:39] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:42] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11001, 'getaddrinfo failed')
+[2026-07-03 14:33:48] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:48] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:52] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:52] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:33:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:10] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:10] [WARNING] root: [remnawave] get by-id failed user_id=36 remote_id=18 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/18: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:17] [ERROR] root: [bot][subscription] subscription url error tg_id=1237947229: Timeout on reading data from socket
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\vpn_subscription\subscription_url.py", line 104, in subscription_link
+    data = await bot_api.get_subscription_url(tg_id=tg_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 214, in get_subscription_url
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/subscription/url")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 61, in _request_json
+    async with session.request(method, self._url(path), json=json, headers=self._headers()) as resp:
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 748, in _connect_and_send_request
+    await resp.start(conn)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client_reqrep.py", line 532, in start
+    message, payload = await protocol.read()  # type: ignore[union-attr]
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\streams.py", line 672, in read
+    await self._waiter
+aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socket
+[2026-07-03 14:35:17] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-03 14:35:17] [WARNING] root: [remnawave] sync failed user_id=36 err=remnawave request failed method=POST url=https://panel.lunetpn.ru/api/users: Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-03 14:35:20] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:24] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:24] [WARNING] root: [remnawave] get by-id failed user_id=36 remote_id=18 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/18: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:28] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-03 14:35:28] [WARNING] root: [remnawave] sync failed user_id=36 err=remnawave request failed method=POST url=https://panel.lunetpn.ru/api/users: Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-03 14:35:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:40] [WARNING] root: [remnawave] get by-id failed user_id=36 remote_id=18 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/18: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:35:44] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-03 14:35:47] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11002, 'getaddrinfo failed')
+[2026-07-03 14:37:29] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:37:29] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:37:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:37:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:37:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:44:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:45:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:45:06] [INFO] root: Database tables initialized
+[2026-07-03 14:45:06] [INFO] root: Database connection successful
+[2026-07-03 14:45:34] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:45:34] [INFO] root: Database tables initialized
+[2026-07-03 14:45:34] [INFO] root: Database connection successful
+[2026-07-03 14:46:02] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:46:02] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:46:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:46:07] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:46:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:49:36] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 14:50:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:18] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:18] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:25] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:50:43] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11001, 'getaddrinfo failed')
+[2026-07-03 14:52:10] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:10] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:14] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:21] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:26] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:26] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:28] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11002, 'getaddrinfo failed')
+[2026-07-03 14:52:28] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11002, 'getaddrinfo failed')
+[2026-07-03 14:52:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:52:37] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:58:55] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:58:55] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:58:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:58:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 14:59:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:12:15] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 15:15:00] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 15:15:00] [INFO] root: Database tables initialized
+[2026-07-03 15:15:00] [INFO] root: Database connection successful
+[2026-07-03 15:16:47] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-03 15:16:47] [INFO] root: Bot stopped
+[2026-07-03 15:16:53] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 15:16:53] [INFO] root: Bot started
+[2026-07-03 15:18:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:18:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:18:08] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:18:08] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:18:15] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:19:07] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:19:07] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:19:11] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:19:11] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:19:18] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:35:42] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-03 15:35:42] [INFO] root: Bot stopped
+[2026-07-03 15:35:51] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 15:35:52] [INFO] root: Bot started
+[2026-07-03 15:51:26] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:51:27] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:51:31] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:51:31] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-03 15:51:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-03 15:51:40] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-03 17:32:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 17:32:57] [INFO] root: Database tables initialized
+[2026-07-03 17:32:57] [INFO] root: Database connection successful
+[2026-07-03 18:01:46] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
+[2026-07-03 18:01:46] [WARNING] root: [admin][broadcast] send failed tg_id=7557954606 error=Telegram server says - Forbidden: the bot can't send messages to the bot
+[2026-07-03 18:01:47] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
+[2026-07-03 18:05:45] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 18:05:46] [INFO] root: Database tables initialized
+[2026-07-03 18:05:46] [INFO] root: Database connection successful
+[2026-07-03 18:05:54] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
+[2026-07-03 18:05:55] [WARNING] root: [admin][broadcast] send failed tg_id=7557954606 error=Telegram server says - Forbidden: the bot can't send messages to the bot
+[2026-07-03 18:05:56] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
+[2026-07-03 20:57:22] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 20:57:24] [INFO] root: Database tables initialized
+[2026-07-03 20:57:24] [INFO] root: Database connection successful
+[2026-07-03 21:30:54] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 21:30:54] [INFO] root: Database tables initialized
+[2026-07-03 21:30:54] [INFO] root: Database connection successful
+[2026-07-03 21:39:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 21:39:06] [INFO] root: Database tables initialized
+[2026-07-03 21:39:06] [INFO] root: Database connection successful
+[2026-07-03 21:45:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 21:45:43] [INFO] root: Database tables initialized
+[2026-07-03 21:45:43] [INFO] root: Database connection successful
+[2026-07-03 21:48:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 21:48:07] [INFO] root: Database tables initialized
+[2026-07-03 21:48:07] [INFO] root: Database connection successful
+[2026-07-03 21:48:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 21:48:14] [INFO] root: Database tables initialized
+[2026-07-03 21:48:14] [INFO] root: Database connection successful
+[2026-07-03 22:12:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:12:58] [INFO] root: Bot started
+[2026-07-03 22:25:54] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:27:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:28:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:45:46] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:46:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 22:47:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:00:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:00:06] [INFO] root: Database tables initialized
+[2026-07-03 23:00:06] [INFO] root: Database connection successful
+[2026-07-03 23:00:15] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:00:15] [INFO] root: Database tables initialized
+[2026-07-03 23:00:15] [INFO] root: Database connection successful
+[2026-07-03 23:03:53] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:05:20] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:05:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:06:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:07:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:07:33] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:07:34] [INFO] root: Database tables initialized
+[2026-07-03 23:07:34] [INFO] root: Database connection successful
+[2026-07-03 23:09:33] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:17:00] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-03 23:17:01] [INFO] root: Bot stopped
+[2026-07-03 23:17:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:17:08] [INFO] root: Bot started
+[2026-07-03 23:22:08] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:22:08] [INFO] root: Database tables initialized
+[2026-07-03 23:22:08] [INFO] root: Database connection successful
+[2026-07-03 23:24:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:24:44] [INFO] root: Database tables initialized
+[2026-07-03 23:24:44] [INFO] root: Database connection successful
+[2026-07-03 23:25:02] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-03 23:25:02] [INFO] root: Bot stopped
+[2026-07-03 23:25:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:25:17] [INFO] root: Bot started
+[2026-07-03 23:32:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:32:04] [INFO] root: Database tables initialized
+[2026-07-03 23:32:04] [INFO] root: Database connection successful
+[2026-07-03 23:33:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:53:47] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:53:47] [INFO] root: Database tables initialized
+[2026-07-03 23:53:47] [INFO] root: Database connection successful
+[2026-07-03 23:53:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-03 23:53:58] [INFO] root: Database tables initialized
+[2026-07-03 23:53:58] [INFO] root: Database connection successful
+[2026-07-03 23:59:19] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
+[2026-07-03 23:59:20] [WARNING] root: [admin][broadcast] send failed tg_id=7557954606 error=Telegram server says - Forbidden: the bot can't send messages to the bot
+[2026-07-03 23:59:20] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
+[2026-07-04 00:20:30] [ERROR] asyncio: Exception in callback _ProactorBasePipeTransport._call_connection_lost()
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost()>
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-07-04 00:37:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 00:37:06] [INFO] root: Database tables initialized
+[2026-07-04 00:37:06] [INFO] root: Database connection successful
+[2026-07-04 00:52:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 00:52:35] [INFO] root: Bot stopped
+[2026-07-04 00:52:41] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 00:52:42] [INFO] root: Bot started
+[2026-07-04 00:52:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 00:52:56] [INFO] root: Database tables initialized
+[2026-07-04 00:52:56] [INFO] root: Database connection successful
+[2026-07-04 01:02:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:02:58] [INFO] root: Database tables initialized
+[2026-07-04 01:02:58] [INFO] root: Database connection successful
+[2026-07-04 01:06:13] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:06:13] [INFO] root: Database tables initialized
+[2026-07-04 01:06:13] [INFO] root: Database connection successful
+[2026-07-04 01:11:41] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:11:41] [INFO] root: Database tables initialized
+[2026-07-04 01:11:41] [INFO] root: Database connection successful
+[2026-07-04 01:11:43] [ERROR] root: remnawave expired status sync failed user_id=96: remnawave patch user state failed status=400 body={'statusCode': 400, 'message': 'Validation failed', 'errors': [{'received': 'EXPIRED', 'code': 'invalid_enum_value', 'options': ['ACTIVE', 'DISABLED'], 'path': ['status'], 'message': "You can't change status to LIMITED or EXPIRED. These statuses handled by Remnawave."}]}
+[2026-07-04 01:17:43] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:17:43] [INFO] root: Database tables initialized
+[2026-07-04 01:17:43] [INFO] root: Database connection successful
+[2026-07-04 01:23:56] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:23:56] [INFO] root: Database tables initialized
+[2026-07-04 01:23:56] [INFO] root: Database connection successful
+[2026-07-04 01:23:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 01:23:59] [INFO] root: Bot stopped
+[2026-07-04 01:24:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:24:05] [INFO] root: Bot started
+[2026-07-04 01:26:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:26:18] [INFO] root: Database tables initialized
+[2026-07-04 01:26:18] [INFO] root: Database connection successful
+[2026-07-04 01:30:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 01:30:28] [INFO] root: Database tables initialized
+[2026-07-04 01:30:28] [INFO] root: Database connection successful
+[2026-07-04 14:34:53] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 14:34:56] [INFO] root: Bot started
+[2026-07-04 14:35:10] [INFO] root: Bot stopped
+[2026-07-04 14:35:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 14:35:17] [INFO] root: Bot started
+[2026-07-04 15:32:23] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 15:32:23] [INFO] root: Bot stopped
+[2026-07-04 15:32:29] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:32:30] [INFO] root: Bot started
+[2026-07-04 15:32:43] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:34:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:34:15] [INFO] root: Database tables initialized
+[2026-07-04 15:34:15] [INFO] root: Database connection successful
+[2026-07-04 15:34:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:34:59] [INFO] root: Database tables initialized
+[2026-07-04 15:34:59] [INFO] root: Database connection successful
+[2026-07-04 15:36:33] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:36:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 15:36:34] [INFO] root: Bot stopped
+[2026-07-04 15:36:34] [INFO] root: Database tables initialized
+[2026-07-04 15:36:34] [INFO] root: Database connection successful
+[2026-07-04 15:36:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:36:40] [INFO] root: Bot started
+[2026-07-04 15:42:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 15:42:32] [INFO] root: Bot stopped
+[2026-07-04 15:42:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:42:40] [INFO] root: Bot started
+[2026-07-04 15:43:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 15:43:37] [INFO] root: Bot stopped
+[2026-07-04 15:43:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:43:44] [INFO] root: Bot started
+[2026-07-04 15:47:31] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-04 15:47:43] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-04 15:59:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:59:49] [INFO] root: Database tables initialized
+[2026-07-04 15:59:49] [INFO] root: Database connection successful
+[2026-07-04 15:59:53] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 15:59:53] [INFO] root: Bot stopped
+[2026-07-04 15:59:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 15:59:59] [INFO] root: Bot started
+[2026-07-04 16:05:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 16:05:12] [INFO] root: Database tables initialized
+[2026-07-04 16:05:12] [INFO] root: Database connection successful
+[2026-07-04 16:20:36] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 16:20:37] [INFO] root: Database tables initialized
+[2026-07-04 16:20:37] [INFO] root: Database connection successful
+[2026-07-04 16:22:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 16:22:42] [INFO] root: Database tables initialized
+[2026-07-04 16:22:42] [INFO] root: Database connection successful
+[2026-07-04 16:31:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-04 16:31:49] [INFO] root: Database tables initialized
+[2026-07-04 16:31:49] [INFO] root: Database connection successful
+[2026-07-04 16:50:29] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 16:50:29] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 16:50:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 16:50:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:09:35] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:09:35] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:09:39] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:09:39] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:09:47] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:10:17] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:10:17] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:10:22] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:10:22] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:10:30] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:13:32] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:13:32] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:13:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:13:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:13:44] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:14:11] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:14:15] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:14:15] [WARNING] root: [remnawave] get by-id failed user_id=36 remote_id=18 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/18: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-04 17:14:23] [WARNING] root: [remnawave] request retry method=POST url=https://panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-04 17:14:23] [WARNING] root: [remnawave] sync failed user_id=36 err=remnawave request failed method=POST url=https://panel.lunetpn.ru/api/users: Connection timeout to host https://panel.lunetpn.ru/api/users
+[2026-07-04 17:14:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-04 17:14:50] [INFO] root: Bot stopped

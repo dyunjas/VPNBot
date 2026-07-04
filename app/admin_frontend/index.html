@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -8,26 +8,7 @@
 </head>
 <body>
   <script>
-    const token = localStorage.getItem("admin_access_token");
-    if (token) {
-      window.location.replace("/admin/dashboard");
-    } else {
-      window.location.replace("/admin/login");
-    }
+    window.location.replace("/admin/dashboard");
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

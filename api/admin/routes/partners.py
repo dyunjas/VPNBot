@@ -64,3 +64,41 @@ async def admin_partner_update(link_id: int, payload: PartnerLinkUpdatePayload):
             raise HTTPException(status_code=404, detail="Партнерская ссылка не найдена")
 
     return {"ok": True}
+
+
+@router.get("/partners/{link_id}/details", dependencies=[Depends(require_admin_auth)])
+async def admin_partner_details(link_id: int):
+    async with async_session() as session:
+        service = PartnerService(session)
+        details = await service.get_link_details(link_id=link_id)
+        if not details:
+            raise HTTPException(status_code=404, detail="Партнерская ссылка не найдена")
+
+    return {
+        "ok": True,
+        "link": {
+            **details["link"],
+            "created_at": _to_iso(details["link"]["created_at"]),
+        },
+        "summary": {
+            **details["summary"],
+            "last_payment_at": _to_iso(details["summary"]["last_payment_at"]),
+        },
+        "users": [
+            {
+                **item,
+                "user_created_at": _to_iso(item["user_created_at"]),
+                "attributed_at": _to_iso(item["attributed_at"]),
+                "last_paid_at": _to_iso(item["last_paid_at"]),
+            }
+            for item in details["users"]
+        ],
+        "recent_payments": [
+            {
+                **item,
+                "paid_at": _to_iso(item["paid_at"]),
+                "attributed_at": _to_iso(item["attributed_at"]),
+            }
+            for item in details["recent_payments"]
+        ],
+    }

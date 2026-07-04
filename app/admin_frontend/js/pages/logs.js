@@ -13,19 +13,12 @@ function formatBytes(bytes) {
 }
 
 function openLogDownload(filename) {
-  const token = getToken();
-  if (!token) {
-    clearToken();
-    window.location.replace("/admin/login");
-    return;
-  }
   const encoded = encodeURIComponent(filename);
-  fetch(`/admin-api/logs/${encoded}/download`, {
-    headers: { Authorization: `Bearer ${token}` },
+  fetch(`/api/admin/logs/${encoded}/download`, {
+    credentials: "include",
   })
     .then(async (res) => {
       if (res.status === 401) {
-        clearToken();
         window.location.replace("/admin/login");
         return null;
       }
@@ -52,7 +45,7 @@ function openLogDownload(filename) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "logs",
     title: "Логи",
@@ -77,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function loadLogs() {
-    const data = await api("/admin-api/logs?limit=200");
+    const data = await api("/api/admin/logs?limit=200");
     const items = data.items || [];
     const tbody = q("tbody");
     tbody.innerHTML = "";

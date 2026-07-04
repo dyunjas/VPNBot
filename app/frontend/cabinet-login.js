@@ -22,6 +22,9 @@ function setStatus(text, type = "") {
 function mapErrorMessage(err) {
   const raw = String(err || "").toLowerCase();
   if (!raw) return "Не удалось выполнить запрос.";
+  if (raw.includes("code already sent recently")) {
+    return "Код уже был отправлен недавно. Подождите немного перед повторной отправкой.";
+  }
   if (raw.includes("invalid credentials") || raw.includes("wrong password") || raw.includes("wrong login") || raw.includes("неверный")) {
     return "Неверный логин или код.";
   }
@@ -78,7 +81,7 @@ async function sendEmailCode() {
   const email = (q("email").value || "").trim();
   if (!email) throw new Error("Введите email.");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Введите корректный email.");
-  await post("/cabinet-api/auth/send-email-code", { email });
+  await post("/api/auth/send-email-code", { email });
   emailVerifyBlock.classList.remove("is-hidden");
   q("email_code").focus();
   setStatus("Код отправлен на email.", "success");
@@ -88,7 +91,7 @@ async function verifyEmail() {
   const email = (q("email").value || "").trim();
   const code = (q("email_code").value || "").trim();
   if (!email || !code) throw new Error("Заполните email и код.");
-  const data = await post("/cabinet-api/auth/verify-code", { channel: "email", email, code });
+  const data = await post("/api/auth/verify-code", { channel: "email", email, code });
   localStorage.setItem("cabinet_access_token", data.access_token);
   window.location.replace("/cabinet");
 }
@@ -97,7 +100,7 @@ async function sendTelegramCode() {
   const tgRaw = (q("tg_id").value || "").trim();
   const tgId = Number(tgRaw);
   if (!Number.isFinite(tgId)) throw new Error("Введите корректный Telegram ID.");
-  await post("/cabinet-api/auth/send-telegram-code", { tg_id: tgId });
+  await post("/api/auth/send-telegram-code", { tg_id: tgId });
   tgVerifyBlock.classList.remove("is-hidden");
   q("tg_code").focus();
   setStatus("Код отправлен в Telegram.", "success");
@@ -108,7 +111,7 @@ async function verifyTelegram() {
   const code = (q("tg_code").value || "").trim();
   const tgId = Number(tgRaw);
   if (!Number.isFinite(tgId) || !code) throw new Error("Заполните Telegram ID и код.");
-  const data = await post("/cabinet-api/auth/verify-code", { channel: "telegram", tg_id: tgId, code });
+  const data = await post("/api/auth/verify-code", { channel: "telegram", tg_id: tgId, code });
   localStorage.setItem("cabinet_access_token", data.access_token);
   window.location.replace("/cabinet");
 }

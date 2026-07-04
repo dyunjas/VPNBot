@@ -158,7 +158,7 @@ def _map_service_error(e: Exception) -> HTTPException:
     if isinstance(e, NotEnoughReferralBalance):
         return HTTPException(status_code=402, detail="Недостаточно реферального баланса")
     if isinstance(e, PaymentNotConfirmed):
-        return HTTPException(status_code=409, detail=str(e) or "Платеж еще не подтвержден")
+        return HTTPException(status_code=409, detail="Transaction not approved")
     if isinstance(e, PurchaseInProgress):
         return HTTPException(status_code=409, detail=str(e) or "Покупка уже обрабатывается")
     if isinstance(e, BannedUser):

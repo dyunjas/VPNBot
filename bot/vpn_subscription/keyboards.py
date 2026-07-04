@@ -2,11 +2,12 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def back_keys_kb(url: str, auto_renew: bool = False):
+def back_keys_kb(url: str | None, auto_renew: bool = False):
     builder = InlineKeyboardBuilder()
     auto_text = "🟢 Автопродление: ВКЛ" if auto_renew else "🔴 Автопродление: ВЫКЛ"
 
-    builder.add(InlineKeyboardButton(text="Копировать ссылку", copy_text={"text": url}))
+    if url:
+        builder.add(InlineKeyboardButton(text="Копировать ссылку", copy_text={"text": url}))
     builder.button(text=auto_text, callback_data="toggle_auto_renew")
     builder.button(text="➕ Докупить ГБ", callback_data="reset_traffic")
     builder.button(text="📱 Устройства", callback_data="subscription_devices")

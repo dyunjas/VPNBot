@@ -3,22 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lunet — VPN через Telegram и веб-кабинет</title>
-  <meta name="description" content="Lunet — VPN-сервис с управлением подпиской, устройствами и платежами через Telegram-бота и веб-кабинет." />
+  <title>Lunet - быстрый VPN для стабильного доступа</title>
+  <meta
+    name="description"
+    content="Lunet - VPN-сервис с быстрым подключением, стабильным доступом и локациями в 7+ странах."
+  />
   <link rel="icon" type="image/png" href="/miniapp/assets/lunet-flavicon.png" />
-  <link rel="stylesheet" href="/miniapp/landing.css?v=19" />
+  <link rel="stylesheet" href="/miniapp/landing.css?v=23" />
 </head>
 <body>
-  <div class="page">
-    <header class="topbar">
+  <main class="page">
+    <header class="topbar" aria-label="Шапка сайта">
       <a class="brand" href="/" aria-label="Lunet">
         <img class="brand__logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
       </a>
 
       <nav class="topbar__links" aria-label="Основная навигация">
-        <a href="#features">Преимущества</a>
+        <a href="#locations">Локации</a>
         <a href="#how">Как это работает</a>
-        <a href="#access">Доступ</a>
+        <a href="#join">Подключиться</a>
       </nav>
 
       <button class="landing-menu-toggle" id="landing-menu-toggle" type="button" aria-label="Открыть меню">
@@ -27,139 +30,166 @@
 
       <div class="topbar__actions">
         <a class="btn btn--ghost" href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener noreferrer">Поддержка</a>
-        <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Кабинет</a>
+        <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Подключиться</a>
       </div>
     </header>
 
     <div class="landing-menu" id="landing-menu">
-      <a href="#features">Преимущества</a>
+      <a href="#locations">Локации</a>
       <a href="#how">Как это работает</a>
-      <a href="#access">Доступ</a>
+      <a href="#join">Подключиться</a>
       <a href="https://t.me/LunetVPNSupportBot" target="_blank" rel="noopener noreferrer">Поддержка</a>
-      <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Кабинет</a>
+      <a class="btn" href="https://app.lunetpn.ru/cabinet/login">Подключиться</a>
     </div>
 
-    <section class="hero card">
+    <section class="hero card" id="hero">
       <div class="hero__content">
         <img class="hero__logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
         <p class="eyebrow">LUNET VPN</p>
-        <h1>VPN с локациями в ключевых странах</h1>
-        <p class="lead">Россия, Италия, Швеция, Швейцария, Великобритания, Финляндия, Германия, Турция, Япония и Филиппины. Белые списки для сервисов, где нужен стабильный доступ.</p>
+        <h1>Быстрый VPN для стабильного доступа и свободного выбора локаций</h1>
+        <p class="lead">
+          Lunet помогает подключаться к нужному региону без лишней сложности: быстрый старт, стабильный маршрут и
+          уверенная работа в повседневных и рабочих сценариях.
+        </p>
         <div class="hero__actions">
-          <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Открыть Telegram-бота</a>
-          <a class="btn btn--ghost" href="https://app.lunetpn.ru/cabinet/login">Перейти в кабинет</a>
+          <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Начать подключение</a>
+          <a class="btn btn--ghost" href="https://t.me/LunetVPNSupport" target="_blank" rel="noopener noreferrer">Связаться с поддержкой</a>
         </div>
         <div class="hero__bullets">
-          <span>Белые списки</span>
           <span>Стабильный доступ</span>
+          <span>Быстрое подключение</span>
+          <span>Локации по миру</span>
         </div>
       </div>
 
       <div class="hero__panel">
         <div class="hero-stat">
           <span>География</span>
-          <b>10 стран + белые списки</b>
-          <p>Выбирайте сервер под нужный сервис, регион или задачу.</p>
+          <b>7+ стран</b>
+          <p>Выбирайте подходящую локацию под рабочие задачи, повседневный трафик и нужный регион.</p>
         </div>
         <div class="hero-stat">
-          <span>Белые списки</span>
-          <b>Есть</b>
-          <p>Полезно для сайтов и приложений, где нужен предсказуемый маршрут.</p>
+          <span>Качество</span>
+          <b>Стабильный маршрут</b>
+          <p>VPN рассчитан на аккуратный отклик, предсказуемое соединение и комфортную ежедневную работу.</p>
         </div>
       </div>
     </section>
 
-    <section class="section" id="features">
+    <section class="section" id="locations" aria-labelledby="locations-title">
       <div class="section-head">
-        <p class="section-kicker">Локации VPN</p>
-        <h2>Страны, которые доступны в сети Lunet</h2>
+        <div>
+          <p class="section-kicker">Локации VPN</p>
+          <h2 id="locations-title">Подключение через 7+ стран</h2>
+        </div>
       </div>
       <div class="grid grid--locations">
-        <article class="card location-card"><span class="location-flag">🇷🇺</span><h3>Россия</h3><p>Для локальных сервисов и привычного маршрута.</p></article>
-        <article class="card location-card"><span class="location-flag">🇮🇹</span><h3>Италия</h3><p>Европейская локация для повседневного использования.</p></article>
-        <article class="card location-card"><span class="location-flag">🇸🇪</span><h3>Швеция</h3><p>Стабильный северный маршрут с аккуратным пингом.</p></article>
-        <article class="card location-card"><span class="location-flag">🇨🇭</span><h3>Швейцария</h3><p>Локация для приватного и спокойного подключения.</p></article>
-        <article class="card location-card"><span class="location-flag">🇬🇧</span><h3>Великобритания</h3><p>Подходит для европейских и англоязычных сервисов.</p></article>
-        <article class="card location-card"><span class="location-flag">🛡️</span><h3>Белые списки</h3><p>Маршруты для сервисов, где важна предсказуемость.</p></article>
-        <article class="card location-card"><span class="location-flag">🇫🇮</span><h3>Финляндия</h3><p>Быстрый маршрут для повседневных задач.</p></article>
-        <article class="card location-card"><span class="location-flag">🇩🇪</span><h3>Германия</h3><p>Универсальная локация для работы и доступа к сайтам.</p></article>
-        <article class="card location-card"><span class="location-flag">🇹🇷</span><h3>Турция</h3><p>Подходит для региональных сервисов и медиа.</p></article>
-        <article class="card location-card"><span class="location-flag">🇯🇵</span><h3>Япония</h3><p>Азиатская точка входа для точечных задач.</p></article>
-        <article class="card location-card"><span class="location-flag">🇵🇭</span><h3>Филиппины</h3><p>Ещё одна удалённая локация в азиатском регионе.</p></article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/russia-flag.png" alt="Флаг России" />
+          <h3>Россия</h3>
+          <p>Локальная локация для привычных сервисов и базового маршрута без лишних задержек.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/italy-flag.png" alt="Флаг Италии" />
+          <h3>Италия</h3>
+          <p>Европейская точка подключения для повседневного использования и стабильного серфинга.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/switzerland-flag.png" alt="Флаг Швейцарии" />
+          <h3>Швейцария</h3>
+          <p>Спокойный маршрут для задач, где важны предсказуемость и аккуратный сетевой профиль.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/finland-flag.png" alt="Флаг Финляндии" />
+          <h3>Финляндия</h3>
+          <p>Северная локация с хорошим откликом для ежедневного трафика и рабочих сценариев.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/germany-flag.png" alt="Флаг Германии" />
+          <h3>Германия</h3>
+          <p>Универсальная европейская локация для сайтов, приложений и обычной повседневной работы.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/turkey-flag.png" alt="Флаг Турции" />
+          <h3>Турция</h3>
+          <p>Региональная точка доступа для медиасервисов, travel-сценариев и маршрутов ближе к восточному региону.</p>
+        </article>
+        <article class="card location-card">
+          <img class="location-flag" src="/miniapp/assets/japan-flag.png" alt="Флаг Японии" />
+          <h3>Япония</h3>
+          <p>Азиатская локация для задач, где нужен удаленный регион и точечный маршрут в APAC.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="how">
+    <section class="section" id="how" aria-labelledby="how-title">
       <div class="section-head">
-        <p class="section-kicker">Как работает</p>
-        <h2>Простой сценарий подключения</h2>
+        <div>
+          <p class="section-kicker">Как это работает</p>
+          <h2 id="how-title">Простой сценарий подключения</h2>
+        </div>
       </div>
       <div class="grid grid--3">
         <article class="card step-card">
           <span class="step-badge">1</span>
-          <h3>Выберите страну</h3>
-          <p>Ориентируйтесь на флаг и регион, который нужен под вашу задачу.</p>
+          <h3>Выберите регион</h3>
+          <p>Ориентируйтесь на нужную страну и подключайтесь под свой сценарий без сложной ручной настройки.</p>
         </article>
         <article class="card step-card">
           <span class="step-badge">2</span>
-          <h3>Подключитесь</h3>
-          <p>VPN активируется через Telegram-бота и сразу готов к работе.</p>
+          <h3>Запустите VPN</h3>
+          <p>Получите быстрый доступ к защищенному соединению и начните работу сразу после подключения.</p>
         </article>
         <article class="card step-card">
           <span class="step-badge">3</span>
-          <h3>Меняйте локацию</h3>
-          <p>Если нужен другой регион, переключайтесь без лишней ручной настройки.</p>
+          <h3>Меняйте локации</h3>
+          <p>Переключайтесь между странами, когда нужен другой маршрут, регион или более подходящий отклик.</p>
         </article>
       </div>
     </section>
 
-    <section class="section" id="access">
-      <div class="section-head">
-        <p class="section-kicker">Быстрый доступ</p>
-        <h2>Откройте нужный канал подключения</h2>
+    <section class="join card" id="join" aria-labelledby="join-title">
+      <div class="join__body">
+        <p class="section-kicker">Старт</p>
+        <h2 id="join-title">Подключите Lunet VPN</h2>
+        <p class="lead">Выберите подходящую локацию, подключитесь за пару кликов и используйте стабильный VPN в ежедневной работе.</p>
       </div>
-      <div class="grid grid--2">
-        <a class="action card action-card" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">
-          <h3>Telegram-бот</h3>
-          <p>Подключение, продление и смена региона из Telegram.</p>
-          <span class="action-link">Открыть бот</span>
-        </a>
-        <a class="action card action-card" href="https://app.lunetpn.ru/cabinet/login">
-          <h3>Веб-кабинет</h3>
-          <p>Аккаунт, подписка и информация по устройствам в браузере.</p>
-          <span class="action-link">Открыть кабинет</span>
-        </a>
+      <div class="join__actions">
+        <a class="btn" href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Подключиться</a>
+        <a class="btn btn--ghost" href="https://t.me/LunetVPNSupport" target="_blank" rel="noopener noreferrer">Задать вопрос</a>
       </div>
     </section>
 
-    <footer class="landing-footer">
-      <div class="landing-footer__grid">
-        <div>
-          <h4>Lunet</h4>
-          <p>VPN-сервис с доступом через Telegram-бота и веб-кабинет.</p>
+    <footer class="footer" aria-label="Подвал сайта">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img class="footer-brand__logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
+          <p class="footer-copy">© Lunet 2026</p>
         </div>
-        <div>
-          <h4>Навигация</h4>
-          <a href="#features">Преимущества</a>
-          <a href="#how">Как это работает</a>
-          <a href="https://app.lunetpn.ru/cabinet/login">Веб-кабинет</a>
+
+        <div class="footer-links">
+          <p class="footer-title">Поддержка</p>
+          <a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Telegram-бот</a>
+          <a href="https://t.me/LunetVPNSupport" target="_blank" rel="noopener noreferrer">Поддержка в Telegram</a>
         </div>
-        <div>
-          <h4>Документы</h4>
+
+        <div class="footer-links">
+          <p class="footer-title">Документы</p>
           <a href="/terms/">Пользовательское соглашение</a>
           <a href="/terms/privacy/">Политика конфиденциальности</a>
           <a href="/terms/offer/">Оферта</a>
         </div>
-        <div>
-          <h4>Контакты</h4>
-          <a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">@LunetVpnBot</a>
-          <a href="https://t.me/LunetVPNSupport" target="_blank" rel="noopener noreferrer">@LunetVPNSupport</a>
-          <p>Поддержка: 08:00–22:00 МСК</p>
+
+        <div class="footer-links">
+          <p class="footer-title">Навигация</p>
+          <a href="#locations">Локации VPN</a>
+          <a href="#how">Как это работает</a>
+          <a href="#join">Подключиться</a>
         </div>
       </div>
-      <div class="landing-footer__bottom">© Lunet. Все права защищены.</div>
     </footer>
-  </div>
+  </main>
+
   <script defer src="/miniapp/landing.js?v=3"></script>
 </body>
 </html>

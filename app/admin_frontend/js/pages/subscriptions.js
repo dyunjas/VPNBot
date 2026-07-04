@@ -1,7 +1,7 @@
 ﻿const subState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "subscriptions",
     title: "Подписки",
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       search: q("search").value || "",
       status: q("status").value,
     });
-    const data = await api(`/admin-api/subscriptions?${params.toString()}`);
+    const data = await api(`/api/admin/subscriptions?${params.toString()}`);
     const items = data.items || [];
     const meta = data.meta || { page: 1, pages: 1, total: 0 };
     subState.pages = meta.pages;
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!confirm(`Удалить подписку #${subId}? Действие необратимо.`)) return;
 
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/subscriptions/${subId}`, { method: "DELETE" });
+          await api(`/api/admin/subscriptions/${subId}`, { method: "DELETE" });
           await loadRows();
           showToast("Подписка удалена", "success");
         }).catch((err) => alert(err.message));
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   q("create_sub").addEventListener("click", async (e) => {
     await withButtonLoading(e.currentTarget, async () => {
-      await api("/admin-api/subscriptions", {
+      await api("/api/admin/subscriptions", {
         method: "POST",
         body: JSON.stringify({
           user_id: Number(q("new_user_id").value),
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (q("edit_extend_days").value) payload.extend_days = Number(q("edit_extend_days").value);
 
     await withButtonLoading(e.currentTarget, async () => {
-      await api(`/admin-api/subscriptions/${id}`, {
+      await api(`/api/admin/subscriptions/${id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!confirm(`Продлить подписку на ${days} дн. ${targetLabel}?`)) return;
 
     await withButtonLoading(e.currentTarget, async () => {
-      const result = await api("/admin-api/subscriptions/bulk-extend", {
+      const result = await api("/api/admin/subscriptions/bulk-extend", {
         method: "POST",
         body: JSON.stringify({ target, days }),
       });

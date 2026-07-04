@@ -1,20 +1,26 @@
 ﻿from __future__ import annotations
 
+import os
 from datetime import datetime, timezone
 from typing import Any, AsyncGenerator
 
-from fastapi import APIRouter, Depends
+from aiogram import Bot
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.loader import bot
 from backend.core.logger_config import logger
+from backend.core.telegram import create_telegram_session
 from backend.database.models import User, Subscription, SubStatus
 from backend.database.session import async_session
 from backend.services import UserService
 
 router = APIRouter(tags=["subscription"])
+
+
+def _webhook_secret() -> str:
+    return (os.getenv("REMNAWAVE_WEBHOOK_SECRET") or "").strip()
 
 
 def _clip(value: str | None, limit: int) -> str | None:
@@ -60,7 +66,21 @@ def get_user_service(session: AsyncSession = Depends(get_session)) -> UserServic
 
 
 async def _send_telegram_message(chat_id: int, text: str) -> None:
-    await bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML")
+    from entry_api import runtime_bot
+
+    bot_instance = runtime_bot
+    temp_bot: Bot | None = None
+    if bot_instance is None:
+        bot_token = (os.getenv("BOT_TOKEN") or "").strip()
+        if not bot_token:
+            raise RuntimeError("BOT_TOKEN is not configured")
+        temp_bot = Bot(token=bot_token, session=create_telegram_session())
+        bot_instance = temp_bot
+    try:
+        await bot_instance.send_message(chat_id=chat_id, text=text, parse_mode="HTML")
+    finally:
+        if temp_bot is not None:
+            await temp_bot.session.close()
 
 
 async def _safe_notify(chat_id: int, text: str) -> None:
@@ -108,6 +128,14 @@ async def _find_user_for_webhook(session: AsyncSession, payload: RemnawaveWebhoo
     return None
 
 
+def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
+    for key in ("hwidUserDevice", "userHwidDevice", "hwid_user_device", "device"):
+        value = data.get(key)
+        if isinstance(value, dict):
+            return value
+    return {}
+
+
 def _extract_token_from_url(url: str | None) -> str | None:
     if not isinstance(url, str):
         return None
@@ -118,24 +146,43 @@ def _extract_token_from_url(url: str | None) -> str | None:
     return parts[-1] if parts else None
 
 
-@router.post("/remn-webhook")
+@router.post("/remnawave-webhook")
 async def remnawave_webhook(
+    request: Request,
     payload: RemnawaveWebhookPayload,
+    x_webhook_token: str | None = Header(default=None, alias="X-Webhook-Token"),
     user_service: UserService = Depends(get_user_service),
 ):
+    expected_secret = _webhook_secret()
+    if expected_secret:
+        provided_secret = (x_webhook_token or request.query_params.get("token") or "").strip()
+        if provided_secret != expected_secret:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+    scope = str(payload.scope or "").strip()
     event = str(payload.event or "").strip()
+    if scope and scope != "user_hwid_devices":
+        logger.info("[webhook][remnawave] ignored scope=%s event=%s", scope, event)
+        return {"ok": True, "ignored": True, "scope": scope, "event": event}
     if event != "user_hwid_devices.added":
+        logger.info("[webhook][remnawave] ignored event=%s", event)
         return {"ok": True, "ignored": True, "event": event}
 
     data = payload.data or {}
-    hwid_device = data.get("hwidUserDevice") if isinstance(data.get("hwidUserDevice"), dict) else {}
+    hwid_device = _extract_hwid_device(data)
     hwid = _clip(hwid_device.get("hwid"), 128)
     if not hwid:
+        logger.warning("[webhook][remnawave] hwid missing payload=%s", payload.model_dump())
         return {"ok": False, "error": "hwid_missing"}
 
     user: User | None = await _find_user_for_webhook(user_service.session, payload)
     if not user:
-        logger.warning("[webhook][remnawave] user not found event=%s payload_user=%s", event, (data.get("user") or {}))
+        logger.warning(
+            "[webhook][remnawave] user not found scope=%s event=%s payload_user=%s",
+            scope,
+            event,
+            (data.get("user") or {}),
+        )
         return {"ok": False, "error": "user_not_found"}
 
     connected_at = _parse_iso_dt(hwid_device.get("createdAt")) or _parse_iso_dt(payload.timestamp) or datetime.now(timezone.utc)
@@ -166,9 +213,10 @@ async def remnawave_webhook(
         await _safe_notify(user.tg_id, msg)
 
     logger.info(
-        "[webhook][remnawave] processed event=%s user_id=%s hwid=%s",
+        "[webhook][remnawave] processed scope=%s event=%s user_id=%s hwid=%s",
+        scope,
         event,
         user.id,
         hwid,
     )
-    return {"ok": True, "event": event}
+    return {"ok": True, "scope": scope, "event": event}

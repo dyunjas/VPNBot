@@ -1,7 +1,7 @@
 const txState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "transactions",
     title: "Транзакции",
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       search: q("search").value || "",
     });
 
-    const data = await api(`/admin-api/transactions?${params.toString()}`);
+    const data = await api(`/api/admin/transactions?${params.toString()}`);
     const items = data.items || [];
     const meta = data.meta || { page: 1, pages: 1, total: 0 };
     txState.pages = meta.pages;

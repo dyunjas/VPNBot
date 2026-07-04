@@ -49,6 +49,8 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
             )
         except Exception as e:
             raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
 
         sub_service = SubscriptionService(session)
         plan = await sub_service.get_plan(sub.plan_id)
@@ -83,6 +85,8 @@ async def mini_subscription_traffic_buy(payload: BuyTrafficPayload):
             )
         except Exception as e:
             raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
 
         return {
             "ok": True,

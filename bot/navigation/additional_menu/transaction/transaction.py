@@ -1,9 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.services import UserService, TransactionService
-from backend.services.exceptions import UserNotFound, TransactionNotFound
-
 from backend.images import MAIN_MENU_IMG
 
 from bot.navigation.additional_menu.transaction.keyboards import (
@@ -15,22 +12,10 @@ router = Router()
 
 
 @router.callback_query(F.data == "transaction_history")
-async def transactions_clb(
-    callback: CallbackQuery, 
-    transaction_service: TransactionService, user_service: UserService
-    ):
-    tg_id = callback.from_user.id
-    try:
-        user = await user_service.get_by_tg_id(tg_id)
-    except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
-        )
-        return
-    
-    transactions = await transaction_service.list_by_user(user.id)
+async def transactions_clb(callback: CallbackQuery, bot_api):
+    txs = await bot_api.list_transactions(tg_id=callback.from_user.id)
 
-    if not transactions:
+    if not txs:
         content = InputMediaPhoto(
             media=MAIN_MENU_IMG,
             caption="У вас пока нет транзакций"
@@ -42,7 +27,7 @@ async def transactions_clb(
         await callback.answer()
         return
 
-    keyboard = build_transactions_kb(transactions, page=0)
+    keyboard = build_transactions_kb(txs, page=0)
     content = InputMediaPhoto(
         media=MAIN_MENU_IMG,
         caption="Ваши транзакции:"
@@ -55,25 +40,11 @@ async def transactions_clb(
 
 
 @router.callback_query(F.data.startswith("transactions_page:"))
-async def transaction_orders_clb(
-    callback: CallbackQuery, 
-    transaction_service: TransactionService, user_service: UserService
-    ):
+async def transaction_orders_clb(callback: CallbackQuery, bot_api):
     page = int(callback.data.split(":")[1])
+    txs = await bot_api.list_transactions(tg_id=callback.from_user.id)
 
-    tg_id = callback.from_user.id
-
-    try:
-        user = await user_service.get_by_tg_id(tg_id)
-    except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
-        )
-        return
-
-    transactions = await transaction_service.list_by_user(user.id)
-
-    if not transactions:
+    if not txs:
         content = InputMediaPhoto(
             media=MAIN_MENU_IMG,
             caption="У вас пока нет транзакций"
@@ -85,7 +56,7 @@ async def transaction_orders_clb(
         await callback.answer()
         return
 
-    keyboard = build_transactions_kb(transactions, page=page)
+    keyboard = build_transactions_kb(txs, page=page)
     content = InputMediaPhoto(
         media=MAIN_MENU_IMG,
         caption="Ваши транзакции:"
@@ -98,41 +69,31 @@ async def transaction_orders_clb(
 
 
 @router.callback_query(F.data.startswith("transaction:"))
-async def transaction_detail_clb(
-    callback: CallbackQuery, 
-    transaction_service: TransactionService, user_service: UserService
-    ):
+async def transaction_detail_clb(callback: CallbackQuery, bot_api):
     parts = callback.data.split(":")
     transaction_id = int(parts[1])
     page = int(parts[2]) if len(parts) > 2 else 0
 
-    tg_id = callback.from_user.id
     try:
-        user = await user_service.get_by_tg_id(tg_id)
-    except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
-        )
-
-    try:
-        transaction = await transaction_service.get_by_id_for_user(transaction_id, user.id)
-    except TransactionNotFound:
+        tx = await bot_api.get_transaction(tg_id=callback.from_user.id, transaction_id=transaction_id)
+        transaction = tx.get("transaction") if isinstance(tx, dict) else tx
+    except Exception:
         await callback.message.answer(
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Транзакция не найдена"
         )
         return
-    
-    created_at_text = transaction.created_at.strftime('%d.%m.%Y %H:%M') if transaction.created_at else "-"
-    paid_at_text = transaction.paid_at.strftime('%d.%m.%Y %H:%M') if getattr(transaction, "paid_at", None) else "-"
-    status_text = "Оплачено" if getattr(transaction, "paid", False) else "Не оплачено"
+
+    created_at_text = transaction.get("created_at") or "-"
+    paid_at_text = transaction.get("paid_at") or "-"
+    status_text = "Оплачено" if transaction.get("paid") else "Не оплачено"
 
     text = (
-        f"<b><tg-emoji emoji-id='5769403330761593044'>👛</tg-emoji> Сумма:</b> {transaction.amount} RUB\n"
+        f"<b><tg-emoji emoji-id='5769403330761593044'>👝</tg-emoji> Сумма:</b> {transaction.get('amount')} RUB\n"
         f"<b><tg-emoji emoji-id='5900104897885376843'>🕓</tg-emoji> Дата создания:</b> {created_at_text}\n"
         f"<b><tg-emoji emoji-id='5900104897885376843'>🕓</tg-emoji> Дата оплаты:</b> {paid_at_text}\n"
         f"<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Статус:</b> {status_text}\n"
-        f"<b><tg-emoji emoji-id='5983399041197675256'>🏪</tg-emoji> Система:</b> {transaction.payment_system}\n"
-        f"<b><tg-emoji emoji-id='5985433648810171091'>🏷</tg-emoji> ID транзакции:</b> <code>{transaction.transaction_id}</code>"
+        f"<b><tg-emoji emoji-id='5983399041197675256'>🏪</tg-emoji> Система:</b> {transaction.get('payment_system')}\n"
+        f"<b><tg-emoji emoji-id='5985433648810171091'>🏷</tg-emoji> ID транзакции:</b> <code>{transaction.get('transaction_id')}</code>"
     )
 
     content = InputMediaPhoto(
@@ -146,3 +107,4 @@ async def transaction_detail_clb(
         reply_markup=back_to_transactions_bt(page)
     )
     await callback.answer()
+

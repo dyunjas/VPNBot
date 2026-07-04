@@ -1,44 +1,35 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, InputMediaPhoto
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, InputMediaPhoto
 
 from backend.images import MAIN_MENU_IMG
 from bot.navigation.additional_menu.referral.keyboards import referral_kb
 from bot.utils.html import html_escape
 
-from backend.services import ReferralService, UserService
-from backend.services.exceptions import UserNotFound
-
 router = Router()
 
 
 @router.callback_query(F.data == "referral")
-async def referral_clb(callback: CallbackQuery, referral_service: ReferralService, user_service: UserService, state: FSMContext):
-
-    tg_id = callback.from_user.id
-
+async def referral_clb(callback: CallbackQuery, bot_api, state: FSMContext):
     try:
-        user = await user_service.get_by_tg_id(tg_id)
-    except UserNotFound:
+        info = await bot_api.get_referral_info(tg_id=callback.from_user.id)
+    except Exception:
         await callback.message.answer(
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
         )
         return
-    
-    referral_account = await referral_service.create_account(user.id)
 
-    referral_url = f"https://t.me/LunetVpnBot?start=ref_{tg_id}"
+    referral = info.get("referral") if isinstance(info, dict) else {}
+    referral_url = f"https://t.me/LunetVpnBot?start=ref_{callback.from_user.id}"
     share_referral_url = f"https://t.me/share/url?url={referral_url}"
 
     text = (
         "<b>Приглашайте друзей и зарабатывайте\n</b>"
         "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> +1 день VPN \n"
-        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> +{referral_account.referral_percent}% с каждого пополнения друга\n\n"
-
-        "<tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Ваша статистика:\n"
-        f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Приглашено: {referral_account.invited_count} чел\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс: {referral_account.referral_balance} RUB\n\n"
-
+        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> +{referral.get('percent')}% с каждого пополнения друга\n\n"
+        "<tg-emoji emoji-id='5931472654660800739'>📉</tg-emoji> Ваша статистика:\n"
+        f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Приглашено: {referral.get('invited_count')} чел\n"
+        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс: {referral.get('balance')} RUB\n\n"
         "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ваша ссылка:\n"
         f"<code>{html_escape(referral_url)}</code>\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Совет: делитесь ссылкой с друзьями, публикуйте в чатах и соцсетях</i>"
@@ -54,3 +45,4 @@ async def referral_clb(callback: CallbackQuery, referral_service: ReferralServic
         reply_markup=referral_kb(share_referral_url)
     )
     await state.clear()
+

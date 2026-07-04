@@ -73,3 +73,7 @@ class DeviceNotFound(Exception):
     pass
 
 
+class MaintenanceModeError(BaseException):
+    pass
+
+

@@ -12,7 +12,9 @@ def subscription_plans_kb(plans, page: int = 0):
     chunk = plans[start:end]
 
     for plan in chunk:
-        builder.button(text=plan.name, callback_data=f"plan:{plan.id}:{page}")
+        plan_name = plan.get("name") if isinstance(plan, dict) else plan.name
+        plan_id = plan.get("id") if isinstance(plan, dict) else plan.id
+        builder.button(text=plan_name, callback_data=f"plan:{plan_id}:{page}")
 
     builder.adjust(1)
 

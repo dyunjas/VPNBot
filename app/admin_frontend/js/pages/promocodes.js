@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "promocodes",
     title: "Промокоды",
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function loadPromocodes() {
-    const data = await api("/admin-api/promocodes");
+    const data = await api("/api/admin/promocodes");
     const items = data.items || [];
     q("tbody").innerHTML = "";
 
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!confirm(`Удалить промокод #${promocodeId}? Действие необратимо.`)) return;
 
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/promocodes/${promocodeId}`, { method: "DELETE" });
+          await api(`/api/admin/promocodes/${promocodeId}`, { method: "DELETE" });
           await loadPromocodes();
           showToast("Промокод удален", "success");
         }).catch((err) => alert(err.message));
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     await withButtonLoading(e.currentTarget, async () => {
-      await api("/admin-api/promocodes", {
+      await api("/api/admin/promocodes", {
         method: "POST",
         body: JSON.stringify(payload),
       });

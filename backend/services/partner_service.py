@@ -1,6 +1,7 @@
 import re
 import uuid
 
+from datetime import datetime, timezone
 from typing import Literal
 
 from sqlalchemy import func, select, update
@@ -8,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.config import settings
 from backend.core.logger_config import logger
-from backend.database.models import PartnerAttribution, PartnerLink, Transaction
+from backend.database.models import PartnerAttribution, PartnerLink, Transaction, User
 
 
 PARTNER_CODE_RE = re.compile(r"^[a-zA-Z0-9_-]{3,64}$")
@@ -70,7 +71,7 @@ class PartnerService:
             return "already_attributed"
 
         self.session.add(PartnerAttribution(partner_link_id=link.id, user_id=user_id))
-        await self.session.flush()
+        await self.session.commit()
         logger.info("[biz][partner] user_attached user_id=%s partner_link_id=%s code=%s", user_id, link.id, link.code)
         return "attached"
 
@@ -138,3 +139,121 @@ class PartnerService:
             }
             for link, new_users, paid_topups, paid_amount in rows
         ]
+
+    async def get_link_details(self, *, link_id: int) -> dict | None:
+        link = await self.session.get(PartnerLink, link_id)
+        if not link:
+            return None
+
+        user_payments_sq = (
+            select(
+                Transaction.user_id.label("user_id"),
+                func.count(Transaction.id).label("paid_topups"),
+                func.coalesce(func.sum(Transaction.amount), 0).label("paid_amount"),
+                func.max(Transaction.paid_at).label("last_paid_at"),
+                func.max(Transaction.amount).label("max_paid_amount"),
+            )
+            .where(Transaction.paid.is_(True))
+            .group_by(Transaction.user_id)
+            .subquery()
+        )
+
+        users_stmt = (
+            select(
+                PartnerAttribution.user_id,
+                User.tg_id,
+                User.username,
+                User.created_at,
+                PartnerAttribution.created_at,
+                func.coalesce(user_payments_sq.c.paid_topups, 0),
+                func.coalesce(user_payments_sq.c.paid_amount, 0),
+                user_payments_sq.c.last_paid_at,
+                func.coalesce(user_payments_sq.c.max_paid_amount, 0),
+            )
+            .join(User, User.id == PartnerAttribution.user_id)
+            .outerjoin(user_payments_sq, user_payments_sq.c.user_id == PartnerAttribution.user_id)
+            .where(PartnerAttribution.partner_link_id == link_id)
+            .order_by(
+                func.coalesce(user_payments_sq.c.paid_amount, 0).desc(),
+                PartnerAttribution.created_at.desc(),
+            )
+        )
+
+        recent_payments_stmt = (
+            select(
+                Transaction.id,
+                Transaction.user_id,
+                User.tg_id,
+                User.username,
+                Transaction.amount,
+                Transaction.payment_system,
+                Transaction.paid_at,
+                PartnerAttribution.created_at,
+            )
+            .join(PartnerAttribution, PartnerAttribution.user_id == Transaction.user_id)
+            .join(User, User.id == Transaction.user_id)
+            .where(
+                PartnerAttribution.partner_link_id == link_id,
+                Transaction.paid.is_(True),
+                Transaction.paid_at.is_not(None),
+            )
+            .order_by(Transaction.paid_at.desc(), Transaction.id.desc())
+            .limit(20)
+        )
+
+        users_rows = (await self.session.execute(users_stmt)).all()
+        recent_payment_rows = (await self.session.execute(recent_payments_stmt)).all()
+
+        total_paid_users = sum(1 for row in users_rows if int(row[5] or 0) > 0)
+        total_converted_amount = sum(int(row[6] or 0) for row in users_rows)
+        total_converted_topups = sum(int(row[5] or 0) for row in users_rows)
+        last_payment_at = None
+        for row in recent_payment_rows:
+            paid_at = row[6]
+            if paid_at and (last_payment_at is None or paid_at > last_payment_at):
+                last_payment_at = paid_at
+
+        return {
+            "link": {
+                "id": link.id,
+                "name": link.name,
+                "code": link.code,
+                "url": self.build_url(link.code),
+                "is_active": bool(link.is_active),
+                "created_at": link.created_at,
+            },
+            "summary": {
+                "attributed_users": len(users_rows),
+                "paid_users": total_paid_users,
+                "paid_topups": total_converted_topups,
+                "paid_amount": total_converted_amount,
+                "last_payment_at": last_payment_at,
+            },
+            "users": [
+                {
+                    "user_id": int(user_id),
+                    "tg_id": tg_id,
+                    "username": username,
+                    "user_created_at": user_created_at,
+                    "attributed_at": attributed_at,
+                    "paid_topups": int(paid_topups or 0),
+                    "paid_amount": int(paid_amount or 0),
+                    "last_paid_at": last_paid_at,
+                    "max_paid_amount": int(max_paid_amount or 0),
+                }
+                for user_id, tg_id, username, user_created_at, attributed_at, paid_topups, paid_amount, last_paid_at, max_paid_amount in users_rows
+            ],
+            "recent_payments": [
+                {
+                    "transaction_id": int(tx_id),
+                    "user_id": int(user_id),
+                    "tg_id": tg_id,
+                    "username": username,
+                    "amount": int(amount or 0),
+                    "payment_system": payment_system,
+                    "paid_at": paid_at,
+                    "attributed_at": attributed_at,
+                }
+                for tx_id, user_id, tg_id, username, amount, payment_system, paid_at, attributed_at in recent_payment_rows
+            ],
+        }

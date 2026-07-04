@@ -5,6 +5,32 @@ from ..common import *
 router = APIRouter()
 
 
+def _public_payment_method(payment_system: str) -> str:
+    raw = str(payment_system or "").lower().strip()
+    if raw == "cryptobot":
+        return "crypto"
+    if raw in ("platega", "pally"):
+        return raw
+    return raw
+
+
+async def _confirm_transaction_by_method(
+    billing: BillingService,
+    method: str,
+    provider_id: str,
+) -> None:
+    if method == "platega":
+        await billing.confirm_platega_payment(provider_id)
+        return
+    if method == "pally":
+        await billing.confirm_pally_payment(provider_id)
+        return
+    if method == "crypto":
+        await billing.confirm_crypto_payment(int(provider_id))
+        return
+    raise HTTPException(400, "method must be 'platega', 'crypto' or 'pally'")
+
+
 @router.post("/promocode/apply")
 async def mini_promocode_apply(payload: ApplyPromocodePayload):
     code = (payload.code or "").strip()
@@ -143,14 +169,12 @@ async def mini_balance_topup(payload: TopupPayload):
             raise
         except Exception as e:
             raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
 
 
 @router.post("/balance/check")
 async def mini_balance_check(payload: BalanceCheckPayload):
-    method = (payload.method or "platega").lower().strip()
-    if method not in ("platega", "crypto", "pally"):
-        raise HTTPException(400, "method must be 'platega', 'crypto' or 'pally'")
-
     tg_user = _get_tg_user(payload.initData)
     tg_id = tg_user["id"]
 
@@ -163,85 +187,92 @@ async def mini_balance_check(payload: BalanceCheckPayload):
 
         provider_id = (payload.provider_id or "").strip() or None
 
-        if not provider_id:
-            if method == "platega":
-                payment_system = "platega"
-            elif method == "pally":
-                payment_system = "PALLY"
-            else:
-                payment_system = "cryptobot"
-            tx = await tx_service.get_last_unpaid_by_system(
+        if provider_id:
+            method = (payload.method or "platega").lower().strip()
+            if method not in ("platega", "crypto", "pally"):
+                raise HTTPException(400, "method must be 'platega', 'crypto' or 'pally'")
+            checked = 1
+            candidates: list[tuple[str, str]] = [(method, provider_id)]
+        else:
+            recent_txs = await tx_service.list_recent_unpaid(
                 user_id=user.id,
-                payment_system=payment_system,
+                limit=3,
+                payment_systems={"platega", "pally", "cryptobot"},
             )
-            if not tx:
-                return {"ok": False, "reason": "no_pending", "message": "Нет незавершенных платежей"}
-            provider_id = tx.transaction_id
+            if not recent_txs:
+                return {
+                    "ok": False,
+                    "reason": "no_pending",
+                    "checked": 0,
+                    "message": "Нет незавершенных платежей",
+                }
+            candidates = [
+                (_public_payment_method(tx.payment_system), tx.transaction_id)
+                for tx in recent_txs
+            ]
+            checked = len(candidates)
 
+        last_tx = None
         try:
-            if method == "platega":
-                await billing.confirm_platega_payment(provider_id)
-            elif method == "pally":
-                await billing.confirm_pally_payment(provider_id)
-            else:
+            for method, provider_id in candidates:
                 try:
-                    invoice_id = int(provider_id)
-                except ValueError:
-                    raise HTTPException(400, "provider_id must be invoice_id (int) for crypto")
-                await billing.confirm_crypto_payment(invoice_id)
+                    await _confirm_transaction_by_method(billing, method, provider_id)
+                except PaymentNotConfirmed:
+                    try:
+                        last_tx = await tx_service.get_by_provider_id(provider_id)
+                    except TransactionNotFound:
+                        last_tx = None
+                    continue
 
-        except PaymentNotConfirmed:
-            try:
                 tx = await tx_service.get_by_provider_id(provider_id)
-            except TransactionNotFound:
-                return {"ok": False, "reason": "tx_not_found", "message": "Transaction not found"}
+                fresh_user = await user_service.get_by_id(user.id)
 
-            fresh_user = await user_service.get_by_id(user.id)
-            return {
-                "ok": True,
-                "confirmed": False,
-                "method": method,
-                "transaction": {
-                    "id": tx.id,
-                    "provider_id": tx.transaction_id,
-                    "amount": int(tx.amount) if tx.amount is not None else None,
-                    "paid": tx.paid,
-                    "status_raw": "NOT_CONFIRMED",
-                },
-                "balance": fresh_user.balance,
-            }
+                return {
+                    "ok": True,
+                    "confirmed": True,
+                    "checked": checked,
+                    "method": method,
+                    "transaction": {
+                        "id": tx.id,
+                        "provider_id": tx.transaction_id,
+                        "amount": int(tx.amount) if tx.amount is not None else None,
+                        "paid": True,
+                        "status_raw": "CONFIRMED",
+                    },
+                    "balance": fresh_user.balance,
+                }
         except TransactionNotFound:
-            return {"ok": False, "reason": "tx_not_found", "message": "Transaction not found"}
+            return {
+                "ok": False,
+                "reason": "tx_not_found",
+                "checked": checked,
+                "message": "Transaction not found",
+            }
         except Exception as e:
             raise _map_service_error(e)
         finally:
-            try:
-                await billing.platega.close()
-            except Exception:
-                pass
-            try:
-                if billing.pally:
-                    await billing.pally.close()
-            except Exception:
-                pass
-            try:
-                await billing.crypto.close()
-            except Exception:
-                pass
+            await billing.close_clients()
 
-        tx = await tx_service.get_by_provider_id(provider_id)
         fresh_user = await user_service.get_by_id(user.id)
+        if not last_tx:
+            return {
+                "ok": False,
+                "reason": "tx_not_found",
+                "checked": checked,
+                "message": "Transaction not found",
+            }
 
         return {
             "ok": True,
-            "confirmed": True,
-            "method": method,
+            "confirmed": False,
+            "checked": checked,
+            "method": _public_payment_method(last_tx.payment_system),
             "transaction": {
-                "id": tx.id,
-                "provider_id": tx.transaction_id,
-                "amount": int(tx.amount) if tx.amount is not None else None,
-                "paid": True,
-                "status_raw": "CONFIRMED",
+                "id": last_tx.id,
+                "provider_id": last_tx.transaction_id,
+                "amount": int(last_tx.amount) if last_tx.amount is not None else None,
+                "paid": last_tx.paid,
+                "status_raw": "NOT_CONFIRMED",
             },
             "balance": fresh_user.balance,
         }

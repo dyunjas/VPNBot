@@ -70,7 +70,6 @@ async def health():
     return {"status": "ok", "service": "landing"}
 
 
-# Landing uses shared frontend assets/styles from the same frontend dir.
 app.mount("/miniapp", StaticFiles(directory=FRONTEND_DIR, html=False), name="miniapp_assets")
 
 

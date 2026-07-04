@@ -31,8 +31,8 @@ function setFieldState(field, isInvalid) {
   field.classList.toggle("is-invalid", Boolean(isInvalid));
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (getToken()) {
+document.addEventListener("DOMContentLoaded", async () => {
+  if (await hasAdminSession()) {
     window.location.replace("/admin/dashboard");
     return;
   }
@@ -74,11 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setFieldState(passwordInput?.closest(".login-field"), false);
 
     await withButtonLoading(submitBtn, async () => {
-      const data = await api("/admin-api/auth/login", {
+      await api("/api/admin/auth/login", {
         method: "POST",
         body: JSON.stringify({ login, password }),
       });
-      setToken(data.access_token);
       setInlineError("Вход выполнен", "success");
       window.location.replace("/admin/dashboard");
     }).catch((err) => {

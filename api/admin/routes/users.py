@@ -1,9 +1,9 @@
 from aiogram import Bot
-from aiogram.client.session.aiohttp import AiohttpSession
 from fastapi import APIRouter
 from ..common import *
 from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
+from backend.core.telegram import create_telegram_session
 
 router = APIRouter()
 
@@ -16,8 +16,7 @@ async def _send_user_status_change_notification(*, tg_id: int, action: str) -> N
         if not bot_token:
             logger.warning("[admin][users] status notify skipped: BOT_TOKEN missing")
             return
-        proxy_url = (settings.BOT_PROXY or "").strip() or None
-        session = AiohttpSession(proxy=proxy_url) if proxy_url else AiohttpSession()
+        session = create_telegram_session()
         temp_bot = Bot(token=bot_token, session=session)
         bot_instance = temp_bot
 

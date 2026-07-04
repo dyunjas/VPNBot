@@ -1,15 +1,15 @@
 # Separate Entrypoints
 
-Проект разнесен на отдельные процессы:
+Project processes:
 
-- `entry_landing.py` -> лендинг (по умолчанию порт `8001`)
-- `entry_miniapp.py` -> Telegram mini app frontend-only (порт `8002`)
-- `entry_cabinet.py` -> web кабинет frontend-only (порт `8003`)
-- `entry_admin_frontend.py` -> админка frontend-only (порт `8011`)
-- `entry_api.py` -> общий API-only сервис (включая `admin-api`) (порт `8004`)
+- `entry_landing.py` -> landing frontend only
+- `entry_miniapp.py` -> Telegram mini app frontend only
+- `entry_cabinet.py` -> web cabinet frontend only
+- `entry_admin_frontend.py` -> admin frontend only
+- `entry_api.py` -> shared API service with `/api` and internal admin routes under `/api/admin`
 - `main.py` -> Telegram bot
 
-## Пример запуска (PowerShell)
+## Run examples
 
 ```powershell
 $env:LANDING_PORT="8001"; python entry_landing.py
@@ -32,10 +32,14 @@ $env:API_CORS_ORIGINS="http://127.0.0.1:8002,http://127.0.0.1:8003,http://127.0.
 ```
 
 ```powershell
+$env:API_BASE_URL="http://127.0.0.1:8004"; $env:BOT_API_TOKEN="change-me"; python entry_bot.py
+```
+
+```powershell
 $env:MINIAPP_URL="https://your-miniapp-domain/miniapp/"; python main.py
 ```
 
-## Важно
+## Notes
 
-- Для production лучше вынести маршрутизацию на reverse proxy (nginx/traefik/caddy) и проксировать домены/пути на эти порты.
-- Стили/ассеты общие (`app/frontend`), backend и БД общие.
+- For production, route the domains/paths through a reverse proxy.
+- Shared assets, backend, and database stay common across the apps.

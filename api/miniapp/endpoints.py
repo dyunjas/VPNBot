@@ -6,7 +6,7 @@ from api.miniapp.routes import (
     account_router,
 )
 
-router = APIRouter(prefix="/mini", tags=["mini-app"] )
+router = APIRouter(prefix="/api", tags=["mini-app"])
 router.include_router(profile_router)
 router.include_router(subscriptions_router)
 router.include_router(billing_router)

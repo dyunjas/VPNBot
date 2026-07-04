@@ -6,11 +6,7 @@ from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from backend.images import MAIN_MENU_IMG
-from backend.services import UserService
 from backend.services.exceptions import UserNotFound, BannedUser
-from backend.services.partner_service import PartnerService
-from backend.services.referral_service import ReferralService
-from backend.services.subscription_service import SubscriptionService
 from backend.states import CaptchaStates
 from bot.navigation.main_menu.keyboards import main_menu_kb
 from bot.utils.html import html_escape
@@ -121,14 +117,11 @@ async def _render_welcome(message_or_callback: Message | CallbackQuery) -> None:
 
 
 async def _grant_trial_and_notify(*, message: Message | None, bot, session, user_id: int, tg_id: int) -> None:
-    sub_service = SubscriptionService(session)
     try:
-        await sub_service.activate_subscription(
-            user_id=user_id,
-            plan_id=9,
-            auto_renew=False,
-        )
+        result = await session.activate_trial(user_id=user_id)
     except Exception:
+        return
+    if isinstance(result, dict) and result.get("granted") is False:
         return
 
     text = (
@@ -152,15 +145,13 @@ async def _process_post_registration_links(
     username: str | None,
     bot,
     full_name: str,
-    user_service: UserService,
-    referral_service: ReferralService,
-    partner_service: PartnerService,
+    bot_api,
 ) -> None:
     if args.startswith("partner_"):
         partner_code = args.split("_", 1)[1].strip()
         if partner_code:
             try:
-                await partner_service.attach_user(user_id=user_id, code=partner_code)
+                await bot_api.attach_partner(user_id=user_id, code=partner_code)
             except ValueError:
                 pass
 
@@ -174,18 +165,15 @@ async def _process_post_registration_links(
             return
 
         try:
-            referrer = await user_service.get_by_tg_id(ref_tg_id)
+            referrer = await bot_api.get_user_by_tg_id(ref_tg_id)
         except UserNotFound:
             return
 
         try:
-            linked = await referral_service.attach_referrer(
-                user_id=user_id,
-                referrer_id=referrer.id,
-            )
+            result = await bot_api.attach_referrer(user_id=user_id, referrer_tg_id=ref_tg_id)
         except BannedUser:
             return
-        if not linked:
+        if not result.get("linked"):
             return
 
         referral_name = (
@@ -194,7 +182,7 @@ async def _process_post_registration_links(
             else html_escape(full_name or str(tg_id))
         )
         await bot.send_message(
-            chat_id=referrer.tg_id,
+            chat_id=referrer.get("user", referrer).get("tg_id"),
             text=(
                 "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> У вас новый реферал!\n"
                 f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> {referral_name}\n"
@@ -206,9 +194,7 @@ async def _process_post_registration_links(
 @router.message(F.text.startswith("/start"))
 async def start_cmd(
     message: Message,
-    user_service: UserService,
-    referral_service: ReferralService,
-    partner_service: PartnerService,
+    bot_api,
     state: FSMContext,
 ):
     tg_id = message.from_user.id
@@ -217,7 +203,7 @@ async def start_cmd(
     args = parts[1].strip() if len(parts) > 1 else ""
 
     try:
-        user = await user_service.get_by_tg_id(tg_id)
+        user = await bot_api.get_user_by_tg_id(tg_id)
     except UserNotFound:
         await state.clear()
         await _send_captcha(
@@ -238,9 +224,7 @@ async def start_cmd(
 async def captcha_answer(
     callback: CallbackQuery,
     state: FSMContext,
-    user_service: UserService,
-    referral_service: ReferralService,
-    partner_service: PartnerService,
+    bot_api,
 ):
     data = await state.get_data()
     target_code = str(data.get("captcha_target") or "")
@@ -295,25 +279,24 @@ async def captcha_answer(
 
     tg_id = callback.from_user.id
     username = callback.from_user.username
-    user = await user_service.create_user(tg_id=tg_id, username=username)
+    created = await bot_api.ensure_user(tg_id=tg_id, username=username)
+    user = created.get("user") or {}
     await _grant_trial_and_notify(
         message=callback.message,
         bot=callback.bot,
-        session=user_service.session,
-        user_id=user.id,
+        session=bot_api,
+        user_id=int(user.get("id")),
         tg_id=tg_id,
     )
 
     await _process_post_registration_links(
         args=str(data.get("pending_args") or ""),
-        user_id=user.id,
+        user_id=int(user.get("id")),
         tg_id=tg_id,
         username=username,
         bot=callback.bot,
         full_name=callback.from_user.full_name or "",
-        user_service=user_service,
-        referral_service=referral_service,
-        partner_service=partner_service,
+        bot_api=bot_api,
     )
 
     await state.clear()

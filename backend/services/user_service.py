@@ -19,6 +19,8 @@ class UserService:
             user = await self.user_repo.create(tg_id=tg_id, username=username)
             self.user_repo.session.add(user)
             await self.session.flush()
+            await self.session.commit()
+            await self.session.refresh(user)
             logger.info(
                 "[biz][user] created user_id=%s tg_id=%s username=%s",
                 user.id,

@@ -23,6 +23,31 @@ class SubscriptionService:
         self.topup_repo = SubscriptionTopupRepository(session)
         self.user_repo = UserRepository(session)
 
+    @staticmethod
+    def _gb_to_bytes(gb: Decimal) -> int:
+        return max(0, int((Decimal(gb or 0) * Decimal(1024**3)).to_integral_value()))
+
+    async def _refresh_user_traffic_limit_snapshot(self, *, user_id: int, subscription) -> int:
+        if not subscription:
+            await self.user_repo.set_traffic_limit_bytes(user_id=user_id, traffic_limit_bytes=0)
+            return 0
+
+        plan = await self.sub_repo.get_plan_by_id(int(subscription.plan_id))
+        plan_gb = Decimal(getattr(plan, "gb_limit", 0) or 0)
+        topup_gb = await self.topup_repo.sum_gb(subscription_id=subscription.id)
+        traffic_limit_bytes = self._gb_to_bytes(plan_gb + Decimal(topup_gb or 0))
+        await self.user_repo.set_traffic_limit_bytes(
+            user_id=user_id,
+            traffic_limit_bytes=traffic_limit_bytes,
+        )
+        logger.info(
+            "[biz][subscription] traffic_limit_snapshot_updated user_id=%s subscription_id=%s traffic_limit_bytes=%s",
+            user_id,
+            subscription.id,
+            traffic_limit_bytes,
+        )
+        return traffic_limit_bytes
+
     async def _reset_user_traffic_safe(self, user_id: int) -> None:
         logger.info("[subscription] reset_user_traffic skipped user_id=%s (remnawave-only mode)", user_id)
 
@@ -153,6 +178,8 @@ class SubscriptionService:
             )
 
         await self._reset_user_traffic_safe(user_id=user_id)
+        await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
+        await self.session.commit()
         logger.info(
             "[biz][subscription] activate_completed user_id=%s subscription_id=%s",
             user_id,
@@ -240,6 +267,8 @@ class SubscriptionService:
             )
         
         await self._reset_user_traffic_safe(user_id=user_id)
+        await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
+        await self.session.commit()
         logger.info(
             "[biz][subscription] renew_completed user_id=%s subscription_id=%s",
             user_id,
@@ -264,6 +293,7 @@ class SubscriptionService:
             raise SubscriptionNotFound("Subscription not found")
 
         await self.topup_repo.add_topup(subscription_id=sub.id, gb=gb)
+        await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
         logger.info(
             "[biz][subscription] add_traffic_completed user_id=%s subscription_id=%s gb=%s",
             user_id,

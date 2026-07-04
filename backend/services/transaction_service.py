@@ -75,3 +75,41 @@ class TransactionService:
 
         candidates.sort(key=_sort_key, reverse=True)
         return candidates[0] if candidates else None
+
+    async def list_recent_unpaid(
+        self,
+        user_id: int,
+        *,
+        limit: int = 3,
+        payment_systems: set[str] | None = None,
+    ) -> list[Transaction]:
+        txs = await self.tx_repo.list_by_user_id(user_id)
+
+        normalized_systems = None
+        if payment_systems:
+            normalized_systems = {
+                str(payment_system).lower().strip()
+                for payment_system in payment_systems
+                if str(payment_system or "").strip()
+            }
+
+        candidates = [
+            tx
+            for tx in txs
+            if (not tx.paid)
+            and (
+                normalized_systems is None
+                or str(tx.payment_system).lower().strip() in normalized_systems
+            )
+        ]
+
+        def _sort_key(tx: Transaction) -> float:
+            dt = tx.created_at
+            if dt is None:
+                return 0.0
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.timestamp()
+
+        candidates.sort(key=_sort_key, reverse=True)
+        return candidates[: max(1, int(limit or 1))]

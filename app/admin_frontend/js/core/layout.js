@@ -1,7 +1,10 @@
-﻿function ensureAuthOrRedirect() {
-  if (!getToken()) {
+async function ensureAuthOrRedirect() {
+  const ok = await hasAdminSession();
+  if (!ok) {
     window.location.replace("/admin/login");
+    return false;
   }
+  return true;
 }
 
 function statusBadge(status) {
@@ -155,12 +158,12 @@ const ADMIN_MENU = [
 
 function menuIcon(kind) {
   const map = {
-    overview: "<path d='M4.5 6.5h6v6h-6z'/><path d='M13.5 6.5h6v3h-6z'/><path d='M13.5 12.5h6v6h-6z'/><path d='M4.5 14.5h6v4h-6z'/>",
-    users: "<circle cx='12' cy='8.5' r='2.4'/><path d='M6 18c1.1-2.9 3.6-4.6 6-4.6s4.9 1.7 6 4.6'/><path d='M18.5 11.5c1.1 0 2 .8 2 1.8 0 1-.9 1.8-2 1.8'/>",
-    subs: "<path d='M5.5 7.5h13v9h-13z'/><path d='M8 5.5v4M16 5.5v4M8 12h8M8 15h5'/>",
-    plans: "<path d='M5.5 16.5h13'/><path d='M8 15V9.5M12 15V6.5M16 15v-3.5'/><path d='M6.5 8.5h2M10.5 7h2M14.5 10h2'/>",
-    tx: "<path d='M6.5 8.5h11'/><path d='M6.5 8.5l2-2M6.5 8.5l2 2'/><path d='M17.5 15.5h-11'/><path d='M17.5 15.5l-2-2M17.5 15.5l-2 2'/>",
-    wd: "<path d='M12 5.5v9'/><path d='M8.5 11.5L12 15l3.5-3.5'/><path d='M6.5 19.5h11'/>",
+    overview: "<path d='M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10'/><path d='M6 8h.01'/><path d='M9 8h.01'/>",
+    users: "<path d='M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0'/><path d='M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2'/>",
+    subs: "<path d='M12 21h-6a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4.5'/><path d='M16 3v4'/><path d='M8 3v4'/><path d='M4 11h16'/><path d='M17 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0'/><path d='M22 22a2 2 0 0 0 -2 -2h-2a2 2 0 0 0 -2 2'/>",
+    plans: "<path d='M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0'/><path d='M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0'/><path d='M3 6l0 13'/><path d='M12 6l0 13'/><path d='M21 6l0 13'/>",
+    tx: "<path d='M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3'/><path d='M16 3v4'/><path d='M8 3v4'/><path d='M4 11h12.5'/><path d='M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5'/><path d='M19 21v1m0 -8v1'/>",
+    wd: "<path d='M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5'/><path d='M3 10h18'/><path d='M16 19h6'/><path d='M19 16l3 3l-3 3'/><path d='M7.005 15h.005'/><path d='M11 15h2'/>",
     ref: "<circle cx='7.5' cy='8.5' r='2'/><circle cx='16.5' cy='8.5' r='2'/><circle cx='12' cy='15.5' r='2.2'/><path d='M9 9.5l2 4M15 9.5l-2 4'/>",
     partner: "<path d='M9 7h6a3 3 0 0 1 0 6H9a3 3 0 0 1 0-6Z'/><path d='M7 12h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6Z'/>",
     promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
@@ -189,45 +192,57 @@ function renderQuickNav() {
 
 function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   document.body.innerHTML = `
-    <div class="app-bg"></div>
     <button id="mobile_nav_overlay" class="mobile-nav-overlay" type="button" aria-label="Закрыть меню"></button>
 
     <div class="app">
       <aside class="sidebar">
         <div class="sidebar-head">
-          <img class="logo-image" src="/miniapp/assets/lunet-logo-sign.png?v=1" alt="Lunet" />
-          <div class="sidebar-subtitle">Панель управления</div>
+          <div class="sidebar-kicker">Internal Tool</div>
+          <div class="sidebar-title">Админ-панель</div>
         </div>
 
         <nav class="menu">${renderMenu(activeKey)}</nav>
 
         <div class="sidebar-footer">
-          <button id="logout" class="btn-danger">Выход</button>
+          <button id="logout" class="btn-logout">Выход</button>
         </div>
       </aside>
 
       <main class="main">
         <header class="topbar">
-          <div>
-            <div class="crumbs">Главная / Панель Lunet</div>
-            <div class="page-title">${title}</div>
-            <div class="page-sub">${subtitle}</div>
-          </div>
-          <div class="topbar-right">
+          <div class="topbar-left">
             <button id="mobile_nav_toggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню">
               <span></span><span></span><span></span>
             </button>
-            <select id="quick_nav" class="top-select">${renderQuickNav()}</select>
+            <div class="topbar-title">Админ-панель</div>
           </div>
         </header>
 
-        <section id="content">${contentHtml}</section>
+        <section class="page-shell">
+          <div class="page-header-card">
+            <div>
+              <div class="crumbs">Главная / ${title}</div>
+              <div class="page-title">${title}</div>
+              <div class="page-sub">${subtitle}</div>
+            </div>
+            <select id="quick_nav" class="top-select">${renderQuickNav()}</select>
+          </div>
+
+          <section id="content">${contentHtml}</section>
+
+          <footer class="page-footer">Админ-панель · Все права защищены</footer>
+        </section>
       </main>
     </div>
   `;
 
-  q("logout").addEventListener("click", () => {
-    clearToken();
+  q("logout").addEventListener("click", async () => {
+    try {
+      await fetch(`${API_BASE}/api/admin/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {}
     window.location.replace("/admin/login");
   });
 
@@ -271,15 +286,7 @@ async function renderSessionInfo() {
 }
 
 function renderPager(meta, prevBtn, nextBtn, label) {
-  label.textContent = `Страница ${meta.page}/${meta.pages}, всего ${meta.total}`;
+  label.textContent = `Страница ${meta.page} из ${meta.pages}`;
   prevBtn.disabled = meta.page <= 1;
   nextBtn.disabled = meta.page >= meta.pages;
 }
-
-
-
-
-
-
-
-

@@ -76,6 +76,18 @@ class UserRepository:
             .where(User.id == user_id)
             .values(email=email)
         )
+
+    async def set_traffic_limit_bytes(
+        self,
+        *,
+        user_id: int,
+        traffic_limit_bytes: int,
+    ) -> None:
+        await self.session.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(traffic_limit_bytes=max(0, int(traffic_limit_bytes or 0)))
+        )
     
     async def add_balance(
             self,

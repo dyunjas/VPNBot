@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import asyncio
 from datetime import datetime, timezone
@@ -176,6 +176,14 @@ class RemnaWaveService:
         except Exception:
             return None
 
+    @staticmethod
+    def _status_is_active(subscription) -> bool:
+        if not subscription:
+            return False
+        status = getattr(subscription, "status", None)
+        raw = getattr(status, "value", status)
+        return str(raw or "").lower() == "active"
+
     def _extract_remote_user_uuid(self, data: Any) -> str | None:
         if not isinstance(data, dict):
             return None
@@ -258,36 +266,60 @@ class RemnaWaveService:
             dt = now + timedelta(days=30)
         return self._iso_or_none(dt) or (now + timedelta(days=30)).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
-    async def _build_payload(self, user, subscription) -> dict[str, Any]:
+    async def _calculate_traffic_limit_bytes(self, *, user, subscription) -> int:
+        stored = max(0, int(getattr(user, "traffic_limit_bytes", 0) or 0))
+        if not subscription:
+            return stored
+
         topup_gb = Decimal(0)
-        if subscription:
-            try:
-                topup_gb = await self.topup_repo.sum_gb(subscription_id=subscription.id)
-            except Exception:
-                topup_gb = Decimal(0)
+        try:
+            topup_gb = await self.topup_repo.sum_gb(subscription_id=subscription.id)
+        except Exception:
+            topup_gb = Decimal(0)
 
         plan_gb = Decimal(0)
-        expires_at = None
-        if subscription:
-            plan = None
-            try:
-                plan_id = getattr(subscription, "plan_id", None)
-                if plan_id is not None:
-                    plan = await self.sub_repo.get_plan_by_id(int(plan_id))
-            except Exception:
-                plan = None
-            plan_gb = Decimal(getattr(plan, "gb_limit", 0) or 0)
-            expires_at = self._iso_or_none(subscription.current_period_end)
+        try:
+            plan_id = getattr(subscription, "plan_id", None)
+            if plan_id is not None:
+                plan = await self.sub_repo.get_plan_by_id(int(plan_id))
+                plan_gb = Decimal(getattr(plan, "gb_limit", 0) or 0)
+        except Exception:
+            plan_gb = Decimal(0)
 
-        total_gb = max(Decimal(0), plan_gb + Decimal(topup_gb or 0))
-        traffic_limit_bytes = int(total_gb * Decimal(1024**3))
-        expire_at = self._iso_or_none(expires_at) if isinstance(expires_at, datetime) else expires_at
-        expire_at = self._normalize_expire_at(expire_at)
+        calculated = max(0, int((plan_gb + Decimal(topup_gb or 0)) * Decimal(1024**3)))
+        if calculated != stored:
+            await self.user_repo.set_traffic_limit_bytes(
+                user_id=user.id,
+                traffic_limit_bytes=calculated,
+            )
+            user.traffic_limit_bytes = calculated
+        return calculated
+
+    async def _desired_user_status(self, *, user, subscription) -> str:
+        if bool(getattr(user, "banned", False)):
+            return "DISABLED"
+        if subscription and self._status_is_active(subscription):
+            expires_at = getattr(subscription, "current_period_end", None)
+            if isinstance(expires_at, datetime):
+                if expires_at.tzinfo is None:
+                    expires_at = expires_at.replace(tzinfo=timezone.utc)
+                if expires_at > datetime.now(timezone.utc):
+                    return "ACTIVE"
+        return "DISABLED"
+
+    async def _build_payload(self, user, subscription) -> dict[str, Any]:
+        traffic_limit_bytes = await self._calculate_traffic_limit_bytes(
+            user=user,
+            subscription=subscription,
+        )
+        desired_status = await self._desired_user_status(user=user, subscription=subscription)
+        raw_expire_at = self._iso_or_none(getattr(subscription, "current_period_end", None)) if subscription else None
+        expire_at = self._normalize_expire_at(raw_expire_at) if desired_status == "ACTIVE" else None
 
         return {
             "username": self._build_username(user),
             "expireAt": expire_at,
-            "status": "ACTIVE",
+            "status": desired_status,
             "trafficLimitBytes": max(0, int(traffic_limit_bytes)),
             "trafficLimitStrategy": "NO_RESET",
             "hwidDeviceLimit": 3,
@@ -296,6 +328,24 @@ class RemnaWaveService:
             "description": f"Lunet user_id={getattr(user, 'id', None)}",
             "activeInternalSquads": self.active_internal_squads,
         }
+
+    async def _build_patch_payload(self, *, user, subscription, remote_uuid: str | None = None) -> dict[str, Any]:
+        payload_source = await self._build_payload(user, subscription)
+        payload: dict[str, Any] = {
+            "uuid": remote_uuid or None,
+            "username": None if remote_uuid else payload_source["username"],
+            "status": payload_source["status"],
+            "trafficLimitBytes": payload_source["trafficLimitBytes"],
+            "trafficLimitStrategy": payload_source["trafficLimitStrategy"],
+            "hwidDeviceLimit": payload_source["hwidDeviceLimit"],
+            "telegramId": payload_source.get("telegramId"),
+            "email": payload_source.get("email"),
+            "description": payload_source.get("description"),
+            "activeInternalSquads": payload_source.get("activeInternalSquads"),
+        }
+        if payload_source.get("status") == "ACTIVE" and payload_source.get("expireAt"):
+            payload["expireAt"] = payload_source["expireAt"]
+        return self._compact_payload(payload)
 
     async def _request_json(self, http: aiohttp.ClientSession, method: str, url: str, **kwargs) -> tuple[int, Any]:
         attempts = 2
@@ -406,6 +456,8 @@ class RemnaWaveService:
         timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
         async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
             create_payload = self._compact_payload(payload)
+            if "expireAt" not in create_payload:
+                create_payload["expireAt"] = self._normalize_expire_at(None)
             status, data = await self._request_json(
                 http,
                 "POST",
@@ -422,24 +474,21 @@ class RemnaWaveService:
 
             existing = await self._find_remote_user(http, user)
             if existing and existing.get("uuid"):
-                patch_payload = {
-                    "uuid": existing["uuid"],
-                    "status": payload["status"],
-                    "trafficLimitBytes": payload["trafficLimitBytes"],
-                    "expireAt": payload["expireAt"],
-                    "hwidDeviceLimit": payload["hwidDeviceLimit"],
-                }
-                if payload.get("activeInternalSquads"):
-                    patch_payload["activeInternalSquads"] = payload["activeInternalSquads"]
-                patch_payload = self._compact_payload(patch_payload)
+                patch_payload = await self._build_patch_payload(
+                    user=user,
+                    subscription=subscription,
+                    remote_uuid=existing["uuid"],
+                )
                 status, data = await self._request_json(http, "PATCH", f"{self.base_url}/api/users", json=patch_payload)
                 if status >= 400:
                     minimal_patch_payload = {
                         "uuid": existing["uuid"],
                         "status": payload["status"],
                         "trafficLimitBytes": payload["trafficLimitBytes"],
-                        "expireAt": payload["expireAt"],
+                        "trafficLimitStrategy": payload["trafficLimitStrategy"],
                     }
+                    if payload.get("status") == "ACTIVE" and payload.get("expireAt"):
+                        minimal_patch_payload["expireAt"] = payload["expireAt"]
                     status2, data2 = await self._request_json(
                         http,
                         "PATCH",
@@ -825,6 +874,50 @@ class RemnaWaveService:
             )
         return True
 
+    async def sync_local_user(self, *, user, subscription=None) -> bool:
+        if not self.enabled:
+            raise RuntimeError("remnawave is not configured")
+
+        remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+            user=user,
+            subscription=subscription,
+        )
+        await self._persist_binding(
+            user_id=user.id,
+            remote_id=remote_id,
+            remote_uuid=remote_uuid,
+            sub_url=_sub_url,
+        )
+        return True
+
+    async def sync_all_local_users(self) -> dict[str, int]:
+        users = await self.user_repo.get_all_users()
+        now = datetime.now(timezone.utc)
+        synced = 0
+        failed = 0
+
+        for user in users:
+            try:
+                subscription = await self.sub_repo.get_active_with_plan(user.id, now=now)
+                await self.sync_local_user(user=user, subscription=subscription)
+                await self.session.commit()
+                synced += 1
+            except Exception as e:
+                await self.session.rollback()
+                failed += 1
+                logger.exception(
+                    "[remnawave] auto_sync_user_failed user_id=%s tg_id=%s: %s",
+                    getattr(user, "id", None),
+                    getattr(user, "tg_id", None),
+                    e,
+                )
+
+        return {
+            "total": len(users),
+            "synced": synced,
+            "failed": failed,
+        }
+
     async def sync_user_traffic_limit(self, *, user, subscription) -> bool:
         if not self.enabled:
             raise RuntimeError("remnawave is not configured")
@@ -880,7 +973,7 @@ class RemnaWaveService:
         remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=subscription)
 
         is_expired_target = str(status).upper() == "EXPIRED"
-        near_expire_at = self._iso_or_none(datetime.now(timezone.utc) + timedelta(seconds=30))
+        near_expire_at = self._iso_or_none(datetime.now(timezone.utc) + timedelta(seconds=40))
         payload: dict[str, Any] = {
             "trafficLimitBytes": int(payload_source["trafficLimitBytes"]),
             "trafficLimitStrategy": "NO_RESET",

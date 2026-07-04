@@ -88,103 +88,106 @@ async def expire_checker(bot):
         remnawave_service = RemnaWaveService(session)
 
         try:
-            expired_subs = await sub_service.list_active_expired(now=now)
-        except Exception as e:
-            logger.error("Expire checker: failed to load expired subs: %s", e)
-            expired_subs = []
-
-        for sub in expired_subs:
             try:
-                await sub_service.mark_expired(subscription_id=sub.id)
+                expired_subs = await sub_service.list_active_expired(now=now)
             except Exception as e:
-                logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
-                continue
+                logger.error("Expire checker: failed to load expired subs: %s", e)
+                expired_subs = []
 
-            try:
-                user = await user_service.get_by_id(sub.user_id)
-            except UserNotFound:
-                continue
-
-            try:
-                if remnawave_service.enabled:
-                    await remnawave_service.sync_user_state(
-                        user=user,
-                        subscription=sub,
-                        status="EXPIRED",
-                    )
-            except Exception as e:
-                logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
-
-            try:
-                await _notify_subscription_expired(bot, user.tg_id)
-            except Exception as e:
-                logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
-
-        try:
-            soon_subs = await sub_service.list_active_ending_between(
-                start=now,
-                end=warning_time
-            )
-        except Exception as e:
-            logger.error("failed to load soon subs: %s", e)
-            soon_subs = []
-
-        for sub in soon_subs:
-            try:
-                user = await user_service.get_by_id(sub.user_id)
-            except UserNotFound:
-                continue
-
-            if bool(getattr(user, "banned", False)):
-                logger.info("[scheduler][expire] skip banned user_id=%s sub_id=%s", user.id, sub.id)
-                continue
-
-            # auto renew
-            if sub.auto_renew:
+            for sub in expired_subs:
                 try:
-                    renewed = await billing_service.buy_subscription(
-                        user_id=sub.user_id,
-                        plan_id=sub.plan_id,
-                        auto_renew=True,
-                    )
-
-                    end = renewed.current_period_end
-                    if end and end.tzinfo is None:
-                        end = end.replace(tzinfo=timezone.utc)
-
-                    if end:
-                        await _notify_subscription_renewed(bot, user.tg_id, end)
-
-                    continue
-
-                except (InsufficientBalance, TooEarlyToRenew):
-                    pass
+                    await sub_service.mark_expired(subscription_id=sub.id)
                 except Exception as e:
-                    logger.error(
-                        "auto-renew failed user_id=%s sub_id=%s: %s",
-                        sub.user_id,
-                        sub.id,
-                        e,
-                    )
-
-            # notify soon
-            try:
-                period_end = sub.current_period_end
-                if not period_end:
+                    logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
                     continue
 
-                if period_end.tzinfo is None:
-                    period_end = period_end.replace(tzinfo=timezone.utc)
-                else:
-                    period_end = period_end.astimezone(timezone.utc)
+                try:
+                    user = await user_service.get_by_id(sub.user_id)
+                except UserNotFound:
+                    continue
 
-                remain = period_end - now
-                hours = max(1, int(remain.total_seconds() // 3600))
+                try:
+                    if remnawave_service.enabled:
+                        await remnawave_service.sync_user_state(
+                            user=user,
+                            subscription=sub,
+                            status="EXPIRED",
+                        )
+                except Exception as e:
+                    logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
 
-                await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+                try:
+                    await _notify_subscription_expired(bot, user.tg_id)
+                except Exception as e:
+                    logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
 
+            try:
+                soon_subs = await sub_service.list_active_ending_between(
+                    start=now,
+                    end=warning_time
+                )
             except Exception as e:
-                logger.error("notify soon failed tg_id=%s: %s", user.tg_id, e)
+                logger.error("failed to load soon subs: %s", e)
+                soon_subs = []
+
+            for sub in soon_subs:
+                try:
+                    user = await user_service.get_by_id(sub.user_id)
+                except UserNotFound:
+                    continue
+
+                if bool(getattr(user, "banned", False)):
+                    logger.info("[scheduler][expire] skip banned user_id=%s sub_id=%s", user.id, sub.id)
+                    continue
+
+                # auto renew
+                if sub.auto_renew:
+                    try:
+                        renewed = await billing_service.buy_subscription(
+                            user_id=sub.user_id,
+                            plan_id=sub.plan_id,
+                            auto_renew=True,
+                        )
+
+                        end = renewed.current_period_end
+                        if end and end.tzinfo is None:
+                            end = end.replace(tzinfo=timezone.utc)
+
+                        if end:
+                            await _notify_subscription_renewed(bot, user.tg_id, end)
+
+                        continue
+
+                    except (InsufficientBalance, TooEarlyToRenew):
+                        pass
+                    except Exception as e:
+                        logger.error(
+                            "auto-renew failed user_id=%s sub_id=%s: %s",
+                            sub.user_id,
+                            sub.id,
+                            e,
+                        )
+
+                # notify soon
+                try:
+                    period_end = sub.current_period_end
+                    if not period_end:
+                        continue
+
+                    if period_end.tzinfo is None:
+                        period_end = period_end.replace(tzinfo=timezone.utc)
+                    else:
+                        period_end = period_end.astimezone(timezone.utc)
+
+                    remain = period_end - now
+                    hours = max(1, int(remain.total_seconds() // 3600))
+
+                    await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+
+                except Exception as e:
+                    logger.error("notify soon failed tg_id=%s: %s", user.tg_id, e)
+        finally:
+            await billing_service.close_clients()
 
 
 async def expire_checker_loop(bot, interval_sec: int = 300):

@@ -6,13 +6,15 @@ from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 from aiogram.types.input_file import BufferedInputFile
-from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Cookie, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
 from sqlalchemy import String, cast, delete, desc, func, literal, or_, select
 
 from backend.core.config import settings
 from backend.database.models import (
+    BroadcastHistory,
+    BroadcastJobStatus,
     PartnerAttribution,
     PartnerLink,
     Promocode,
@@ -37,7 +39,7 @@ from backend.services.user_service import UserService
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.partner_service import PartnerService
 
-router = APIRouter(prefix="/admin-api", tags=["admin-web"])
+router = APIRouter(prefix="/api/admin", tags=["admin-web"])
 
 SORT_FIELDS = {
     "id": User.id,
@@ -136,14 +138,11 @@ def _decode_admin_access_token(token: str) -> dict:
 async def require_admin_auth(
     authorization: str | None = Header(default=None, alias="Authorization"),
     x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
+    admin_access_token: str | None = Cookie(default=None, alias="admin_access_token"),
 ) -> dict:
-    token = _extract_token(authorization, x_admin_token)
+    token = _extract_token(authorization, x_admin_token) or (admin_access_token or "").strip() or None
     if not token:
         raise HTTPException(status_code=401, detail="Unauthorized")
-
-    compat_token = (settings.ADMIN_WEB_TOKEN or "").strip()
-    if compat_token and token == compat_token:
-        return {"sub": "legacy-token", "scope": "admin:web"}
 
     payload = _decode_admin_access_token(token)
     if payload.get("scope") != "admin:web":
@@ -224,6 +223,7 @@ __all__ = [
     "BufferedInputFile",
     "APIRouter",
     "Depends",
+    "Cookie",
     "File",
     "Form",
     "Header",
@@ -243,6 +243,8 @@ __all__ = [
     "or_",
     "select",
     "settings",
+    "BroadcastHistory",
+    "BroadcastJobStatus",
     "PartnerAttribution",
     "PartnerLink",
     "Promocode",

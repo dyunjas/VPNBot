@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Кабинет | Lunet</title>
+  <meta name="description" content="Кабинет Lunet для управления подпиской, устройствами, платежами и профилем." />
+  <link rel="icon" type="image/png" href="/miniapp/assets/lunet-flavicon.png" />
+  __SURFACE_STYLES__
+  __HEAD_SCRIPTS__
+</head>
+<body>
+  <div id="outside-stub" class="outside" style="display:none;">
+    <div class="outside__card">
+      <div class="outside__title">РњРёРЅРё РїСЂРёР»РѕР¶РµРЅРёРµ РґРѕСЃС‚СѓРїРЅРѕ С‚РѕР»СЊРєРѕ РІ Telegram</div>
+    </div>
+  </div>
+
+  <div id="banned-stub" class="outside" style="display:none;">
+    <div class="outside__card">
+      <div class="outside__title">Р”РѕСЃС‚СѓРї РѕРіСЂР°РЅРёС‡РµРЅ</div>
+      <p>Р•СЃР»Рё СЌС‚Рѕ РІС‹РіР»СЏРґРёС‚ РєР°Рє РѕС€РёР±РєР°, РЅР°РїРёС€РёС‚Рµ РІ РїРѕРґРґРµСЂР¶РєСѓ.</p>
+    </div>
+  </div>
+
+  <div id="unavailable-stub" class="outside" style="display:none;">
+    <div class="outside__card outside__card--server">
+      <div class="outside__title">РЎРµСЂРІРµСЂ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ</div>
+      <p>Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° СЃРµСЂРІРµСЂР°. РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р· С‡СѓС‚СЊ РїРѕР·Р¶Рµ.</p>
+    </div>
+  </div>
+
+  <div id="app-root" class="app">
+    <div id="alerts" class="alerts" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="cabinet-topbar">
+      <div class="cabinet-topbar__brand">
+        <img class="cabinet-topbar__brand-logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
+      </div>
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="РћС‚РєСЂС‹С‚СЊ РјРµРЅСЋ">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <button class="mobile-menu-backdrop" id="mobile-menu-backdrop" type="button" aria-label="Р—Р°РєСЂС‹С‚СЊ РјРµРЅСЋ"></button>
+
+    __APP_SHELL__
+  </div>
+  __APP_BOOTSTRAP__
+</body>
+</html>

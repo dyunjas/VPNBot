@@ -498,3 +498,424 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-06-28 21:59:13] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
 [2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=70.0 payment_method=2
 [2026-06-28 21:59:25] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=71e9feaf-45a3-48cd-80e3-229aaadd26ea amount=70.0
+[2026-07-02 22:21:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=90 plan_id=1 auto_renew=True
+[2026-07-02 22:21:57] [INFO] root: [biz][billing] charge_balance_requested user_id=90 amount=95
+[2026-07-02 22:21:57] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=90 balance=0 required=95
+[2026-07-02 22:43:00] [INFO] root: [biz][billing] buy_traffic_requested user_id=92 gb=2
+[2026-07-02 22:43:00] [INFO] root: [biz][billing] charge_balance_requested user_id=92 amount=4
+[2026-07-02 22:43:00] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=92 balance=0 required=4
+[2026-07-02 22:46:47] [INFO] root: [biz][billing] buy_traffic_requested user_id=92 gb=2
+[2026-07-02 22:46:47] [INFO] root: [biz][billing] charge_balance_requested user_id=92 amount=4
+[2026-07-02 22:46:47] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=92 balance=0 required=4
+[2026-07-02 22:47:00] [INFO] root: [PALLY] Create payment tg_id=8854825267 amount=5
+[2026-07-02 22:47:00] [INFO] root: [biz][billing] pally_create_requested user_id=92 amount=5.0 ttl=600
+[2026-07-02 22:47:03] [ERROR] root: [biz][billing] pally_create_http_403 user_id=92 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.6.136'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-07-02 22:47:03] [ERROR] root: [biz][billing] pally_create_api_error user_id=92 status=403 error=HTTP 403 message=api:error.ip_access_denied response=None payload={'success': False, 'message': 'api:error.ip_access_denied', 'errors': {'ip': '188.186.6.136'}, 'http_status': 403, 'error': 'HTTP 403'}
+[2026-07-02 22:47:03] [ERROR] root: [PALLY] Payment creation failed for tg_id=8854825267: PALLY API error: HTTP 403
+[2026-07-02 22:47:10] [INFO] root: [PLATEGA] Create payment tg_id=8854825267 amount=5 method=СБП
+[2026-07-02 22:47:10] [INFO] root: [biz][billing] platega_create_requested user_id=92 amount=5.0 payment_method=2
+[2026-07-02 22:47:10] [INFO] root: [biz][billing] platega_created user_id=92 provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb amount=5.0
+[2026-07-02 22:47:13] [INFO] root: [biz][billing] platega_confirm_requested provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb
+[2026-07-02 22:47:13] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb status=PENDING
+[2026-07-02 22:47:13] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:47:21] [INFO] root: [biz][billing] platega_confirm_requested provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb
+[2026-07-02 22:47:21] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb status=PENDING
+[2026-07-02 22:47:21] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:47:52] [INFO] root: [biz][billing] platega_confirm_requested provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb
+[2026-07-02 22:47:52] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=9ffce27a-49af-4756-8e30-21b62d50aedb status=PENDING
+[2026-07-02 22:47:52] [ERROR] root: [PLATEGA] Unexpected error confirming payment 9ffce27a-49af-4756-8e30-21b62d50aedb: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:51:52] [INFO] root: [biz][billing] buy_traffic_requested user_id=92 gb=2
+[2026-07-02 22:51:52] [INFO] root: [biz][billing] charge_balance_requested user_id=92 amount=4
+[2026-07-02 22:51:52] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=92 balance=0 required=4
+[2026-07-02 22:52:04] [INFO] root: [PLATEGA] Create payment tg_id=8854825267 amount=5 method=СБП
+[2026-07-02 22:52:04] [INFO] root: [biz][billing] platega_create_requested user_id=92 amount=5.0 payment_method=2
+[2026-07-02 22:52:04] [INFO] root: [biz][billing] platega_created user_id=92 provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac amount=5.0
+[2026-07-02 22:52:05] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 22:52:05] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 22:52:05] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:27] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 22:52:29] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 22:52:29] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 22:52:29] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:29] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 22:52:29] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 22:52:31] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 22:52:31] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 22:52:31] [ERROR] root: [PLATEGA] Unexpected error confirming payment d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac: Платеж еще не подтвержден
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 109, in check_platega_payment_clb
+    result = await bot_api.confirm_platega_payment(tg_id=callback.from_user.id, provider_transaction_id=transaction_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 240, in confirm_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 68, in _request_json
+    raise self._map_error(resp.status, payload)
+backend.services.exceptions.PurchaseInProgress: Платеж еще не подтвержден
+[2026-07-02 23:03:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 23:04:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 23:04:08] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 23:04:08] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac status=PENDING
+[2026-07-02 23:05:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac
+[2026-07-02 23:05:01] [INFO] root: [biz][billing] platega_confirmed provider_id=d9fc8da6-60f9-4bd9-bc4a-c9f30e0366ac user_id=92 amount=5
+[2026-07-02 23:05:35] [INFO] root: [PLATEGA] Create payment tg_id=8854825267 amount=5 method=СБП
+[2026-07-02 23:05:35] [INFO] root: [biz][billing] platega_create_requested user_id=92 amount=5.0 payment_method=2
+[2026-07-02 23:05:35] [INFO] root: [biz][billing] platega_created user_id=92 provider_id=d85efaf1-de3f-4453-88a6-66e726bc14ac amount=5.0
+[2026-07-02 23:05:50] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d85efaf1-de3f-4453-88a6-66e726bc14ac
+[2026-07-02 23:05:50] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d85efaf1-de3f-4453-88a6-66e726bc14ac status=PENDING
+[2026-07-02 23:05:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d85efaf1-de3f-4453-88a6-66e726bc14ac
+[2026-07-02 23:05:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=d85efaf1-de3f-4453-88a6-66e726bc14ac status=PENDING
+[2026-07-03 00:57:26] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-03 00:57:26] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=95
+[2026-07-03 00:57:26] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=95
+[2026-07-03 00:57:27] [INFO] root: [biz][billing] buy_subscription_completed user_id=36 subscription_id=49 plan_id=1 charged=95
+[2026-07-03 01:24:37] [INFO] root: [biz][billing] platega_confirm_requested provider_id=71e9feaf-45a3-48cd-80e3-229aaadd26ea
+[2026-07-03 01:24:38] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=71e9feaf-45a3-48cd-80e3-229aaadd26ea status=CANCELED
+[2026-07-03 12:50:39] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-07-03 12:50:40] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e amount=50.0
+[2026-07-03 12:50:50] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:50] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:52] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:52] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:53] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:53] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:53] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:54] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:54] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:54] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:54] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:54] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:54] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:54] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:54] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:54] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:54] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:55] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:55] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:56] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:56] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:56] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:50:56] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:50:56] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 12:56:58] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 12:56:58] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=PENDING
+[2026-07-03 13:11:15] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=4 auto_renew=True
+[2026-07-03 13:11:15] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=4 seconds_left=2734748
+[2026-07-03 13:11:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=9 auto_renew=True
+[2026-07-03 13:11:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=9 seconds_left=2734746
+[2026-07-03 14:29:37] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-03 14:29:37] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2730047
+[2026-07-03 14:29:42] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-03 14:29:42] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2730041
+[2026-07-03 21:46:50] [INFO] root: [biz][billing] platega_confirm_requested provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e
+[2026-07-03 21:46:50] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=42bc847d-0d55-4195-99e3-4b487a1a027e status=CANCELED
+[2026-07-03 22:15:42] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=СБП
+[2026-07-03 22:15:42] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=5.0 payment_method=2
+[2026-07-03 22:15:43] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=9e41073f-d302-4505-8ab6-4c14561afd03 amount=5.0
+[2026-07-03 22:15:45] [INFO] root: [biz][billing] platega_confirm_requested provider_id=9e41073f-d302-4505-8ab6-4c14561afd03
+[2026-07-03 22:15:45] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=9e41073f-d302-4505-8ab6-4c14561afd03 status=PENDING
+[2026-07-03 22:17:09] [INFO] root: [biz][billing] platega_confirm_requested provider_id=9e41073f-d302-4505-8ab6-4c14561afd03
+[2026-07-03 22:17:09] [INFO] root: [biz][billing] platega_confirmed provider_id=9e41073f-d302-4505-8ab6-4c14561afd03 user_id=36 amount=5
+[2026-07-03 23:26:14] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=50 method=Банковская карта
+[2026-07-03 23:26:14] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=11
+[2026-07-03 23:26:15] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 amount=50.0
+[2026-07-03 23:26:16] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-03 23:26:17] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=PENDING
+[2026-07-03 23:26:31] [INFO] root: [biz][billing] buy_traffic_requested user_id=36 gb=100
+[2026-07-03 23:26:31] [INFO] root: [biz][billing] charge_balance_requested user_id=36 amount=200
+[2026-07-03 23:26:31] [INFO] root: [biz][billing] charge_balance_completed user_id=36 amount=200
+[2026-07-03 23:26:31] [INFO] root: [biz][billing] buy_traffic_completed user_id=36 subscription_id=49 gb=100 charged=200
+[2026-07-04 00:37:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-04 00:37:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=96 plan_id=1 seconds_left=7793966
+[2026-07-04 00:40:19] [INFO] root: [PLATEGA] Create payment tg_id=7269510366 amount=10 method=СБП
+[2026-07-04 00:40:19] [INFO] root: [biz][billing] platega_create_requested user_id=97 amount=10.0 payment_method=2
+[2026-07-04 00:40:19] [INFO] root: [biz][billing] platega_created user_id=97 provider_id=d706c604-804c-43e8-a765-891d1966cc55 amount=10.0
+[2026-07-04 00:40:52] [INFO] root: [biz][billing] platega_confirm_requested provider_id=d706c604-804c-43e8-a765-891d1966cc55
+[2026-07-04 00:40:52] [INFO] root: [biz][billing] platega_confirmed provider_id=d706c604-804c-43e8-a765-891d1966cc55 user_id=97 amount=10
+[2026-07-04 01:28:03] [INFO] root: [biz][billing] buy_subscription_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-04 01:28:03] [INFO] root: [biz][billing] charge_balance_requested user_id=96 amount=95
+[2026-07-04 01:28:03] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=96 balance=0 required=95
+[2026-07-04 01:28:23] [INFO] root: [biz][billing] buy_subscription_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-04 01:28:23] [INFO] root: [biz][billing] charge_balance_requested user_id=96 amount=95
+[2026-07-04 01:28:23] [INFO] root: [biz][billing] charge_balance_completed user_id=96 amount=95
+[2026-07-04 01:28:24] [INFO] root: [biz][billing] buy_subscription_completed user_id=96 subscription_id=77 plan_id=1 charged=95
+[2026-07-04 15:35:41] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=50 method=РЎР‘Рџ 2
+[2026-07-04 15:35:41] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=50.0 payment_method=2
+[2026-07-04 15:35:42] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f amount=50.0
+[2026-07-04 15:37:27] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=РЎР‘Рџ 2
+[2026-07-04 15:37:27] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=5.0 payment_method=2
+[2026-07-04 15:37:27] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=7621f400-32d4-4034-8964-ad4830936129 amount=5.0
+[2026-07-04 15:42:03] [INFO] root: [biz][billing] platega_callback_received provider_id=7621f400-32d4-4034-8964-ad4830936129 status=CONFIRMED
+[2026-07-04 15:42:03] [INFO] root: [biz][billing] platega_callback_confirmed provider_id=7621f400-32d4-4034-8964-ad4830936129 user_id=36 amount=5
+[2026-07-04 15:44:06] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=СБП 2
+[2026-07-04 15:44:06] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=5.0 payment_method=2
+[2026-07-04 15:44:17] [ERROR] root: [PLATEGA] Payment creation failed for tg_id=1237947229: Cannot connect to host app.platega.io:443 ssl:default [getaddrinfo failed]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 56, in pay_platega_clb
+    payment = await bot_api.create_platega_payment(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 245, in create_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 73, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Cannot connect to host app.platega.io:443 ssl:default [getaddrinfo failed]
+[2026-07-04 15:44:25] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=СБП 2
+[2026-07-04 15:44:25] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=5.0 payment_method=2
+[2026-07-04 15:44:36] [ERROR] root: [PLATEGA] Payment creation failed for tg_id=1237947229: Cannot connect to host app.platega.io:443 ssl:default [getaddrinfo failed]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\platega_payment.py", line 56, in pay_platega_clb
+    payment = await bot_api.create_platega_payment(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 245, in create_platega_payment
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 73, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: Cannot connect to host app.platega.io:443 ssl:default [getaddrinfo failed]
+[2026-07-04 15:44:43] [INFO] root: [CRYPTO] Create invoice tg_id=1237947229 amount=5 RUB
+[2026-07-04 15:44:43] [ERROR] root: [CRYPTO] Payment creation failed for tg_id=1237947229: [{'type': 'missing', 'loc': ['body', 'amount'], 'msg': 'Field required', 'input': {'amount_rub': 5, 'asset': 'USDT', 'description': 'Пополнение баланса на 5 RUB', 'expires_in': 900}}]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\payments\cryptobot_payment.py", line 42, in pay_crypto_clb
+    invoice = await bot_api.create_crypto_invoice(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 265, in create_crypto_invoice
+    return await self._request_json(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 73, in _request_json
+    raise self._map_error(resp.status, payload)
+RuntimeError: [{'type': 'missing', 'loc': ['body', 'amount'], 'msg': 'Field required', 'input': {'amount_rub': 5, 'asset': 'USDT', 'description': 'Пополнение баланса на 5 RUB', 'expires_in': 900}}]
+[2026-07-04 15:49:29] [INFO] root: [biz][billing] buy_subscription_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:49:29] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=97 plan_id=4 seconds_left=7739410
+[2026-07-04 15:49:32] [INFO] root: [biz][billing] buy_subscription_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:49:32] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=97 plan_id=4 seconds_left=7739407
+[2026-07-04 15:49:55] [INFO] root: [biz][billing] buy_subscription_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:49:55] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=97 plan_id=4 seconds_left=7739384
+[2026-07-04 15:50:50] [INFO] root: [biz][billing] buy_subscription_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:50:50] [INFO] root: [biz][billing] charge_balance_requested user_id=97 amount=80
+[2026-07-04 15:50:50] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=97 balance=10 required=80
+[2026-07-04 15:52:02] [INFO] root: [biz][billing] buy_subscription_requested user_id=97 plan_id=4 auto_renew=True
+[2026-07-04 15:52:02] [INFO] root: [biz][billing] charge_balance_requested user_id=97 amount=80
+[2026-07-04 15:52:02] [INFO] root: [biz][billing] charge_balance_completed user_id=97 amount=80
+[2026-07-04 15:52:03] [INFO] root: [biz][billing] buy_subscription_completed user_id=97 subscription_id=78 plan_id=4 charged=80
+[2026-07-04 16:00:25] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=10 method=СБП 2
+[2026-07-04 16:00:25] [INFO] root: [biz][billing] platega_create_requested user_id=36 amount=10.0 payment_method=2
+[2026-07-04 16:00:25] [INFO] root: [biz][billing] platega_created user_id=36 provider_id=c5733346-8aac-4559-8e9a-9382205f9771 amount=10.0
+[2026-07-04 16:00:26] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:00:27] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:00:41] [INFO] root: [CRYPTO] Create invoice tg_id=1237947229 amount=10 RUB
+[2026-07-04 16:00:41] [INFO] root: [biz][billing] crypto_create_requested user_id=36 amount_rub=10 asset=USDT
+[2026-07-04 16:00:41] [INFO] root: [biz][billing] crypto_created user_id=36 invoice_id=55779017 amount_rub=10 amount_crypto=0.13
+[2026-07-04 16:00:44] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55779017
+[2026-07-04 16:00:44] [WARNING] root: [biz][billing] crypto_not_paid invoice_id=55779017 status=None
+[2026-07-04 16:02:19] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55779017
+[2026-07-04 16:02:19] [WARNING] root: [biz][billing] crypto_not_paid invoice_id=55779017 status=None
+[2026-07-04 16:02:28] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55779017
+[2026-07-04 16:02:28] [WARNING] root: [biz][billing] crypto_not_paid invoice_id=55779017 status=None
+[2026-07-04 16:05:14] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55779017
+[2026-07-04 16:05:14] [INFO] root: [biz][billing] crypto_confirmed invoice_id=55779017 user_id=36 amount=10
+[2026-07-04 16:22:28] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:22:28] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:22:31] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:22:31] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:22:49] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:22:49] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:22:49] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:22:49] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:22:49] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:22:49] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:22:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:22:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:22:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:22:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:22:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:22:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:23:11] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:23:12] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:23:12] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:23:12] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:23:12] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:23:12] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:31:04] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:31:04] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=PENDING
+[2026-07-04 16:31:04] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:31:04] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:31:04] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:31:04] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:38:56] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:38:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:38:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:38:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:38:57] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:38:57] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:41:48] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:41:48] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:41:48] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:41:48] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:41:48] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:41:48] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:42:20] [INFO] root: [biz][billing] crypto_create_requested user_id=36 amount_rub=10 asset=USDT
+[2026-07-04 16:42:21] [INFO] root: [biz][billing] crypto_created user_id=36 invoice_id=55782082 amount_rub=10 amount_crypto=0.13
+[2026-07-04 16:42:48] [INFO] root: [biz][billing] crypto_create_requested user_id=36 amount_rub=10 asset=USDT
+[2026-07-04 16:42:48] [INFO] root: [biz][billing] crypto_created user_id=36 invoice_id=55782115 amount_rub=10 amount_crypto=0.13
+[2026-07-04 16:43:10] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55782115
+[2026-07-04 16:43:10] [INFO] root: [biz][billing] crypto_confirmed invoice_id=55782115 user_id=36 amount=10
+[2026-07-04 16:43:13] [INFO] root: [biz][billing] crypto_confirm_requested invoice_id=55782082
+[2026-07-04 16:43:14] [INFO] root: [biz][billing] crypto_confirmed invoice_id=55782082 user_id=36 amount=10
+[2026-07-04 16:43:23] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:43:24] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:43:24] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:43:24] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:43:24] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:43:24] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:43:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:43:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:43:25] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:43:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:43:25] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:43:25] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:43:25] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:43:26] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:43:26] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:43:26] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:43:26] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:43:26] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 16:53:04] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 16:53:05] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 16:53:05] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 16:53:05] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 16:53:05] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 16:53:05] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 17:01:58] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 17:01:58] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 17:01:58] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 17:01:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 17:01:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 17:01:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 17:01:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 17:01:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 17:01:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 17:01:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 17:01:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 17:01:59] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 17:01:59] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 17:02:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=c5733346-8aac-4559-8e9a-9382205f9771
+[2026-07-04 17:02:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 17:02:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 17:02:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 17:02:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 17:02:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-04 17:02:00] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=c5733346-8aac-4559-8e9a-9382205f9771 status=CANCELED
+[2026-07-04 17:02:00] [INFO] root: [biz][billing] platega_confirm_requested provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f
+[2026-07-04 17:02:01] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
+[2026-07-04 17:02:01] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
+[2026-07-04 17:02:01] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED

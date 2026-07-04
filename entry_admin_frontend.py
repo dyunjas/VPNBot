@@ -22,6 +22,16 @@ def _render_admin_page(name: str) -> HTMLResponse:
         html = f.read()
     api_base = os.getenv("ADMIN_API_BASE_URL", os.getenv("API_BASE_URL", "http://127.0.0.1:8004"))
     bootstrap = f"<script>window.__ADMIN_API_BASE_URL={api_base!r};</script>"
+    for version in ("36", "37", "38", "39"):
+        html = html.replace(f"/admin/styles.css?v={version}", "/admin/styles.css?v=40")
+    for version in ("26", "27", "28", "29", "30"):
+        html = html.replace(f"/admin/js/core/api.js?v={version}", "/admin/js/core/api.js?v=31")
+    for version in ("26", "27", "28", "29", "30", "31"):
+        html = html.replace(f"/admin/js/core/layout.js?v={version}", "/admin/js/core/layout.js?v=32")
+    for version in ("29",):
+        html = html.replace(f"/admin/js/pages/login.js?v={version}", "/admin/js/pages/login.js?v=30")
+    for version in ("32", "33", "34", "35"):
+        html = html.replace(f"/admin/js/pages/dashboard.js?v={version}", "/admin/js/pages/dashboard.js?v=36")
     if '<script src="/admin/js/core/api.js' in html:
         html = html.replace('<script src="/admin/js/core/api.js', f'{bootstrap}\n  <script src="/admin/js/core/api.js', 1)
     return HTMLResponse(

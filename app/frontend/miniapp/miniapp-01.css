@@ -1,0 +1,286 @@
+.is-miniapp {
+  overflow-x: hidden;
+}
+
+.is-miniapp .app {
+  width: min(980px, calc(100% - 24px));
+  min-height: 100dvh;
+  padding: calc(18px + var(--tg-safe-top)) 12px 110px;
+}
+
+.is-miniapp .cabinet-topbar,
+.is-miniapp .sidebar,
+.is-miniapp .cabinet-footer,
+.is-miniapp .mobile-menu-toggle,
+.is-miniapp .mobile-menu-backdrop {
+  display: none !important;
+}
+
+.is-miniapp .cabinet-shell {
+  display: block;
+}
+
+.is-miniapp .view-host,
+.is-miniapp .view,
+.is-miniapp .cabinet-home {
+  gap: 22px;
+}
+
+.is-miniapp .card.glass,
+.is-miniapp .glass-soft,
+.is-miniapp .summary-item,
+.is-miniapp .subscription-kpi__meta-item,
+.is-miniapp .device-card,
+.is-miniapp .feature-pill,
+.is-miniapp .pay-method,
+.is-miniapp .bottom-nav,
+.is-miniapp .tab {
+  border-color: #e3eaf5;
+}
+
+.is-miniapp .card.glass {
+  border-radius: 24px;
+  box-shadow: 0 14px 36px rgba(15, 35, 70, 0.08);
+}
+
+.is-miniapp .cabinet-hero {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 22px;
+  padding: 20px;
+}
+
+.is-miniapp .cabinet-hero__user {
+  align-items: center;
+  gap: 14px;
+}
+
+.is-miniapp .cabinet-hero__meta {
+  gap: 8px;
+}
+
+.is-miniapp .profile-card__name {
+  font-size: clamp(28px, 7vw, 36px);
+  line-height: 1;
+}
+
+.is-miniapp .profile-card__id-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.is-miniapp .cabinet-balance {
+  align-self: flex-start;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: fit-content;
+  padding: 0 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f5f9ff 0%, #edf4ff 100%);
+  box-shadow: inset 0 0 0 1px #bcd2fb;
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.is-miniapp .cabinet-grid {
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.is-miniapp .cabinet-panel {
+  padding: 20px;
+}
+
+.is-miniapp .cabinet-panel--subscription,
+.is-miniapp .cabinet-panel--traffic,
+.is-miniapp .cabinet-panel--connect,
+.is-miniapp .cabinet-panel--devices,
+.is-miniapp .cabinet-panel--summary {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.is-miniapp .card-head {
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.is-miniapp .card-head h2 {
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.is-miniapp .mini-note {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.is-miniapp .subscription-status {
+  margin: 6px 0 16px;
+  font-size: clamp(34px, 8vw, 44px);
+}
+
+.is-miniapp .subscription-kpi {
+  gap: 18px;
+}
+
+.is-miniapp .subscription-kpi__value {
+  font-size: clamp(54px, 14vw, 72px);
+}
+
+.is-miniapp .subscription-kpi__meta {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.is-miniapp .subscription-kpi__meta-item {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.is-miniapp .subscription-progress {
+  margin: 16px 0 10px;
+}
+
+.is-miniapp .subscription-progress__bar {
+  height: 12px;
+}
+
+.is-miniapp .cabinet-panel--connect {
+  text-align: center;
+}
+
+.is-miniapp .cabinet-panel--connect .card-head {
+  justify-content: center;
+}
+
+.is-miniapp .cabinet-connect__btn {
+  width: min(100%, 280px);
+  min-width: 0;
+  min-height: 58px;
+  margin: 18px auto 0;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  font-size: 18px;
+  line-height: 1.2;
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.18);
+}
+
+.is-miniapp .cabinet-connect__btn .btn__icon {
+  width: 28px;
+  height: 28px;
+}
+
+.is-miniapp .traffic-layout {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 20px;
+}
+
+.is-miniapp .traffic-ring {
+  width: 224px;
+  height: 224px;
+}
+
+.is-miniapp .traffic-ring__inner {
+  width: 194px;
+  height: 194px;
+  box-shadow: inset 0 0 0 1px #dfe8f5;
+}
+
+.is-miniapp .traffic-ring__value {
+  font-size: 34px;
+}
+
+.is-miniapp .traffic-ring__caption {
+  font-size: 14px;
+}
+
+.is-miniapp .traffic-legend {
+  width: 100%;
+  gap: 12px;
+}
+
+.is-miniapp .traffic-legend__item {
+  padding: 14px 16px;
+  border: 1px solid #e3eaf5;
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.is-miniapp .link-button {
+  margin-top: 14px;
+}
+
+.is-miniapp .summary-stack {
+  gap: 10px;
+}
+
+.is-miniapp .summary-item {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.is-miniapp .summary-item b {
+  font-size: 20px;
+}
+
+.is-miniapp .cabinet-device-list {
+  gap: 12px;
+}
+
+.is-miniapp .device-card {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 35, 70, 0.05);
+}
+
+.is-miniapp .device-card__action {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.is-miniapp .cabinet-features {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.is-miniapp .feature-pill {
+  min-height: 84px;
+  padding: 18px;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.is-miniapp .feature-pill__icon {
+  width: 44px;
+  height: 44px;
+  flex-basis: 44px;
+}
+
+.is-miniapp .feature-pill__title {
+  font-size: 16px;
+}
+
+.is-miniapp .settings-grid {
+  grid-template-columns: 1fr;
+}
+

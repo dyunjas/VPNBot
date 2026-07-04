@@ -1,7 +1,7 @@
 ﻿const wdState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "withdrawals",
     title: "Заявки на вывод",
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       page_size: "25",
       status: q("status").value,
     });
-    const data = await api(`/admin-api/withdrawals?${params.toString()}`);
+    const data = await api(`/api/admin/withdrawals?${params.toString()}`);
     const items = data.items || [];
     const meta = data.meta || { page: 1, pages: 1, total: 0 };
     wdState.pages = meta.pages;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       approve.disabled = w.status !== "pending";
       approve.addEventListener("click", async (e) => {
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/withdrawals/${w.id}/approve`, { method: "POST" });
+          await api(`/api/admin/withdrawals/${w.id}/approve`, { method: "POST" });
           await loadRows();
           showToast(`Заявка #${w.id} подтверждена`, "success");
         }).catch((err) => alert(err.message));
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       reject.disabled = w.status !== "pending";
       reject.addEventListener("click", async (e) => {
         await withButtonLoading(e.currentTarget, async () => {
-          await api(`/admin-api/withdrawals/${w.id}/reject`, { method: "POST" });
+          await api(`/api/admin/withdrawals/${w.id}/reject`, { method: "POST" });
           await loadRows();
           showToast(`Заявка #${w.id} отклонена`, "success");
         }).catch((err) => alert(err.message));

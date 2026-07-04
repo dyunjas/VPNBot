@@ -1,0 +1,345 @@
+      <main id="view-host" class="view-host">
+        <section class="view view--active" id="view-home">
+          <div class="cabinet-home">
+            <div class="card glass cabinet-hero">
+              <div class="cabinet-hero__user">
+                <img id="home-avatar" class="avatar avatar--xl" alt="avatar" />
+                <div class="cabinet-hero__meta">
+                  <div id="home-name" class="profile-card__name">Пользователь</div>
+                  <div class="profile-card__id-wrap">
+                    <div id="home-id" class="profile-card__id">ID: -</div>
+                    <button class="profile-id-copy" id="home-id-copy" type="button">Копировать ID</button>
+                  </div>
+                </div>
+              </div>
+              <div id="home-balance" class="cabinet-balance">0 ₽</div>
+            </div>
+
+            <div class="cabinet-grid">
+              <div class="card glass cabinet-panel cabinet-panel--subscription">
+                <div class="card-head">
+                  <div>
+                    <h2>Подписка</h2>
+                    <p class="mini-note">Срок действия, трафик и состояние доступа.</p>
+                  </div>
+                  <span id="sub-badge" class="badge badge--ok">Активна</span>
+                </div>
+                <div id="sub-title" class="subscription-status">Подписка активна</div>
+                <div class="subscription-kpi">
+                  <div>
+                    <div class="subscription-kpi__label">Осталось дней</div>
+                    <div id="sub-days-left" class="subscription-kpi__value">—</div>
+                  </div>
+                  <div class="subscription-kpi__meta">
+                    <div class="subscription-kpi__meta-item glass-soft">
+                      <span>Действует до</span>
+                      <div id="sub-end-date">—</div>
+                    </div>
+                    <div class="subscription-kpi__meta-item glass-soft">
+                      <span>Трафик</span>
+                      <div id="sub-traffic-text">—</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="subscription-progress">
+                  <div class="subscription-progress__bar">
+                    <span id="sub-progress-fill"></span>
+                  </div>
+                </div>
+                <div class="row dashboard-actions">
+                  <button class="btn" data-open="plans" type="button">
+                    <svg class="btn__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5" />
+                      <path d="M16 3v4" />
+                      <path d="M8 3v4" />
+                      <path d="M4 11h16" />
+                      <path d="M16 19h6" />
+                      <path d="M19 16v6" />
+                    </svg>
+                    <span>Продлить подписку</span>
+                  </button>
+                  <button class="btn btn--ghost" data-open="profile" type="button">Подробнее</button>
+                </div>
+              </div>
+
+              <div class="card glass cabinet-panel cabinet-panel--connect">
+                <div class="card-head">
+                  <div>
+                    <h2>Быстрое подключение</h2>
+                    <p class="mini-note">Откройте VPN-ссылку и перейдите к инструкции по подключению.</p>
+                  </div>
+                </div>
+                <button id="btn-quick-connect" class="btn cabinet-connect__btn" type="button">
+                  <svg class="btn__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                    <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" />
+                    <path d="M9 12h6" />
+                    <path d="M9 16h6" />
+                  </svg>
+                  <span>Инструкция</span>
+                </button>
+              </div>
+
+              <div class="card glass cabinet-panel cabinet-panel--traffic">
+                <div class="card-head">
+                  <div>
+                    <h2>Использование трафика</h2>
+                    <p class="mini-note">Сколько уже потрачено и сколько осталось.</p>
+                  </div>
+                </div>
+                <div class="traffic-layout">
+                  <div class="traffic-ring">
+                    <svg class="traffic-ring__svg" viewBox="0 0 120 120" aria-hidden="true">
+                      <circle class="traffic-ring__track" cx="60" cy="60" r="50"></circle>
+                      <circle id="traffic-ring-progress" class="traffic-ring__progress" cx="60" cy="60" r="50"></circle>
+                    </svg>
+                    <div class="traffic-ring__inner">
+                      <div id="traffic-used-gb" class="traffic-ring__value">0 GB</div>
+                      <div id="traffic-total-gb" class="traffic-ring__caption">из 0 GB</div>
+                    </div>
+                  </div>
+                  <div class="traffic-legend">
+                    <div class="traffic-legend__item">
+                      <span class="traffic-legend__dot traffic-legend__dot--used"></span>
+                      <span>Использовано</span>
+                      <b id="traffic-used-text">0 GB (0%)</b>
+                    </div>
+                    <div class="traffic-legend__item">
+                      <span class="traffic-legend__dot traffic-legend__dot--left"></span>
+                      <span>Осталось</span>
+                      <b id="traffic-left-text">0 GB (0%)</b>
+                    </div>
+                  </div>
+                </div>
+                <button class="link-button" data-open="profile" type="button">Подробнее о трафике →</button>
+              </div>
+
+              <div class="card glass cabinet-panel cabinet-panel--devices">
+                <div class="card-head">
+                  <div>
+                    <h2>Ваши устройства</h2>
+                    <p class="mini-note">Список активных устройств и лимит подключений.</p>
+                  </div>
+                  <span id="home-device-limit" class="badge">0/∞</span>
+                </div>
+                <div id="home-devices-list" class="list cabinet-device-list">Загрузка...</div>
+                <button class="link-button" data-open="devices" type="button">Управление устройствами →</button>
+              </div>
+
+              <div class="card glass cabinet-panel cabinet-panel--summary">
+                <h2>Краткая сводка</h2>
+                <div class="summary-stack">
+                  <div class="summary-item glass-soft">
+                    <span>Реферальный баланс</span>
+                    <b id="ref-balance">0 ₽</b>
+                  </div>
+                  <div class="summary-item glass-soft">
+                    <span>Приглашено пользователей</span>
+                    <b id="ref-invited">0</b>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cabinet-features">
+              <div class="feature-pill">
+                <div class="feature-pill__icon">
+                  <svg class="feature-pill__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 13h6l-1 9 9-12h-6l1-8z" fill="currentColor"/></svg>
+                </div>
+                <div>
+                  <div class="feature-pill__title">Высокая скорость</div>
+                  <div class="feature-pill__text">Быстрые серверы по всему миру</div>
+                </div>
+              </div>
+              <div class="feature-pill">
+                <div class="feature-pill__icon">
+                  <svg class="feature-pill__svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="15" r="1.4" fill="currentColor"/></svg>
+                </div>
+                <div>
+                  <div class="feature-pill__title">Безопасность</div>
+                  <div class="feature-pill__text">Шифрование и защита данных</div>
+                </div>
+              </div>
+              <div class="feature-pill">
+                <div class="feature-pill__icon">
+                  <svg class="feature-pill__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="feature-pill__title">Без логов</div>
+                  <div class="feature-pill__text">Мы не храним ваши данные</div>
+                </div>
+              </div>
+              <div class="feature-pill">
+                <div class="feature-pill__icon">
+                  <svg class="feature-pill__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-2v-8h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 12v6a2 2 0 0 0 2 2h2v-8H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="feature-pill__title">24/7 Поддержка</div>
+                  <div class="feature-pill__text">Помощь в любое время</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-plans">
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Тарифы</h2>
+                <p class="mini-note">Выберите подходящий план и оформите подписку без переходов на отдельные страницы.</p>
+              </div>
+            </div>
+            <div id="plans-list" class="list">Загрузка...</div>
+          </div>
+        </section>
+
+        <section class="view" id="view-devices">
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Устройства</h2>
+                <p class="mini-note">Удаляйте старые устройства, чтобы освободить слот и не копить мусор.</p>
+              </div>
+            </div>
+            <div id="device-limit" class="muted">Лимит: -</div>
+            <div id="devices-list" class="list">Загрузка...</div>
+          </div>
+        </section>
+
+        <section class="view" id="view-profile">
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>VPN ссылка</h2>
+                <p class="mini-note">Копируйте ссылку для подключения и открывайте её в приложении.</p>
+              </div>
+            </div>
+            <div id="sub-link-wrap" class="sub-link-wrap">
+              <div id="sub-link" class="mono link">Ссылка синхронизируется...</div>
+              <div class="row">
+                <button id="btn-copy-sub" class="btn" type="button">Скопировать</button>
+                <button id="btn-open-sub" class="btn btn--ghost" type="button">Открыть</button>
+              </div>
+            </div>
+            <p class="muted">Если подписка ещё не активна, ссылка появится после оформления.</p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Докупить трафик</h2>
+                <p class="mini-note">Введите количество гигабайт и докупите пакет без выхода из кабинета.</p>
+              </div>
+            </div>
+            <div class="row row--traffic">
+              <input id="traffic-gb-input" class="input" inputmode="numeric" placeholder="ГБ" />
+              <button id="btn-buy-traffic" class="btn" type="button">Купить ГБ</button>
+            </div>
+            <p id="traffic-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <h2>Промокод</h2>
+            <div class="row">
+              <input id="promo-input" class="input" placeholder="Введите промокод" />
+              <button id="promo-apply" class="btn" type="button">Применить</button>
+            </div>
+            <p id="promo-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Пополнение</h2>
+                <p class="mini-note">Выберите сумму и удобный способ оплаты.</p>
+              </div>
+            </div>
+            <div class="topup-panel">
+              <div class="topup-panel__amount">
+                <label class="topup-panel__label" for="topup-input">Сумма пополнения</label>
+                <input id="topup-input" class="input topup-panel__input" placeholder="Сумма в рублях" inputmode="numeric" />
+              </div>
+              <div class="topup-panel__methods-wrap">
+                <div class="topup-panel__label">Способ оплаты</div>
+                <div id="topup-methods" class="payment-methods">
+                  <button class="pay-method" data-method="pally" type="button" aria-label="Оплата через СБП 1">
+                    <img class="pay-method__icon" src="/miniapp/assets/pay-sbp.png" alt="СБП 1" />
+                    <span class="pay-method__copy">
+                      <span class="pay-method__label">СБП 1</span>
+                      <span class="pay-method__hint">Быстрый перевод</span>
+                    </span>
+                  </button>
+                  <button class="pay-method" data-method="sbp" type="button" aria-label="Оплата через СБП">
+                    <img class="pay-method__icon" src="/miniapp/assets/pay-sbp.png" alt="СБП" />
+                    <span class="pay-method__copy">
+                      <span class="pay-method__label">СБП 2</span>
+                      <span class="pay-method__hint">Резервный шлюз</span>
+                    </span>
+                  </button>
+                  <button class="pay-method pay-method--active" data-method="card" type="button" aria-label="Оплата картой">
+                    <img class="pay-method__icon" src="/miniapp/assets/pay-mir.png" alt="MIR" />
+                    <span class="pay-method__copy">
+                      <span class="pay-method__label">Карта</span>
+                      <span class="pay-method__hint">МИР</span>
+                    </span>
+                  </button>
+                  <button class="pay-method" data-method="crypto" type="button" aria-label="Оплата криптовалютой">
+                    <img class="pay-method__icon" src="/miniapp/assets/pay-usdt.png" alt="USDT" />
+                    <span class="pay-method__copy">
+                      <span class="pay-method__label">USDT</span>
+                      <span class="pay-method__hint">Криптовалюта</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="topup-panel__actions">
+              <button id="topup-pay" class="btn topup-panel__submit" type="button">Оплатить</button>
+            </div>
+            <p id="topup-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Транзакции</h2>
+                <p class="mini-note">Проверка платежей и список последних операций.</p>
+              </div>
+            </div>
+            <div class="row">
+              <button id="btn-check-payments" class="btn" type="button">Проверить платежи</button>
+              <button id="btn-refresh-tx" class="btn btn--ghost" type="button">Обновить</button>
+            </div>
+            <div id="tx-list" class="list">Загрузка...</div>
+            <div class="row row--more">
+              <button id="btn-more-tx" class="btn btn--ghost" type="button" style="display:none;">Показать ещё 10</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Настройки</h2>
+                <p class="mini-note">Быстрые действия и параметры интерфейса.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <div class="settings-item settings-item--actions">
+                <div class="settings-item__title">Поддержка</div>
+                <div class="muted">Если нужна помощь, откройте чат поддержки.</div>
+                <button class="btn btn--ghost js-open-support" type="button">Открыть поддержку</button>
+              </div>
+              <div class="settings-item settings-item--actions">
+                <div class="settings-item__title">Сеанс</div>
+                <div class="muted">Завершите сессию на этом устройстве.</div>
+                <button class="btn btn--danger js-cabinet-logout" type="button">Выйти</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>

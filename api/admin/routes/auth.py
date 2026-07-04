@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from fastapi import Request
 import time
 from ..common import *
@@ -7,6 +7,7 @@ router = APIRouter()
 _LOGIN_ATTEMPTS: dict[str, list[float]] = {}
 _LOGIN_WINDOW_SEC = 300
 _LOGIN_MAX_ATTEMPTS = 5
+_ADMIN_COOKIE_NAME = "admin_access_token"
 
 
 def _login_rate_key(request: Request, login: str) -> str:
@@ -89,7 +90,7 @@ def _fill_amount_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_m
         bucket["count"] = int(bucket["count"]) + 1
 
 @router.post("/auth/login")
-async def admin_auth_login(payload: LoginPayload, request: Request):
+async def admin_auth_login(payload: LoginPayload, request: Request, response: Response):
     expected_login = (settings.ADMIN_WEB_LOGIN or "").strip()
     expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
     if not expected_login or not expected_password:
@@ -104,12 +105,28 @@ async def admin_auth_login(payload: LoginPayload, request: Request):
     if payload.login != expected_login or payload.password != expected_password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = _create_admin_access_token(payload.login)
-    return {"ok": True, "access_token": access_token, "token_type": "bearer"}
+    max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
+    response.set_cookie(
+        key=_ADMIN_COOKIE_NAME,
+        value=access_token,
+        max_age=max_age,
+        httponly=True,
+        secure=request.url.scheme == "https",
+        samesite="lax",
+        path="/",
+    )
+    return {"ok": True, "login": payload.login}
 
 
 @router.get("/auth/me")
 async def admin_auth_me(auth=Depends(require_admin_auth)):
     return {"ok": True, "login": auth.get("sub"), "scope": auth.get("scope")}
+
+
+@router.post("/auth/logout")
+async def admin_auth_logout(response: Response):
+    response.delete_cookie(key=_ADMIN_COOKIE_NAME, path="/", samesite="lax")
+    return {"ok": True}
 
 
 @router.get("/health", dependencies=[Depends(require_admin_auth)])

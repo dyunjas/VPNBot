@@ -39,7 +39,7 @@ async def admin_logs_list(
                 "filename": p.name,
                 "size_bytes": int(stat.st_size),
                 "updated_at": int(stat.st_mtime),
-                "download_url": f"/admin-api/logs/{p.name}/download",
+                "download_url": f"/api/admin/logs/{p.name}/download",
             }
         )
     return {"ok": True, "items": items}

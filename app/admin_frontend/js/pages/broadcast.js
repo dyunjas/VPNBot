@@ -1,6 +1,19 @@
 let broadcastPollTimer = null;
 let currentBroadcastJobId = "";
 
+function broadcastStatusLabel(status) {
+  const value = String(status || "queued").toLowerCase();
+  if (value === "completed") return statusBadge("approved");
+  if (value === "failed") return statusBadge("rejected");
+  return statusBadge("pending");
+}
+
+function broadcastTextPreview(text) {
+  const value = String(text || "").replace(/\s+/g, " ").trim();
+  if (!value) return "—";
+  return value.length > 96 ? `${value.slice(0, 96)}...` : value;
+}
+
 function stopBroadcastPolling() {
   if (broadcastPollTimer) {
     clearTimeout(broadcastPollTimer);
@@ -19,11 +32,7 @@ function renderBroadcastJob(job) {
   const failedSamples = Array.isArray(job?.failed_samples) ? job.failed_samples : [];
 
   const statusBadgeHtml =
-    status === "completed"
-      ? statusBadge("approved")
-      : status === "failed"
-        ? statusBadge("rejected")
-        : statusBadge("pending");
+    broadcastStatusLabel(status);
 
   const sampleHtml = failedSamples.length
     ? `<div class="table-wrap">
@@ -52,9 +61,75 @@ function renderBroadcastJob(job) {
   `;
 }
 
+function renderBroadcastHistory(items) {
+  if (!Array.isArray(items) || !items.length) {
+    return `<div class="page-sub">История рассылок пока пуста</div>`;
+  }
+
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Создана</th>
+            <th>Статус</th>
+            <th>Текст</th>
+            <th>Получатели</th>
+            <th>Успешно</th>
+            <th>Ошибки</th>
+            <th>Тип</th>
+            <th>Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items
+            .map(
+              (item) => `
+                <tr>
+                  <td>${formatDateTime(item.created_at)}</td>
+                  <td>${broadcastStatusLabel(item.status)}</td>
+                  <td title="${safeText(item.text || "")}">${safeText(broadcastTextPreview(item.text))}</td>
+                  <td>${safeText(item.total)}</td>
+                  <td>${safeText(item.success)}</td>
+                  <td>${safeText(item.failed)}</td>
+                  <td>${item.has_image ? "Текст + изображение" : "Только текст"}</td>
+                  <td>
+                    <button class="btn-outline-primary js-open-broadcast" data-job-id="${safeText(item.job_id)}" type="button">Открыть</button>
+                  </td>
+                </tr>
+              `,
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function loadBroadcastHistory() {
+  const host = q("history");
+  if (!host) return;
+
+  try {
+    const data = await api("/api/admin/broadcast/history?limit=20");
+    const items = data.items || [];
+    host.innerHTML = renderBroadcastHistory(items);
+    host.querySelectorAll(".js-open-broadcast").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const jobId = btn.getAttribute("data-job-id") || "";
+        if (!jobId) return;
+        currentBroadcastJobId = jobId;
+        await pollBroadcast(jobId);
+      });
+    });
+  } catch (err) {
+    host.innerHTML = `<div class="page-sub">${safeText(err.message || "Не удалось загрузить историю")}</div>`;
+  }
+}
+
 async function pollBroadcast(jobId) {
   try {
-    const data = await api(`/admin-api/broadcast/jobs/${jobId}`);
+    const data = await api(`/api/admin/broadcast/jobs/${jobId}`);
     const job = data.job || {};
     q("result").innerHTML = renderBroadcastJob(job);
 
@@ -62,6 +137,7 @@ async function pollBroadcast(jobId) {
       stopBroadcastPolling();
       const sendBtn = q("send");
       if (sendBtn) sendBtn.disabled = false;
+      await loadBroadcastHistory();
       if (job.status === "completed") showToast("Рассылка завершена", "success");
       return;
     }
@@ -76,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const MAX_IMAGE_SIZE_MB = 8;
   const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
-  ensureAuthOrRedirect();
+  if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "broadcast",
     title: "Рассылки",
@@ -103,6 +179,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div id="result">Результат появится после запуска</div>
         </div>
       </div>
+      <div class="card">
+        <div class="dashboard-section-card__head">
+          <div>
+            <div class="dashboard-section-card__eyebrow">История</div>
+            <h3>Последние рассылки</h3>
+          </div>
+          <button id="reload_history" class="btn-outline-primary" type="button">Обновить</button>
+        </div>
+        <div id="history">Загрузка...</div>
+      </div>
     `,
   });
 
@@ -123,7 +209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await withButtonLoading(e.currentTarget, async () => {
       stopBroadcastPolling();
-      const data = await api("/admin-api/broadcast/upload", {
+      const data = await api("/api/admin/broadcast/upload", {
         method: "POST",
         body: form,
       });
@@ -133,20 +219,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       q("result").innerHTML = `
         <div class="summary-list">
-          <div><span>Статус</span><b>${statusBadge("pending")}</b></div>
+          <div><span>Статус</span><b>${broadcastStatusLabel("pending")}</b></div>
           <div><span>Job ID</span><b class="mono">${safeText(currentBroadcastJobId)}</b></div>
         </div>
         <div class="page-sub">Рассылка запущена. Обновление статистики каждые 3 секунды.</div>
       `;
       q("send").disabled = true;
+      await loadBroadcastHistory();
       pollBroadcast(currentBroadcastJobId);
+    }).catch((err) => alert(err.message));
+  });
+
+  q("reload_history")?.addEventListener("click", async (e) => {
+    await withButtonLoading(e.currentTarget, async () => {
+      await loadBroadcastHistory();
     }).catch((err) => alert(err.message));
   });
 
   try {
     await renderSessionInfo();
+    await loadBroadcastHistory();
   } catch (e) {
     alert(e.message);
   }
 });
-

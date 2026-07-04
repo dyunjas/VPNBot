@@ -1,10 +1,11 @@
 from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.client.session.aiohttp import AiohttpSession
 
+from backend.api_client import BotApiClient
 from backend.core.config import settings
+from backend.core.telegram import create_telegram_session
 
 default = DefaultBotProperties(
     parse_mode=ParseMode.HTML,
@@ -13,15 +14,13 @@ default = DefaultBotProperties(
 
 bot: Bot | None = None
 dp: Dispatcher | None = None
+bot_api: BotApiClient | None = None
 
 
 async def setup_bot():
-    global bot, dp
+    global bot, dp, bot_api
 
-    proxy_url = settings.BOT_PROXY  # socks5://user:pass@ip:port
-
-    # ✅ ВАЖНО: прокси тут, без aiohttp_socks
-    session = AiohttpSession(proxy=proxy_url)
+    session = create_telegram_session()
 
     bot = Bot(
         token=settings.BOT_TOKEN,
@@ -30,9 +29,12 @@ async def setup_bot():
     )
 
     dp = Dispatcher(storage=MemoryStorage())
+    bot_api = BotApiClient()
 
     return bot, dp
 
 
 async def shutdown_bot(bot: Bot):
     await bot.session.close()
+    if bot_api is not None:
+        await bot_api.close()

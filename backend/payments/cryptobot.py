@@ -90,7 +90,16 @@ class CryptoPayAPI:
         params = {"invoice_ids": str(invoice_id)}
         invoices = await self._request("GET", "getInvoices", params=params)
         if isinstance(invoices, list) and invoices:
-            return invoices[0]
+            first = invoices[0]
+            return first if isinstance(first, dict) else {}
+        if isinstance(invoices, dict):
+            for key in ("items", "invoices", "data", "result"):
+                value = invoices.get(key)
+                if isinstance(value, list) and value:
+                    first = value[0]
+                    return first if isinstance(first, dict) else {}
+            if "invoice_id" in invoices or "status" in invoices:
+                return invoices
         return {}
 
     async def close(self) -> None:
