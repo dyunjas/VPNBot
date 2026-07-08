@@ -9,12 +9,14 @@ from backend.services.exceptions import (
 )
 
 from backend.database.models import Promocode
+from backend.services.activity_service import ActivityService
 
 class PromoService:
     def __init__(self, session: AsyncSession):
         self.session = session
         self.promo_repo = PromocodeRepository(session)
         self.user_repo = UserRepository(session)
+        self.activity_service = ActivityService(session)
 
     async def activate_promocode(self, user_id: int, code: str) -> Promocode:
         logger.info("[biz][promo] activate_requested user_id=%s code=%s", user_id, code)
@@ -44,6 +46,14 @@ class PromoService:
         )
 
         await self.promo_repo.decrement_usages(promo.id, by=1)
+        await self.activity_service.log_user_event(
+            user_id=user.id,
+            category="promo",
+            action="promocode_activated",
+            source="user",
+            amount=int(promo.amount or 0),
+            note=f"Активирован промокод {promo.code}",
+        )
 
         await self.session.commit()
         logger.info(

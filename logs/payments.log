@@ -919,3 +919,14 @@ RuntimeError: [{'type': 'missing', 'loc': ['body', 'amount'], 'msg': 'Field requ
 [2026-07-04 17:02:01] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=7da109f9-e5cb-4c5c-9f03-99798a9ea11f status=CANCELED
 [2026-07-04 17:02:01] [INFO] root: [biz][billing] platega_confirm_requested provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629
 [2026-07-04 17:02:01] [WARNING] root: [biz][billing] platega_not_confirmed provider_id=61ca8e82-6607-4db6-8fb9-f57e0a099629 status=CANCELED
+[2026-07-08 15:59:04] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:04] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=40
+[2026-07-08 15:59:04] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=98 balance=0 required=40
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=40
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=40
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] buy_traffic_completed user_id=98 subscription_id=79 gb=20 charged=40
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=50
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=100
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=100
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] buy_traffic_completed user_id=98 subscription_id=79 gb=50 charged=100

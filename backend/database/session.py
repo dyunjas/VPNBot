@@ -40,6 +40,38 @@ async def init_db():
                 "ADD COLUMN IF NOT EXISTS traffic_limit_bytes BIGINT NOT NULL DEFAULT 0"
             )
         )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscription_plans "
+                "ADD COLUMN IF NOT EXISTS is_hidden BOOLEAN NOT NULL DEFAULT FALSE"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscription_plans "
+                "ADD COLUMN IF NOT EXISTS is_trial BOOLEAN NOT NULL DEFAULT FALSE"
+            )
+        )
+        await conn.execute(
+            text(
+                "CREATE TABLE IF NOT EXISTS vpn_user_activities ("
+                "id SERIAL PRIMARY KEY, "
+                "user_id INTEGER NOT NULL REFERENCES vpn_users(id) ON DELETE CASCADE, "
+                "category VARCHAR(32) NOT NULL DEFAULT 'system', "
+                "action VARCHAR(64) NOT NULL, "
+                "source VARCHAR(32) NOT NULL DEFAULT 'system', "
+                "amount INTEGER NULL, "
+                "traffic_gb NUMERIC(10,2) NULL, "
+                "subscription_id INTEGER NULL REFERENCES vpn_subscriptions(id) ON DELETE SET NULL, "
+                "transaction_id_ref INTEGER NULL REFERENCES vpn_transactions(id) ON DELETE SET NULL, "
+                "note VARCHAR(512) NULL, "
+                "created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()"
+                ")"
+            )
+        )
+        await conn.execute(text("CREATE INDEX IF NOT EXISTS ix_vpn_user_activities_user_id ON vpn_user_activities(user_id)"))
+        await conn.execute(text("CREATE INDEX IF NOT EXISTS ix_vpn_user_activities_subscription_id ON vpn_user_activities(subscription_id)"))
+        await conn.execute(text("CREATE INDEX IF NOT EXISTS ix_vpn_user_activities_transaction_id_ref ON vpn_user_activities(transaction_id_ref)"))
     logger.info("Database tables initialized")
 
 async def check_connection():

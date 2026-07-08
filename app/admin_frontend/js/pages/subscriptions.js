@@ -1,4 +1,4 @@
-﻿const subState = { page: 1, pages: 1 };
+const subState = { page: 1, pages: 1 };
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (!(await ensureAuthOrRedirect())) return;
@@ -25,21 +25,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         <div class="content-grid subscriptions-grid">
           <div class="card">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Окончание</th><th>Действия</th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <div class="pager">
-            <button id="prev">Назад</button>
-            <span id="meta"></span>
-            <button id="next">Вперед</button>
-          </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Окончание</th><th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+            <div class="pager">
+              <button id="prev">Назад</button>
+              <span id="meta"></span>
+              <button id="next">Вперед</button>
+            </div>
           </div>
 
           <div class="content-stack">
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <input id="new_plan_id" type="number" placeholder="ID тарифа" />
               </div>
               <div class="toolbar" style="margin-top:10px">
-                <label class="inline-field"><input id="new_auto" type="checkbox" /> Автопродление</label>
+                <label class="plans-flag subscription-auto-flag"><input id="new_auto" type="checkbox" /> <span>Автопродление</span></label>
                 <button id="create_sub" class="btn-primary">Создать</button>
               </div>
             </div>
@@ -85,6 +85,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </select>
                 <input id="edit_extend_days" type="number" placeholder="Продлить на дней" />
                 <button id="update_sub">Сохранить</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Добавить трафик</h3>
+              <div class="toolbar">
+                <input id="traffic_sub_id" type="number" placeholder="ID активной подписки" />
+                <input id="traffic_gb" type="number" min="1" step="1" placeholder="Сколько GB добавить" />
+                <button id="add_traffic" class="btn-primary">Начислить трафик</button>
               </div>
             </div>
           </div>
@@ -106,72 +115,80 @@ document.addEventListener("DOMContentLoaded", async () => {
     subState.pages = meta.pages;
 
     q("tbody").innerHTML = "";
-    items.forEach((s) => {
+    items.forEach((subscription) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${s.id}</td>
-        <td>${s.user_id}</td>
-        <td>${s.tg_id || ""}</td>
-        <td>${s.plan_name || s.plan_id}</td>
-        <td>${statusBadge(s.status)}</td>
-        <td>${s.auto_renew ? "Да" : "Нет"}</td>
-        <td>${formatDateTime(s.current_period_end)}</td>
+        <td>${subscription.id}</td>
+        <td>${subscription.user_id}</td>
+        <td>${subscription.tg_id || ""}</td>
+        <td>${subscription.plan_name || subscription.plan_id}</td>
+        <td>${statusBadge(subscription.status)}</td>
+        <td>${subscription.auto_renew ? "Да" : "Нет"}</td>
+        <td>${formatDateTime(subscription.current_period_end)}</td>
         <td class="row-actions">
-          <button data-edit="${s.id}">Изменить</button>
-          <button class="btn-danger" data-delete="${s.id}">Удалить</button>
+          <button data-edit="${subscription.id}">Изменить</button>
+          <button class="btn-outline-primary" data-traffic="${subscription.id}">+ трафик</button>
+          <button class="btn-danger" data-delete="${subscription.id}">Удалить</button>
         </td>
       `;
       q("tbody").appendChild(tr);
     });
 
-    q("tbody").querySelectorAll("button[data-edit]").forEach((b) => {
-      b.addEventListener("click", () => {
-        q("edit_sub_id").value = b.getAttribute("data-edit");
+    q("tbody").querySelectorAll("button[data-edit]").forEach((button) => {
+      button.addEventListener("click", () => {
+        q("edit_sub_id").value = button.getAttribute("data-edit");
       });
     });
 
-    q("tbody").querySelectorAll("button[data-delete]").forEach((b) => {
-      b.addEventListener("click", async (e) => {
-        const subId = Number(b.getAttribute("data-delete") || "0");
-        if (!subId) return;
-        if (!confirm(`Удалить подписку #${subId}? Действие необратимо.`)) return;
+    q("tbody").querySelectorAll("button[data-traffic]").forEach((button) => {
+      button.addEventListener("click", () => {
+        q("traffic_sub_id").value = button.getAttribute("data-traffic");
+        q("traffic_gb").focus();
+      });
+    });
 
-        await withButtonLoading(e.currentTarget, async () => {
-          await api(`/api/admin/subscriptions/${subId}`, { method: "DELETE" });
+    q("tbody").querySelectorAll("button[data-delete]").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const subscriptionId = Number(button.getAttribute("data-delete") || "0");
+        if (!subscriptionId) return;
+        if (!confirm(`Удалить подписку #${subscriptionId}? Действие необратимо.`)) return;
+
+        await withButtonLoading(event.currentTarget, async () => {
+          await api(`/api/admin/subscriptions/${subscriptionId}`, { method: "DELETE" });
           await loadRows();
           showToast("Подписка удалена", "success");
-        }).catch((err) => alert(err.message));
+        }).catch((error) => alert(error.message));
       });
     });
 
     renderPager(meta, q("prev"), q("next"), q("meta"));
   }
 
-  q("apply").addEventListener("click", async (e) => {
-    await withButtonLoading(e.currentTarget, async () => {
+  q("apply").addEventListener("click", async (event) => {
+    await withButtonLoading(event.currentTarget, async () => {
       subState.page = 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("prev").addEventListener("click", async (e) => {
+  q("prev").addEventListener("click", async (event) => {
     if (subState.page <= 1) return;
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       subState.page -= 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("next").addEventListener("click", async (e) => {
+  q("next").addEventListener("click", async (event) => {
     if (subState.page >= subState.pages) return;
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       subState.page += 1;
       await loadRows();
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("create_sub").addEventListener("click", async (e) => {
-    await withButtonLoading(e.currentTarget, async () => {
+  q("create_sub").addEventListener("click", async (event) => {
+    await withButtonLoading(event.currentTarget, async () => {
       await api("/api/admin/subscriptions", {
         method: "POST",
         body: JSON.stringify({
@@ -182,10 +199,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       await loadRows();
       showToast("Подписка создана", "success");
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("update_sub").addEventListener("click", async (e) => {
+  q("update_sub").addEventListener("click", async (event) => {
     const id = Number(q("edit_sub_id").value || "0");
     if (!id) return alert("Введите ID подписки");
 
@@ -194,17 +211,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (q("edit_status").value) payload.status = q("edit_status").value;
     if (q("edit_extend_days").value) payload.extend_days = Number(q("edit_extend_days").value);
 
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       await api(`/api/admin/subscriptions/${id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
       await loadRows();
       showToast("Подписка обновлена", "success");
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
-  q("bulk_extend").addEventListener("click", async (e) => {
+  q("add_traffic").addEventListener("click", async (event) => {
+    const subscriptionId = Number(q("traffic_sub_id").value || "0");
+    const gb = Number(q("traffic_gb").value || "0");
+    if (!subscriptionId) return alert("Введите ID подписки");
+    if (gb <= 0) return alert("Введите количество GB");
+
+    await withButtonLoading(event.currentTarget, async () => {
+      await api(`/api/admin/subscriptions/${subscriptionId}/traffic`, {
+        method: "POST",
+        body: JSON.stringify({ gb }),
+      });
+      await loadRows();
+      showToast("Трафик начислен", "success");
+    }).catch((error) => alert(error.message));
+  });
+
+  q("bulk_extend").addEventListener("click", async (event) => {
     const days = Number(q("bulk_days").value || "0");
     const target = q("bulk_target").value || "all";
     if (!days || days < 1) return alert("Введите количество дней");
@@ -217,7 +250,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!confirm(`Продлить подписку на ${days} дн. ${targetLabel}?`)) return;
 
-    await withButtonLoading(e.currentTarget, async () => {
+    await withButtonLoading(event.currentTarget, async () => {
       const result = await api("/api/admin/subscriptions/bulk-extend", {
         method: "POST",
         body: JSON.stringify({ target, days }),
@@ -235,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           .join("\n");
         alert(`Часть подписок не обработана:\n${preview}`);
       }
-    }).catch((err) => alert(err.message));
+    }).catch((error) => alert(error.message));
   });
 
   try {
@@ -244,8 +277,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     bindEnterSubmit(["bulk_days"], "bulk_extend");
     bindEnterSubmit(["new_user_id", "new_plan_id"], "create_sub");
     bindEnterSubmit(["edit_sub_id", "edit_plan_id", "edit_extend_days"], "update_sub");
+    bindEnterSubmit(["traffic_sub_id", "traffic_gb"], "add_traffic");
     await loadRows();
-  } catch (e) {
-    alert(e.message);
+  } catch (error) {
+    alert(error.message);
   }
 });

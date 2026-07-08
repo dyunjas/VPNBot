@@ -178,6 +178,81 @@
   min-height: 32px;
   padding: 6px 12px;
 }
+.plans-flags {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.plans-flag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.plans-flag input[type="checkbox"] {
+  min-height: 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #dc2626;
+}
+.subscription-auto-flag {
+  min-width: 220px;
+  margin-right: 6px;
+}
+.plans-mobile-list {
+  display: none;
+}
+.plans-mobile-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+  display: grid;
+  gap: 12px;
+}
+.plans-mobile-card__head {
+  display: grid;
+  gap: 10px;
+}
+.plans-mobile-card__id {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.plans-mobile-card__badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.plans-mobile-card__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.plans-mobile-card__grid > div {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  display: grid;
+  gap: 4px;
+}
+.plans-mobile-card__grid span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.plans-mobile-card__grid b {
+  font-size: 14px;
+}
 .users-table-card .table-wrap {
   max-height: none;
 }

@@ -9,7 +9,7 @@ from aiogram.types.input_file import BufferedInputFile
 from fastapi import APIRouter, Cookie, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
-from sqlalchemy import String, cast, delete, desc, func, literal, or_, select
+from sqlalchemy import String, cast, delete, desc, func, literal, or_, select, update
 
 from backend.core.config import settings
 from backend.database.models import (
@@ -24,17 +24,21 @@ from backend.database.models import (
     SubStatus,
     Subscription,
     SubscriptionPlan,
+    SubscriptionTopup,
     Transaction,
+    UserActivity,
     User,
     WithdrawalStatus,
 )
 from backend.database.session import async_session
 from backend.services.exceptions import (
+    BannedUser,
     InsufficientBalance,
     SubscriptionNotFound,
     UserNotFound,
 )
 from backend.services.subscription_service import SubscriptionService
+from backend.services.activity_service import ActivityService
 from backend.services.user_service import UserService
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.partner_service import PartnerService
@@ -67,6 +71,8 @@ PLAN_SORT_FIELDS = {
     "name": SubscriptionPlan.name,
     "price": SubscriptionPlan.price,
     "period_days": SubscriptionPlan.period_days,
+    "is_hidden": SubscriptionPlan.is_hidden,
+    "is_trial": SubscriptionPlan.is_trial,
     "created_at": SubscriptionPlan.created_at,
 }
 
@@ -161,8 +167,10 @@ class UserActionPayload(BaseModel):
         "unban",
         "add_balance",
         "sub_balance",
+        "add_traffic",
     ]
     amount: int | None = None
+    gb: float | None = Field(default=None, gt=0)
 
 
 class SubscriptionCreatePayload(BaseModel):
@@ -184,11 +192,17 @@ class SubscriptionBulkExtendPayload(BaseModel):
     days: int = Field(gt=0, le=3650)
 
 
+class SubscriptionTrafficPayload(BaseModel):
+    gb: float = Field(gt=0)
+
+
 class PlanCreatePayload(BaseModel):
     name: str = Field(min_length=2, max_length=64)
     price: int = Field(gt=0)
     period_days: int = Field(default=30, gt=0)
     gb_limit: int = Field(default=100, ge=0)
+    is_hidden: bool = False
+    is_trial: bool = False
 
 
 class PlanUpdatePayload(BaseModel):
@@ -196,6 +210,8 @@ class PlanUpdatePayload(BaseModel):
     price: int | None = Field(default=None, gt=0)
     period_days: int | None = Field(default=None, gt=0)
     gb_limit: int | None = Field(default=None, ge=0)
+    is_hidden: bool | None = None
+    is_trial: bool | None = None
 
 
 class PromocodeCreatePayload(BaseModel):
@@ -242,6 +258,7 @@ __all__ = [
     "literal",
     "or_",
     "select",
+    "update",
     "settings",
     "BroadcastHistory",
     "BroadcastJobStatus",
@@ -254,14 +271,18 @@ __all__ = [
     "SubStatus",
     "Subscription",
     "SubscriptionPlan",
+    "SubscriptionTopup",
     "Transaction",
+    "UserActivity",
     "User",
     "WithdrawalStatus",
     "async_session",
     "InsufficientBalance",
+    "BannedUser",
     "SubscriptionNotFound",
     "UserNotFound",
     "SubscriptionService",
+    "ActivityService",
     "UserService",
     "RemnaWaveService",
     "PartnerService",
@@ -283,6 +304,7 @@ __all__ = [
     "SubscriptionCreatePayload",
     "SubscriptionUpdatePayload",
     "SubscriptionBulkExtendPayload",
+    "SubscriptionTrafficPayload",
     "PlanCreatePayload",
     "PlanUpdatePayload",
     "PromocodeCreatePayload",

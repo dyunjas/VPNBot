@@ -16,6 +16,7 @@ from backend.payments.pally import PallyPaymentAPI
 
 from backend.services.subscription_service import SubscriptionService
 from backend.services.remnawave_service import RemnaWaveService
+from backend.services.activity_service import ActivityService
 from backend.services.exceptions import (
     BannedUser,
     UserNotFound,
@@ -39,6 +40,7 @@ class BillingService:
         self.tx_repo = TransactionRepository(session)
         self.sub_service = SubscriptionService(session)
         self.remnawave_service = RemnaWaveService(session)
+        self.activity_service = ActivityService(session)
 
         self.platega = PlategaPaymentAPI()
         self.crypto = CryptoPayAPI()
@@ -177,6 +179,15 @@ class BillingService:
             provider_transaction_id=provider_transaction_id,
             paid_at=datetime.now(timezone.utc),
         )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="platega",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден платеж {provider_transaction_id}",
+        )
 
         await self.session.commit()
         logger.info(
@@ -287,6 +298,15 @@ class BillingService:
         await self.tx_repo.mark_paid(
             provider_transaction_id=str(invoice_id),
             paid_at=datetime.now(timezone.utc),
+        )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="cryptobot",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден платеж {invoice_id}",
         )
 
         await self.session.commit()
@@ -423,6 +443,15 @@ class BillingService:
             provider_transaction_id=provider_transaction_id,
             paid_at=datetime.now(timezone.utc),
         )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="pally",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден платеж {provider_transaction_id}",
+        )
 
         await self.session.commit()
         logger.info(
@@ -502,7 +531,7 @@ class BillingService:
             logger.warning("[biz][billing] buy_subscription_banned user_id=%s plan_id=%s", user_id, plan_id)
             raise BannedUser("User is banned")
 
-        plan = await self.sub_service.get_plan(plan_id)
+        plan = await self.sub_service.get_public_plan(plan_id)
 
         now = datetime.now(timezone.utc)
         try:
@@ -569,6 +598,16 @@ class BillingService:
             )
 
         await self.session.commit()
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="subscription_purchased",
+            source="user",
+            amount=int(plan.price or 0),
+            subscription_id=sub.id,
+            note=f"Покупка/продление подписки plan_id={plan_id}",
+        )
+        await self.session.commit()
         logger.info(
             "[biz][billing] buy_subscription_completed user_id=%s subscription_id=%s plan_id=%s charged=%s",
             user_id,
@@ -616,6 +655,17 @@ class BillingService:
                 e,
             )
 
+        await self.session.commit()
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="traffic",
+            action="traffic_purchased",
+            source="user",
+            amount=int(price),
+            traffic_gb=gb,
+            subscription_id=sub.id,
+            note="Покупка дополнительного трафика",
+        )
         await self.session.commit()
         logger.info(
             "[biz][billing] buy_traffic_completed user_id=%s subscription_id=%s gb=%s charged=%s",

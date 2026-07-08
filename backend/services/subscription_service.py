@@ -4,7 +4,7 @@ from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.logger_config import logger
-from backend.database.models import SubStatus
+from backend.database.models import SubStatus, Subscription
 from backend.repositories.subscription_repository import SubscriptionRepository
 from backend.repositories.subscription_topup_repository import SubscriptionTopupRepository
 from backend.repositories.user_repository import UserRepository
@@ -14,6 +14,7 @@ from backend.services.exceptions import (
     SubscriptionNotFound,
     PlanNotFound, TooEarlyToRenew
 )
+from backend.services.activity_service import ActivityService
 
 
 class SubscriptionService:
@@ -22,6 +23,7 @@ class SubscriptionService:
         self.sub_repo = SubscriptionRepository(session)
         self.topup_repo = SubscriptionTopupRepository(session)
         self.user_repo = UserRepository(session)
+        self.activity_service = ActivityService(session)
 
     @staticmethod
     def _gb_to_bytes(gb: Decimal) -> int:
@@ -51,12 +53,21 @@ class SubscriptionService:
     async def _reset_user_traffic_safe(self, user_id: int) -> None:
         logger.info("[subscription] reset_user_traffic skipped user_id=%s (remnawave-only mode)", user_id)
 
-    async def list_plans(self):
-        return await self.sub_repo.list_plans()
+    async def list_plans(self, *, include_hidden: bool = False):
+        return await self.sub_repo.list_plans(include_hidden=include_hidden)
 
     async def get_plan(self, plan_id: int):
         plan = await self.sub_repo.get_plan_by_id(plan_id)
         if not plan:
+            raise PlanNotFound("Plan not found")
+        return plan
+
+    async def get_trial_plan(self):
+        return await self.sub_repo.get_trial_plan()
+
+    async def get_public_plan(self, plan_id: int):
+        plan = await self.get_plan(plan_id)
+        if bool(getattr(plan, "is_hidden", False)):
             raise PlanNotFound("Plan not found")
         return plan
 
@@ -179,6 +190,14 @@ class SubscriptionService:
 
         await self._reset_user_traffic_safe(user_id=user_id)
         await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="subscription_activated",
+            source="system",
+            subscription_id=sub.id,
+            note=f"План {plan.id}, период {plan.period_days} дн., трафик {plan.gb_limit} GB",
+        )
         await self.session.commit()
         logger.info(
             "[biz][subscription] activate_completed user_id=%s subscription_id=%s",
@@ -268,6 +287,14 @@ class SubscriptionService:
         
         await self._reset_user_traffic_safe(user_id=user_id)
         await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="subscription_renewed",
+            source="system",
+            subscription_id=sub.id,
+            note=f"Продление на {duration_hours} ч.",
+        )
         await self.session.commit()
         logger.info(
             "[biz][subscription] renew_completed user_id=%s subscription_id=%s",
@@ -294,6 +321,15 @@ class SubscriptionService:
 
         await self.topup_repo.add_topup(subscription_id=sub.id, gb=gb)
         await self._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=sub)
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="traffic",
+            action="traffic_added",
+            source="system",
+            traffic_gb=gb,
+            subscription_id=sub.id,
+            note="Выдача дополнительного трафика",
+        )
         logger.info(
             "[biz][subscription] add_traffic_completed user_id=%s subscription_id=%s gb=%s",
             user_id,
@@ -312,6 +348,13 @@ class SubscriptionService:
         return await self.sub_repo.list_active_ending_between(start=start, end=end)
 
     async def mark_expired(self, *, subscription_id: int) -> None:
+        sub = await self.session.get(Subscription, subscription_id)
+        if not sub:
+            logger.warning(
+                "[biz][subscription] mark_expired_not_found subscription_id=%s",
+                subscription_id,
+            )
+            raise SubscriptionNotFound("Subscription not found")
         updated = await self.sub_repo.mark_expired(subscription_id=subscription_id)
         if updated <= 0:
             logger.warning(
@@ -319,6 +362,14 @@ class SubscriptionService:
                 subscription_id,
             )
             raise SubscriptionNotFound("Subscription not found")
+        await self.activity_service.log_user_event(
+            user_id=sub.user_id,
+            category="subscription",
+            action="subscription_expired",
+            source="system",
+            subscription_id=sub.id,
+            note="Подписка переведена в expired",
+        )
         await self.session.commit()
         logger.info(
             "[biz][subscription] marked_expired subscription_id=%s",
@@ -344,6 +395,14 @@ class SubscriptionService:
             )
             raise SubscriptionNotFound("Subscription not found")
         sub.auto_renew = auto_renew
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="auto_renew_changed",
+            source="system",
+            subscription_id=sub.id,
+            note=f"auto_renew={auto_renew}",
+        )
         await self.session.commit()
         logger.info(
             "[biz][subscription] auto_renew_changed user_id=%s subscription_id=%s auto_renew=%s",

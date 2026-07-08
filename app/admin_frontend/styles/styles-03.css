@@ -21,6 +21,28 @@ th {
 tbody tr:nth-child(even) { background: #ffffff; }
 tbody tr:hover { background: #f8fafc; }
 .row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.tx-actions-head,
+.tx-actions-cell {
+  width: 160px;
+  min-width: 160px;
+}
+.tx-actions-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+.tx-actions-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 32px;
+}
+.tx-confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  width: 116px;
+  justify-content: center;
+  text-align: center;
+}
 .pager { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
 
 .badge {

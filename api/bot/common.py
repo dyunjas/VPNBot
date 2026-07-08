@@ -37,7 +37,6 @@ from backend.services.exceptions import (
     UserNotFound,
 )
 
-TRIAL_PLAN_ID = 9
 MIN_WITHDRAW_AMOUNT = 500
 
 

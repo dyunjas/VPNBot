@@ -14,13 +14,35 @@ class SubscriptionRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def list_plans(self) -> Sequence[SubscriptionPlan]:
-        res = await self.session.execute(select(SubscriptionPlan).order_by(SubscriptionPlan.id.asc()))
+    async def list_plans(self, *, include_hidden: bool = False) -> Sequence[SubscriptionPlan]:
+        stmt = select(SubscriptionPlan)
+        if not include_hidden:
+            stmt = stmt.where(SubscriptionPlan.is_hidden.is_(False))
+        res = await self.session.execute(stmt.order_by(SubscriptionPlan.id.asc()))
         return res.scalars().all()
     
     async def get_plan_by_id(self, plan_id: int) -> SubscriptionPlan | None:
         res = await self.session.execute(select(SubscriptionPlan).where(SubscriptionPlan.id == plan_id))
         return res.scalar_one_or_none()
+
+    async def get_trial_plan(self) -> SubscriptionPlan | None:
+        res = await self.session.execute(
+            select(SubscriptionPlan)
+            .where(SubscriptionPlan.is_trial.is_(True))
+            .order_by(SubscriptionPlan.id.asc())
+            .limit(1)
+        )
+        return res.scalar_one_or_none()
+
+    async def clear_trial_flags(self, *, exclude_plan_id: int | None = None) -> None:
+        stmt = (
+            update(SubscriptionPlan)
+            .where(SubscriptionPlan.is_trial.is_(True))
+            .values(is_trial=False)
+        )
+        if exclude_plan_id is not None:
+            stmt = stmt.where(SubscriptionPlan.id != exclude_plan_id)
+        await self.session.execute(stmt)
     
     async def get_by_user_id(self, user_id: int) -> Subscription | None:
         res = await self.session.execute(select(Subscription).where(Subscription.user_id == user_id))

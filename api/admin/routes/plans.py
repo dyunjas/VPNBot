@@ -32,6 +32,8 @@ async def admin_plans(
                 "price": int(p.price),
                 "period_days": p.period_days,
                 "gb_limit": int(getattr(p, "gb_limit", 0) or 0),
+                "is_hidden": bool(getattr(p, "is_hidden", False)),
+                "is_trial": bool(getattr(p, "is_trial", False)),
                 "created_at": _to_iso(p.created_at),
                 "subscriptions_count": sub_counts.get(p.id, 0),
             }
@@ -51,9 +53,18 @@ async def admin_plan_create(payload: PlanCreatePayload):
             price=payload.price,
             period_days=payload.period_days,
             gb_limit=payload.gb_limit,
+            is_hidden=payload.is_hidden,
+            is_trial=payload.is_trial,
             created_at=datetime.now(timezone.utc),
         )
         session.add(plan)
+        await session.flush()
+        if payload.is_trial:
+            await session.execute(
+                update(SubscriptionPlan)
+                .where(SubscriptionPlan.id != plan.id, SubscriptionPlan.is_trial.is_(True))
+                .values(is_trial=False)
+            )
         await session.commit()
         await session.refresh(plan)
         return {"ok": True, "plan_id": plan.id}
@@ -77,6 +88,16 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
             plan.period_days = payload.period_days
         if payload.gb_limit is not None:
             plan.gb_limit = payload.gb_limit
+        if payload.is_hidden is not None:
+            plan.is_hidden = payload.is_hidden
+        if payload.is_trial is not None:
+            plan.is_trial = payload.is_trial
+            if payload.is_trial:
+                await session.execute(
+                    update(SubscriptionPlan)
+                    .where(SubscriptionPlan.id != plan.id, SubscriptionPlan.is_trial.is_(True))
+                    .values(is_trial=False)
+                )
         await session.commit()
         await session.refresh(plan)
         return {"ok": True}

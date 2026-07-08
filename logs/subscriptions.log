@@ -1324,3 +1324,26 @@ aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socke
 [2026-07-04 15:52:02] [INFO] root: [subscription] reset_user_traffic skipped user_id=97 (remnawave-only mode)
 [2026-07-04 15:52:02] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=97 subscription_id=78 traffic_limit_bytes=32212254720
 [2026-07-04 15:52:02] [INFO] root: [biz][subscription] activate_completed user_id=97 subscription_id=78
+[2026-07-07 23:39:37] [INFO] root: [biz][subscription] marked_expired subscription_id=78
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] activate_requested user_id=98 plan_id=5 auto_renew=False
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] created user_id=98 subscription_id=79 plan_id=5 period_end=2027-07-02 19:04:47.142644+00:00 gb_added=360.00
+[2026-07-08 00:04:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=98 (remnawave-only mode)
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=386547056640
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] activate_completed user_id=98 subscription_id=79
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_requested user_id=36 duration_hours=24
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-08-06 04:50:24.843594+00:00
+[2026-07-08 00:04:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=36 subscription_id=49 traffic_limit_bytes=139586437120
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=386547056640
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=20
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=50
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=408021893120
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=50
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] add_traffic_requested user_id=84 gb=60.0
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=96636764160
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] add_traffic_completed user_id=84 subscription_id=67 gb=60.0
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=1000.0
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=461708984320
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=1000.0

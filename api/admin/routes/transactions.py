@@ -1,7 +1,11 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter
+
 from ..common import *
 
 router = APIRouter()
+
 
 @router.get("/transactions", dependencies=[Depends(require_admin_auth)])
 async def admin_transactions(
@@ -70,3 +74,38 @@ async def admin_transactions(
     }
 
 
+@router.post("/transactions/{transaction_id}/confirm", dependencies=[Depends(require_admin_auth)])
+async def admin_transaction_confirm(transaction_id: int):
+    async with async_session() as session:
+        tx = _http_404_if_none(await session.get(Transaction, transaction_id), "transaction not found")
+        user = _http_404_if_none(await session.get(User, tx.user_id), "user not found")
+        if bool(tx.paid):
+            return {
+                "ok": True,
+                "transaction_id": tx.id,
+                "already_paid": True,
+                "balance": int(user.balance or 0),
+            }
+
+        user.balance = int(user.balance or 0) + int(tx.amount or 0)
+        tx.paid = True
+        tx.paid_at = datetime.now(timezone.utc)
+
+        await ActivityService(session).log_user_event(
+            user_id=user.id,
+            category="admin",
+            action="payment_confirmed",
+            source="admin_panel",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Ручное подтверждение платежа {tx.transaction_id or tx.id}",
+        )
+        await session.commit()
+        await session.refresh(user)
+        return {
+            "ok": True,
+            "transaction_id": tx.id,
+            "already_paid": False,
+            "balance": int(user.balance or 0),
+            "paid_at": _to_iso(tx.paid_at),
+        }

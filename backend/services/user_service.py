@@ -6,28 +6,39 @@ from backend.core.logger_config import logger
 from backend.database.models import User
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import UserNotFound, InsufficientBalance
+from backend.services.activity_service import ActivityService
 
 
 class UserService:
     def __init__(self, session: AsyncSession):
         self.session = session
         self.user_repo = UserRepository(session)
+        self.activity_service = ActivityService(session)
 
     async def create_user(self, tg_id: int, username: str | None = None):
         user = await self.user_repo.get_by_tg_id(tg_id)
+        created = False
         if not user:
             user = await self.user_repo.create(tg_id=tg_id, username=username)
             self.user_repo.session.add(user)
             await self.session.flush()
+            await self.activity_service.log_user_event(
+                user_id=user.id,
+                category="user",
+                action="user_created",
+                source="system",
+                note="Автоматическая регистрация пользователя",
+            )
             await self.session.commit()
             await self.session.refresh(user)
+            created = True
             logger.info(
                 "[biz][user] created user_id=%s tg_id=%s username=%s",
                 user.id,
                 tg_id,
                 username,
             )
-        return user
+        return user, created
 
     async def get_by_id(self, user_id: int):
         user = await self.user_repo.get_by_id(user_id)
@@ -95,6 +106,14 @@ class UserService:
             raise UserNotFound(f"User with id:{user_id} not found")
         before = int(user.balance or 0)
         await self.user_repo.add_balance(user_id=user_id, amount=amount)
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="billing",
+            action="balance_added",
+            source="system",
+            amount=amount,
+            note="Начисление на баланс",
+        )
         await self.session.commit()
         await self.session.refresh(user)
         logger.info(
@@ -114,6 +133,14 @@ class UserService:
             raise InsufficientBalance("Insufficient balance")
         before = int(user.balance or 0)
         await self.user_repo.sub_balance(user_id=user_id, amount=amount)
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="billing",
+            action="balance_subtracted",
+            source="system",
+            amount=amount,
+            note="Списание с баланса",
+        )
         await self.session.commit()
         await self.session.refresh(user)
         logger.info(

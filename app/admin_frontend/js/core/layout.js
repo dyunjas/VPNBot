@@ -156,6 +156,8 @@ const ADMIN_MENU = [
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
 ];
 
+const DESKTOP_SIDEBAR_STORAGE_KEY = "adminDesktopSidebarCollapsed";
+
 function menuIcon(kind) {
   const map = {
     overview: "<path d='M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10'/><path d='M6 8h.01'/><path d='M9 8h.01'/>",
@@ -197,8 +199,10 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     <div class="app">
       <aside class="sidebar">
         <div class="sidebar-head">
-          <div class="sidebar-kicker">Internal Tool</div>
-          <div class="sidebar-title">Админ-панель</div>
+          <div>
+            <div class="sidebar-kicker">Internal Tool</div>
+            <div class="sidebar-title">Админ-панель</div>
+          </div>
         </div>
 
         <nav class="menu">${renderMenu(activeKey)}</nav>
@@ -212,6 +216,9 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
         <header class="topbar">
           <div class="topbar-left">
             <button id="mobile_nav_toggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню">
+              <span></span><span></span><span></span>
+            </button>
+            <button id="desktop_topbar_toggle" class="desktop-topbar-toggle" type="button" aria-label="Свернуть меню" title="Свернуть меню">
               <span></span><span></span><span></span>
             </button>
             <div class="topbar-title">Админ-панель</div>
@@ -251,20 +258,58 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     if (val) window.location.href = val;
   });
 
+  const applyDesktopSidebarState = (collapsed) => {
+    document.body.classList.toggle("desktop-sidebar-collapsed", collapsed);
+    const desktopToggles = [q("desktop_topbar_toggle")].filter(Boolean);
+    desktopToggles.forEach((toggle) => {
+      toggle.setAttribute("aria-label", collapsed ? "Развернуть меню" : "Свернуть меню");
+      toggle.setAttribute("title", collapsed ? "Развернуть меню" : "Свернуть меню");
+    });
+  };
+
+  const setDesktopSidebarCollapsed = (collapsed) => {
+    applyDesktopSidebarState(collapsed);
+    try {
+      window.localStorage.setItem(DESKTOP_SIDEBAR_STORAGE_KEY, collapsed ? "1" : "0");
+    } catch {}
+  };
+
+  const toggleDesktopSidebar = () => {
+    if (window.innerWidth <= 980) return;
+    setDesktopSidebarCollapsed(!document.body.classList.contains("desktop-sidebar-collapsed"));
+  };
+
+  let desktopCollapsed = false;
+  try {
+    desktopCollapsed = window.localStorage.getItem(DESKTOP_SIDEBAR_STORAGE_KEY) === "1";
+  } catch {}
+  applyDesktopSidebarState(desktopCollapsed);
+
   const openMobileNav = () => document.body.classList.add("mobile-nav-open");
   const closeMobileNav = () => document.body.classList.remove("mobile-nav-open");
 
   const navToggle = q("mobile_nav_toggle");
   const navOverlay = q("mobile_nav_overlay");
+  const desktopTopbarToggle = q("desktop_topbar_toggle");
   if (navToggle) {
     navToggle.addEventListener("click", () => {
       if (document.body.classList.contains("mobile-nav-open")) closeMobileNav();
       else openMobileNav();
     });
   }
+  if (desktopTopbarToggle) desktopTopbarToggle.addEventListener("click", toggleDesktopSidebar);
   if (navOverlay) navOverlay.addEventListener("click", closeMobileNav);
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 980) closeMobileNav();
+    if (window.innerWidth > 980) {
+      closeMobileNav();
+      let collapsed = false;
+      try {
+        collapsed = window.localStorage.getItem(DESKTOP_SIDEBAR_STORAGE_KEY) === "1";
+      } catch {}
+      applyDesktopSidebarState(collapsed);
+      return;
+    }
+    document.body.classList.remove("desktop-sidebar-collapsed");
   });
 
   const menuEl = document.querySelector(".menu");

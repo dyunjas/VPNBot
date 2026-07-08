@@ -22,7 +22,19 @@ router = APIRouter(dependencies=[Depends(require_bot_auth)])
 async def plans(tg_id: int, user_service=Depends(get_user_service)):
     _ = await _get_user_or_404(user_service, tg_id)
     plans = await SubscriptionService(user_service.session).list_plans()
-    return {"ok": True, "items": [{"id": plan.id, "name": plan.name, "price": int(plan.price), "period_days": plan.period_days, "gb_limit": int(getattr(plan, "gb_limit", 0) or 0)} for plan in plans]}
+    return {
+        "ok": True,
+        "items": [
+            {
+                "id": plan.id,
+                "name": plan.name,
+                "price": int(plan.price),
+                "period_days": plan.period_days,
+                "gb_limit": int(getattr(plan, "gb_limit", 0) or 0),
+            }
+            for plan in plans
+        ],
+    }
 
 
 @router.get("/users/by-tg/{tg_id}/subscription")
@@ -43,6 +55,10 @@ async def subscription(tg_id: int, user_service=Depends(get_user_service)):
 @router.post("/users/by-tg/{tg_id}/subscription/buy")
 async def subscription_buy(tg_id: int, payload: PlanBuyPayload, user_service=Depends(get_user_service)):
     user = await _get_user_or_404(user_service, tg_id)
+    try:
+        await SubscriptionService(user_service.session).get_public_plan(payload.plan_id)
+    except Exception as e:
+        raise _map_service_error(e)
     billing = BillingService(user_service.session)
     try:
         sub = await billing.buy_subscription(user_id=user.id, plan_id=payload.plan_id, auto_renew=payload.auto_renew)

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <table>
             <thead>
               <tr>
-                <th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Provider ID</th><th>Сумма</th><th>Система</th><th>Статус</th><th>Создана</th><th>Оплачена</th>
+                <th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Provider ID</th><th>Сумма</th><th>Система</th><th>Статус</th><th>Создана</th><th>Оплачена</th><th class="tx-actions-head">Действия</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
@@ -36,6 +36,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
     `,
   });
+
+  async function confirmPayment(id, button, amount, providerId) {
+    const providerLabel = String(providerId || id);
+    if (!confirm(`Подтвердить платеж на ${amount} RUB?\n\nProvider ID: ${providerLabel}\nСумма будет зачислена пользователю на баланс.`)) {
+      return;
+    }
+
+    await withButtonLoading(button, async () => {
+      const result = await api(`/api/admin/transactions/${id}/confirm`, { method: "POST" });
+      await loadRows();
+      showToast(
+        result.already_paid ? "Платеж уже был подтвержден" : `Платеж подтвержден, баланс: ${result.balance} RUB`,
+        "success",
+      );
+    }).catch((error) => alert(error.message));
+  }
 
   async function loadRows() {
     const params = new URLSearchParams({
@@ -65,7 +81,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${statusBadge(transaction.paid ? "paid" : "unpaid")}</td>
         <td>${formatDateTime(transaction.created_at)}</td>
         <td>${formatDateTime(transaction.paid_at)}</td>
+        <td class="tx-actions-cell"><div class="row-actions tx-actions-wrap"></div></td>
       `;
+
+      const actions = tr.querySelector(".tx-actions-wrap");
+      if (!transaction.paid) {
+        const button = document.createElement("button");
+        button.className = "btn-primary tx-confirm-btn";
+        button.textContent = "Подтвердить";
+        button.addEventListener("click", () =>
+          confirmPayment(transaction.id, button, transaction.amount, transaction.transaction_id)
+        );
+        actions.appendChild(button);
+      } else {
+        actions.textContent = "—";
+      }
+
       q("tbody").appendChild(tr);
     });
 

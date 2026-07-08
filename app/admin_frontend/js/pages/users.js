@@ -1,5 +1,46 @@
 const usersState = { page: 1, pages: 1, selectedUserId: null };
 
+function formatTraffic(bytes) {
+  const value = Number(bytes || 0);
+  if (value <= 0) return "0 GB";
+  return `${(value / 1024 ** 3).toFixed(2)} GB`;
+}
+
+function formatActivityValue(item) {
+  const chunks = [];
+  if (item.amount !== null && item.amount !== undefined) chunks.push(`${safeText(item.amount)} RUB`);
+  if (item.traffic_gb !== null && item.traffic_gb !== undefined) chunks.push(`${safeText(item.traffic_gb)} GB`);
+  if (item.note) chunks.push(safeText(item.note));
+  return chunks.join(" • ") || "Без деталей";
+}
+
+function activityLabel(item) {
+  const labels = {
+    user_created: "Регистрация",
+    ban: "Блокировка",
+    unban: "Разблокировка",
+    add_balance: "Ручное пополнение",
+    sub_balance: "Ручное списание",
+    add_traffic: "Ручная выдача трафика",
+    balance_added: "Начисление баланса",
+    balance_subtracted: "Списание баланса",
+    payment_confirmed: "Подтверждение платежа",
+    subscription_activated: "Активация подписки",
+    subscription_renewed: "Продление подписки",
+    subscription_expired: "Истечение подписки",
+    subscription_created: "Создание подписки",
+    subscription_updated: "Изменение подписки",
+    subscription_deleted: "Удаление подписки",
+    subscription_bulk_extended: "Массовое продление",
+    subscription_purchased: "Покупка подписки",
+    traffic_added: "Выдача трафика",
+    traffic_purchased: "Покупка трафика",
+    auto_renew_changed: "Автопродление",
+    promocode_activated: "Промокод",
+  };
+  return labels[item.action] || item.action || "Событие";
+}
+
 function renderEmptyUserState() {
   return `
     <div class="empty-user-state">
@@ -101,6 +142,8 @@ async function loadUserDetails(userId) {
   const user = data.user || {};
   const subscription = data.subscription || {};
   const transactions = data.transactions || [];
+  const topups = data.topups || [];
+  const activities = data.activities || [];
 
   q("details").innerHTML = `
     <div class="details-section">
@@ -111,6 +154,7 @@ async function loadUserDetails(userId) {
         <div><span>Username</span><b>${safeText(user.username)}</b></div>
         <div><span>Email</span><b>${safeText(user.email)}</b></div>
         <div><span>Баланс</span><b>${safeText(user.balance)} RUB</b></div>
+        <div><span>Лимит трафика</span><b>${safeText(formatTraffic(user.traffic_limit_bytes))}</b></div>
         <div><span>Статус</span>${user.banned ? statusBadge("ban") : statusBadge("ok")}</div>
       </div>
     </div>
@@ -122,6 +166,7 @@ async function loadUserDetails(userId) {
         <div><span>Статус</span>${statusBadge(subscription.status || "expired")}</div>
         <div><span>Активна до</span><b>${formatDateTime(subscription.current_period_end)}</b></div>
         <div><span>Автопродление</span>${subscription.auto_renew ? statusBadge("yes") : statusBadge("no")}</div>
+        <div><span>Добавлено трафика</span><b>${safeText(subscription.topup_gb || 0)} GB</b></div>
       </div>
     </div>
 
@@ -138,6 +183,42 @@ async function loadUserDetails(userId) {
                   `<tr><td>${safeText(item.id)}</td><td>${safeText(item.amount)} RUB</td><td>${safeText(item.payment_system)}</td><td>${statusBadge(item.paid ? "paid" : "unpaid")}</td></tr>`
               )
               .join("") || "<tr><td colspan='4'>Нет транзакций</td></tr>"}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h4>Начисления трафика</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>GB</th><th>Подписка</th><th>Дата</th></tr></thead>
+          <tbody>
+            ${topups
+              .slice(0, 10)
+              .map(
+                (item) =>
+                  `<tr><td>${safeText(item.id)}</td><td>${safeText(item.gb)} GB</td><td>${safeText(item.subscription_id)}</td><td>${formatDateTime(item.created_at)}</td></tr>`
+              )
+              .join("") || "<tr><td colspan='4'>Нет начислений трафика</td></tr>"}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h4>История действий</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Дата</th><th>Тип</th><th>Источник</th><th>Детали</th></tr></thead>
+          <tbody>
+            ${activities
+              .slice(0, 20)
+              .map(
+                (item) =>
+                  `<tr><td>${formatDateTime(item.created_at)}</td><td>${safeText(activityLabel(item))}</td><td>${safeText(item.source || item.category)}</td><td>${formatActivityValue(item)}</td></tr>`
+              )
+              .join("") || "<tr><td colspan='4'>История пока пуста</td></tr>"}
           </tbody>
         </table>
       </div>

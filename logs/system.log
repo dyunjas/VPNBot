@@ -8681,3 +8681,45 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-05 00:05:00] [INFO] root: Settings successfully loaded from .env
 [2026-07-05 00:05:00] [INFO] root: Database tables initialized
 [2026-07-05 00:05:00] [INFO] root: Database connection successful
+[2026-07-07 23:39:34] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:39:36] [INFO] root: Database tables initialized
+[2026-07-07 23:39:36] [INFO] root: Database connection successful
+[2026-07-07 23:40:00] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:40:00] [INFO] root: Bot started
+[2026-07-07 23:40:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:42:01] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-07 23:42:02] [INFO] root: Bot stopped
+[2026-07-07 23:42:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:42:08] [INFO] root: Bot started
+[2026-07-07 23:42:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:42:17] [INFO] root: Database tables initialized
+[2026-07-07 23:42:17] [INFO] root: Database connection successful
+[2026-07-07 23:46:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:46:22] [INFO] root: Database tables initialized
+[2026-07-07 23:46:22] [INFO] root: Database connection successful
+[2026-07-08 00:20:57] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 121] Превышен таймаут семафора
+[2026-07-08 00:21:19] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 00:31:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:31:16] [INFO] root: Database tables initialized
+[2026-07-08 00:31:16] [INFO] root: Database connection successful
+[2026-07-08 00:36:37] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:36:38] [INFO] root: Database tables initialized
+[2026-07-08 00:36:38] [INFO] root: Database connection successful
+[2026-07-08 00:45:19] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:45:19] [INFO] root: Database tables initialized
+[2026-07-08 00:45:19] [INFO] root: Database connection successful
+[2026-07-08 15:53:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 15:53:19] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 15:53:20] [INFO] root: Database tables initialized
+[2026-07-08 15:53:20] [INFO] root: Database connection successful
+[2026-07-08 15:53:20] [INFO] root: Bot started
+[2026-07-08 15:53:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 16:50:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 16:50:06] [INFO] root: Database tables initialized
+[2026-07-08 16:50:06] [INFO] root: Database connection successful
+[2026-07-08 17:02:13] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:02:24] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 17:08:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:09:12] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 17:11:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:11:15] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)

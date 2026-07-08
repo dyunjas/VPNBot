@@ -40,8 +40,10 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
     async with async_session() as session:
         user = await _get_user_or_404(session, tg_id)
         billing = BillingService(session)
+        sub_service = SubscriptionService(session)
 
         try:
+            await sub_service.get_public_plan(payload.plan_id)
             sub = await billing.buy_subscription(
                 user_id=user.id,
                 plan_id=payload.plan_id,
@@ -52,7 +54,6 @@ async def mini_subscription_buy(payload: BuySubscriptionPayload):
         finally:
             await billing.close_clients()
 
-        sub_service = SubscriptionService(session)
         plan = await sub_service.get_plan(sub.plan_id)
 
         return {

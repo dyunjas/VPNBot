@@ -1,6 +1,9 @@
-﻿from fastapi import APIRouter
-from ..common import *
+from decimal import Decimal
+
+from fastapi import APIRouter
 from aiogram import Bot
+
+from ..common import *
 from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
 from backend.core.telegram import create_telegram_session
@@ -45,6 +48,7 @@ async def _notify_bulk_extend(users: list[tuple[User, datetime]], days: int) -> 
         if temp_bot is not None:
             await temp_bot.session.close()
     return sent
+
 
 @router.get("/subscriptions", dependencies=[Depends(require_admin_auth)])
 async def admin_subscriptions(
@@ -115,11 +119,20 @@ async def admin_subscription_create(payload: SubscriptionCreatePayload):
             raise HTTPException(status_code=400, detail="cannot create subscription for banned user")
 
         sub_service = SubscriptionService(session)
+        activity_service = ActivityService(session)
         try:
             sub = await sub_service.activate_subscription(
                 user_id=payload.user_id,
                 plan_id=payload.plan_id,
                 auto_renew=payload.auto_renew,
+            )
+            await activity_service.log_user_event(
+                user_id=payload.user_id,
+                category="admin",
+                action="subscription_created",
+                source="admin_panel",
+                subscription_id=sub.id,
+                note=f"Подписка создана из админки, plan_id={payload.plan_id}, auto_renew={payload.auto_renew}",
             )
             await session.commit()
             await session.refresh(sub)
@@ -133,8 +146,10 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
         user = _http_404_if_none(await session.get(User, sub.user_id), "user not found")
+        activity_service = ActivityService(session)
         now = datetime.now(timezone.utc)
         period_end_changed = False
+        changes: list[str] = []
 
         if bool(getattr(user, "banned", False)):
             if (
@@ -147,11 +162,14 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         if payload.plan_id is not None:
             plan = _http_404_if_none(await session.get(SubscriptionPlan, payload.plan_id), "plan not found")
             sub.plan_id = plan.id
+            changes.append(f"plan_id={plan.id}")
 
         if payload.status is not None:
             sub.status = SubStatus(payload.status)
+            changes.append(f"status={payload.status}")
         if payload.auto_renew is not None:
             sub.auto_renew = payload.auto_renew
+            changes.append(f"auto_renew={payload.auto_renew}")
 
         if payload.extend_days is not None:
             base_end = _as_aware_utc(sub.current_period_end) or now
@@ -160,11 +178,23 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
             sub.current_period_end = base_end + timedelta(days=max(payload.extend_days, 0))
             sub.next_renewal_at = sub.current_period_end
             period_end_changed = True
+            changes.append(f"extend_days={payload.extend_days}")
 
         if payload.current_period_end is not None:
             sub.current_period_end = _as_aware_utc(payload.current_period_end)
             sub.next_renewal_at = sub.current_period_end
             period_end_changed = True
+            changes.append("current_period_end_set")
+
+        if changes:
+            await activity_service.log_user_event(
+                user_id=user.id,
+                category="admin",
+                action="subscription_updated",
+                source="admin_panel",
+                subscription_id=sub.id,
+                note="; ".join(changes)[:512],
+            )
 
         await session.commit()
         if period_end_changed:
@@ -176,6 +206,51 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
                     pass
         await session.refresh(sub)
         return {"ok": True}
+
+
+@router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_admin_auth)])
+async def admin_subscription_add_traffic(subscription_id: int, payload: SubscriptionTrafficPayload):
+    async with async_session() as session:
+        sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
+        user = _http_404_if_none(await session.get(User, sub.user_id), "user not found")
+        if bool(getattr(user, "banned", False)):
+            raise HTTPException(status_code=400, detail="cannot add traffic for banned user")
+
+        subscription_service = SubscriptionService(session)
+        activity_service = ActivityService(session)
+        remnawave_service = RemnaWaveService(session)
+
+        gb = Decimal(str(payload.gb or 0))
+        if gb <= 0:
+            raise HTTPException(status_code=400, detail="gb must be > 0")
+
+        active_sub = await subscription_service.get_active_subscription(user.id)
+        if int(active_sub.id) != int(subscription_id):
+            raise HTTPException(status_code=400, detail="traffic can be added only to active subscription")
+
+        updated_sub = await subscription_service.add_traffic(user.id, gb)
+        await activity_service.log_user_event(
+            user_id=user.id,
+            category="admin",
+            action="add_traffic",
+            source="admin_panel",
+            traffic_gb=gb,
+            subscription_id=updated_sub.id,
+            note=f"Ручная выдача трафика из раздела подписок, subscription_id={updated_sub.id}",
+        )
+        if remnawave_service.enabled:
+            await remnawave_service.sync_user_state(user=user, subscription=updated_sub, status="ACTIVE")
+        await session.refresh(user)
+        await session.commit()
+        topup_gb = await subscription_service.get_topup_gb(updated_sub.id)
+        return {
+            "ok": True,
+            "subscription_id": updated_sub.id,
+            "user_id": user.id,
+            "gb": float(gb),
+            "topup_gb": float(topup_gb or 0),
+            "traffic_limit_bytes": int(user.traffic_limit_bytes or 0),
+        }
 
 
 @router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_admin_auth)])
@@ -200,6 +275,7 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
 
         rows = (await session.execute(stmt.order_by(Subscription.id.asc()))).all()
         remnawave_service = RemnaWaveService(session)
+        activity_service = ActivityService(session)
         updated = 0
         failed: list[dict[str, str | int]] = []
         notify_queue: list[tuple[User, datetime]] = []
@@ -230,6 +306,14 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
                         subscription=sub,
                         status="ACTIVE",
                     )
+                await activity_service.log_user_event(
+                    user_id=user.id,
+                    category="admin",
+                    action="subscription_bulk_extended",
+                    source="admin_panel",
+                    subscription_id=sub.id,
+                    note=f"Массовое продление подписки на {payload.days} дн.",
+                )
                 await session.commit()
                 updated += 1
                 notify_queue.append((user, new_end))
@@ -256,6 +340,14 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
 async def admin_subscription_delete(subscription_id: int):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
+        await ActivityService(session).log_user_event(
+            user_id=sub.user_id,
+            category="admin",
+            action="subscription_deleted",
+            source="admin_panel",
+            subscription_id=sub.id,
+            note="Подписка удалена из админки",
+        )
         await session.delete(sub)
         await session.commit()
         return {"ok": True}

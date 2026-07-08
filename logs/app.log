@@ -14883,3 +14883,167 @@ PermissionError: Unauthorized
 [2026-07-05 00:05:00] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-07-05 00:05:00] [INFO] root: Database tables initialized
 [2026-07-05 00:05:00] [INFO] root: Database connection successful
+[2026-07-07 23:39:34] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:39:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:39:36] [INFO] root: Database tables initialized
+[2026-07-07 23:39:36] [INFO] root: Database connection successful
+[2026-07-07 23:39:37] [INFO] root: [biz][subscription] marked_expired subscription_id=78
+[2026-07-07 23:40:00] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:40:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:40:00] [INFO] root: Bot started
+[2026-07-07 23:40:00] [INFO] aiogram.dispatcher: Start polling
+[2026-07-07 23:40:01] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-07 23:40:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:40:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:41:07] [ERROR] root: Failed to load user from API: BOT_API_TOKEN is not configured
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\middlewares\user_update.py", line 24, in __call__
+    user = await bot_api.get_user_by_tg_id(event_user.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 133, in get_user_by_tg_id
+    return await self._request_json("GET", f"/api/users/by-tg/{tg_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 67, in _request_json
+    async with session.request(method, self._url(path), json=json, headers=self._headers()) as resp:
+                                                                           ~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\backend\api_client.py", line 41, in _headers
+    raise RuntimeError("BOT_API_TOKEN is not configured")
+RuntimeError: BOT_API_TOKEN is not configured
+[2026-07-07 23:41:07] [INFO] aiogram.event: Update id=891136694 is handled. Duration 11 ms by bot id=7557954606
+[2026-07-07 23:42:01] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-07 23:42:01] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-07 23:42:01] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-07 23:42:02] [INFO] root: Bot polling cancelled
+[2026-07-07 23:42:02] [INFO] root: Bot stopped
+[2026-07-07 23:42:02] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-07 23:42:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:42:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:42:08] [INFO] root: Bot started
+[2026-07-07 23:42:08] [INFO] aiogram.dispatcher: Start polling
+[2026-07-07 23:42:09] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-07 23:42:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:42:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:42:17] [INFO] root: Database tables initialized
+[2026-07-07 23:42:17] [INFO] root: Database connection successful
+[2026-07-07 23:42:22] [INFO] aiogram.event: Update id=891136695 is handled. Duration 991 ms by bot id=7557954606
+[2026-07-07 23:42:24] [INFO] aiogram.event: Update id=891136696 is handled. Duration 425 ms by bot id=7557954606
+[2026-07-07 23:42:27] [INFO] aiogram.event: Update id=891136697 is handled. Duration 503 ms by bot id=7557954606
+[2026-07-07 23:42:31] [INFO] aiogram.event: Update id=891136698 is handled. Duration 245 ms by bot id=7557954606
+[2026-07-07 23:44:32] [INFO] aiogram.event: Update id=891136699 is handled. Duration 128 ms by bot id=7557954606
+[2026-07-07 23:44:33] [INFO] aiogram.event: Update id=891136700 is handled. Duration 211 ms by bot id=7557954606
+[2026-07-07 23:46:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-07 23:46:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-07 23:46:22] [INFO] root: Database tables initialized
+[2026-07-07 23:46:22] [INFO] root: Database connection successful
+[2026-07-07 23:51:33] [INFO] aiogram.event: Update id=891136701 is handled. Duration 205 ms by bot id=7557954606
+[2026-07-07 23:51:35] [INFO] aiogram.event: Update id=891136702 is handled. Duration 201 ms by bot id=7557954606
+[2026-07-07 23:51:35] [INFO] aiogram.event: Update id=891136703 is handled. Duration 195 ms by bot id=7557954606
+[2026-07-08 00:04:07] [INFO] aiogram.event: Update id=891136704 is handled. Duration 369 ms by bot id=7557954606
+[2026-07-08 00:04:10] [INFO] aiogram.event: Update id=891136705 is handled. Duration 125 ms by bot id=7557954606
+[2026-07-08 00:04:44] [INFO] aiogram.event: Update id=891136706 is handled. Duration 114 ms by bot id=7557954606
+[2026-07-08 00:04:47] [INFO] root: [biz][user] created user_id=98 tg_id=7269510366 username=duolingo217228ss
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] activate_requested user_id=98 plan_id=5 auto_renew=False
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] created user_id=98 subscription_id=79 plan_id=5 period_end=2027-07-02 19:04:47.142644+00:00 gb_added=360.00
+[2026-07-08 00:04:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=98 (remnawave-only mode)
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=386547056640
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] activate_completed user_id=98 subscription_id=79
+[2026-07-08 00:04:47] [INFO] root: [biz][referral] account_created user_id=98 account_id=74
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_requested user_id=36 duration_hours=24
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_extended user_id=36 subscription_id=49 new_period_end=2026-08-06 04:50:24.843594+00:00
+[2026-07-08 00:04:47] [INFO] root: [subscription] reset_user_traffic skipped user_id=36 (remnawave-only mode)
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=36 subscription_id=49 traffic_limit_bytes=139586437120
+[2026-07-08 00:04:47] [INFO] root: [biz][subscription] renew_completed user_id=36 subscription_id=49
+[2026-07-08 00:04:48] [INFO] root: [biz][referral] referrer_attached user_id=98 referrer_id=36 bonus_hours=24
+[2026-07-08 00:04:48] [INFO] aiogram.event: Update id=891136707 is handled. Duration 1458 ms by bot id=7557954606
+[2026-07-08 00:04:59] [INFO] aiogram.event: Update id=891136708 is handled. Duration 128 ms by bot id=7557954606
+[2026-07-08 00:05:01] [INFO] aiogram.event: Update id=891136709 is handled. Duration 346 ms by bot id=7557954606
+[2026-07-08 00:05:05] [INFO] aiogram.event: Update id=891136710 is handled. Duration 224 ms by bot id=7557954606
+[2026-07-08 00:05:12] [INFO] aiogram.event: Update id=891136711 is handled. Duration 1104 ms by bot id=7557954606
+[2026-07-08 00:05:14] [INFO] aiogram.event: Update id=891136712 is handled. Duration 203 ms by bot id=7557954606
+[2026-07-08 00:05:15] [INFO] aiogram.event: Update id=891136713 is handled. Duration 192 ms by bot id=7557954606
+[2026-07-08 00:05:17] [INFO] aiogram.event: Update id=891136714 is handled. Duration 224 ms by bot id=7557954606
+[2026-07-08 00:05:18] [INFO] aiogram.event: Update id=891136715 is handled. Duration 223 ms by bot id=7557954606
+[2026-07-08 00:05:19] [INFO] aiogram.event: Update id=891136716 is handled. Duration 216 ms by bot id=7557954606
+[2026-07-08 00:05:21] [INFO] aiogram.event: Update id=891136717 is handled. Duration 434 ms by bot id=7557954606
+[2026-07-08 00:20:57] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 121] Превышен таймаут семафора
+[2026-07-08 00:20:57] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-08 00:21:19] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 00:31:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:31:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 00:31:16] [INFO] root: Database tables initialized
+[2026-07-08 00:31:16] [INFO] root: Database connection successful
+[2026-07-08 00:36:37] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:36:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 00:36:38] [INFO] root: Database tables initialized
+[2026-07-08 00:36:38] [INFO] root: Database connection successful
+[2026-07-08 00:45:19] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 00:45:19] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 00:45:19] [INFO] root: Database tables initialized
+[2026-07-08 00:45:19] [INFO] root: Database connection successful
+[2026-07-08 00:45:59] [INFO] aiogram.event: Update id=891136718 is handled. Duration 768 ms by bot id=7557954606
+[2026-07-08 00:46:02] [INFO] aiogram.event: Update id=891136719 is handled. Duration 224 ms by bot id=7557954606
+[2026-07-08 00:46:10] [INFO] aiogram.event: Update id=891136720 is handled. Duration 261 ms by bot id=7557954606
+[2026-07-08 00:46:11] [INFO] aiogram.event: Update id=891136721 is handled. Duration 232 ms by bot id=7557954606
+[2026-07-08 15:53:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 15:53:19] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 15:53:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 15:53:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 15:53:20] [INFO] root: Database tables initialized
+[2026-07-08 15:53:20] [INFO] root: Database connection successful
+[2026-07-08 15:53:20] [INFO] root: Bot started
+[2026-07-08 15:53:20] [INFO] aiogram.dispatcher: Start polling
+[2026-07-08 15:53:21] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-08 15:53:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 15:53:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 15:58:56] [INFO] aiogram.event: Update id=891136722 is handled. Duration 722 ms by bot id=7557954606
+[2026-07-08 15:58:58] [INFO] aiogram.event: Update id=891136723 is handled. Duration 414 ms by bot id=7557954606
+[2026-07-08 15:59:00] [INFO] aiogram.event: Update id=891136724 is handled. Duration 410 ms by bot id=7557954606
+[2026-07-08 15:59:03] [INFO] aiogram.event: Update id=891136725 is handled. Duration 107 ms by bot id=7557954606
+[2026-07-08 15:59:04] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:04] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=40
+[2026-07-08 15:59:04] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=98 balance=0 required=40
+[2026-07-08 15:59:04] [INFO] aiogram.event: Update id=891136726 is handled. Duration 236 ms by bot id=7557954606
+[2026-07-08 15:59:07] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=0 after=100
+[2026-07-08 15:59:07] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=100 after=200
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=40
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=40
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=20
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=386547056640
+[2026-07-08 15:59:09] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=20
+[2026-07-08 15:59:09] [INFO] root: [biz][billing] buy_traffic_completed user_id=98 subscription_id=79 gb=20 charged=40
+[2026-07-08 15:59:10] [INFO] aiogram.event: Update id=891136727 is handled. Duration 749 ms by bot id=7557954606
+[2026-07-08 15:59:58] [INFO] aiogram.event: Update id=891136728 is handled. Duration 424 ms by bot id=7557954606
+[2026-07-08 16:00:11] [INFO] aiogram.event: Update id=891136729 is handled. Duration 526 ms by bot id=7557954606
+[2026-07-08 16:00:13] [INFO] aiogram.event: Update id=891136730 is handled. Duration 138 ms by bot id=7557954606
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] buy_traffic_requested user_id=98 gb=50
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=100
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=100
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=50
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=408021893120
+[2026-07-08 16:00:15] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=50
+[2026-07-08 16:00:15] [INFO] root: [biz][billing] buy_traffic_completed user_id=98 subscription_id=79 gb=50 charged=100
+[2026-07-08 16:00:15] [INFO] aiogram.event: Update id=891136731 is handled. Duration 622 ms by bot id=7557954606
+[2026-07-08 16:00:18] [INFO] aiogram.event: Update id=891136732 is handled. Duration 466 ms by bot id=7557954606
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] add_traffic_requested user_id=84 gb=60.0
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=96636764160
+[2026-07-08 16:01:08] [INFO] root: [biz][subscription] add_traffic_completed user_id=84 subscription_id=67 gb=60.0
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=1000.0
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=461708984320
+[2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=1000.0
+[2026-07-08 16:50:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 16:50:05] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 16:50:06] [INFO] root: Database tables initialized
+[2026-07-08 16:50:06] [INFO] root: Database connection successful
+[2026-07-08 16:50:06] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-07-08 16:50:06] [INFO] root: [scheduler][remnawave_sync] enabled times=14:53
+[2026-07-08 16:53:14] [INFO] root: [scheduler][remnawave_sync] completed total=11 synced=11 failed=0
+[2026-07-08 17:02:13] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:02:13] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-08 17:02:24] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 17:08:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:08:58] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-08 17:09:12] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 17:11:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+[2026-07-08 17:11:04] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-08 17:11:15] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)

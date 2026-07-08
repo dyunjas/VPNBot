@@ -214,6 +214,8 @@ class SubscriptionPlan(Base):
     price: Mapped[int] = mapped_column()
     period_days: Mapped[int] = mapped_column(default=30)
     gb_limit: Mapped[int] = mapped_column(default=0, nullable=False)
+    is_hidden: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_trial: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
@@ -270,6 +272,36 @@ class SubscriptionTopup(Base):
     )
 
     subscription: Mapped["Subscription"] = relationship(back_populates="topups")
+
+
+class UserActivity(Base):
+    __tablename__ = "vpn_user_activities"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("vpn_users.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    category: Mapped[str] = mapped_column(String(32), nullable=False, default="system")
+    action: Mapped[str] = mapped_column(String(64), nullable=False)
+    source: Mapped[str] = mapped_column(String(32), nullable=False, default="system")
+    amount: Mapped[int | None] = mapped_column(nullable=True)
+    traffic_gb: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
+    subscription_id: Mapped[int | None] = mapped_column(
+        ForeignKey("vpn_subscriptions.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    transaction_id_ref: Mapped[int | None] = mapped_column(
+        ForeignKey("vpn_transactions.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    note: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
     
 class Transaction(Base):
     __tablename__ = "vpn_transactions"

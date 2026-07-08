@@ -24,6 +24,10 @@
 .mobile-nav-toggle span { width: 18px; height: 2px; border-radius: 2px; background: #ffffff; }
 .mobile-nav-overlay { display: none; }
 
+@media (min-width: 981px) {
+  .desktop-topbar-toggle { display: inline-flex; }
+}
+
 .native-select-hidden { position: absolute !important; opacity: 0 !important; pointer-events: none !important; width: 0 !important; height: 0 !important; }
 .fancy-select { position: relative; min-width: 170px; }
 .fancy-select-trigger { width: 100%; display: flex; justify-content: space-between; align-items: center; }
@@ -93,6 +97,10 @@
   .mobile-nav-overlay { display: block; position: fixed; inset: 0; z-index: 65; border: 0; background: rgba(10, 20, 35, 0.38); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
   body.mobile-nav-open .mobile-nav-overlay { opacity: 1; pointer-events: auto; }
   .mobile-nav-toggle { display: inline-flex; }
+  .desktop-topbar-toggle,
+  .desktop-nav-toggle {
+    display: none;
+  }
   .topbar {
     padding: 12px 16px;
     min-height: 56px;
@@ -185,6 +193,18 @@
   .partner-details__grid,
   .maintenance-card__grid {
     grid-template-columns: 1fr;
+  }
+  .plans-flags,
+  .plans-mobile-card__grid {
+    grid-template-columns: 1fr;
+  }
+  .plans-mobile-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .plans-table-wrap {
+    display: none;
   }
   .toolbar--filters,
   .toolbar--management {

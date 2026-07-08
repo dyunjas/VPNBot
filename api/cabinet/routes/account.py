@@ -126,6 +126,10 @@ async def cabinet_subscription_buy(payload: BuySubscriptionPayload, user_id: int
     user_id = _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
+        try:
+            await SubscriptionService(session).get_public_plan(payload.plan_id)
+        except Exception as e:
+            raise _map_service_error(e)
         billing = BillingService(session)
         try:
             sub = await billing.buy_subscription(user_id=user.id, plan_id=payload.plan_id, auto_renew=True)

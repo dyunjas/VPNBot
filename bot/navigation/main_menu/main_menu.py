@@ -116,12 +116,8 @@ async def _render_welcome(message_or_callback: Message | CallbackQuery) -> None:
         )
 
 
-async def _grant_trial_and_notify(*, message: Message | None, bot, session, user_id: int, tg_id: int) -> None:
-    try:
-        result = await session.activate_trial(user_id=user_id)
-    except Exception:
-        return
-    if isinstance(result, dict) and result.get("granted") is False:
+async def _grant_trial_and_notify(*, message: Message | None, bot, tg_id: int, trial_granted: bool) -> None:
+    if not trial_granted:
         return
 
     text = (
@@ -284,9 +280,8 @@ async def captcha_answer(
     await _grant_trial_and_notify(
         message=callback.message,
         bot=callback.bot,
-        session=bot_api,
-        user_id=int(user.get("id")),
         tg_id=tg_id,
+        trial_granted=bool(created.get("trial_granted")),
     )
 
     await _process_post_registration_links(
