@@ -1,9 +1,9 @@
 import asyncio
-import os
 from datetime import datetime, timedelta, timezone
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
@@ -82,12 +82,7 @@ async def expire_checker(bot):
     async with async_session() as session:
         now = datetime.now(timezone.utc)
         warning_time = now + timedelta(hours=6)
-        webhook_expiration_mode = (os.getenv("REMNAWAVE_WEBHOOK_EXPIRATION_ENABLED") or "").strip().lower() in {
-            "1",
-            "true",
-            "yes",
-            "on",
-        }
+        webhook_expiration_mode = bool(settings.REMNAWAVE_WEBHOOK_EXPIRATION_ENABLED)
 
         sub_service = SubscriptionService(session)
         user_service = UserService(session)

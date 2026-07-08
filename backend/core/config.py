@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     REMNAWAVE_UPSERT_PATH: str | None = None
     REMNAWAVE_AUTO_SYNC_ENABLED: bool = False
     REMNAWAVE_AUTO_SYNC_TIMES: str = "03:00"
+    REMNAWAVE_WEBHOOK_EXPIRATION_ENABLED: bool = False
     XRAY_AUTH: str | None = None
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
