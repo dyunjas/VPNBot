@@ -12,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.logger_config import logger
+from backend.core.config import settings
 from backend.core.telegram import create_telegram_session
 from backend.database.models import User, Subscription, SubStatus
 from backend.database.session import async_session
@@ -74,7 +75,7 @@ async def _send_telegram_message(chat_id: int, text: str, *, photo=None, reply_m
     bot_instance = runtime_bot
     temp_bot: Bot | None = None
     if bot_instance is None:
-        bot_token = (os.getenv("BOT_TOKEN") or "").strip()
+        bot_token = (settings.BOT_TOKEN or "").strip()
         if not bot_token:
             raise RuntimeError("BOT_TOKEN is not configured")
         temp_bot = Bot(token=bot_token, session=create_telegram_session())
