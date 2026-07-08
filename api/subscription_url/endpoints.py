@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any, AsyncGenerator
 
 from aiogram import Bot
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -14,6 +15,8 @@ from backend.core.logger_config import logger
 from backend.core.telegram import create_telegram_session
 from backend.database.models import User, Subscription, SubStatus
 from backend.database.session import async_session
+from backend.images import MAIN_MENU_IMG
+from backend.services.activity_service import ActivityService
 from backend.services import UserService
 
 router = APIRouter(tags=["subscription"])
@@ -65,8 +68,8 @@ def get_user_service(session: AsyncSession = Depends(get_session)) -> UserServic
     return UserService(session)
 
 
-async def _send_telegram_message(chat_id: int, text: str) -> None:
-    from entry_api import runtime_bot
+async def _send_telegram_message(chat_id: int, text: str, *, photo=None, reply_markup=None) -> None:
+    from backend.core.loader import bot as runtime_bot
 
     bot_instance = runtime_bot
     temp_bot: Bot | None = None
@@ -77,15 +80,30 @@ async def _send_telegram_message(chat_id: int, text: str) -> None:
         temp_bot = Bot(token=bot_token, session=create_telegram_session())
         bot_instance = temp_bot
     try:
-        await bot_instance.send_message(chat_id=chat_id, text=text, parse_mode="HTML")
+        if photo is not None:
+            await bot_instance.send_photo(
+                chat_id=chat_id,
+                photo=photo,
+                caption=text,
+                parse_mode="HTML",
+                reply_markup=reply_markup,
+            )
+            return
+
+        await bot_instance.send_message(
+            chat_id=chat_id,
+            text=text,
+            parse_mode="HTML",
+            reply_markup=reply_markup,
+        )
     finally:
         if temp_bot is not None:
             await temp_bot.session.close()
 
 
-async def _safe_notify(chat_id: int, text: str) -> None:
+async def _safe_notify(chat_id: int, text: str, *, photo=None, reply_markup=None) -> None:
     try:
-        await _send_telegram_message(chat_id, text)
+        await _send_telegram_message(chat_id, text, photo=photo, reply_markup=reply_markup)
     except Exception:
         logger.exception("[webhook][remnawave] telegram notify failed chat_id=%s", chat_id)
 
@@ -93,6 +111,8 @@ async def _safe_notify(chat_id: int, text: str) -> None:
 async def _find_user_for_webhook(session: AsyncSession, payload: RemnawaveWebhookPayload) -> User | None:
     data = payload.data or {}
     remote_user = data.get("user") if isinstance(data.get("user"), dict) else {}
+    if not remote_user and isinstance(data, dict):
+        remote_user = data
 
     remote_uuid = str(remote_user.get("uuid") or "").strip()
     if remote_uuid:
@@ -128,6 +148,68 @@ async def _find_user_for_webhook(session: AsyncSession, payload: RemnawaveWebhoo
     return None
 
 
+def _extract_expiration_hours(payload: RemnawaveWebhookPayload) -> int | None:
+    data = payload.data or {}
+    meta = data.get("meta") if isinstance(data.get("meta"), dict) else {}
+    raw_meta_expiration = meta.get("expiration")
+    if raw_meta_expiration is not None:
+        try:
+            value = int(raw_meta_expiration)
+            if value > 0:
+                return value
+        except Exception:
+            pass
+
+    expire_at = _parse_iso_dt(data.get("expireAt"))
+    event_at = _parse_iso_dt(payload.timestamp) or datetime.now(timezone.utc)
+    if not expire_at:
+        return None
+    remain_hours = round((expire_at - event_at).total_seconds() / 3600)
+    return remain_hours if remain_hours > 0 else None
+
+
+async def _find_latest_subscription(session: AsyncSession, *, user_id: int) -> Subscription | None:
+    res = await session.execute(
+        select(Subscription)
+        .where(Subscription.user_id == user_id)
+        .order_by(Subscription.current_period_end.desc(), Subscription.id.desc())
+        .limit(1)
+    )
+    return res.scalar_one_or_none()
+
+
+async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
+    builder = InlineKeyboardBuilder()
+    builder.button(text="🌙 Продлить", callback_data="subscription")
+    text = (
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Внимание!</b>\n\n"
+        f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка скоро истечёт! Осталось примерно {hours} ч.\n"
+        "Продлите подписку, чтобы не потерять доступ к сервису."
+    )
+    await _safe_notify(
+        tg_id,
+        text,
+        photo=MAIN_MENU_IMG,
+        reply_markup=builder.as_markup(),
+    )
+
+
+async def _notify_subscription_expired(*, tg_id: int) -> None:
+    builder = InlineKeyboardBuilder()
+    builder.button(text="🌙 Продлить", callback_data="subscription")
+    text = (
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Внимание!</b>\n\n"
+        "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка истекла. Доступ к ключам остановлен.\n"
+        "Продлите подписку, чтобы восстановить доступ к сервису."
+    )
+    await _safe_notify(
+        tg_id,
+        text,
+        photo=MAIN_MENU_IMG,
+        reply_markup=builder.as_markup(),
+    )
+
+
 def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
     for key in ("hwidUserDevice", "userHwidDevice", "hwid_user_device", "device"):
         value = data.get(key)
@@ -161,6 +243,75 @@ async def remnawave_webhook(
 
     scope = str(payload.scope or "").strip()
     event = str(payload.event or "").strip()
+    if scope == "user":
+        async with async_session() as session:
+            user = await _find_user_for_webhook(session, payload)
+            if not user:
+                logger.warning(
+                    "[webhook][remnawave] user event ignored: user not found event=%s payload_user=%s",
+                    event,
+                    (payload.data or {}),
+                )
+                return {"ok": False, "error": "user_not_found", "event": event}
+
+            activity_service = ActivityService(session)
+
+            if event == "user.expiration":
+                hours = _extract_expiration_hours(payload)
+                if hours not in (24, 48):
+                    logger.info(
+                        "[webhook][remnawave] expiration ignored user_id=%s hours=%s",
+                        user.id,
+                        hours,
+                    )
+                    return {"ok": True, "ignored": True, "event": event, "hours": hours}
+
+                if user.tg_id:
+                    await _notify_expiration_warning(tg_id=int(user.tg_id), hours=hours)
+                await activity_service.log_user_event(
+                    user_id=user.id,
+                    category="webhook",
+                    action="subscription_expiration_warning",
+                    source="remnawave",
+                    note=f"Получен webhook user.expiration за {hours} ч.",
+                )
+                await session.commit()
+                logger.info(
+                    "[webhook][remnawave] expiration processed user_id=%s hours=%s",
+                    user.id,
+                    hours,
+                )
+                return {"ok": True, "event": event, "hours": hours}
+
+            if event == "user.expired":
+                subscription = await _find_latest_subscription(session, user_id=user.id)
+                if subscription:
+                    expire_at = _parse_iso_dt((payload.data or {}).get("expireAt")) or datetime.now(timezone.utc)
+                    subscription.status = SubStatus.expired
+                    subscription.current_period_end = expire_at
+                    subscription.next_renewal_at = expire_at
+                user.traffic_limit_bytes = 0
+                if user.tg_id:
+                    await _notify_subscription_expired(tg_id=int(user.tg_id))
+                await activity_service.log_user_event(
+                    user_id=user.id,
+                    category="webhook",
+                    action="subscription_expired",
+                    source="remnawave",
+                    subscription_id=getattr(subscription, "id", None),
+                    note="Получен webhook user.expired, локальная подписка переведена в expired",
+                )
+                await session.commit()
+                logger.info(
+                    "[webhook][remnawave] expired processed user_id=%s subscription_id=%s",
+                    user.id,
+                    getattr(subscription, "id", None),
+                )
+                return {"ok": True, "event": event, "subscription_id": getattr(subscription, "id", None)}
+
+        logger.info("[webhook][remnawave] ignored user event=%s", event)
+        return {"ok": True, "ignored": True, "event": event}
+
     if scope and scope != "user_hwid_devices":
         logger.info("[webhook][remnawave] ignored scope=%s event=%s", scope, event)
         return {"ok": True, "ignored": True, "scope": scope, "event": event}

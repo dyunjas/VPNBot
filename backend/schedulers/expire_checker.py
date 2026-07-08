@@ -1,4 +1,5 @@
 import asyncio
+import os
 from datetime import datetime, timedelta, timezone
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -81,6 +82,12 @@ async def expire_checker(bot):
     async with async_session() as session:
         now = datetime.now(timezone.utc)
         warning_time = now + timedelta(hours=6)
+        webhook_expiration_mode = (os.getenv("REMNAWAVE_WEBHOOK_EXPIRATION_ENABLED") or "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
 
         sub_service = SubscriptionService(session)
         user_service = UserService(session)
@@ -88,38 +95,39 @@ async def expire_checker(bot):
         remnawave_service = RemnaWaveService(session)
 
         try:
-            try:
-                expired_subs = await sub_service.list_active_expired(now=now)
-            except Exception as e:
-                logger.error("Expire checker: failed to load expired subs: %s", e)
-                expired_subs = []
-
-            for sub in expired_subs:
+            if not webhook_expiration_mode:
                 try:
-                    await sub_service.mark_expired(subscription_id=sub.id)
+                    expired_subs = await sub_service.list_active_expired(now=now)
                 except Exception as e:
-                    logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
-                    continue
+                    logger.error("Expire checker: failed to load expired subs: %s", e)
+                    expired_subs = []
 
-                try:
-                    user = await user_service.get_by_id(sub.user_id)
-                except UserNotFound:
-                    continue
+                for sub in expired_subs:
+                    try:
+                        await sub_service.mark_expired(subscription_id=sub.id)
+                    except Exception as e:
+                        logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
+                        continue
 
-                try:
-                    if remnawave_service.enabled:
-                        await remnawave_service.sync_user_state(
-                            user=user,
-                            subscription=sub,
-                            status="EXPIRED",
-                        )
-                except Exception as e:
-                    logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
+                    try:
+                        user = await user_service.get_by_id(sub.user_id)
+                    except UserNotFound:
+                        continue
 
-                try:
-                    await _notify_subscription_expired(bot, user.tg_id)
-                except Exception as e:
-                    logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
+                    try:
+                        if remnawave_service.enabled:
+                            await remnawave_service.sync_user_state(
+                                user=user,
+                                subscription=sub,
+                                status="EXPIRED",
+                            )
+                    except Exception as e:
+                        logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
+
+                    try:
+                        await _notify_subscription_expired(bot, user.tg_id)
+                    except Exception as e:
+                        logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
 
             try:
                 soon_subs = await sub_service.list_active_ending_between(
@@ -169,6 +177,9 @@ async def expire_checker(bot):
                         )
 
                 # notify soon
+                if webhook_expiration_mode:
+                    continue
+
                 try:
                     period_end = sub.current_period_end
                     if not period_end:
