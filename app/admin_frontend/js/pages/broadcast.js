@@ -159,18 +159,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     subtitle: "Долгие рассылки выполняются в фоне, статус обновляется автоматически",
     contentHtml: `
       <div class="content-grid">
-        <div class="card">
+        <div class="card broadcast-card">
           <h3>Новая рассылка</h3>
-          <div class="toolbar">
+          <div class="toolbar broadcast-toolbar">
             <select id="parse_mode">
               <option value="HTML">HTML</option>
               <option value="MarkdownV2">MarkdownV2</option>
             </select>
-            <label class="inline-field"><input id="include_banned" type="checkbox" /> Включить забаненных</label>
+            <label class="broadcast-check" for="include_banned">
+              <input id="include_banned" type="checkbox" />
+              <span>Включить забаненных</span>
+            </label>
           </div>
-          <textarea id="text" placeholder="Текст сообщения. Для premium emoji: <tg-emoji emoji-id='...'>⭐</tg-emoji>"></textarea>
-          <div class="toolbar">
-            <input id="image" type="file" accept="image/*" />
+          <textarea id="text" class="broadcast-textarea" placeholder="Текст сообщения. Для premium emoji: <tg-emoji emoji-id='...'>⭐</tg-emoji>"></textarea>
+          <div class="toolbar broadcast-toolbar broadcast-toolbar--bottom">
+            <label class="file-picker" for="image">
+              <span class="file-picker__button">Выбрать файл</span>
+              <span id="image_name" class="file-picker__name">Файл не выбран</span>
+            </label>
+            <input id="image" type="file" accept="image/*" hidden />
             <button id="send" class="btn-primary">Запустить рассылку</button>
           </div>
         </div>
@@ -228,6 +235,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       await loadBroadcastHistory();
       pollBroadcast(currentBroadcastJobId);
     }).catch((err) => alert(err.message));
+  });
+
+  q("image")?.addEventListener("change", () => {
+    const file = q("image").files && q("image").files[0] ? q("image").files[0] : null;
+    q("image_name").textContent = file ? file.name : "Файл не выбран";
   });
 
   q("reload_history")?.addEventListener("click", async (e) => {

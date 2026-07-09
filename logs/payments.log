@@ -930,3 +930,5 @@ RuntimeError: [{'type': 'missing', 'loc': ['body', 'amount'], 'msg': 'Field requ
 [2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=100
 [2026-07-08 16:00:15] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=100
 [2026-07-08 16:00:15] [INFO] root: [biz][billing] buy_traffic_completed user_id=98 subscription_id=79 gb=50 charged=100
+[2026-07-09 00:37:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-09 00:37:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2470385

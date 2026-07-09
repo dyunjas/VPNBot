@@ -213,6 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       actions.className = "row-actions";
 
       const copy = document.createElement("button");
+      copy.className = "btn-outline-primary";
       copy.textContent = "Копировать";
       copy.addEventListener("click", async () => {
         await navigator.clipboard.writeText(item.url);
@@ -228,7 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       const toggle = document.createElement("button");
-      toggle.className = item.is_active ? "btn-warn" : "btn-ok";
+      toggle.className = item.is_active ? "btn-danger" : "btn-success";
       toggle.textContent = item.is_active ? "Выключить" : "Включить";
       toggle.addEventListener("click", async (event) => {
         await withButtonLoading(event.currentTarget, async () => {

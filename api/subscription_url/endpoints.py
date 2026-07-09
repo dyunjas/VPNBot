@@ -182,9 +182,13 @@ async def _find_latest_subscription(session: AsyncSession, *, user_id: int) -> S
 async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
     builder = InlineKeyboardBuilder()
     builder.button(text="🌙 Продлить", callback_data="subscription")
+    if hours >= 48:
+        remaining_text = "через 2 дня"
+    else:
+        remaining_text = "через 1 день"
     text = (
         "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Внимание!</b>\n\n"
-        f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка скоро истечёт! Осталось примерно {hours} ч.\n"
+        f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка истекает {remaining_text}.\n"
         "Продлите подписку, чтобы не потерять доступ к сервису."
     )
     await _safe_notify(
@@ -257,8 +261,16 @@ async def remnawave_webhook(
 
             activity_service = ActivityService(session)
 
-            if event == "user.expiration":
-                hours = _extract_expiration_hours(payload)
+            expiration_event_hours = {
+                "expires_in_48_hours": 48,
+                "user.expires_in_48_hours": 48,
+                "expires_in_24_hours": 24,
+                "user.expires_in_24_hours": 24,
+            }
+            if event in expiration_event_hours or event == "user.expiration":
+                hours = expiration_event_hours.get(event)
+                if hours is None:
+                    hours = _extract_expiration_hours(payload)
                 if hours not in (24, 48):
                     logger.info(
                         "[webhook][remnawave] expiration ignored user_id=%s hours=%s",
@@ -274,12 +286,13 @@ async def remnawave_webhook(
                     category="webhook",
                     action="subscription_expiration_warning",
                     source="remnawave",
-                    note=f"Получен webhook user.expiration за {hours} ч.",
+                    note=f"Получен webhook {event} за {hours} ч.",
                 )
                 await session.commit()
                 logger.info(
-                    "[webhook][remnawave] expiration processed user_id=%s hours=%s",
+                    "[webhook][remnawave] expiration processed user_id=%s event=%s hours=%s",
                     user.id,
+                    event,
                     hours,
                 )
                 return {"ok": True, "event": event, "hours": hours}

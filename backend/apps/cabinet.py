@@ -16,15 +16,15 @@ def create_app():
         return render_shell(
             stylesheet_urls=[
                 "/miniapp/shared-tokens.css?v=1",
-                "/miniapp/shared-ui.css?v=4",
-                "/miniapp/cabinet.css?v=6",
+                "/miniapp/shared-ui.css?v=8",
+                "/miniapp/cabinet.css?v=18",
             ],
             bootstrap_scripts=[
-                f"<script>window.__API_BASE_URL={settings.API_BASE_URL_JS!r};</script>",
+                "<script>window.__API_BASE_URL=window.location.origin;</script>",
                 '<script defer src="/miniapp/cabinet-app.js?v=3"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-01.js?v=5"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-02.js?v=5"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-03.js?v=5"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-02.js?v=12"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-03.js?v=6"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-04.js?v=5"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-05.js?v=5"></script>',
             ],
@@ -37,7 +37,7 @@ def create_app():
         html = (FRONTEND_DIR / "cabinet-login.html").read_text(encoding="utf-8")
         rendered = html.replace(
             "__API_BOOTSTRAP__",
-            f"<script>window.__API_BASE_URL={settings.API_BASE_URL_JS!r};</script>",
+            "<script>window.__API_BASE_URL=window.location.origin;</script>",
         )
         return no_cache_html(rendered)
 
@@ -61,4 +61,3 @@ def create_app():
 
     mount_frontend_assets(app)
     return app
-

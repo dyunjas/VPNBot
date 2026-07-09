@@ -1,30 +1,33 @@
 .chart-period.is-active {
-  border-color: #dc2626;
-  background: #dc2626;
+  border-color: var(--brand-2);
+  background: linear-gradient(135deg, var(--brand), #6f89ff);
   color: #ffffff;
-  box-shadow: none;
+  box-shadow: 0 10px 20px rgba(76, 111, 255, 0.18);
 }
 
 .dashboard-chart-total {
-  min-height: 34px;
-  padding: 0 12px;
+  min-height: 38px;
+  padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--text);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+  color: var(--brand-2);
   display: inline-flex;
   align-items: center;
   font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .payments-chart {
   border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #fbfcfd;
-  padding: 14px 12px 12px;
-  box-shadow: none;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top, rgba(76, 111, 255, 0.08), transparent 44%),
+    linear-gradient(180deg, #fbfdff 0%, #f1f6ff 100%);
+  padding: 16px 14px 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
   overflow: hidden;
 }
 
@@ -50,7 +53,7 @@
 }
 
 .payments-chart__value {
-  color: #31568a;
+  color: var(--brand-2);
   font-weight: 700;
   line-height: 1.25;
 }
@@ -73,10 +76,10 @@
 .payments-chart__bar {
   width: 100%;
   max-width: 34px;
-  border-radius: 11px 11px 5px 5px;
-  border: 1px solid #8eb8ef;
-  background: linear-gradient(180deg, #5ca0ff 0%, #1f6feb 100%);
-  box-shadow: 0 10px 18px rgba(31, 111, 235, 0.16);
+  border-radius: 13px 13px 6px 6px;
+  border: 1px solid rgba(76, 111, 255, 0.24);
+  background: linear-gradient(180deg, #8ba2ff 0%, #4c6fff 58%, #3557dd 100%);
+  box-shadow: 0 14px 26px rgba(76, 111, 255, 0.2);
 }
 
 .metric-chart {
@@ -93,7 +96,7 @@
 }
 
 .metric-chart__grid line {
-  stroke: rgba(91, 117, 150, 0.14);
+  stroke: rgba(106, 128, 187, 0.16);
   stroke-width: 1;
   shape-rendering: geometricPrecision;
 }
@@ -112,18 +115,19 @@
 
 .metric-chart__axis text {
   fill: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0;
+  font-weight: 600;
 }
 
 .metric-chart__point-dot {
-  fill: #1f6feb;
+  fill: var(--brand);
   stroke: #ffffff;
   stroke-width: 2;
 }
 
 .metric-chart__point-halo {
-  fill: rgba(31, 111, 235, 0.12);
+  fill: rgba(76, 111, 255, 0.16);
 }
 
 .metric-chart__legend {
@@ -134,12 +138,13 @@
 
 .metric-chart__legend-item {
   border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #ffffff;
-  padding: 10px 11px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
+  padding: 11px 12px;
   display: grid;
   gap: 3px;
   min-width: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .metric-chart__legend-label {
@@ -165,8 +170,8 @@
 .admin-login-page {
   min-height: 100dvh;
   background:
-    radial-gradient(900px 380px at 50% 0%, rgba(31, 111, 235, 0.06), transparent 62%),
-    linear-gradient(180deg, #f1f4f9 0%, #f3f6fb 100%);
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.24), transparent 26%),
+    linear-gradient(180deg, #5b7cfa 0%, #4f74f7 100%);
   color: var(--text);
 }
 
@@ -183,29 +188,16 @@
   width: 100%;
   max-width: 460px;
   padding: 28px 28px 24px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-  border-color: #cbd8e7;
-  box-shadow: 0 20px 44px rgba(15, 30, 55, 0.12);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: var(--shadow);
 }
 
 .login-card__head {
   display: grid;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.login-card__eyebrow {
-  color: #335a8f;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.login-card--admin h2 {
-  font-size: clamp(28px, 3.8vw, 38px);
-  margin: 0;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
 .login-field {
@@ -220,6 +212,20 @@
   font-weight: 700;
 }
 
+.login-field input {
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.login-field input:focus {
+  border-color: #8eabff;
+  box-shadow: 0 0 0 4px rgba(76, 111, 255, 0.14);
+}
+
 .login-field.is-invalid .password-field,
 .login-field.is-invalid input {
   border-color: #e5aeb7;
@@ -229,10 +235,11 @@
 .password-field {
   display: grid;
   grid-template-columns: 1fr auto;
-  border: 1px solid #d8dfe8;
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  background: #ffffff;
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
 .password-field input {
@@ -244,8 +251,8 @@
 .password-toggle {
   width: 44px;
   border: 0;
-  border-left: 1px solid #d8dfe8;
-  background: linear-gradient(180deg, #fbfdff 0%, #f5f9fd 100%);
+  border-left: 1px solid var(--line);
+  background: linear-gradient(180deg, #fbfdff 0%, #f4f8ff 100%);
   color: #5a6b83;
   display: grid;
   place-items: center;
@@ -272,6 +279,6 @@
 .btn-primary--wide {
   width: 100%;
   min-height: 48px;
-  box-shadow: 0 12px 24px rgba(31, 111, 235, 0.2);
+  box-shadow: 0 16px 32px rgba(76, 111, 255, 0.20);
 }
 

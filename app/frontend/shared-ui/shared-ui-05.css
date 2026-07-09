@@ -91,9 +91,13 @@
 }
 
 .traffic-ring {
+  --traffic-ring-size: 188px;
+  --traffic-ring-svg-size: 168px;
+  --traffic-ring-stroke: 8px;
+  --traffic-ring-inner-size: 164px;
   position: relative;
-  width: 188px;
-  height: 188px;
+  width: var(--traffic-ring-size);
+  height: var(--traffic-ring-size);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -101,17 +105,21 @@
 
 .traffic-ring__svg {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
+  top: 50%;
+  left: 50%;
+  width: var(--traffic-ring-svg-size);
+  height: var(--traffic-ring-svg-size);
+  display: block;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
   overflow: visible;
 }
 
 .traffic-ring__track,
 .traffic-ring__progress {
   fill: none;
-  stroke-width: 8;
+  stroke-width: var(--traffic-ring-stroke);
+  vector-effect: non-scaling-stroke;
 }
 
 .traffic-ring__track {
@@ -121,14 +129,14 @@
 .traffic-ring__progress {
   stroke: var(--primary);
   stroke-linecap: round;
-  stroke-dasharray: 314.159;
-  stroke-dashoffset: 314.159;
-  transition: stroke-dashoffset .28s ease;
+  stroke-dasharray: 0 100;
+  stroke-dashoffset: 0;
+  transition: stroke-dasharray .28s ease;
 }
 
 .traffic-ring__inner {
-  width: 164px;
-  height: 164px;
+  width: var(--traffic-ring-inner-size);
+  height: var(--traffic-ring-inner-size);
   border-radius: 50%;
   background: #fff;
   box-shadow: inset 0 0 0 1px #dde6f2;

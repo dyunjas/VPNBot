@@ -191,6 +191,16 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
         subscription_rows = (
             await session.execute(select(Subscription.created_at).where(Subscription.created_at >= chart_start))
         ).scalars().all()
+        activation_subscription_rows = (
+            await session.execute(
+                select(Subscription.created_at)
+                .join(SubscriptionPlan, Subscription.plan_id == SubscriptionPlan.id)
+                .where(
+                    Subscription.created_at >= chart_start,
+                    SubscriptionPlan.is_trial.is_(False),
+                )
+            )
+        ).scalars().all()
         payment_rows = (
             await session.execute(
                 select(Transaction.paid_at, Transaction.amount).where(
@@ -206,7 +216,10 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
     payments_buckets = _build_chart_buckets(chart_start, chart_mode, bucket_count)
 
     _fill_count_buckets(user_rows, users_buckets, chart_mode)
+    activation_subscriptions_buckets = _build_chart_buckets(chart_start, chart_mode, bucket_count)
+
     _fill_count_buckets(subscription_rows, subscriptions_buckets, chart_mode)
+    _fill_count_buckets(activation_subscription_rows, activation_subscriptions_buckets, chart_mode)
     _fill_amount_buckets(payment_rows, payments_buckets, chart_mode)
 
     users_chart = [
@@ -229,7 +242,7 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
     activation_chart = []
     for key in users_buckets.keys():
         users_count = int(users_buckets[key]["count"])
-        subs_count = int(subscriptions_buckets[key]["count"])
+        subs_count = int(activation_subscriptions_buckets[key]["count"])
         rate = round((subs_count / users_count) * 100, 1) if users_count else 0.0
         activation_chart.append(
             {

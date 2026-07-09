@@ -91,9 +91,9 @@
 }
 
 .pay-method--active {
-  border-color: #6ea2f1;
-  background: linear-gradient(180deg, #eef5ff 0%, #e4efff 100%);
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.08), 0 12px 28px rgba(37, 99, 235, 0.14);
+  border-color: #4c6fff;
+  background: linear-gradient(180deg, #f3f6ff 0%, #ebf1ff 100%);
+  box-shadow: 0 0 0 2px rgba(76, 111, 255, 0.26), 0 12px 28px rgba(76, 111, 255, 0.16);
   color: #17335c;
 }
 

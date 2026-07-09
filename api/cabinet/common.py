@@ -56,7 +56,9 @@ REFRESH_COOKIE = "cabinet_refresh_token"
 
 _OTP_STORE: dict[str, dict] = {}
 _OTP_LAST_SENT: dict[str, float] = {}
+_OTP_SEND_HISTORY: dict[str, list[float]] = {}
 _OTP_SEND_COOLDOWN_SEC = 30
+_OTP_TG_LOGIN_WINDOW_SEC = 600
 _INT32_MIN = -(2**31)
 _INT32_MAX = 2**31 - 1
 
@@ -210,18 +212,67 @@ def _cleanup_otp() -> None:
 def _put_otp(channel: str, identity: str, user_id: int, code: str) -> None:
     _cleanup_otp()
     key = _otp_key(channel, identity)
+    now_ts = time.time()
     _OTP_STORE[key] = {
         "user_id": user_id,
         "code": code,
         "expires_at": int(time.time()) + OTP_TTL_SEC,
     }
-    _OTP_LAST_SENT[key] = time.time()
+    _OTP_LAST_SENT[key] = now_ts
+    history = [ts for ts in _OTP_SEND_HISTORY.get(key, []) if (now_ts - ts) < _OTP_TG_LOGIN_WINDOW_SEC]
+    history.append(now_ts)
+    _OTP_SEND_HISTORY[key] = history
 
 
-def _otp_send_allowed(channel: str, identity: str) -> bool:
+def _otp_send_allowed(
+    channel: str,
+    identity: str,
+    *,
+    cooldown_sec: int | None = None,
+    window_sec: int | None = None,
+    max_sends: int | None = None,
+) -> bool:
     key = _otp_key(channel, identity)
+    cooldown = int(cooldown_sec or _OTP_SEND_COOLDOWN_SEC)
     last_sent = float(_OTP_LAST_SENT.get(key, 0) or 0)
-    return (time.time() - last_sent) >= _OTP_SEND_COOLDOWN_SEC
+    now_ts = time.time()
+    if (now_ts - last_sent) < cooldown:
+        return False
+    if window_sec and max_sends:
+        history = [ts for ts in _OTP_SEND_HISTORY.get(key, []) if (now_ts - ts) < int(window_sec)]
+        _OTP_SEND_HISTORY[key] = history
+        if len(history) >= int(max_sends):
+            return False
+    return True
+
+
+def _otp_send_retry_after(
+    channel: str,
+    identity: str,
+    *,
+    cooldown_sec: int | None = None,
+    window_sec: int | None = None,
+    max_sends: int | None = None,
+) -> int:
+    key = _otp_key(channel, identity)
+    cooldown = int(cooldown_sec or _OTP_SEND_COOLDOWN_SEC)
+    now_ts = time.time()
+    retry_after = 0
+
+    last_sent = float(_OTP_LAST_SENT.get(key, 0) or 0)
+    if last_sent:
+        retry_after = max(retry_after, int(max(0, cooldown - (now_ts - last_sent)) + 0.999))
+
+    if window_sec and max_sends:
+        history = [ts for ts in _OTP_SEND_HISTORY.get(key, []) if (now_ts - ts) < int(window_sec)]
+        _OTP_SEND_HISTORY[key] = history
+        if len(history) >= int(max_sends):
+            oldest_relevant = history[-int(max_sends)]
+            retry_after = max(
+                retry_after,
+                int(max(0, int(window_sec) - (now_ts - oldest_relevant)) + 0.999),
+            )
+    return retry_after
 
 
 def _pop_otp(channel: str, identity: str, code: str) -> int | None:

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Вход в кабинет | Lunet</title>
   <meta name="description" content="Вход в веб-кабинет Lunet по коду из email или Telegram." />
-  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=13" />
+  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=15" />
 </head>
 <body>
   <main class="auth-page">
@@ -26,7 +26,7 @@
         </div>
 
         <form id="form_email" class="auth-form" autocomplete="on">
-          <div class="auth-step">
+          <div id="email_request_block" class="auth-step auth-step--request">
             <div class="step-title">Шаг 1. Получить код на email</div>
             <label class="field">
               <span>Email</span>
@@ -37,7 +37,7 @@
             </div>
           </div>
 
-          <div id="email_verify_block" class="auth-step is-hidden">
+          <div id="email_verify_block" class="auth-step auth-step--verify is-hidden">
             <div class="step-title">Шаг 2. Введите код из письма</div>
             <label class="field">
               <span>Код</span>
@@ -50,7 +50,7 @@
         </form>
 
         <form id="form_telegram" class="auth-form is-hidden" autocomplete="off">
-          <div class="auth-step">
+          <div id="tg_request_block" class="auth-step auth-step--request">
             <div class="step-title">Шаг 1. Получить код в Telegram</div>
             <label class="field">
               <span>Telegram ID</span>
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <div id="tg_verify_block" class="auth-step is-hidden">
+          <div id="tg_verify_block" class="auth-step auth-step--verify is-hidden">
             <div class="step-title">Шаг 2. Введите код из Telegram</div>
             <label class="field">
               <span>Код</span>
@@ -95,6 +95,6 @@
   </main>
 
   __API_BOOTSTRAP__
-  <script defer src="/miniapp/cabinet-login.js?v=5"></script>
+  <script defer src="/miniapp/cabinet-login.js?v=6"></script>
 </body>
 </html>

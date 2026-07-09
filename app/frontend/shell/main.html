@@ -12,7 +12,9 @@
                   </div>
                 </div>
               </div>
-              <div id="home-balance" class="cabinet-balance">0 ₽</div>
+              <div class="cabinet-hero__side">
+                <div id="home-balance" class="cabinet-balance">0 ₽</div>
+              </div>
             </div>
 
             <div class="cabinet-grid">
@@ -82,40 +84,6 @@
                 </button>
               </div>
 
-              <div class="card glass cabinet-panel cabinet-panel--traffic">
-                <div class="card-head">
-                  <div>
-                    <h2>Использование трафика</h2>
-                    <p class="mini-note">Сколько уже потрачено и сколько осталось.</p>
-                  </div>
-                </div>
-                <div class="traffic-layout">
-                  <div class="traffic-ring">
-                    <svg class="traffic-ring__svg" viewBox="0 0 120 120" aria-hidden="true">
-                      <circle class="traffic-ring__track" cx="60" cy="60" r="50"></circle>
-                      <circle id="traffic-ring-progress" class="traffic-ring__progress" cx="60" cy="60" r="50"></circle>
-                    </svg>
-                    <div class="traffic-ring__inner">
-                      <div id="traffic-used-gb" class="traffic-ring__value">0 GB</div>
-                      <div id="traffic-total-gb" class="traffic-ring__caption">из 0 GB</div>
-                    </div>
-                  </div>
-                  <div class="traffic-legend">
-                    <div class="traffic-legend__item">
-                      <span class="traffic-legend__dot traffic-legend__dot--used"></span>
-                      <span>Использовано</span>
-                      <b id="traffic-used-text">0 GB (0%)</b>
-                    </div>
-                    <div class="traffic-legend__item">
-                      <span class="traffic-legend__dot traffic-legend__dot--left"></span>
-                      <span>Осталось</span>
-                      <b id="traffic-left-text">0 GB (0%)</b>
-                    </div>
-                  </div>
-                </div>
-                <button class="link-button" data-open="profile" type="button">Подробнее о трафике →</button>
-              </div>
-
               <div class="card glass cabinet-panel cabinet-panel--devices">
                 <div class="card-head">
                   <div>
@@ -129,7 +97,12 @@
               </div>
 
               <div class="card glass cabinet-panel cabinet-panel--summary">
-                <h2>Краткая сводка</h2>
+                <div class="card-head">
+                  <div>
+                    <h2>Краткая сводка</h2>
+                    <p class="mini-note">Основные показатели аккаунта и реферальной активности.</p>
+                  </div>
+                </div>
                 <div class="summary-stack">
                   <div class="summary-item glass-soft">
                     <span>Реферальный баланс</span>

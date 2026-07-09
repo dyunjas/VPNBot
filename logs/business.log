@@ -1187,3 +1187,66 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_requested user_id=98 gb=1000.0
 [2026-07-08 16:01:18] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=98 subscription_id=79 traffic_limit_bytes=461708984320
 [2026-07-08 16:01:18] [INFO] root: [biz][subscription] add_traffic_completed user_id=98 subscription_id=79 gb=1000.0
+[2026-07-08 21:22:28] [INFO] root: [biz][user] created user_id=99 tg_id=7875834910 username=LunetVpnSupport
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] activate_requested user_id=99 plan_id=5 auto_renew=False
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] created user_id=99 subscription_id=80 plan_id=5 period_end=2027-07-03 16:22:28.330253+00:00 gb_added=360.00
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=386547056640
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] activate_completed user_id=99 subscription_id=80
+[2026-07-08 22:39:05] [INFO] root: [biz][user] balance_added user_id=36 amount=100 before=1529 after=1629
+[2026-07-08 22:41:58] [INFO] root: [biz][user] balance_subtracted user_id=36 amount=100 before=1629 after=1529
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=60 after=160
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=160 after=260
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=260 after=360
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=360 after=460
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=460 after=560
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=560 after=660
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=660 after=760
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=760 after=860
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=860 after=960
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=960 after=1060
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1060 after=1160
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1160 after=1260
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1260 after=1360
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1360 after=1460
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1460 after=1560
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1560 after=1660
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1660 after=1760
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1760 after=1860
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1860 after=1960
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1960 after=2060
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2060 after=2160
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2160 after=2260
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2260 after=2360
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2360 after=2460
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2460 after=2560
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2560 after=2660
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2660 after=2760
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2760 after=2860
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2860 after=2960
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2960 after=3060
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3060 after=3160
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3160 after=3260
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3260 after=3360
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3360 after=3460
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3460 after=3560
+[2026-07-08 22:42:57] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3560 after=3660
+[2026-07-08 22:42:57] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3660 after=3760
+[2026-07-08 23:57:06] [INFO] root: [biz][user] balance_added user_id=96 amount=100 before=105 after=205
+[2026-07-09 00:37:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-09 00:37:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2470385
+[2026-07-09 00:43:00] [INFO] root: [biz][user] created user_id=100 tg_id=1237947229 username=dyunjais
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=5 auto_renew=False
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] created user_id=100 subscription_id=83 plan_id=5 period_end=2027-07-03 19:43:00.882641+00:00 gb_added=360.00
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-07-09 00:44:18] [INFO] root: [biz][referral] account_created user_id=100 account_id=75
+[2026-07-09 20:13:48] [INFO] root: [biz][user] email_updated user_id=100 old=None new=vladislavisaev0507@gmail.com
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=1000.0
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=386547056640
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=1000.0
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=100.0
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=1460288880640
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=100.0
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=100.0
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=1567663063040
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=100.0

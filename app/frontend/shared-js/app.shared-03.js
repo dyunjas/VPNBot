@@ -138,12 +138,11 @@ function renderDevices(items) {
   if (devicesHost) devicesHost.innerHTML = "";
 
   if (!items.length) {
-    if (homeHost) homeHost.textContent = "Устройств пока нет";
     if (devicesHost) devicesHost.textContent = "Устройств пока нет";
     return;
   }
 
-  if (homeHost) homeHost.appendChild(createDeviceCard(items[0]));
+  if (homeHost && items[0]) homeHost.appendChild(createDeviceCard(items[0]));
   if (devicesHost) {
     items.forEach((d) => {
       devicesHost.appendChild(createDeviceCard(d));
@@ -175,8 +174,8 @@ async function loadDevices() {
     setTextSkeleton(["home-device-limit", "device-limit"], false);
   } catch (e) {
     if ($("home-devices-list")) $("home-devices-list").textContent = "Устройств пока нет";
-    if ($("devices-list")) $("devices-list").textContent = "Устройств пока нет";
     if ($("home-device-limit")) $("home-device-limit").textContent = "0/∞";
+    if ($("devices-list")) $("devices-list").textContent = "Устройств пока нет";
     if ($("device-limit")) $("device-limit").textContent = "Лимит: 0/∞";
     setTextSkeleton(["home-device-limit", "device-limit"], false);
   }

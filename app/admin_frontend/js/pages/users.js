@@ -6,11 +6,48 @@ function formatTraffic(bytes) {
   return `${(value / 1024 ** 3).toFixed(2)} GB`;
 }
 
+function shortText(value, max = 18) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return text.length > max ? `${text.slice(0, max)}...` : text;
+}
+
+function shortId(value) {
+  return shortText(value, 22);
+}
+
 function formatActivityValue(item) {
   const chunks = [];
-  if (item.amount !== null && item.amount !== undefined) chunks.push(`${safeText(item.amount)} RUB`);
-  if (item.traffic_gb !== null && item.traffic_gb !== undefined) chunks.push(`${safeText(item.traffic_gb)} GB`);
-  if (item.note) chunks.push(safeText(item.note));
+
+  if (item.amount !== null && item.amount !== undefined && Number(item.amount) !== 0) {
+    chunks.push(`${safeText(item.amount)} RUB`);
+  }
+
+  if (item.traffic_gb !== null && item.traffic_gb !== undefined && Number(item.traffic_gb) !== 0) {
+    chunks.push(`${safeText(item.traffic_gb)} GB`);
+  }
+
+  if (item.subscription_id) {
+    chunks.push(`Подписка #${safeText(item.subscription_id)}`);
+  }
+
+  if (item.transaction_id) {
+    chunks.push(`Платеж #${safeText(item.transaction_id)}`);
+  }
+
+  if (item.provider_payment_id) {
+    chunks.push(`Provider ${safeText(shortId(item.provider_payment_id))}`);
+  }
+
+  if (item.note) {
+    const compactNote = String(item.note)
+      .replace(/Ручное подтверждение платежа/gi, "Подтвержден")
+      .replace(/Manual payment confirmation/gi, "Подтвержден")
+      .replace(/Ручное пополнение/gi, "Пополнение")
+      .replace(/Ручное списание/gi, "Списание");
+    chunks.push(safeText(shortText(compactNote, 42)));
+  }
+
   return chunks.join(" • ") || "Без деталей";
 }
 
@@ -39,20 +76,6 @@ function activityLabel(item) {
     promocode_activated: "Промокод",
   };
   return labels[item.action] || item.action || "Событие";
-}
-
-function renderEmptyUserState() {
-  return `
-    <div class="empty-user-state">
-      <div class="empty-user-state__icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="8.5" r="3.2"></circle>
-          <path d="M5.5 18c1.4-3.1 4-4.8 6.5-4.8S17.1 14.9 18.5 18"></path>
-        </svg>
-      </div>
-      <div class="empty-user-state__text">Информация о пользователе появится здесь</div>
-    </div>
-  `;
 }
 
 function renderUsersLayout() {
@@ -84,46 +107,62 @@ function renderUsersLayout() {
         </div>
       </div>
 
-      <div class="users-main-grid">
-        <div class="card users-table-card">
-          <h3>Список пользователей</h3>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th><th>Telegram ID</th><th>Username</th><th>Баланс</th><th>Подписка</th><th>Бан</th><th>Действия</th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <div class="pager pager--minimal">
-            <button id="prev" class="btn-pager">Назад</button>
-            <span id="meta" class="pager__meta"></span>
-            <button id="next" class="btn-pager">Вперёд</button>
-          </div>
+      <div class="card users-table-card">
+        <h3>Список пользователей</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Telegram ID</th><th>Username</th><th>Баланс</th><th>Подписка</th><th>Бан</th><th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
         </div>
+        <div class="pager pager--minimal">
+          <button id="prev" class="btn-pager">Назад</button>
+          <span id="meta" class="pager__meta"></span>
+          <button id="next" class="btn-pager">Вперёд</button>
+        </div>
+      </div>
 
-        <div class="content-stack side-panel-stack">
-          <div class="card side-card">
-            <h3>Данные пользователя</h3>
-            <div id="details" class="details-grid details-grid--empty">${renderEmptyUserState()}</div>
-          </div>
-
-          <div class="card side-card">
-            <h3>Управление</h3>
-            <div class="toolbar toolbar--management">
-              <input id="balance_amount" type="number" min="1" value="100" placeholder="Сумма" />
-              <button id="btn_add_balance" class="btn-info">Пополнить</button>
-              <button id="btn_sub_balance" class="btn-warn">Списать</button>
-              <button id="btn_toggle_ban" class="btn-outline-danger">Бан / Разбан</button>
+      <div id="user_modal" class="user-modal" hidden>
+        <button id="user_modal_overlay" class="user-modal__overlay" type="button" aria-label="Закрыть окно"></button>
+        <div class="user-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="user_modal_title">
+          <div class="user-modal__topbar">
+            <div>
+              <div class="user-modal__eyebrow">Пользователь</div>
+              <h3 id="user_modal_title" class="user-modal__title">Карточка пользователя</h3>
             </div>
-            <div class="page-sub">Все действия применяются к выбранному пользователю.</div>
+            <button id="user_modal_close" class="user-modal__close" type="button" aria-label="Закрыть окно">×</button>
           </div>
+
+          <div class="user-modal__actions">
+            <input id="balance_amount" type="number" min="1" value="100" placeholder="Сумма" />
+            <button id="btn_add_balance" class="btn-info">Пополнить</button>
+            <button id="btn_sub_balance" class="btn-outline-danger">Списать</button>
+            <button id="btn_toggle_ban" class="btn-danger">Бан / Разбан</button>
+          </div>
+
+          <div id="details" class="user-modal__content"></div>
         </div>
       </div>
     </div>
   `;
+}
+
+function closeUserModal() {
+  const modal = q("user_modal");
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.classList.remove("user-modal-open");
+}
+
+function openUserModal() {
+  const modal = q("user_modal");
+  if (!modal) return;
+  modal.hidden = false;
+  document.body.classList.add("user-modal-open");
 }
 
 async function userAction(userId, action, extra = {}) {
@@ -133,6 +172,10 @@ async function userAction(userId, action, extra = {}) {
   });
   await loadUsers();
   await loadUserDetails(userId);
+}
+
+function renderInfoRow(label, value) {
+  return `<div><span>${label}</span><b>${value}</b></div>`;
 }
 
 async function loadUserDetails(userId) {
@@ -145,70 +188,103 @@ async function loadUserDetails(userId) {
   const topups = data.topups || [];
   const activities = data.activities || [];
 
+  q("user_modal_title").textContent = user.username ? `@${user.username}` : `Пользователь #${user.id}`;
   q("details").innerHTML = `
-    <div class="details-section">
-      <h4>Основное</h4>
-      <div class="details-list">
-        <div><span>ID</span><b>${safeText(user.id)}</b></div>
-        <div><span>Telegram ID</span><b>${safeText(user.tg_id)}</b></div>
-        <div><span>Username</span><b>${safeText(user.username)}</b></div>
-        <div><span>Email</span><b>${safeText(user.email)}</b></div>
-        <div><span>Баланс</span><b>${safeText(user.balance)} RUB</b></div>
-        <div><span>Лимит трафика</span><b>${safeText(formatTraffic(user.traffic_limit_bytes))}</b></div>
-        <div><span>Статус</span>${user.banned ? statusBadge("ban") : statusBadge("ok")}</div>
+    <div class="user-modal__summary">
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Баланс</span>
+        <strong>${safeText(user.balance)} RUB</strong>
+      </div>
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Статус</span>
+        <strong>${user.banned ? "Забанен" : "Активен"}</strong>
+      </div>
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Подписка</span>
+        <strong>${safeText(subscription.plan_name || "Нет")}</strong>
+      </div>
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Трафик</span>
+        <strong>${safeText(subscription.topup_gb || 0)} GB</strong>
       </div>
     </div>
 
-    <div class="details-section">
-      <h4>Подписка</h4>
-      <div class="details-list">
-        <div><span>План</span><b>${safeText(subscription.plan_name)}</b></div>
-        <div><span>Статус</span>${statusBadge(subscription.status || "expired")}</div>
-        <div><span>Активна до</span><b>${formatDateTime(subscription.current_period_end)}</b></div>
-        <div><span>Автопродление</span>${subscription.auto_renew ? statusBadge("yes") : statusBadge("no")}</div>
-        <div><span>Добавлено трафика</span><b>${safeText(subscription.topup_gb || 0)} GB</b></div>
+    <div class="user-modal__grid user-modal__grid--overview">
+      <div class="details-section">
+        <h4>Основное</h4>
+        <div class="details-list">
+          ${renderInfoRow("ID", safeText(user.id))}
+          ${renderInfoRow("Telegram ID", safeText(user.tg_id))}
+          ${renderInfoRow("Username", safeText(user.username || "—"))}
+          ${renderInfoRow("Email", safeText(user.email || "—"))}
+          ${renderInfoRow("Баланс", `${safeText(user.balance)} RUB`)}
+          ${renderInfoRow("Лимит трафика", safeText(formatTraffic(user.traffic_limit_bytes)))}
+          <div><span>Статус</span>${user.banned ? statusBadge("ban") : statusBadge("ok")}</div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h4>Подписка</h4>
+        <div class="details-list">
+          ${renderInfoRow("План", safeText(subscription.plan_name || "—"))}
+          <div><span>Статус</span>${statusBadge(subscription.status || "expired")}</div>
+          ${renderInfoRow("Активна до", formatDateTime(subscription.current_period_end))}
+          <div><span>Автопродление</span>${subscription.auto_renew ? statusBadge("yes") : statusBadge("no")}</div>
+          ${renderInfoRow("Добавлено трафика", `${safeText(subscription.topup_gb || 0)} GB`)}
+        </div>
       </div>
     </div>
 
-    <div class="details-section">
-      <h4>Последние транзакции</h4>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Сумма</th><th>Система</th><th>Статус</th></tr></thead>
-          <tbody>
-            ${transactions
-              .slice(0, 8)
-              .map(
-                (item) =>
-                  `<tr><td>${safeText(item.id)}</td><td>${safeText(item.amount)} RUB</td><td>${safeText(item.payment_system)}</td><td>${statusBadge(item.paid ? "paid" : "unpaid")}</td></tr>`
-              )
-              .join("") || "<tr><td colspan='4'>Нет транзакций</td></tr>"}
-          </tbody>
-        </table>
+    <div class="user-modal__grid user-modal__grid--details">
+      <div class="details-section details-section--compact">
+        <div class="details-section__head">
+          <h4>Последние транзакции</h4>
+          <span class="details-section__meta">${transactions.length}</span>
+        </div>
+        <div class="table-wrap table-wrap--modal">
+          <table>
+            <thead><tr><th>ID</th><th>Сумма</th><th>Система</th><th>Статус</th></tr></thead>
+            <tbody>
+              ${transactions
+                .slice(0, 8)
+                .map(
+                  (item) =>
+                    `<tr><td>${safeText(item.id)}</td><td>${safeText(item.amount)} RUB</td><td>${safeText(item.payment_system)}</td><td>${statusBadge(item.paid ? "paid" : "unpaid")}</td></tr>`,
+                )
+                .join("") || "<tr><td colspan='4'>Нет транзакций</td></tr>"}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="details-section details-section--compact">
+        <div class="details-section__head">
+          <h4>Начисления трафика</h4>
+          <span class="details-section__meta">${topups.length}</span>
+        </div>
+        <div class="table-wrap table-wrap--modal">
+          <table>
+            <thead><tr><th>ID</th><th>GB</th><th>Подписка</th><th>Дата</th></tr></thead>
+            <tbody>
+              ${topups
+                .slice(0, 10)
+                .map(
+                  (item) =>
+                    `<tr><td>${safeText(item.id)}</td><td>${safeText(item.gb)} GB</td><td>${safeText(item.subscription_id)}</td><td>${formatDateTime(item.created_at)}</td></tr>`,
+                )
+                .join("") || "<tr><td colspan='4'>Нет начислений трафика</td></tr>"}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <div class="details-section">
-      <h4>Начисления трафика</h4>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>GB</th><th>Подписка</th><th>Дата</th></tr></thead>
-          <tbody>
-            ${topups
-              .slice(0, 10)
-              .map(
-                (item) =>
-                  `<tr><td>${safeText(item.id)}</td><td>${safeText(item.gb)} GB</td><td>${safeText(item.subscription_id)}</td><td>${formatDateTime(item.created_at)}</td></tr>`
-              )
-              .join("") || "<tr><td colspan='4'>Нет начислений трафика</td></tr>"}
-          </tbody>
-        </table>
+    <div class="details-section details-section--history">
+      <div class="details-section__head">
+        <h4>История действий</h4>
+        <span class="details-section__meta">${activities.length}</span>
       </div>
-    </div>
-
-    <div class="details-section">
-      <h4>История действий</h4>
-      <div class="table-wrap">
+      <div class="table-wrap table-wrap--modal table-wrap--history">
         <table>
           <thead><tr><th>Дата</th><th>Тип</th><th>Источник</th><th>Детали</th></tr></thead>
           <tbody>
@@ -216,7 +292,7 @@ async function loadUserDetails(userId) {
               .slice(0, 20)
               .map(
                 (item) =>
-                  `<tr><td>${formatDateTime(item.created_at)}</td><td>${safeText(activityLabel(item))}</td><td>${safeText(item.source || item.category)}</td><td>${formatActivityValue(item)}</td></tr>`
+                  `<tr><td>${formatDateTime(item.created_at)}</td><td>${safeText(activityLabel(item))}</td><td>${safeText(item.source || item.category || "system")}</td><td>${formatActivityValue(item)}</td></tr>`,
               )
               .join("") || "<tr><td colspan='4'>История пока пуста</td></tr>"}
           </tbody>
@@ -224,10 +300,13 @@ async function loadUserDetails(userId) {
       </div>
     </div>
   `;
-  q("details").classList.remove("details-grid--empty");
 
   const toggle = q("btn_toggle_ban");
-  if (toggle) toggle.textContent = user.banned ? "Разбанить" : "Забанить";
+  if (toggle) {
+    toggle.textContent = user.banned ? "Разбанить" : "Забанить";
+    toggle.className = user.banned ? "btn-success" : "btn-danger";
+  }
+  openUserModal();
   await loadUsers();
 }
 
@@ -235,7 +314,10 @@ function actionBtn(label, className, onClick) {
   const button = document.createElement("button");
   button.textContent = label;
   button.className = className || "";
-  button.addEventListener("click", onClick);
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    onClick();
+  });
   return button;
 }
 
@@ -279,13 +361,58 @@ async function loadUsers() {
     actions.appendChild(actionBtn("Открыть", "btn-outline-primary", () => loadUserDetails(user.id)));
     actions.appendChild(actionBtn("+100", "btn-outline-success", () => userAction(user.id, "add_balance", { amount: 100 })));
     actions.appendChild(actionBtn("-100", "btn-outline-danger", () => userAction(user.id, "sub_balance", { amount: 100 })));
-    actions.appendChild(actionBtn(user.banned ? "Разбан" : "Бан", "btn-solid-danger", () => userAction(user.id, user.banned ? "unban" : "ban")));
+    actions.appendChild(
+      actionBtn(
+        user.banned ? "Разбан" : "Бан",
+        user.banned ? "btn-success" : "btn-danger",
+        () => userAction(user.id, user.banned ? "unban" : "ban"),
+      ),
+    );
 
     tr.querySelector("td:last-child").appendChild(actions);
     q("tbody").appendChild(tr);
   });
 
   renderPager(meta, q("prev"), q("next"), q("meta"));
+}
+
+function bindModalControls() {
+  q("user_modal_overlay")?.addEventListener("click", closeUserModal);
+  q("user_modal_close")?.addEventListener("click", closeUserModal);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeUserModal();
+  });
+
+  q("btn_add_balance")?.addEventListener("click", async (event) => {
+    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
+    const amount = Number(q("balance_amount").value || "0");
+    if (amount <= 0) return alert("Введите корректную сумму");
+    await withButtonLoading(event.currentTarget, async () => {
+      await userAction(usersState.selectedUserId, "add_balance", { amount });
+      showToast("Баланс пополнен", "success");
+    }).catch((error) => alert(error.message));
+  });
+
+  q("btn_sub_balance")?.addEventListener("click", async (event) => {
+    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
+    const amount = Number(q("balance_amount").value || "0");
+    if (amount <= 0) return alert("Введите корректную сумму");
+    await withButtonLoading(event.currentTarget, async () => {
+      await userAction(usersState.selectedUserId, "sub_balance", { amount });
+      showToast("Баланс списан", "success");
+    }).catch((error) => alert(error.message));
+  });
+
+  q("btn_toggle_ban")?.addEventListener("click", async (event) => {
+    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
+    const current = (q("btn_toggle_ban").textContent || "").toLowerCase();
+    const action = current.includes("разбан") ? "unban" : "ban";
+    await withButtonLoading(event.currentTarget, async () => {
+      await userAction(usersState.selectedUserId, action);
+      showToast(action === "ban" ? "Пользователь забанен" : "Пользователь разбанен", "success");
+    }).catch((error) => alert(error.message));
+  });
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -296,6 +423,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     subtitle: "Поиск, фильтрация, управление статусом",
     contentHtml: renderUsersLayout(),
   });
+
+  bindModalControls();
 
   q("apply").addEventListener("click", async (event) => {
     await withButtonLoading(event.currentTarget, async () => {
@@ -317,36 +446,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(event.currentTarget, async () => {
       usersState.page += 1;
       await loadUsers();
-    }).catch((error) => alert(error.message));
-  });
-
-  q("btn_add_balance").addEventListener("click", async (event) => {
-    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
-    const amount = Number(q("balance_amount").value || "0");
-    if (amount <= 0) return alert("Введите корректную сумму");
-    await withButtonLoading(event.currentTarget, async () => {
-      await userAction(usersState.selectedUserId, "add_balance", { amount });
-      showToast("Баланс пополнен", "success");
-    }).catch((error) => alert(error.message));
-  });
-
-  q("btn_sub_balance").addEventListener("click", async (event) => {
-    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
-    const amount = Number(q("balance_amount").value || "0");
-    if (amount <= 0) return alert("Введите корректную сумму");
-    await withButtonLoading(event.currentTarget, async () => {
-      await userAction(usersState.selectedUserId, "sub_balance", { amount });
-      showToast("Баланс списан", "success");
-    }).catch((error) => alert(error.message));
-  });
-
-  q("btn_toggle_ban").addEventListener("click", async (event) => {
-    if (!usersState.selectedUserId) return alert("Сначала выберите пользователя");
-    const current = (q("btn_toggle_ban").textContent || "").toLowerCase();
-    const action = current.includes("разбан") ? "unban" : "ban";
-    await withButtonLoading(event.currentTarget, async () => {
-      await userAction(usersState.selectedUserId, action);
-      showToast(action === "ban" ? "Пользователь забанен" : "Пользователь разбанен", "success");
     }).catch((error) => alert(error.message));
   });
 

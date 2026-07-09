@@ -9,7 +9,9 @@ const tabEmail = q("tab_email");
 const tabTelegram = q("tab_telegram");
 const formEmail = q("form_email");
 const formTelegram = q("form_telegram");
+const emailRequestBlock = q("email_request_block");
 const emailVerifyBlock = q("email_verify_block");
+const tgRequestBlock = q("tg_request_block");
 const tgVerifyBlock = q("tg_verify_block");
 
 function setStatus(text, type = "") {
@@ -60,36 +62,39 @@ async function post(path, body) {
 }
 
 function resetSteps() {
-  emailVerifyBlock.classList.add("is-hidden");
-  tgVerifyBlock.classList.add("is-hidden");
-  q("email_code").value = "";
-  q("tg_code").value = "";
+  emailRequestBlock?.classList.remove("is-hidden");
+  tgRequestBlock?.classList.remove("is-hidden");
+  emailVerifyBlock?.classList.add("is-hidden");
+  tgVerifyBlock?.classList.add("is-hidden");
+  if (q("email_code")) q("email_code").value = "";
+  if (q("tg_code")) q("tg_code").value = "";
 }
 
 function setMode(mode) {
   const emailMode = mode === "email";
-  tabEmail.classList.toggle("is-active", emailMode);
-  tabTelegram.classList.toggle("is-active", !emailMode);
-  tabEmail.setAttribute("aria-selected", emailMode ? "true" : "false");
-  tabTelegram.setAttribute("aria-selected", emailMode ? "false" : "true");
-  formEmail.classList.toggle("is-hidden", !emailMode);
-  formTelegram.classList.toggle("is-hidden", emailMode);
+  tabEmail?.classList.toggle("is-active", emailMode);
+  tabTelegram?.classList.toggle("is-active", !emailMode);
+  tabEmail?.setAttribute("aria-selected", emailMode ? "true" : "false");
+  tabTelegram?.setAttribute("aria-selected", emailMode ? "false" : "true");
+  formEmail?.classList.toggle("is-hidden", !emailMode);
+  formTelegram?.classList.toggle("is-hidden", emailMode);
   setStatus("");
 }
 
 async function sendEmailCode() {
-  const email = (q("email").value || "").trim();
+  const email = (q("email")?.value || "").trim();
   if (!email) throw new Error("Введите email.");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Введите корректный email.");
   await post("/api/auth/send-email-code", { email });
-  emailVerifyBlock.classList.remove("is-hidden");
-  q("email_code").focus();
+  emailRequestBlock?.classList.add("is-hidden");
+  emailVerifyBlock?.classList.remove("is-hidden");
+  q("email_code")?.focus();
   setStatus("Код отправлен на email.", "success");
 }
 
 async function verifyEmail() {
-  const email = (q("email").value || "").trim();
-  const code = (q("email_code").value || "").trim();
+  const email = (q("email")?.value || "").trim();
+  const code = (q("email_code")?.value || "").trim();
   if (!email || !code) throw new Error("Заполните email и код.");
   const data = await post("/api/auth/verify-code", { channel: "email", email, code });
   localStorage.setItem("cabinet_access_token", data.access_token);
@@ -97,18 +102,19 @@ async function verifyEmail() {
 }
 
 async function sendTelegramCode() {
-  const tgRaw = (q("tg_id").value || "").trim();
+  const tgRaw = (q("tg_id")?.value || "").trim();
   const tgId = Number(tgRaw);
   if (!Number.isFinite(tgId)) throw new Error("Введите корректный Telegram ID.");
   await post("/api/auth/send-telegram-code", { tg_id: tgId });
-  tgVerifyBlock.classList.remove("is-hidden");
-  q("tg_code").focus();
+  tgRequestBlock?.classList.add("is-hidden");
+  tgVerifyBlock?.classList.remove("is-hidden");
+  q("tg_code")?.focus();
   setStatus("Код отправлен в Telegram.", "success");
 }
 
 async function verifyTelegram() {
-  const tgRaw = (q("tg_id").value || "").trim();
-  const code = (q("tg_code").value || "").trim();
+  const tgRaw = (q("tg_id")?.value || "").trim();
+  const code = (q("tg_code")?.value || "").trim();
   const tgId = Number(tgRaw);
   if (!Number.isFinite(tgId) || !code) throw new Error("Заполните Telegram ID и код.");
   const data = await post("/api/auth/verify-code", { channel: "telegram", tg_id: tgId, code });
@@ -116,21 +122,32 @@ async function verifyTelegram() {
   window.location.replace("/cabinet");
 }
 
-async function runAction(action) {
+function setButtonLoading(button, isLoading) {
+  if (!button) return;
+  if (!button.dataset.label) button.dataset.label = button.textContent || "";
+  button.classList.toggle("is-loading", isLoading);
+  button.disabled = isLoading;
+  if (!isLoading) button.textContent = button.dataset.label;
+}
+
+async function runAction(button, action) {
   try {
     setStatus("");
+    setButtonLoading(button, true);
     await action();
   } catch (e) {
     setStatus(mapErrorMessage(e?.message || e), "error");
+  } finally {
+    setButtonLoading(button, false);
   }
 }
 
 tabEmail?.addEventListener("click", () => setMode("email"));
 tabTelegram?.addEventListener("click", () => setMode("telegram"));
-q("send_email_code")?.addEventListener("click", () => runAction(sendEmailCode));
-q("verify_email")?.addEventListener("click", () => runAction(verifyEmail));
-q("send_tg_code")?.addEventListener("click", () => runAction(sendTelegramCode));
-q("verify_tg")?.addEventListener("click", () => runAction(verifyTelegram));
+q("send_email_code")?.addEventListener("click", (event) => runAction(event.currentTarget, sendEmailCode));
+q("verify_email")?.addEventListener("click", (event) => runAction(event.currentTarget, verifyEmail));
+q("send_tg_code")?.addEventListener("click", (event) => runAction(event.currentTarget, sendTelegramCode));
+q("verify_tg")?.addEventListener("click", (event) => runAction(event.currentTarget, verifyTelegram));
 
 resetSteps();
 setMode("email");

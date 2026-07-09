@@ -15047,3 +15047,233 @@ RuntimeError: BOT_API_TOKEN is not configured
 [2026-07-08 17:11:04] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
 [2026-07-08 17:11:04] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-07-08 17:11:15] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-08 20:28:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 20:28:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 20:28:41] [INFO] root: Database tables initialized
+[2026-07-08 20:28:41] [INFO] root: Database connection successful
+[2026-07-08 20:28:41] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-07-08 20:28:41] [INFO] root: [scheduler][remnawave_sync] enabled times=14:53
+[2026-07-08 21:22:26] [INFO] aiogram.event: Update id=891136733 is handled. Duration 704 ms by bot id=7557954606
+[2026-07-08 21:22:28] [INFO] root: [biz][user] created user_id=99 tg_id=7875834910 username=LunetVpnSupport
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] activate_requested user_id=99 plan_id=5 auto_renew=False
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] created user_id=99 subscription_id=80 plan_id=5 period_end=2027-07-03 16:22:28.330253+00:00 gb_added=360.00
+[2026-07-08 21:22:28] [INFO] root: [subscription] reset_user_traffic skipped user_id=99 (remnawave-only mode)
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=386547056640
+[2026-07-08 21:22:28] [INFO] root: [biz][subscription] activate_completed user_id=99 subscription_id=80
+[2026-07-08 21:22:31] [WARNING] root: [remnawave] request retry method=POST url=https://panel1.lunetpn.ru/api/users attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:34] [WARNING] root: [remnawave] request retry method=POST url=https://panel1.lunetpn.ru/api/users attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:34] [WARNING] root: [remnawave] sync failed user_id=99 err=remnawave request failed method=POST url=https://panel1.lunetpn.ru/api/users: Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:34] [WARNING] root: [remnawave] subscription_url missing in API response user_id=99
+[2026-07-08 21:22:34] [INFO] aiogram.event: Update id=891136734 is handled. Duration 6652 ms by bot id=7557954606
+[2026-07-08 21:22:45] [WARNING] root: [remnawave] request retry method=POST url=https://panel1.lunetpn.ru/api/users attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:48] [WARNING] root: [remnawave] request retry method=POST url=https://panel1.lunetpn.ru/api/users attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:48] [WARNING] root: [remnawave] sync failed user_id=99 err=remnawave request failed method=POST url=https://panel1.lunetpn.ru/api/users: Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 21:22:48] [WARNING] root: [remnawave] subscription_url missing in API response user_id=99
+[2026-07-08 21:22:49] [INFO] aiogram.event: Update id=891136735 is handled. Duration 6451 ms by bot id=7557954606
+[2026-07-08 21:23:27] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 21:23:27] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 21:23:27] [INFO] root: Database tables initialized
+[2026-07-08 21:23:27] [INFO] root: Database connection successful
+[2026-07-08 21:23:28] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-07-08 21:23:28] [INFO] root: [scheduler][remnawave_sync] enabled times=14:53
+[2026-07-08 22:39:05] [INFO] root: [biz][user] balance_added user_id=36 amount=100 before=1529 after=1629
+[2026-07-08 22:39:49] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-telegram-id/7875834910 attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 22:39:52] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-telegram-id/7875834910 attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 22:40:00] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-telegram-id/7875834910 attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 22:40:03] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-telegram-id/7875834910 attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-08 22:41:58] [INFO] root: [biz][user] balance_subtracted user_id=36 amount=100 before=1629 after=1529
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=60 after=160
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=160 after=260
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=260 after=360
+[2026-07-08 22:42:47] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=360 after=460
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=460 after=560
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=560 after=660
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=660 after=760
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=760 after=860
+[2026-07-08 22:42:48] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=860 after=960
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=960 after=1060
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1060 after=1160
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1160 after=1260
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1260 after=1360
+[2026-07-08 22:42:49] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1360 after=1460
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1460 after=1560
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1560 after=1660
+[2026-07-08 22:42:50] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1660 after=1760
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1760 after=1860
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1860 after=1960
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=1960 after=2060
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2060 after=2160
+[2026-07-08 22:42:54] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2160 after=2260
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2260 after=2360
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2360 after=2460
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2460 after=2560
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2560 after=2660
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2660 after=2760
+[2026-07-08 22:42:55] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2760 after=2860
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2860 after=2960
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=2960 after=3060
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3060 after=3160
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3160 after=3260
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3260 after=3360
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3360 after=3460
+[2026-07-08 22:42:56] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3460 after=3560
+[2026-07-08 22:42:57] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3560 after=3660
+[2026-07-08 22:42:57] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3660 after=3760
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_field with data[42:61]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_value with data[63:85]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_data with data[89:1192]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_field with data[1236:1255]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_value with data[1257:1285]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_data with data[1289:1293]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_begin with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_field with data[1337:1356]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_value with data[1358:1390]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_header_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_headers_finished with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_data with data[1394:1399]
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_part_end with no data
+[2026-07-08 23:51:01] [DEBUG] python_multipart.multipart: Calling on_end with no data
+[2026-07-08 23:51:02] [WARNING] root: [admin][broadcast] send failed tg_id=123456789 error=Telegram server says - Bad Request: chat not found
+[2026-07-08 23:51:03] [WARNING] root: [admin][broadcast] send failed tg_id=7557954606 error=Telegram server says - Forbidden: the bot can't send messages to the bot
+[2026-07-08 23:51:03] [WARNING] root: [admin][broadcast] send failed tg_id=17578424 error=Telegram server says - Bad Request: chat not found
+[2026-07-08 23:57:06] [INFO] root: [biz][user] balance_added user_id=96 amount=100 before=105 after=205
+[2026-07-08 23:58:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-08 23:58:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-08 23:58:44] [INFO] root: Database tables initialized
+[2026-07-08 23:58:44] [INFO] root: Database connection successful
+[2026-07-09 00:15:36] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:15:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 00:15:37] [INFO] root: Database tables initialized
+[2026-07-09 00:15:37] [INFO] root: Database connection successful
+[2026-07-09 00:16:30] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:16:30] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:16:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:16:33] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:16:36] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=1/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:16:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel1.lunetpn.ru/api/users/by-id/3 attempt=2/2 err=Cannot connect to host panel1.lunetpn.ru:443 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+[2026-07-09 00:17:38] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:17:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 00:17:39] [INFO] root: Database tables initialized
+[2026-07-09 00:17:39] [INFO] root: Database connection successful
+[2026-07-09 00:17:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:17:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:18:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 00:18:00] [INFO] root: Database tables initialized
+[2026-07-09 00:18:00] [INFO] root: Database connection successful
+[2026-07-09 00:18:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:18:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 00:18:08] [INFO] root: Database tables initialized
+[2026-07-09 00:18:08] [INFO] root: Database connection successful
+[2026-07-09 00:25:51] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 00:25:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 00:25:52] [INFO] root: Database tables initialized
+[2026-07-09 00:25:52] [INFO] root: Database connection successful
+[2026-07-09 00:37:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=36 plan_id=1 auto_renew=True
+[2026-07-09 00:37:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=36 plan_id=1 seconds_left=2470385
+[2026-07-09 00:39:33] [INFO] aiogram.event: Update id=891136736 is handled. Duration 693 ms by bot id=7557954606
+[2026-07-09 00:39:35] [INFO] aiogram.event: Update id=891136737 is handled. Duration 323 ms by bot id=7557954606
+[2026-07-09 00:39:36] [INFO] aiogram.event: Update id=891136738 is handled. Duration 406 ms by bot id=7557954606
+[2026-07-09 00:39:37] [INFO] aiogram.event: Update id=891136739 is handled. Duration 500 ms by bot id=7557954606
+[2026-07-09 00:41:10] [INFO] aiogram.event: Update id=891136740 is handled. Duration 204 ms by bot id=7557954606
+[2026-07-09 00:41:11] [INFO] aiogram.event: Update id=891136741 is handled. Duration 125 ms by bot id=7557954606
+[2026-07-09 00:41:38] [INFO] aiogram.event: Update id=891136742 is handled. Duration 133 ms by bot id=7557954606
+[2026-07-09 00:41:43] [INFO] aiogram.event: Update id=891136743 is handled. Duration 150 ms by bot id=7557954606
+[2026-07-09 00:42:56] [INFO] aiogram.event: Update id=891136744 is handled. Duration 203 ms by bot id=7557954606
+[2026-07-09 00:43:00] [INFO] root: [biz][user] created user_id=100 tg_id=1237947229 username=dyunjais
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=5 auto_renew=False
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] created user_id=100 subscription_id=83 plan_id=5 period_end=2027-07-03 19:43:00.882641+00:00 gb_added=360.00
+[2026-07-09 00:43:00] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-09 00:43:00] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-07-09 00:43:01] [INFO] aiogram.event: Update id=891136745 is handled. Duration 896 ms by bot id=7557954606
+[2026-07-09 00:43:55] [INFO] aiogram.event: Update id=891136746 is handled. Duration 353 ms by bot id=7557954606
+[2026-07-09 00:44:06] [INFO] aiogram.event: Update id=891136747 is handled. Duration 230 ms by bot id=7557954606
+[2026-07-09 00:44:07] [INFO] aiogram.event: Update id=891136748 is handled. Duration 223 ms by bot id=7557954606
+[2026-07-09 00:44:18] [INFO] root: [biz][referral] account_created user_id=100 account_id=75
+[2026-07-09 00:55:37] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-09 00:55:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-09 00:55:37] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-09 00:55:38] [INFO] root: Bot polling cancelled
+[2026-07-09 00:55:38] [INFO] root: Bot stopped
+[2026-07-09 00:55:38] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-09 19:19:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 19:19:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 19:19:46] [INFO] root: Database tables initialized
+[2026-07-09 19:19:46] [INFO] root: Database connection successful
+[2026-07-09 19:19:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 19:19:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 19:19:54] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 19:19:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 19:19:55] [INFO] root: Database tables initialized
+[2026-07-09 19:19:55] [INFO] root: Database connection successful
+[2026-07-09 19:20:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 19:20:03] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 19:20:03] [INFO] root: Database tables initialized
+[2026-07-09 19:20:03] [INFO] root: Database connection successful
+[2026-07-09 19:20:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 19:20:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 19:20:12] [INFO] root: Bot started
+[2026-07-09 19:20:12] [INFO] aiogram.dispatcher: Start polling
+[2026-07-09 19:20:12] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-09 20:13:17] [INFO] aiogram.event: Update id=891136749 is handled. Duration 694 ms by bot id=7557954606
+[2026-07-09 20:13:18] [INFO] aiogram.event: Update id=891136750 is handled. Duration 295 ms by bot id=7557954606
+[2026-07-09 20:13:20] [INFO] aiogram.event: Update id=891136751 is handled. Duration 207 ms by bot id=7557954606
+[2026-07-09 20:13:33] [INFO] aiogram.event: Update id=891136752 is handled. Duration 878 ms by bot id=7557954606
+[2026-07-09 20:13:48] [INFO] root: [biz][user] email_updated user_id=100 old=None new=vladislavisaev0507@gmail.com
+[2026-07-09 20:13:48] [INFO] aiogram.event: Update id=891136753 is handled. Duration 133 ms by bot id=7557954606
+[2026-07-09 20:13:50] [INFO] aiogram.event: Update id=891136754 is handled. Duration 511 ms by bot id=7557954606
+[2026-07-09 20:15:56] [INFO] aiogram.event: Update id=891136755 is handled. Duration 389 ms by bot id=7557954606
+[2026-07-09 20:15:57] [INFO] aiogram.event: Update id=891136756 is handled. Duration 298 ms by bot id=7557954606
+[2026-07-09 20:15:58] [INFO] aiogram.event: Update id=891136757 is handled. Duration 232 ms by bot id=7557954606
+[2026-07-09 22:45:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 22:45:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 22:45:09] [INFO] root: Database tables initialized
+[2026-07-09 22:45:09] [INFO] root: Database connection successful
+[2026-07-09 23:01:41] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 23:01:41] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 23:01:41] [INFO] root: Database tables initialized
+[2026-07-09 23:01:41] [INFO] root: Database connection successful
+[2026-07-09 23:01:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 23:01:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 23:01:56] [INFO] root: Database tables initialized
+[2026-07-09 23:01:56] [INFO] root: Database connection successful
+[2026-07-09 23:08:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:40] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:44] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:44] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:49] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:53] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:55] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:08:57] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [None]
+[2026-07-09 23:08:57] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [None]
+[2026-07-09 23:08:57] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Cannot connect to host panel.lunetpn.ru:443 ssl:default [Указанное сетевое имя более недоступно]
+[2026-07-09 23:18:41] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:18:42] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/hwid/devices/ddee43a2-b28c-4a8f-a42c-bec39ee8d0d1 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/hwid/devices/ddee43a2-b28c-4a8f-a42c-bec39ee8d0d1
+[2026-07-09 23:18:44] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-09 23:19:17] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-09 23:19:17] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-09 23:19:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-09 23:19:25] [WARNING] aiogram.dispatcher: Sleep for 1.192216 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-07-09 23:19:37] [INFO] aiogram.dispatcher: Connection established (tryings = 2, bot id = 7557954606)
+[2026-07-09 23:37:43] [INFO] root: Settings successfully loaded from .env
+[2026-07-09 23:37:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-09 23:37:43] [INFO] root: Database tables initialized
+[2026-07-09 23:37:43] [INFO] root: Database connection successful
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=1000.0
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=386547056640
+[2026-07-09 23:50:07] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=1000.0
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=100.0
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=1460288880640
+[2026-07-09 23:51:44] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=100.0
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] add_traffic_requested user_id=99 gb=100.0
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=99 subscription_id=80 traffic_limit_bytes=1567663063040
+[2026-07-09 23:51:46] [INFO] root: [biz][subscription] add_traffic_completed user_id=99 subscription_id=80 gb=100.0
+[2026-07-10 00:03:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18

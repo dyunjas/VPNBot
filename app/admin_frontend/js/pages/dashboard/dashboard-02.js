@@ -64,7 +64,9 @@ async function loadDashboard() {
     const paymentsSeries = s.payments_chart || [];
     const usersSeries = s.users_chart || [];
     const subscriptionsSeries = s.subscriptions_chart || [];
-    const activationSeries = buildActivationSeries(usersSeries, subscriptionsSeries);
+    const activationSeries = Array.isArray(s.activation_chart) && s.activation_chart.length
+      ? s.activation_chart
+      : buildActivationSeries(usersSeries, subscriptionsSeries);
 
     renderMetricChart({
       hostId: "payments_chart",
@@ -107,8 +109,8 @@ async function loadDashboard() {
       legendMetaBuilder: (item) => `${formatNumber(item.count || 0)} подписок`,
     });
 
-    const totalActivationUsers = usersSeries.reduce((sum, item) => sum + Number(item.count || 0), 0);
-    const totalActivationSubs = subscriptionsSeries.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    const totalActivationUsers = activationSeries.reduce((sum, item) => sum + Number(item.users || 0), 0);
+    const totalActivationSubs = activationSeries.reduce((sum, item) => sum + Number(item.subscriptions || 0), 0);
     const totalActivationRate = totalActivationUsers > 0 ? (totalActivationSubs / totalActivationUsers) * 100 : 0;
 
     renderMetricChart({
@@ -149,4 +151,138 @@ function syncChartPeriodButtons() {
   document.querySelectorAll(".chart-period").forEach((btn) => {
     btn.classList.toggle("is-active", btn.dataset.period === dashboardState.chartPeriod);
   });
+}
+
+function renderMaintenanceCard(state) {
+  const host = q("maintenance_panel");
+  if (!host) return;
+
+  const maintenance = state || {};
+  const enabled = Boolean(maintenance.enabled);
+  const source = maintenance.source ? safeText(maintenance.source) : "—";
+  const updatedAt = maintenance.updated_at ? formatDateTime(maintenance.updated_at) : "—";
+  const modeLabel = String(maintenance.mode || "").toLowerCase() === "auto" ? "Авто" : "Ручной";
+  const toggleLabel = enabled ? "Завершить техработы" : "Запустить техработы";
+  const toggleClass = enabled ? "btn-solid-danger" : "btn-outline-success";
+  const stateTitle = enabled ? "Сервер на техработах" : "Сервер запущен";
+  const stateMessage = enabled
+    ? safeText(maintenance.message || "Сервер на технических работах.")
+    : "Сервер работает в штатном режиме.";
+
+  host.innerHTML = `
+    <div class="maintenance-card ${enabled ? "maintenance-card--enabled" : "maintenance-card--disabled"}">
+      <div class="maintenance-card__top">
+        <div>
+          <div class="maintenance-card__eyebrow">Статус сервера</div>
+          <div class="maintenance-card__title">${stateTitle}</div>
+        </div>
+      </div>
+      <div class="maintenance-card__grid">
+        <div><span>Режим</span><b>${modeLabel}</b></div>
+        <div><span>Источник</span><b>${source}</b></div>
+        <div><span>Обновлено</span><b>${updatedAt}</b></div>
+      </div>
+      <div class="maintenance-card__message">${stateMessage}</div>
+      <div class="maintenance-card__actions">
+        <button id="maintenance_toggle" class="${toggleClass}" type="button">${toggleLabel}</button>
+      </div>
+    </div>
+  `;
+
+  q("maintenance_toggle")?.addEventListener("click", async (e) => {
+    await withButtonLoading(e.currentTarget, async () => {
+      await api("/api/admin/system/maintenance", {
+        method: "POST",
+        body: JSON.stringify(
+          enabled
+            ? { enabled: false }
+            : { enabled: true, message: "Сервер на технических работах." },
+        ),
+      });
+      showToast(enabled ? "Техработы завершены" : "Техработы запущены", "success");
+      await loadDashboard();
+    });
+  });
+}
+
+async function initDashboardPage() {
+  if (!(await ensureAuthOrRedirect())) return;
+  renderShell({
+    activeKey: "dashboard",
+    title: "Обзор",
+    subtitle: "Пользователи, подписки, пополнения и состояние системы",
+    contentHtml: `
+      <div class="dashboard-grid-stats dashboard-grid-stats--strict" id="stats"></div>
+      <div class="dashboard-layout dashboard-overview-grid">
+        <div class="card dashboard-card dashboard-section-card">
+          <div class="dashboard-section-card__head">
+            <div>
+              <div class="dashboard-section-card__eyebrow">Сводка</div>
+              <h3>Общее состояние системы</h3>
+            </div>
+          </div>
+          <div id="quick">Загрузка...</div>
+        </div>
+        <div class="card dashboard-card dashboard-section-card">
+          <div class="dashboard-section-card__head">
+            <div>
+              <div class="dashboard-section-card__eyebrow">Статусы</div>
+              <h3>Ключевые индикаторы</h3>
+            </div>
+          </div>
+          <div id="health">Загрузка...</div>
+        </div>
+      </div>
+      <div class="card dashboard-card dashboard-section-card">
+        <div class="dashboard-section-card__head">
+          <div>
+            <div class="dashboard-section-card__eyebrow">Система</div>
+            <h3>Техработы</h3>
+          </div>
+        </div>
+        <div id="maintenance_panel">Загрузка...</div>
+      </div>
+      <div class="dashboard-charts-grid">
+        ${chartCardHtml({
+          prefix: "payments_chart",
+          title: "График платежей",
+          subtitle: "Загрузка...",
+          controls: `
+            <div id="payments_chart_periods" class="chart-periods">
+              <button class="chart-period is-active" data-period="14d" type="button">14 дней</button>
+              <button class="chart-period" data-period="30d" type="button">30 дней</button>
+              <button class="chart-period" data-period="12m" type="button">12 месяцев</button>
+            </div>
+          `,
+        })}
+        ${chartCardHtml({
+          prefix: "new_users_chart",
+          title: "Новые пользователи",
+          subtitle: "Загрузка...",
+        })}
+        ${chartCardHtml({
+          prefix: "subscriptions_chart",
+          title: "Купленные подписки",
+          subtitle: "Загрузка...",
+        })}
+        ${chartCardHtml({
+          prefix: "activation_chart",
+          title: "Конверсия в подписку",
+          subtitle: "Загрузка...",
+        })}
+      </div>
+      <div class="card dashboard-card dashboard-section-card">
+        <div class="dashboard-section-card__head">
+          <div>
+            <div class="dashboard-section-card__eyebrow">Мониторинг</div>
+            <h3>Оперативные индикаторы</h3>
+          </div>
+        </div>
+        <div id="signals" class="signals">Загрузка...</div>
+      </div>
+    `,
+  });
+
+  bindChartPeriodSwitch();
+  await loadDashboard();
 }

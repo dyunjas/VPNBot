@@ -267,8 +267,10 @@
     justify-content: flex-start;
   }
   .is-cabinet .traffic-ring {
-    width: 160px;
-    height: 160px;
+    --traffic-ring-size: 172px;
+    --traffic-ring-svg-size: 152px;
+    --traffic-ring-stroke: 8px;
+    --traffic-ring-inner-size: 124px;
   }
 
   .is-cabinet .sidebar {

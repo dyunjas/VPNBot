@@ -29,8 +29,12 @@ function statusBadge(status) {
 
   const label = dict[s] || String(status || "—");
 
-  if (["active", "yes", "paid", "ok", "approved"].includes(s)) return `<span class="badge ok">${label}</span>`;
-  if (["expired", "canceled", "unpaid", "ban", "offline", "rejected"].includes(s)) return `<span class="badge danger">${label}</span>`;
+  if (["active", "yes", "paid", "ok", "approved"].includes(s)) {
+    return `<span class="badge ok">${label}</span>`;
+  }
+  if (["expired", "canceled", "unpaid", "ban", "offline", "rejected"].includes(s)) {
+    return `<span class="badge danger">${label}</span>`;
+  }
   return `<span class="badge warn">${label}</span>`;
 }
 
@@ -170,7 +174,7 @@ function menuIcon(kind) {
     partner: "<path d='M9 7h6a3 3 0 0 1 0 6H9a3 3 0 0 1 0-6Z'/><path d='M7 12h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6Z'/>",
     promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
     mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='2'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
-    logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7a1.5 1.5 0 0 1 1.5-1.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
+    logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7A1.5 1.5 0 0 1 7.5 5.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
   const icon = map[kind] || map.overview;
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg>`;
@@ -199,9 +203,12 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     <div class="app">
       <aside class="sidebar">
         <div class="sidebar-head">
-          <div>
-            <div class="sidebar-kicker">Internal Tool</div>
-            <div class="sidebar-title">Админ-панель</div>
+          <div class="sidebar-brand">
+            <div class="sidebar-brand-mark">LN</div>
+            <div>
+              <div class="sidebar-kicker">Internal Tool</div>
+              <div class="sidebar-title">Админ-панель</div>
+            </div>
           </div>
         </div>
 
@@ -222,6 +229,11 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
               <span></span><span></span><span></span>
             </button>
             <div class="topbar-title">Админ-панель</div>
+          </div>
+          <div class="topbar-right">
+            <div class="topbar-user" aria-hidden="true">
+              <span class="topbar-user__avatar">AD</span>
+            </div>
           </div>
         </header>
 
@@ -257,6 +269,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
     const val = e.target.value;
     if (val) window.location.href = val;
   });
+  document.body.classList.remove("dark");
 
   const applyDesktopSidebarState = (collapsed) => {
     document.body.classList.toggle("desktop-sidebar-collapsed", collapsed);
@@ -291,14 +304,18 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   const navToggle = q("mobile_nav_toggle");
   const navOverlay = q("mobile_nav_overlay");
   const desktopTopbarToggle = q("desktop_topbar_toggle");
+
   if (navToggle) {
     navToggle.addEventListener("click", () => {
       if (document.body.classList.contains("mobile-nav-open")) closeMobileNav();
       else openMobileNav();
     });
   }
-  if (desktopTopbarToggle) desktopTopbarToggle.addEventListener("click", toggleDesktopSidebar);
+  if (desktopTopbarToggle) {
+    desktopTopbarToggle.addEventListener("click", toggleDesktopSidebar);
+  }
   if (navOverlay) navOverlay.addEventListener("click", closeMobileNav);
+
   window.addEventListener("resize", () => {
     if (window.innerWidth > 980) {
       closeMobileNav();

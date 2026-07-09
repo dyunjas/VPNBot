@@ -21,6 +21,7 @@ from api.cabinet.common import (
     _get_tg_user,
     _get_user,
     _otp_send_allowed,
+    _otp_send_retry_after,
     _pop_otp,
     _put_otp,
     _smtp_send_code,
@@ -87,7 +88,25 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
         user = res.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="user with this tg_id not found")
-    if not _otp_send_allowed("telegram", str(payload.tg_id)):
+    if not _otp_send_allowed(
+        "telegram",
+        str(payload.tg_id),
+        cooldown_sec=60,
+        window_sec=600,
+        max_sends=3,
+    ):
+        retry_after = _otp_send_retry_after(
+            "telegram",
+            str(payload.tg_id),
+            cooldown_sec=60,
+            window_sec=600,
+            max_sends=3,
+        )
+        if retry_after >= 60:
+            raise HTTPException(
+                status_code=429,
+                detail=f"too many telegram codes requested, try again in {retry_after} seconds",
+            )
         raise HTTPException(status_code=429, detail="code already sent recently")
 
     code = f"{secrets.randbelow(1000000):06d}"

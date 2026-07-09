@@ -48,36 +48,44 @@ tbody tr:hover { background: #f8fafc; }
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 24px;
-  border-radius: 999px;
+  justify-content: center;
+  min-height: 26px;
+  border-radius: 10px;
   border: 1px solid var(--line);
-  padding: 0 9px;
+  padding: 0 10px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  background: #f7fafc;
-}
-.badge::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #f5f9ff 0%, #edf3ff 100%);
+  color: var(--brand-2);
+  border-color: rgba(76, 111, 255, 0.16);
 }
 .badge.ok {
-  color: #18794e;
+  color: #166a45;
   border-color: var(--ok-line);
-  background: #eefbf3;
+  background: linear-gradient(180deg, #f3fcf7 0%, #eaf8f0 100%);
 }
 .badge.warn {
-  color: #9a6700;
+  color: #8d5f0a;
   border-color: var(--warn-line);
-  background: #fff7eb;
+  background: linear-gradient(180deg, #fff8ee 0%, #fff2de 100%);
 }
 .badge.danger {
   color: #b42336;
   border-color: var(--danger-line);
-  background: #fff1f2;
+  background: linear-gradient(180deg, #fff5f6 0%, #ffecee 100%);
+}
+
+button[data-edit],
+button[data-mobile-edit] {
+  color: var(--brand);
+  border-color: rgba(76, 111, 255, 0.26);
+  background: var(--brand-ghost);
+}
+
+button[data-edit]:hover,
+button[data-mobile-edit]:hover {
+  background: var(--brand-soft);
+  border-color: rgba(76, 111, 255, 0.38);
 }
 

@@ -1,5 +1,30 @@
 .is-miniapp {
+  --bg: #5b7cfa;
+  --bg-soft: #eff4ff;
+  --card: #ffffff;
+  --card-2: #f7f9ff;
+  --line: #dde5f4;
+  --line-strong: #c8d5ee;
+  --text: #182338;
+  --text-soft: #5f6f8b;
+  --muted: #71809a;
+  --primary: #4c6fff;
+  --primary-2: #3a59db;
+  --danger: #dc2626;
+  --ok: #15803d;
+  --warn: #c76a12;
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --shadow: 0 28px 80px rgba(25, 45, 107, 0.18);
+  --shadow-soft: 0 16px 40px rgba(36, 54, 120, 0.10);
   overflow-x: hidden;
+}
+
+body.is-miniapp {
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 28%),
+    linear-gradient(180deg, #5b7cfa 0%, #4f74f7 100%);
 }
 
 .is-miniapp .app {
@@ -35,7 +60,7 @@
 .is-miniapp .pay-method,
 .is-miniapp .bottom-nav,
 .is-miniapp .tab {
-  border-color: #e3eaf5;
+  border-color: #dbe6f6;
 }
 
 .is-miniapp .card.glass {
@@ -214,7 +239,7 @@
 
 .is-miniapp .traffic-legend__item {
   padding: 14px 16px;
-  border: 1px solid #e3eaf5;
+  border: 1px solid #dbe6f6;
   border-radius: 18px;
   background: #f8fbff;
 }
@@ -283,4 +308,3 @@
 .is-miniapp .settings-grid {
   grid-template-columns: 1fr;
 }
-

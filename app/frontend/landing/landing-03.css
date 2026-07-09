@@ -83,7 +83,8 @@
 
   .hero,
   .join,
-  article.card {
+  article.card,
+  .section {
     padding: 18px;
   }
 
@@ -91,6 +92,11 @@
   .grid--locations,
   .footer-inner {
     grid-template-columns: 1fr;
+  }
+
+  .footer {
+    margin-top: 28px;
+    padding-top: 18px;
   }
 
   .hero__actions,

@@ -65,6 +65,33 @@ function chartPointPath(points) {
   return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
 }
 
+function compactChartLabel(label) {
+  const text = String(label || "").trim();
+  if (!text) return "";
+  if (/^\d{2}\.\d{2}\.\d{4}$/.test(text)) return text.slice(0, 5);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return `${text.slice(8, 10)}.${text.slice(5, 7)}`;
+  return text;
+}
+
+function buildXAxisLabels(items, points, width, padding) {
+  const labels = items.map((item) => compactChartLabel(item.label || item.key || ""));
+  const longestLabel = labels.reduce((max, label) => Math.max(max, label.length), 0);
+  const approxLabelWidth = Math.max(28, longestLabel * 7);
+  const availableWidth = Math.max(width - padding.left - padding.right, 1);
+  const maxVisibleLabels = Math.max(2, Math.floor(availableWidth / approxLabelWidth));
+  const step = Math.max(1, Math.ceil(items.length / maxVisibleLabels));
+
+  return points
+    .map((point, index) => {
+      const isFirst = index === 0;
+      const isLast = index === points.length - 1;
+      const visible = isFirst || isLast || index % step === 0;
+      if (!visible) return "";
+      return `<text x="${point.x}" y="${width > 720 ? 228 : 232}" text-anchor="middle">${safeText(labels[index])}</text>`;
+    })
+    .join("");
+}
+
 function buildChartSvg(chartId, items, values, options = {}) {
   const width = 920;
   const height = 240;
@@ -98,13 +125,7 @@ function buildChartSvg(chartId, items, values, options = {}) {
     })
     .join("");
 
-  const xLabels = points
-    .map((point, index) => {
-      const item = items[index];
-      const label = String(item.label || item.key || "");
-      return `<text x="${point.x}" y="${height - 14}" text-anchor="middle">${safeText(label)}</text>`;
-    })
-    .join("");
+  const xLabels = buildXAxisLabels(items, points, width, padding);
 
   const markers = points
     .map((point, index) => {
@@ -128,15 +149,16 @@ function buildChartSvg(chartId, items, values, options = {}) {
     <svg class="metric-chart__svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
       <defs>
         <linearGradient id="${gradientAreaId}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1f6feb" stop-opacity="0.28" />
-          <stop offset="100%" stop-color="#1f6feb" stop-opacity="0.02" />
+          <stop offset="0%" stop-color="var(--brand)" stop-opacity="0.30" />
+          <stop offset="100%" stop-color="var(--brand)" stop-opacity="0.03" />
         </linearGradient>
         <linearGradient id="${gradientLineId}" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#5ca0ff" />
-          <stop offset="100%" stop-color="#1f6feb" />
+          <stop offset="0%" stop-color="#8ca2ff" />
+          <stop offset="55%" stop-color="var(--brand)" />
+          <stop offset="100%" stop-color="var(--brand-2)" />
         </linearGradient>
       </defs>
-      <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="#fbfdff" />
+      <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="var(--surface-soft)" />
       <g class="metric-chart__grid">${gridLines}</g>
       ${areaPath ? `<path class="metric-chart__area" style="fill:url(#${gradientAreaId})" d="${areaPath}"></path>` : ""}
       ${linePath ? `<path class="metric-chart__line" style="stroke:url(#${gradientLineId})" d="${linePath}"></path>` : ""}

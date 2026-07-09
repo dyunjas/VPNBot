@@ -11,13 +11,13 @@ body {
     var(--bg);
 }
 
-body.app-booting #app-root {
+body.app-booting.is-miniapp #app-root {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-body.app-ready #app-root {
+body.app-ready.is-miniapp #app-root {
   opacity: 1;
   visibility: visible;
   transition: opacity .24s ease;
@@ -265,7 +265,8 @@ h1, h2, h3, h4, h5, h6 {
 .alert__msg {
   font-size: 14px;
   line-height: 1.45;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text);
 }
 
 .alert__close {

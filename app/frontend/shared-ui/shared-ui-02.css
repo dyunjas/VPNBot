@@ -35,9 +35,9 @@
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
-body.app-ready .card,
-body.app-ready .feature-pill,
-body.app-ready .cabinet-footer {
+body.app-ready.is-miniapp .card,
+body.app-ready.is-miniapp .feature-pill,
+body.app-ready.is-miniapp .cabinet-footer {
   animation: ui-fade-in .28s ease both;
 }
 

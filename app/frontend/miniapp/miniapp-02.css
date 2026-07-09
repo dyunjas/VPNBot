@@ -32,7 +32,8 @@
 }
 
 .is-miniapp .pay-method--active {
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.14);
+  border-color: #4c6fff;
+  box-shadow: 0 0 0 2px rgba(76, 111, 255, 0.24), 0 10px 24px rgba(76, 111, 255, 0.16);
 }
 
 .is-miniapp .btn,

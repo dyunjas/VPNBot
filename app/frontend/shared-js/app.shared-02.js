@@ -197,39 +197,20 @@ async function loadStatus() {
     "sub-days-left",
     "sub-end-date",
     "sub-traffic-text",
-    "traffic-used-gb",
-    "traffic-total-gb",
-    "traffic-used-text",
-    "traffic-left-text",
   ], true);
   const data = await api("/api/status");
   const sub = data.subscription || {};
   const remnawave = data.remnawave || {};
   const limitBytes = Number(remnawave.trafficLimitBytes || 0);
   const usedBytes = Number(remnawave.usedTrafficBytes || 0);
-  const leftBytes = Math.max(0, limitBytes - usedBytes);
   const usedPercent = formatTrafficPercent(usedBytes, limitBytes);
-  const leftPercent = Math.max(0, 100 - usedPercent);
   const progressFill = document.getElementById("sub-progress-fill");
-  const trafficRingProgress = document.getElementById("traffic-ring-progress");
-
-  if (trafficRingProgress) {
-    const radius = Number(trafficRingProgress.getAttribute("r") || 50);
-    const circumference = 2 * Math.PI * radius;
-    const progress = Math.max(0, Math.min(1, limitBytes > 0 ? usedBytes / limitBytes : 0));
-    trafficRingProgress.style.strokeDasharray = `${circumference}`;
-    trafficRingProgress.style.strokeDashoffset = `${circumference * (1 - progress)}`;
-  }
 
   if (!data.has_subscription) {
     $("sub-title").textContent = "Подписка неактивна";
     $("sub-days-left").textContent = "0";
     $("sub-end-date").textContent = "—";
     $("sub-traffic-text").textContent = "—";
-    $("traffic-used-gb").textContent = "0 GB";
-    $("traffic-total-gb").textContent = "из 0 GB";
-    $("traffic-used-text").textContent = "0 GB (0%)";
-    $("traffic-left-text").textContent = "0 GB (0%)";
     $("sub-badge").textContent = "Неактивна";
     progressFill?.style.setProperty("width", "0%");
     const subLinkWrap = $("sub-link-wrap");
@@ -242,10 +223,6 @@ async function loadStatus() {
       "sub-days-left",
       "sub-end-date",
       "sub-traffic-text",
-      "traffic-used-gb",
-      "traffic-total-gb",
-      "traffic-used-text",
-      "traffic-left-text",
     ], false);
     return;
   }
@@ -256,10 +233,6 @@ async function loadStatus() {
   $("sub-days-left").textContent = String(daysLeft);
   $("sub-end-date").textContent = formatDate(sub.current_period_end);
   $("sub-traffic-text").textContent = `${formatGbValue(usedBytes)} / ${formatGbValue(limitBytes)}`;
-  $("traffic-used-gb").textContent = formatGbValue(usedBytes);
-  $("traffic-total-gb").textContent = `из ${formatGbValue(limitBytes)}`;
-  $("traffic-used-text").textContent = `${formatGbValue(usedBytes)} (${usedPercent}%)`;
-  $("traffic-left-text").textContent = `${formatGbValue(leftBytes)} (${leftPercent}%)`;
   $("sub-badge").textContent = "Активна";
   progressFill?.style.setProperty("width", `${usedPercent}%`);
 
@@ -273,10 +246,6 @@ async function loadStatus() {
     "sub-days-left",
     "sub-end-date",
     "sub-traffic-text",
-    "traffic-used-gb",
-    "traffic-total-gb",
-    "traffic-used-text",
-    "traffic-left-text",
   ], false);
 }
 
