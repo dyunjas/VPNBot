@@ -8791,3 +8791,5 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-09 23:37:43] [INFO] root: Database tables initialized
 [2026-07-09 23:37:43] [INFO] root: Database connection successful
 [2026-07-10 00:03:06] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-10 00:24:08] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-10 00:24:08] [INFO] root: Bot stopped

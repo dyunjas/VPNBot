@@ -3600,3 +3600,8 @@ aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedEr
 [2026-07-09 23:19:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
 [2026-07-09 23:19:25] [WARNING] aiogram.dispatcher: Sleep for 1.192216 seconds and try again... (tryings = 1, bot id = 7557954606)
 [2026-07-09 23:19:37] [INFO] aiogram.dispatcher: Connection established (tryings = 2, bot id = 7557954606)
+[2026-07-10 00:24:08] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-10 00:24:08] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-10 00:24:08] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-10 00:24:08] [INFO] root: Bot polling cancelled
+[2026-07-10 00:24:08] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

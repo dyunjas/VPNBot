@@ -1,1 +1,1 @@
-MAIN_MENU_IMG = "https://i.ibb.co/gMHSCHth/Chat-GPT-Image-29-2026-22-23-30.png"
+MAIN_MENU_IMG = "https://ibb.co/GQX8tHDW"
