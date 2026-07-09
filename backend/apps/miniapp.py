@@ -16,20 +16,20 @@ def create_app():
         return render_shell(
             stylesheet_urls=[
                 "/miniapp/shared-tokens.css?v=1",
-                "/miniapp/shared-ui.css?v=8",
-                "/miniapp/miniapp.css?v=9",
+                "/miniapp/shared-ui.css?v=9",
+                "/miniapp/miniapp.css?v=10",
             ],
             head_scripts=['<script src="https://telegram.org/js/telegram-web-app.js"></script>'],
             bootstrap_scripts=[
                 "<script>window.__API_BASE_URL=window.location.origin;</script>",
-                '<script defer src="/miniapp/miniapp-app.js?v=3"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-01.js?v=4"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-02.js?v=13"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-03.js?v=6"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-04.js?v=4"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-05.js?v=4"></script>',
+                '<script defer src="/miniapp/miniapp-app.js?v=4"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-01.js?v=6"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-02.js?v=14"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-03.js?v=7"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-04.js?v=5"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-05.js?v=5"></script>',
             ],
-            app_entry_url="/miniapp/app.shared.js?v=3",
+            app_entry_url="/miniapp/app.shared.js?v=4",
         )
 
     @app.get("/tg-app")
@@ -49,7 +49,7 @@ def create_app():
 
     @app.get("/__APP_ENTRY__")
     async def legacy_app_entry():
-        return RedirectResponse(url="/miniapp/app.shared.js?v=3", status_code=307)
+        return RedirectResponse(url="/miniapp/app.shared.js?v=4", status_code=307)
 
     @app.get("/health")
     async def health():
