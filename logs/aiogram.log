@@ -3614,3 +3614,19 @@ aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedEr
 [2026-07-10 00:25:11] [INFO] aiogram.event: Update id=891136762 is handled. Duration 218 ms by bot id=7557954606
 [2026-07-10 00:25:12] [INFO] aiogram.event: Update id=891136763 is handled. Duration 356 ms by bot id=7557954606
 [2026-07-10 00:25:14] [INFO] aiogram.event: Update id=891136764 is handled. Duration 221 ms by bot id=7557954606
+[2026-07-10 00:47:01] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-10 00:47:01] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-10 00:47:01] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-10 00:47:01] [INFO] root: Bot polling cancelled
+[2026-07-10 00:47:01] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-10 00:51:22] [INFO] aiogram.dispatcher: Start polling
+[2026-07-10 00:51:22] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-10 00:51:38] [INFO] aiogram.event: Update id=891136765 is handled. Duration 645 ms by bot id=7557954606
+[2026-07-10 00:51:39] [INFO] aiogram.event: Update id=891136766 is handled. Duration 409 ms by bot id=7557954606
+[2026-07-10 00:51:41] [INFO] aiogram.event: Update id=891136767 is handled. Duration 507 ms by bot id=7557954606
+[2026-07-10 00:51:42] [INFO] aiogram.event: Update id=891136768 is handled. Duration 491 ms by bot id=7557954606
+[2026-07-10 00:53:56] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-10 00:53:56] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-10 00:53:56] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-10 00:53:56] [INFO] root: Bot polling cancelled
+[2026-07-10 00:53:56] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

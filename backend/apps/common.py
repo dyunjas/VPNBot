@@ -63,6 +63,10 @@ def apply_common_hardening(app: FastAPI) -> None:
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        path = request.url.path or ""
+        if path.startswith("/miniapp/") and path.lower().endswith((".js", ".css", ".html")):
+            for key, value in NO_CACHE_HEADERS.items():
+                response.headers[key] = value
         if request.url.scheme == "https":
             response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         return response

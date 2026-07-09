@@ -63,7 +63,7 @@ def _is_active_subscription(subscription: dict | None) -> bool:
     return bool(end_dt and end_dt > datetime.now(timezone.utc))
 
 
-async def _render_subscription_screen(
+async def _build_subscription_screen(
     callback: CallbackQuery,
     *,
     subscription,
@@ -71,13 +71,13 @@ async def _render_subscription_screen(
 ):
     if not _is_active_subscription(subscription) or not subscription_url:
         await _safe_callback_answer(callback, SUBSCRIPTION_INACTIVE_TEXT, show_alert=True)
-        return
+        return None
 
     end_value = subscription.get("current_period_end") if isinstance(subscription, dict) else None
     end_dt = _as_aware_utc(datetime.fromisoformat(end_value)) if end_value else None
     if not end_dt:
         await _safe_callback_answer(callback, SUBSCRIPTION_INACTIVE_TEXT, show_alert=True)
-        return
+        return None
 
     safe_url = escape(subscription_url, quote=False)
     auto_renew = bool(subscription.get("auto_renew", False))
@@ -90,14 +90,31 @@ async def _render_subscription_screen(
         "Трафик расходуется <b>ТОЛЬКО</b> на серверах белых списков. "
         "Гигабайты можно докупать по цене 2 RUB / гигабайт. "
         "Гигабайты переносятся между месяцами.</blockquote>\n\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>📅</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        f"<tg-emoji emoji-id='5956148757899776734'>📆</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
         "<tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> Серверы уже подготовлены. "
         "Обновите подписку в приложении.\n\n"
         "<tg-emoji emoji-id='5877318502947229960'>📖</tg-emoji>"
         "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b>Инструкция по подключению (нажмите)</b></a>"
     )
+    return text, auto_renew
 
+
+async def _render_subscription_screen(
+    callback: CallbackQuery,
+    *,
+    subscription,
+    subscription_url: str | None,
+):
+    built = await _build_subscription_screen(
+        callback,
+        subscription=subscription,
+        subscription_url=subscription_url,
+    )
+    if not built:
+        return
+
+    text, auto_renew = built
     media = InputMediaPhoto(
         media=MAIN_MENU_IMG,
         caption=text,
@@ -108,6 +125,28 @@ async def _render_subscription_screen(
         media=media,
         reply_markup=back_keys_kb(subscription_url, auto_renew=auto_renew),
         disable_web_page_preview=True,
+    )
+
+
+async def _refresh_subscription_screen(
+    callback: CallbackQuery,
+    *,
+    subscription,
+    subscription_url: str | None,
+):
+    built = await _build_subscription_screen(
+        callback,
+        subscription=subscription,
+        subscription_url=subscription_url,
+    )
+    if not built:
+        return
+
+    text, auto_renew = built
+    await callback.message.edit_caption(
+        caption=text,
+        parse_mode="HTML",
+        reply_markup=back_keys_kb(subscription_url, auto_renew=auto_renew),
     )
 
 
@@ -131,11 +170,11 @@ async def subscription_link(
     except SubscriptionNotFound:
         await _safe_callback_answer(callback, SUBSCRIPTION_INACTIVE_TEXT, show_alert=True)
         return
-    except Exception as e:
+    except Exception as exc:
         logger.exception(
             "[bot][subscription] subscription url error tg_id=%s: %s",
             tg_id,
-            e,
+            exc,
         )
         await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
         return
@@ -154,7 +193,6 @@ async def toggle_auto_renew(
     bot_api,
 ):
     tg_id = callback.from_user.id
-    await _safe_callback_answer(callback)
 
     try:
         await bot_api.get_user_by_tg_id(tg_id=tg_id)
@@ -180,12 +218,13 @@ async def toggle_auto_renew(
         updated = await bot_api.set_auto_renew(tg_id=tg_id, auto_renew=new_state)
         updated_sub = updated.get("subscription") if isinstance(updated, dict) else {}
         refreshed = await bot_api.get_subscription_url(tg_id=tg_id)
-        subscription_url = refreshed.get("subscription_url") if isinstance(refreshed, dict) else ""
-    except Exception as e:
+        refreshed_sub = refreshed.get("subscription") if isinstance(refreshed, dict) else updated_sub
+        subscription_url = refreshed.get("subscription_url") if isinstance(refreshed, dict) else subscription_url
+    except Exception as exc:
         logger.exception(
             "[bot][subscription] toggle auto_renew error tg_id=%s: %s",
             tg_id,
-            e,
+            exc,
         )
         await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
         return
@@ -194,9 +233,9 @@ async def toggle_auto_renew(
         await _safe_send_callback_message(callback, UNEXPECTED_ERROR_TEXT)
         return
 
-    await _render_subscription_screen(
+    await _refresh_subscription_screen(
         callback,
-        subscription=updated_sub,
+        subscription=refreshed_sub,
         subscription_url=subscription_url,
     )
 
