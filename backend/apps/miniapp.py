@@ -6,6 +6,8 @@ from fastapi.responses import RedirectResponse
 from backend.apps.common import create_fastapi_app, mount_frontend_assets, proxy_api_request, register_legal_routes, render_shell
 from backend.core.config import settings
 
+MINIAPP_BUILD = "20260710-3002"
+
 
 def create_app():
     app = create_fastapi_app(title="Lunet MiniApp Frontend", with_db=True)
@@ -21,15 +23,30 @@ def create_app():
             ],
             head_scripts=['<script src="https://telegram.org/js/telegram-web-app.js"></script>'],
             bootstrap_scripts=[
-                "<script>window.__API_BASE_URL=window.location.origin;</script>",
-                '<script defer src="/miniapp/miniapp-app.js?v=4"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-01.js?v=6"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-02.js?v=14"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-03.js?v=7"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-04.js?v=5"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-05.js?v=5"></script>',
+                (
+                    "<script>"
+                    f"window.__API_BASE_URL=window.location.origin;window.__ASSET_VERSION__='{MINIAPP_BUILD}';"
+                    "(function(){"
+                    f"const build='{MINIAPP_BUILD}';"
+                    "const url=new URL(window.location.href);"
+                    "const current=url.searchParams.get('__cv');"
+                    "if(current!==build){"
+                    "url.searchParams.set('__cv',build);"
+                    "url.searchParams.set('__ts',Date.now().toString());"
+                    "window.location.replace(url.toString());"
+                    "return;"
+                    "}"
+                    "})();"
+                    "</script>"
+                ),
+                f'<script defer src="/miniapp/miniapp-app.js?v={MINIAPP_BUILD}"></script>',
+                f'<script defer src="/miniapp/shared-js/app.shared-01.js?v={MINIAPP_BUILD}"></script>',
+                f'<script defer src="/miniapp/shared-js/app.shared-02.js?v={MINIAPP_BUILD}"></script>',
+                f'<script defer src="/miniapp/shared-js/app.shared-03.js?v={MINIAPP_BUILD}"></script>',
+                f'<script defer src="/miniapp/shared-js/app.shared-04.js?v={MINIAPP_BUILD}"></script>',
+                f'<script defer src="/miniapp/shared-js/app.shared-05.js?v={MINIAPP_BUILD}"></script>',
             ],
-            app_entry_url="/miniapp/app.shared.js?v=4",
+            app_entry_url=f"/miniapp/app.shared.js?v={MINIAPP_BUILD}",
         )
 
     @app.get("/tg-app")
@@ -49,7 +66,7 @@ def create_app():
 
     @app.get("/__APP_ENTRY__")
     async def legacy_app_entry():
-        return RedirectResponse(url="/miniapp/app.shared.js?v=4", status_code=307)
+        return RedirectResponse(url=f"/miniapp/app.shared.js?v={MINIAPP_BUILD}", status_code=307)
 
     @app.get("/health")
     async def health():

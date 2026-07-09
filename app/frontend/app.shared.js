@@ -6,6 +6,12 @@ const SHARED_APP_PARTS = [
   "/miniapp/shared-js/app.shared-05.js",
 ];
 
+function withAssetVersion(src) {
+  const version = String(window.__ASSET_VERSION__ || "").trim();
+  if (!version) return src;
+  return `${src}${src.includes("?") ? "&" : "?"}v=${encodeURIComponent(version)}`;
+}
+
 if (!window.__sharedAppPartsLoaded) {
   window.__sharedAppPartsLoaded = true;
 
@@ -13,7 +19,7 @@ if (!window.__sharedAppPartsLoaded) {
     for (const src of SHARED_APP_PARTS) {
       await new Promise((resolve, reject) => {
         const script = document.createElement("script");
-        script.src = src;
+        script.src = withAssetVersion(src);
         script.defer = true;
         script.onload = resolve;
         script.onerror = () => reject(new Error(`Failed to load ${src}`));
