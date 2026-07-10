@@ -1,6 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
   let latestPlans = [];
 
+  function moveIcon(direction) {
+    if (direction === "up") {
+      return `<svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M16 9l-4 -4" /><path d="M8 9l4 -4" /></svg>`;
+    }
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M16 15l-4 4" /><path d="M8 15l4 4" /></svg>`;
+  }
+
   if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "plans",
@@ -14,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div class="table-wrap plans-table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Название</th><th>Статус</th><th>Цена</th><th>Дней</th><th>Лимит ГБ</th><th>Подписок</th><th>Действие</th></tr>
+                <tr><th>ID</th><th>Порядок</th><th>Название</th><th>Статус</th><th>Цена</th><th>Дней</th><th>Лимит ГБ</th><th>Лимит устройств</th><th>Лимит пользователей</th><th>Подписок</th><th>Действие</th></tr>
               </thead>
               <tbody id="tbody"></tbody>
             </table>
@@ -29,6 +36,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               <input id="new_price" type="number" placeholder="Цена, RUB" />
               <input id="new_days" type="number" placeholder="Период, дней" value="30" />
               <input id="new_gb" type="number" placeholder="Лимит трафика, ГБ" value="100" />
+              <input id="new_device_limit" type="number" placeholder="Лимит устройств" value="3" />
+              <input id="new_purchase_limit" type="number" placeholder="Лимит пользователей, 0 = без лимита" value="0" />
             </div>
             <div class="plans-flags">
               <label class="plans-flag"><input id="new_hidden" type="checkbox" /> <span>Скрыть от пользователей</span></label>
@@ -47,6 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               <input id="edit_price" type="number" placeholder="Цена" />
               <input id="edit_days" type="number" placeholder="Период, дней" />
               <input id="edit_gb" type="number" placeholder="Лимит ГБ" />
+              <input id="edit_device_limit" type="number" placeholder="Лимит устройств" />
+              <input id="edit_purchase_limit" type="number" placeholder="Лимит пользователей, 0 = без лимита" />
             </div>
             <div class="plans-flags">
               <label class="plans-flag"><input id="edit_hidden" type="checkbox" /> <span>Скрыть от пользователей</span></label>
@@ -65,6 +76,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const badges = [];
     badges.push(plan.is_hidden ? `<span class="badge warn">Скрыт</span>` : `<span class="badge ok">Виден</span>`);
     if (plan.is_trial) badges.push(`<span class="badge">Trial</span>`);
+    if (Number(plan.purchase_limit || 0) > 0) {
+      badges.push(`<span class="badge warn">Лимит ${plan.purchase_limit}</span>`);
+    }
+    if (plan.is_exhausted) {
+      badges.push(`<span class="badge danger">Лимит достигнут</span>`);
+    }
     return badges.join(" ");
   }
 
@@ -73,6 +90,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     q("new_price").value = "";
     q("new_days").value = "30";
     q("new_gb").value = "100";
+    q("new_device_limit").value = "3";
+    q("new_purchase_limit").value = "0";
     q("new_hidden").checked = false;
     q("new_trial").checked = false;
   }
@@ -83,6 +102,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     q("edit_price").value = plan.price ?? "";
     q("edit_days").value = plan.period_days ?? "";
     q("edit_gb").value = plan.gb_limit ?? "";
+    q("edit_device_limit").value = plan.device_limit ?? 0;
+    q("edit_purchase_limit").value = plan.purchase_limit ?? 0;
     q("edit_hidden").checked = Boolean(plan.is_hidden);
     q("edit_trial").checked = Boolean(plan.is_trial);
   }
@@ -103,6 +124,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  function bindMoveButtons(items, reload) {
+    document.querySelectorAll("button[data-move-id]").forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        const planId = Number(button.getAttribute("data-move-id") || "0");
+        const direction = button.getAttribute("data-move-direction");
+        if (!planId || !direction) return;
+
+        await withButtonLoading(e.currentTarget, async () => {
+          await api(`/api/admin/plans/${planId}/move`, {
+            method: "POST",
+            body: JSON.stringify({ direction }),
+          });
+          await reload();
+        }).catch((err) => alert(err.message));
+      });
+    });
+  }
+
   async function loadPlans() {
     const data = await api("/api/admin/plans");
     const items = data.items || [];
@@ -114,13 +153,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${plan.id}</td>
+        <td>${plan.display_order ?? plan.id}</td>
         <td>${safeText(plan.name)}</td>
         <td>${planBadges(plan)}</td>
         <td>${plan.price}</td>
         <td>${plan.period_days}</td>
         <td>${plan.gb_limit ?? 0}</td>
+        <td>${plan.device_limit ?? 0}</td>
+        <td>${Number(plan.purchase_limit || 0) > 0 ? plan.purchase_limit : "—"}</td>
         <td>${plan.subscriptions_count}</td>
         <td class="row-actions">
+          <button class="btn-outline-primary plan-move-btn" data-move-id="${plan.id}" data-move-direction="up" aria-label="Поднять тариф выше" title="Поднять выше">${moveIcon("up")}</button>
+          <button class="btn-outline-primary plan-move-btn" data-move-id="${plan.id}" data-move-direction="down" aria-label="Опустить тариф ниже" title="Опустить ниже">${moveIcon("down")}</button>
           <button data-edit="${plan.id}">Изменить</button>
           <button class="btn-danger" data-delete="${plan.id}">Удалить</button>
         </td>
@@ -139,11 +183,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
         <div class="plans-mobile-card__grid">
           <div><span>Цена</span><b>${plan.price} RUB</b></div>
+          <div><span>Порядок</span><b>${plan.display_order ?? plan.id}</b></div>
           <div><span>Период</span><b>${plan.period_days} дн.</b></div>
           <div><span>Лимит</span><b>${plan.gb_limit ?? 0} ГБ</b></div>
+          <div><span>Устройств</span><b>${plan.device_limit ?? 0}</b></div>
+          <div><span>Лимит пользователей</span><b>${Number(plan.purchase_limit || 0) > 0 ? plan.purchase_limit : "Без лимита"}</b></div>
           <div><span>Подписок</span><b>${plan.subscriptions_count}</b></div>
         </div>
         <div class="row-actions">
+          <button class="btn-outline-primary plan-move-btn plan-move-btn--mobile" data-move-id="${plan.id}" data-move-direction="up">${moveIcon("up")}<span>Выше</span></button>
+          <button class="btn-outline-primary plan-move-btn plan-move-btn--mobile" data-move-id="${plan.id}" data-move-direction="down">${moveIcon("down")}<span>Ниже</span></button>
           <button data-mobile-edit="${plan.id}">Изменить</button>
           <button class="btn-danger" data-mobile-delete="${plan.id}">Удалить</button>
         </div>
@@ -169,6 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     bindDelete("button[data-delete]", "data-delete", loadPlans);
     bindDelete("button[data-mobile-delete]", "data-mobile-delete", loadPlans);
+    bindMoveButtons(items, loadPlans);
   }
 
   q("create_plan").addEventListener("click", async (e) => {
@@ -180,6 +230,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           price: Number(q("new_price").value),
           period_days: Number(q("new_days").value),
           gb_limit: Number(q("new_gb").value),
+          device_limit: Number(q("new_device_limit").value || 0),
+          purchase_limit: Number(q("new_purchase_limit").value || 0),
           is_hidden: q("new_hidden").checked,
           is_trial: q("new_trial").checked,
         }),
@@ -202,6 +254,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (q("edit_price").value) payload.price = Number(q("edit_price").value);
     if (q("edit_days").value) payload.period_days = Number(q("edit_days").value);
     if (q("edit_gb").value) payload.gb_limit = Number(q("edit_gb").value);
+    if (q("edit_device_limit").value !== "") payload.device_limit = Number(q("edit_device_limit").value || 0);
+    if (q("edit_purchase_limit").value !== "") payload.purchase_limit = Number(q("edit_purchase_limit").value || 0);
 
     await withButtonLoading(e.currentTarget, async () => {
       await api(`/api/admin/plans/${id}`, {
@@ -222,8 +276,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     await renderSessionInfo();
-    bindEnterSubmit(["new_name", "new_price", "new_days", "new_gb"], "create_plan");
-    bindEnterSubmit(["edit_id", "edit_name", "edit_price", "edit_days", "edit_gb"], "update_plan");
+    bindEnterSubmit(["new_name", "new_price", "new_days", "new_gb", "new_device_limit", "new_purchase_limit"], "create_plan");
+    bindEnterSubmit(["edit_id", "edit_name", "edit_price", "edit_days", "edit_gb", "edit_device_limit", "edit_purchase_limit"], "update_plan");
     resetCreateForm();
     await loadPlans();
   } catch (e) {

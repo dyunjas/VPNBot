@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Окончание</th><th>Действия</th>
+                    <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Устройств</th><th>Окончание</th><th>Действия</th>
                   </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   <option value="expired">Истекла</option>
                   <option value="canceled">Отменена</option>
                 </select>
+                <input id="edit_device_limit" type="number" placeholder="Лимит устройств" />
                 <input id="edit_extend_days" type="number" placeholder="Продлить на дней" />
                 <button id="update_sub">Сохранить</button>
               </div>
@@ -124,6 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${subscription.plan_name || subscription.plan_id}</td>
         <td>${statusBadge(subscription.status)}</td>
         <td>${subscription.auto_renew ? "Да" : "Нет"}</td>
+        <td>${subscription.device_limit ?? 0}</td>
         <td>${formatDateTime(subscription.current_period_end)}</td>
         <td class="row-actions">
           <button data-edit="${subscription.id}">Изменить</button>
@@ -136,7 +138,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     q("tbody").querySelectorAll("button[data-edit]").forEach((button) => {
       button.addEventListener("click", () => {
+        const subscriptionId = Number(button.getAttribute("data-edit") || "0");
+        const subscription = items.find((item) => Number(item.id) === subscriptionId);
         q("edit_sub_id").value = button.getAttribute("data-edit");
+        if (subscription) {
+          q("edit_plan_id").value = subscription.plan_id || "";
+          q("edit_status").value = subscription.status || "";
+          q("edit_device_limit").value = subscription.device_limit ?? 0;
+        }
       });
     });
 
@@ -209,6 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const payload = {};
     if (q("edit_plan_id").value) payload.plan_id = Number(q("edit_plan_id").value);
     if (q("edit_status").value) payload.status = q("edit_status").value;
+    if (q("edit_device_limit").value !== "") payload.device_limit = Number(q("edit_device_limit").value || "0");
     if (q("edit_extend_days").value) payload.extend_days = Number(q("edit_extend_days").value);
 
     await withButtonLoading(event.currentTarget, async () => {
@@ -276,7 +286,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     bindEnterSubmit(["search"], "apply");
     bindEnterSubmit(["bulk_days"], "bulk_extend");
     bindEnterSubmit(["new_user_id", "new_plan_id"], "create_sub");
-    bindEnterSubmit(["edit_sub_id", "edit_plan_id", "edit_extend_days"], "update_sub");
+    bindEnterSubmit(["edit_sub_id", "edit_plan_id", "edit_device_limit", "edit_extend_days"], "update_sub");
     bindEnterSubmit(["traffic_sub_id", "traffic_gb"], "add_traffic");
     await loadRows();
   } catch (error) {

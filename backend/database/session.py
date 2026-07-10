@@ -49,7 +49,46 @@ async def init_db():
         await conn.execute(
             text(
                 "ALTER TABLE vpn_subscription_plans "
+                "ADD COLUMN IF NOT EXISTS device_limit INTEGER NOT NULL DEFAULT 3"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscriptions "
+                "ADD COLUMN IF NOT EXISTS device_limit INTEGER NOT NULL DEFAULT 3"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscription_plans "
+                "ADD COLUMN IF NOT EXISTS display_order INTEGER NOT NULL DEFAULT 0"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscription_plans "
+                "ADD COLUMN IF NOT EXISTS purchase_limit INTEGER NOT NULL DEFAULT 0"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_subscription_plans "
                 "ADD COLUMN IF NOT EXISTS is_trial BOOLEAN NOT NULL DEFAULT FALSE"
+            )
+        )
+        await conn.execute(
+            text(
+                "UPDATE vpn_subscriptions s "
+                "SET device_limit = COALESCE(p.device_limit, 3) "
+                "FROM vpn_subscription_plans p "
+                "WHERE s.plan_id = p.id AND COALESCE(s.device_limit, 0) <= 0"
+            )
+        )
+        await conn.execute(
+            text(
+                "UPDATE vpn_subscription_plans "
+                "SET display_order = id "
+                "WHERE COALESCE(display_order, 0) = 0"
             )
         )
         await conn.execute(

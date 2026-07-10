@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Sequence
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -18,7 +18,9 @@ class SubscriptionRepository:
         stmt = select(SubscriptionPlan)
         if not include_hidden:
             stmt = stmt.where(SubscriptionPlan.is_hidden.is_(False))
-        res = await self.session.execute(stmt.order_by(SubscriptionPlan.id.asc()))
+        res = await self.session.execute(
+            stmt.order_by(SubscriptionPlan.display_order.asc(), SubscriptionPlan.id.asc())
+        )
         return res.scalars().all()
     
     async def get_plan_by_id(self, plan_id: int) -> SubscriptionPlan | None:
@@ -29,10 +31,22 @@ class SubscriptionRepository:
         res = await self.session.execute(
             select(SubscriptionPlan)
             .where(SubscriptionPlan.is_trial.is_(True))
-            .order_by(SubscriptionPlan.id.asc())
+            .order_by(SubscriptionPlan.display_order.asc(), SubscriptionPlan.id.asc())
             .limit(1)
         )
         return res.scalar_one_or_none()
+
+    async def count_plan_subscriptions(self, *, plan_id: int) -> int:
+        res = await self.session.execute(
+            select(func.count(Subscription.id)).where(Subscription.plan_id == plan_id)
+        )
+        return int(res.scalar() or 0)
+
+    async def list_plans_ordered(self) -> Sequence[SubscriptionPlan]:
+        res = await self.session.execute(
+            select(SubscriptionPlan).order_by(SubscriptionPlan.display_order.asc(), SubscriptionPlan.id.asc())
+        )
+        return res.scalars().all()
 
     async def clear_trial_flags(self, *, exclude_plan_id: int | None = None) -> None:
         stmt = (
@@ -75,6 +89,7 @@ class SubscriptionRepository:
             plan_id: int,
             status: SubStatus,
             auto_renew: bool,
+            device_limit: int,
             current_period_start: datetime,
             current_period_end: datetime,
             next_renewal_at: datetime,
@@ -84,6 +99,7 @@ class SubscriptionRepository:
             plan_id=plan_id,
             status=status,
             auto_renew=auto_renew,
+            device_limit=max(0, int(device_limit or 0)),
             current_period_start=current_period_start,
             current_period_end=current_period_end,
             next_renewal_at=next_renewal_at,
@@ -99,6 +115,7 @@ class SubscriptionRepository:
             plan_id: int,
             status: SubStatus,
             auto_renew: bool,
+            device_limit: int,
             current_period_start: datetime,
             current_period_end: datetime,
             next_renewal_at: datetime,
@@ -106,6 +123,7 @@ class SubscriptionRepository:
         sub.plan_id = plan_id
         sub.status = status
         sub.auto_renew = auto_renew
+        sub.device_limit = max(0, int(device_limit or 0))
         sub.current_period_start = current_period_start
         sub.current_period_end = current_period_end
         sub.next_renewal_at = next_renewal_at

@@ -8818,3 +8818,22 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-10 01:29:09] [DEBUG] aiohttp.client: Error while closing connector: gaierror(11002, 'getaddrinfo failed')
 [2026-07-10 01:29:13] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
 [2026-07-10 01:29:17] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-07-10 01:56:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-10 01:56:06] [INFO] root: Database tables initialized
+[2026-07-10 01:56:06] [INFO] root: Database connection successful
+[2026-07-10 23:25:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-10 23:25:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-10 23:25:18] [INFO] root: Database tables initialized
+[2026-07-10 23:25:18] [INFO] root: Database connection successful
+[2026-07-10 23:32:26] [INFO] root: Settings successfully loaded from .env
+[2026-07-10 23:52:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-10 23:52:12] [INFO] root: Database tables initialized
+[2026-07-10 23:52:12] [INFO] root: Database connection successful
+[2026-07-11 00:07:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 00:07:59] [INFO] root: Database tables initialized
+[2026-07-11 00:07:59] [INFO] root: Database connection successful
+[2026-07-11 00:08:09] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 00:08:10] [INFO] root: Bot started
+[2026-07-11 00:42:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 00:42:13] [INFO] root: Database tables initialized
+[2026-07-11 00:42:13] [INFO] root: Database connection successful

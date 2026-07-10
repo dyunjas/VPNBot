@@ -1,10 +1,15 @@
 .table-wrap {
   overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #ffffff;
   max-height: 62vh;
   box-shadow: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  overscroll-behavior: contain;
 }
 table { width: 100%; border-collapse: collapse; }
 th, td { border-bottom: 1px solid #e5ebf3; padding: 10px 9px; text-align: left; white-space: nowrap; }
@@ -44,6 +49,10 @@ tbody tr:hover { background: #f8fafc; }
   text-align: center;
 }
 .pager { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+
+.table-wrap > table {
+  min-width: max-content;
+}
 
 .badge {
   display: inline-flex;

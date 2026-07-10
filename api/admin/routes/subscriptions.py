@@ -101,6 +101,7 @@ async def admin_subscriptions(
                 "plan_name": plan_name,
                 "status": sub.status.value if sub.status else None,
                 "auto_renew": bool(sub.auto_renew),
+                "device_limit": int(getattr(sub, "device_limit", 0) or 0),
                 "current_period_start": _to_iso(sub.current_period_start),
                 "current_period_end": _to_iso(sub.current_period_end),
                 "created_at": _to_iso(sub.created_at),
@@ -149,6 +150,7 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         activity_service = ActivityService(session)
         now = datetime.now(timezone.utc)
         period_end_changed = False
+        requires_remote_sync = False
         changes: list[str] = []
 
         if bool(getattr(user, "banned", False)):
@@ -162,14 +164,21 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         if payload.plan_id is not None:
             plan = _http_404_if_none(await session.get(SubscriptionPlan, payload.plan_id), "plan not found")
             sub.plan_id = plan.id
+            sub.device_limit = max(0, int(getattr(plan, "device_limit", 0) or 0))
+            requires_remote_sync = True
             changes.append(f"plan_id={plan.id}")
 
         if payload.status is not None:
             sub.status = SubStatus(payload.status)
+            requires_remote_sync = True
             changes.append(f"status={payload.status}")
         if payload.auto_renew is not None:
             sub.auto_renew = payload.auto_renew
             changes.append(f"auto_renew={payload.auto_renew}")
+        if payload.device_limit is not None:
+            sub.device_limit = max(0, int(payload.device_limit or 0))
+            requires_remote_sync = True
+            changes.append(f"device_limit={sub.device_limit}")
 
         if payload.extend_days is not None:
             base_end = _as_aware_utc(sub.current_period_end) or now
@@ -178,12 +187,14 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
             sub.current_period_end = base_end + timedelta(days=max(payload.extend_days, 0))
             sub.next_renewal_at = sub.current_period_end
             period_end_changed = True
+            requires_remote_sync = True
             changes.append(f"extend_days={payload.extend_days}")
 
         if payload.current_period_end is not None:
             sub.current_period_end = _as_aware_utc(payload.current_period_end)
             sub.next_renewal_at = sub.current_period_end
             period_end_changed = True
+            requires_remote_sync = True
             changes.append("current_period_end_set")
 
         if changes:
@@ -197,11 +208,15 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
             )
 
         await session.commit()
-        if period_end_changed:
+        if requires_remote_sync:
             remnawave_service = RemnaWaveService(session)
             if remnawave_service.enabled:
                 try:
-                    await remnawave_service.sync_subscription_expire_at(user=user, subscription=sub)
+                    remote_status = "ACTIVE"
+                    current_period_end = _as_aware_utc(sub.current_period_end)
+                    if sub.status != SubStatus.active or not current_period_end or current_period_end <= now:
+                        remote_status = "DISABLED"
+                    await remnawave_service.sync_user_state(user=user, subscription=sub, status=remote_status)
                 except Exception:
                     pass
         await session.refresh(sub)

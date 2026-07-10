@@ -54,7 +54,21 @@ class SubscriptionService:
         logger.info("[subscription] reset_user_traffic skipped user_id=%s (remnawave-only mode)", user_id)
 
     async def list_plans(self, *, include_hidden: bool = False):
-        return await self.sub_repo.list_plans(include_hidden=include_hidden)
+        plans = list(await self.sub_repo.list_plans(include_hidden=include_hidden))
+        if include_hidden:
+            return plans
+
+        visible_plans = []
+        hidden_changed = False
+        for plan in plans:
+            if await self._is_plan_exhausted(plan):
+                await self._hide_exhausted_plan(plan)
+                hidden_changed = True
+                continue
+            visible_plans.append(plan)
+        if hidden_changed:
+            await self.session.commit()
+        return visible_plans
 
     async def get_plan(self, plan_id: int):
         plan = await self.sub_repo.get_plan_by_id(plan_id)
@@ -63,13 +77,37 @@ class SubscriptionService:
         return plan
 
     async def get_trial_plan(self):
-        return await self.sub_repo.get_trial_plan()
+        plan = await self.sub_repo.get_trial_plan()
+        if not plan:
+            return None
+        if await self._is_plan_exhausted(plan):
+            await self._hide_exhausted_plan(plan)
+            await self.session.commit()
+            return None
+        return plan
 
     async def get_public_plan(self, plan_id: int):
         plan = await self.get_plan(plan_id)
         if bool(getattr(plan, "is_hidden", False)):
             raise PlanNotFound("Plan not found")
+        if await self._is_plan_exhausted(plan):
+            await self._hide_exhausted_plan(plan)
+            await self.session.commit()
+            raise PlanNotFound("Plan not found")
         return plan
+
+    async def _is_plan_exhausted(self, plan) -> bool:
+        purchase_limit = max(0, int(getattr(plan, "purchase_limit", 0) or 0))
+        if purchase_limit <= 0:
+            return False
+        current_count = await self.sub_repo.count_plan_subscriptions(plan_id=int(plan.id))
+        return current_count >= purchase_limit
+
+    async def _hide_exhausted_plan(self, plan) -> None:
+        if bool(getattr(plan, "is_hidden", False)):
+            return
+        plan.is_hidden = True
+        await self.session.flush()
 
     async def get_active_subscription(self, user_id: int):
         user = await self.user_repo.get_by_id(user_id)
@@ -110,6 +148,7 @@ class SubscriptionService:
         self._ensure_user_not_banned(user)
 
         plan = await self.get_plan(plan_id)
+        plan_device_limit = max(0, int(getattr(plan, "device_limit", 0) or 0))
 
         now = datetime.now(timezone.utc)
         period = timedelta(days=plan.period_days)
@@ -142,6 +181,7 @@ class SubscriptionService:
                 plan_id=plan.id,
                 status=SubStatus.active,
                 auto_renew=auto_renew,
+                device_limit=plan_device_limit,
                 current_period_start=now,
                 current_period_end=now + period,
                 next_renewal_at=now + period,
@@ -174,6 +214,7 @@ class SubscriptionService:
                 plan_id=plan.id,
                 status=SubStatus.active,
                 auto_renew=auto_renew,
+                device_limit=plan_device_limit,
                 current_period_start=start,
                 current_period_end=end,
                 next_renewal_at=end,
@@ -198,6 +239,8 @@ class SubscriptionService:
             subscription_id=sub.id,
             note=f"План {plan.id}, период {plan.period_days} дн., трафик {plan.gb_limit} GB",
         )
+        if await self._is_plan_exhausted(plan):
+            await self._hide_exhausted_plan(plan)
         await self.session.commit()
         logger.info(
             "[biz][subscription] activate_completed user_id=%s subscription_id=%s",
@@ -242,6 +285,7 @@ class SubscriptionService:
                 plan_id=default_plan.id,
                 status=SubStatus.active,
                 auto_renew=False,
+                device_limit=max(0, int(getattr(default_plan, "device_limit", 0) or 0)),
                 current_period_start=now,
                 current_period_end=now + delta,
                 next_renewal_at=now + delta
@@ -273,6 +317,7 @@ class SubscriptionService:
                 plan_id=sub.plan_id,
                 status=SubStatus.active,
                 auto_renew=sub.auto_renew,
+                device_limit=max(0, int(getattr(sub, "device_limit", 0) or 0)),
                 current_period_start=start,
                 current_period_end=new_end,
                 next_renewal_at=new_end,

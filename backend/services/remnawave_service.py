@@ -184,6 +184,16 @@ class RemnaWaveService:
         raw = getattr(status, "value", status)
         return str(raw or "").lower() == "active"
 
+    def _can_create_remote_user(self, subscription) -> bool:
+        if not self._status_is_active(subscription):
+            return False
+        expires_at = getattr(subscription, "current_period_end", None)
+        if not isinstance(expires_at, datetime):
+            return False
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        return expires_at > datetime.now(timezone.utc)
+
     def _extract_remote_user_uuid(self, data: Any) -> str | None:
         if not isinstance(data, dict):
             return None
@@ -315,14 +325,16 @@ class RemnaWaveService:
         desired_status = await self._desired_user_status(user=user, subscription=subscription)
         raw_expire_at = self._iso_or_none(getattr(subscription, "current_period_end", None)) if subscription else None
         expire_at = self._normalize_expire_at(raw_expire_at) if desired_status == "ACTIVE" else None
+        payload_traffic_limit = max(0, int(traffic_limit_bytes)) if subscription else None
+        payload_traffic_strategy = "NO_RESET" if subscription else None
 
         return {
             "username": self._build_username(user),
             "expireAt": expire_at,
             "status": desired_status,
-            "trafficLimitBytes": max(0, int(traffic_limit_bytes)),
-            "trafficLimitStrategy": "NO_RESET",
-            "hwidDeviceLimit": 3,
+            "trafficLimitBytes": payload_traffic_limit,
+            "trafficLimitStrategy": payload_traffic_strategy,
+            "hwidDeviceLimit": max(0, int(getattr(subscription, "device_limit", 0) or 0)) if subscription else None,
             "telegramId": int(getattr(user, "tg_id", 0) or 0) or None,
             "email": getattr(user, "email", None),
             "description": f"Lunet user_id={getattr(user, 'id', None)}",
@@ -400,7 +412,15 @@ class RemnaWaveService:
                 return payload
         return None
 
-    async def _resolve_remote_ref(self, *, user, subscription=None) -> tuple[str | int | None, str | None]:
+    async def _resolve_remote_ref(
+        self,
+        *,
+        user,
+        subscription=None,
+        allow_create: bool | None = None,
+    ) -> tuple[str | int | None, str | None]:
+        if allow_create is None:
+            allow_create = self._can_create_remote_user(subscription)
         remote_id = self._coerce_int(getattr(user, "remnawave_user_id", None))
         saved_remote_uuid = (getattr(user, "remnawave_user_uuid", None) or "").strip() or None
         if remote_id is not None:
@@ -442,6 +462,9 @@ class RemnaWaveService:
                 )
                 return found_id, found_uuid
 
+        if not allow_create:
+            return None, saved_remote_uuid
+
         remote_id, _sub_url, remote_uuid = await self._sync_remote_user(user=user, subscription=subscription)
         await self._persist_binding(
             user_id=user.id,
@@ -452,12 +475,12 @@ class RemnaWaveService:
         return remote_id, remote_uuid
 
     async def _sync_remote_user(self, *, user, subscription) -> tuple[str | int | None, str | None, str | None]:
+        if not self._can_create_remote_user(subscription):
+            raise RuntimeError("remnawave create skipped: active local subscription is required")
         payload = await self._build_payload(user, subscription)
         timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
         async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
             create_payload = self._compact_payload(payload)
-            if "expireAt" not in create_payload:
-                create_payload["expireAt"] = self._normalize_expire_at(None)
             status, data = await self._request_json(
                 http,
                 "POST",
@@ -629,7 +652,12 @@ class RemnaWaveService:
         if not self.enabled:
             raise RuntimeError("remnawave is not configured")
 
-        remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=subscription)
+        allow_create = self._can_create_remote_user(subscription)
+        remote_id, remote_uuid = await self._resolve_remote_ref(
+            user=user,
+            subscription=subscription,
+            allow_create=allow_create,
+        )
         if remote_id is not None:
             remote = await self._fetch_remote_user_by_id(remote_id=int(remote_id))
             if remote:
@@ -651,6 +679,9 @@ class RemnaWaveService:
                     sub_url=self._extract_first_link(remote),
                 )
                 return remote
+
+        if not allow_create:
+            return None
 
         # Fallback: sync user into panel and fetch by resolved ref.
         synced_id, _sub_url, synced_uuid = await self._sync_remote_user(user=user, subscription=subscription)
@@ -803,7 +834,11 @@ class RemnaWaveService:
         if not self.enabled:
             raise RuntimeError("remnawave is not configured")
 
-        remote_id, remote_uuid = await self._resolve_remote_ref(user=user, subscription=None)
+        remote_id, remote_uuid = await self._resolve_remote_ref(
+            user=user,
+            subscription=None,
+            allow_create=False,
+        )
         user_uuid = (remote_uuid or "").strip()
         if not user_uuid and remote_id is not None:
             status, fetched_uuid, _sub = await self._fetch_remote_by_id(remote_id=int(remote_id))
@@ -877,6 +912,12 @@ class RemnaWaveService:
     async def sync_local_user(self, *, user, subscription=None) -> bool:
         if not self.enabled:
             raise RuntimeError("remnawave is not configured")
+        if not self._can_create_remote_user(subscription):
+            logger.info(
+                "[remnawave] sync_local_user skipped user_id=%s reason=no_active_subscription",
+                getattr(user, "id", None),
+            )
+            return False
 
         remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
             user=user,

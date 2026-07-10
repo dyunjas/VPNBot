@@ -129,12 +129,14 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--brand), #7c92ff);
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  box-shadow: 0 12px 24px rgba(76, 111, 255, 0.22);
+  overflow: hidden;
+}
+
+.sidebar-brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .sidebar-kicker {

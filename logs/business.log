@@ -1253,3 +1253,16 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-07-10 00:25:09] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
 [2026-07-10 00:51:40] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
 [2026-07-10 00:51:42] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-11 00:11:37] [INFO] root: [biz][user] balance_added user_id=40 amount=100 before=0 after=100
+[2026-07-11 00:11:39] [INFO] root: [biz][user] balance_added user_id=40 amount=100 before=100 after=200
+[2026-07-11 00:11:42] [INFO] root: [biz][user] balance_added user_id=40 amount=100 before=200 after=300
+[2026-07-11 00:11:42] [INFO] root: [biz][user] balance_added user_id=40 amount=100 before=300 after=400
+[2026-07-11 00:11:42] [INFO] root: [biz][user] balance_added user_id=40 amount=100 before=400 after=500
+[2026-07-11 00:11:51] [INFO] root: [biz][billing] buy_subscription_requested user_id=40 plan_id=6 auto_renew=True
+[2026-07-11 00:11:51] [INFO] root: [biz][billing] charge_balance_requested user_id=40 amount=165
+[2026-07-11 00:11:51] [INFO] root: [biz][billing] charge_balance_completed user_id=40 amount=165
+[2026-07-11 00:11:51] [INFO] root: [biz][subscription] activate_requested user_id=40 plan_id=6 auto_renew=True
+[2026-07-11 00:11:51] [INFO] root: [biz][subscription] created user_id=40 subscription_id=84 plan_id=6 period_end=2026-08-09 19:11:51.128380+00:00 gb_added=30.00
+[2026-07-11 00:11:51] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=40 subscription_id=84 traffic_limit_bytes=32212254720
+[2026-07-11 00:11:51] [INFO] root: [biz][subscription] activate_completed user_id=40 subscription_id=84
+[2026-07-11 00:11:51] [INFO] root: [biz][billing] buy_subscription_completed user_id=40 subscription_id=84 plan_id=6 charged=165

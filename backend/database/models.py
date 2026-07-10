@@ -214,6 +214,9 @@ class SubscriptionPlan(Base):
     price: Mapped[int] = mapped_column()
     period_days: Mapped[int] = mapped_column(default=30)
     gb_limit: Mapped[int] = mapped_column(default=0, nullable=False)
+    device_limit: Mapped[int] = mapped_column(default=3, nullable=False)
+    display_order: Mapped[int] = mapped_column(default=0, nullable=False)
+    purchase_limit: Mapped[int] = mapped_column(default=0, nullable=False)
     is_hidden: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_trial: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
@@ -251,6 +254,7 @@ class Subscription(Base):
     )
     next_renewal_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     gb_left: Mapped[int] = mapped_column(default=0, nullable=False)
+    device_limit: Mapped[int] = mapped_column(default=3, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

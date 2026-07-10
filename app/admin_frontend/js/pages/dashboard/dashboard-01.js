@@ -4,11 +4,11 @@ const dashboardState = {
 
 function dashboardIcon(kind) {
   const icons = {
-    users: "<circle cx='12' cy='8.5' r='3'/><path d='M5.5 18c1-3 3.7-4.7 6.5-4.7s5.5 1.7 6.5 4.7'/><path d='M18.5 11.5c1 .1 1.8.9 1.8 1.9s-.8 1.8-1.8 1.9'/>",
-    banned: "<circle cx='12' cy='12' r='7.25'/><path d='M8.5 8.5l7 7M15.5 8.5l-7 7'/><path d='M12 4.75v2.5M12 16.75v2.5M4.75 12h2.5M16.75 12h2.5'/>",
-    subs: "<path d='M5.5 8h13v8h-13z'/><path d='M8 6v4M16 6v4M8 12h8'/><path d='M9 15h5'/>",
-    paid: "<rect x='5.5' y='7' width='13' height='10' rx='2'/><path d='M5.5 11h13'/><path d='M8 15h3'/>",
-    revenue: "<circle cx='12' cy='12' r='7'/><path d='M12 8v8'/><path d='M9.5 10.2c0-1.1 1.1-2 2.5-2s2.5.9 2.5 2-.9 1.7-2.5 2.2-2.5 1.2-2.5 2.3 1.1 2 2.5 2 2.5-.9 2.5-2'/>",
+    users: "<path stroke='none' d='M0 0h24v24H0z' fill='none' /><path d='M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0' /><path d='M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2'/>",
+    banned: "<path stroke='none' d='M0 0h24v24H0z' fill='none' /><path d='M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0' /><path d='M5.7 5.7l12.6 12.6'/>",
+    subs: "<path stroke='none' d='M0 0h24v24H0z' fill='none' /><path d='M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4' /><path d='M14 18a4 4 0 1 0 8 0a4 4 0 1 0 -8 0' /><path d='M15 3v4' /><path d='M7 3v4' /><path d='M3 11h16' /><path d='M18 16.496v1.504l1 1'/>",
+    paid: "<path stroke='none' d='M0 0h24v24H0z' fill='none' /><path d='M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5' /><path d='M3 10h18' /><path d='M16 19h6' /><path d='M19 16l3 3l-3 3' /><path d='M7.005 15h.005' /><path d='M11 15h2'/>",
+    revenue: "<path stroke='none' d='M0 0h24v24H0z' fill='none' /><path d='M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3' /><path d='M16 3v4' /><path d='M8 3v4' /><path d='M4 11h12.5' /><path d='M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5' /><path d='M19 21v1m0 -8v1'/>",
   };
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[kind] || icons.users}</svg>`;
 }

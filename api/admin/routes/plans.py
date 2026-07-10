@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.get("/plans", dependencies=[Depends(require_admin_auth)])
 async def admin_plans(
-    sort_by: str = Query(default="id"),
+    sort_by: str = Query(default="display_order"),
     sort_dir: Literal["asc", "desc"] = Query(default="asc"),
 ):
     sort_column = PLAN_SORT_FIELDS.get(sort_by, SubscriptionPlan.id)
@@ -32,10 +32,14 @@ async def admin_plans(
                 "price": int(p.price),
                 "period_days": p.period_days,
                 "gb_limit": int(getattr(p, "gb_limit", 0) or 0),
+                "device_limit": int(getattr(p, "device_limit", 0) or 0),
+                "display_order": int(getattr(p, "display_order", 0) or 0),
+                "purchase_limit": int(getattr(p, "purchase_limit", 0) or 0),
                 "is_hidden": bool(getattr(p, "is_hidden", False)),
                 "is_trial": bool(getattr(p, "is_trial", False)),
                 "created_at": _to_iso(p.created_at),
                 "subscriptions_count": sub_counts.get(p.id, 0),
+                "is_exhausted": bool(getattr(p, "purchase_limit", 0) or 0) > 0 and sub_counts.get(p.id, 0) >= int(getattr(p, "purchase_limit", 0) or 0),
             }
             for p in plans
         ],
@@ -53,12 +57,16 @@ async def admin_plan_create(payload: PlanCreatePayload):
             price=payload.price,
             period_days=payload.period_days,
             gb_limit=payload.gb_limit,
+            device_limit=payload.device_limit,
+            purchase_limit=payload.purchase_limit,
             is_hidden=payload.is_hidden,
             is_trial=payload.is_trial,
             created_at=datetime.now(timezone.utc),
         )
         session.add(plan)
         await session.flush()
+        if not int(getattr(plan, "display_order", 0) or 0):
+            plan.display_order = int(plan.id)
         if payload.is_trial:
             await session.execute(
                 update(SubscriptionPlan)
@@ -88,6 +96,12 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
             plan.period_days = payload.period_days
         if payload.gb_limit is not None:
             plan.gb_limit = payload.gb_limit
+        if payload.device_limit is not None:
+            plan.device_limit = payload.device_limit
+        if payload.display_order is not None:
+            plan.display_order = payload.display_order
+        if payload.purchase_limit is not None:
+            plan.purchase_limit = payload.purchase_limit
         if payload.is_hidden is not None:
             plan.is_hidden = payload.is_hidden
         if payload.is_trial is not None:
@@ -100,6 +114,34 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
                 )
         await session.commit()
         await session.refresh(plan)
+        return {"ok": True}
+
+
+@router.post("/plans/{plan_id}/move", dependencies=[Depends(require_admin_auth)])
+async def admin_plan_move(plan_id: int, payload: PlanMovePayload):
+    async with async_session() as session:
+        plans = list(
+            (
+                await session.execute(
+                    select(SubscriptionPlan).order_by(SubscriptionPlan.display_order.asc(), SubscriptionPlan.id.asc())
+                )
+            )
+            .scalars()
+            .all()
+        )
+        index = next((idx for idx, item in enumerate(plans) if item.id == plan_id), None)
+        if index is None:
+            raise HTTPException(status_code=404, detail="plan not found")
+
+        target_index = index - 1 if payload.direction == "up" else index + 1
+        if target_index < 0 or target_index >= len(plans):
+            return {"ok": True}
+
+        plans[index], plans[target_index] = plans[target_index], plans[index]
+        for order, plan in enumerate(plans, start=1):
+            plan.display_order = order
+
+        await session.commit()
         return {"ok": True}
 
 

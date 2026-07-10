@@ -71,16 +71,18 @@
   body {
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   body {
-    overflow: auto;
+    overflow-x: clip;
+    overflow-y: auto;
   }
   .app {
     grid-template-columns: 1fr;
     min-height: auto;
     margin: 10px;
     border-radius: 24px;
+    overflow: hidden;
   }
   .sidebar {
     position: fixed; z-index: 70; left: 0; top: 0; bottom: 0; width: min(320px, 86vw);
@@ -93,7 +95,29 @@
   .main {
     min-height: auto;
     height: auto;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  #content,
+  .page-shell,
+  .page-shell > *,
+  .content-grid,
+  .content-grid > *,
+  .subscriptions-grid,
+  .subscriptions-grid > *,
+  .content-stack,
+  .content-stack > *,
+  .dashboard-layout,
+  .dashboard-layout > *,
+  .users-main-grid,
+  .users-main-grid > *,
+  .card,
+  .stat-card,
+  .toolbar,
+  .form-grid,
+  .pager {
+    min-width: 0;
+    max-width: 100%;
   }
   body.mobile-nav-open .sidebar { transform: translateX(0); }
   .mobile-nav-overlay { display: block; position: fixed; inset: 0; z-index: 65; border: 0; background: rgba(10, 20, 35, 0.38); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
@@ -171,12 +195,18 @@
     max-height: 240px;
   }
   .table-wrap {
+    display: block;
+    min-width: 0;
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
   }
   table {
+    width: max-content;
     min-width: 760px;
   }
   .row-actions {
@@ -184,6 +214,14 @@
   }
   .row-actions button {
     flex: 0 0 auto;
+  }
+  input,
+  select,
+  textarea,
+  button,
+  .fancy-select,
+  .fancy-select-trigger {
+    max-width: 100%;
   }
   .broadcast-toolbar--bottom {
     grid-template-columns: 1fr;
@@ -221,6 +259,17 @@
   .partner-details__grid,
   .maintenance-card__grid {
     grid-template-columns: 1fr;
+  }
+  .toolbar {
+    padding: 8px;
+  }
+  .subscriptions-toolbar,
+  .subscriptions-toolbar > *,
+  .toolbar > *,
+  .form-grid > * {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
   }
   .plans-flags,
   .plans-mobile-card__grid {
@@ -311,7 +360,20 @@
   }
   th, td { padding: 8px 7px; font-size: 12px; }
   table {
+    width: max-content;
     min-width: 680px;
+  }
+  .row-actions {
+    min-width: max-content;
+  }
+  .table-wrap--modal,
+  .table-wrap--history,
+  .users-table-card .table-wrap,
+  .plans-table-wrap {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
   }
   #toast-root { right: 8px; left: 8px; bottom: 8px; }
   .toast { min-width: 0; width: 100%; max-width: none; }

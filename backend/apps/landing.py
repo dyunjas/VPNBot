@@ -27,7 +27,7 @@ def create_app():
 
     @app.get("/favicon.ico")
     async def favicon():
-        return RedirectResponse(url="/miniapp/assets/lunet-flavicon.png?v=2", status_code=307)
+        return RedirectResponse(url="/miniapp/assets/lunet-favicon.ico?v=7", status_code=307)
 
     @app.get("/health")
     async def health():
@@ -35,4 +35,3 @@ def create_app():
 
     mount_frontend_assets(app)
     return app
-

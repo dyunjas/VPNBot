@@ -46,6 +46,7 @@ async def select_plan_clb(callback: CallbackQuery, bot_api):
         return
 
     gb_text = f"{plan.get('gb_limit')} GB" if plan.get("gb_limit") else "безлимит"
+    device_text = str(plan.get("device_limit") if plan.get("device_limit") is not None else 0)
 
     text = (
         f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Тариф:</b> {plan.get('name')}\n"
@@ -53,11 +54,10 @@ async def select_plan_clb(callback: CallbackQuery, bot_api):
         f"<b><tg-emoji emoji-id='5843799474362652262'>🔄</tg-emoji> Период:</b> {plan.get('period_days')} дней\n"
         f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Трафик Белых списков:</b> {gb_text}\n"
         f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Трафик обычных серверов:</b> безлимит\n"
-        "<b><tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройств:</b> 3\n\n"
+        f"<b><tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройств:</b> {device_text}\n\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Подключиться к VPN можно сразу после оплаты.</i>"
     )
     media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
 
     await callback.message.edit_media(media=media, reply_markup=purchase_subscription_plan(plan_id, page))
     await callback.answer()
-

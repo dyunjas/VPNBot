@@ -68,9 +68,11 @@ TX_SORT_FIELDS = {
 }
 PLAN_SORT_FIELDS = {
     "id": SubscriptionPlan.id,
+    "display_order": SubscriptionPlan.display_order,
     "name": SubscriptionPlan.name,
     "price": SubscriptionPlan.price,
     "period_days": SubscriptionPlan.period_days,
+    "purchase_limit": SubscriptionPlan.purchase_limit,
     "is_hidden": SubscriptionPlan.is_hidden,
     "is_trial": SubscriptionPlan.is_trial,
     "created_at": SubscriptionPlan.created_at,
@@ -183,6 +185,7 @@ class SubscriptionUpdatePayload(BaseModel):
     plan_id: int | None = None
     status: Literal["active", "past_due", "expired", "canceled"] | None = None
     auto_renew: bool | None = None
+    device_limit: int | None = Field(default=None, ge=0)
     extend_days: int | None = None
     current_period_end: datetime | None = None
 
@@ -201,6 +204,8 @@ class PlanCreatePayload(BaseModel):
     price: int = Field(gt=0)
     period_days: int = Field(default=30, gt=0)
     gb_limit: int = Field(default=100, ge=0)
+    device_limit: int = Field(default=3, ge=0)
+    purchase_limit: int = Field(default=0, ge=0)
     is_hidden: bool = False
     is_trial: bool = False
 
@@ -210,8 +215,15 @@ class PlanUpdatePayload(BaseModel):
     price: int | None = Field(default=None, gt=0)
     period_days: int | None = Field(default=None, gt=0)
     gb_limit: int | None = Field(default=None, ge=0)
+    device_limit: int | None = Field(default=None, ge=0)
+    display_order: int | None = Field(default=None, ge=0)
+    purchase_limit: int | None = Field(default=None, ge=0)
     is_hidden: bool | None = None
     is_trial: bool | None = None
+
+
+class PlanMovePayload(BaseModel):
+    direction: Literal["up", "down"]
 
 
 class PromocodeCreatePayload(BaseModel):
@@ -307,6 +319,7 @@ __all__ = [
     "SubscriptionTrafficPayload",
     "PlanCreatePayload",
     "PlanUpdatePayload",
+    "PlanMovePayload",
     "PromocodeCreatePayload",
     "PartnerLinkCreatePayload",
     "PartnerLinkUpdatePayload",

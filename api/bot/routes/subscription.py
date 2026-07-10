@@ -31,6 +31,7 @@ async def plans(tg_id: int, user_service=Depends(get_user_service)):
                 "price": int(plan.price),
                 "period_days": plan.period_days,
                 "gb_limit": int(getattr(plan, "gb_limit", 0) or 0),
+                "device_limit": int(getattr(plan, "device_limit", 0) or 0),
             }
             for plan in plans
         ],

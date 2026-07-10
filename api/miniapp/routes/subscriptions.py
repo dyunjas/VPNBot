@@ -25,6 +25,7 @@ async def mini_plans(payload: InitPayload):
                     "price": p.price,
                     "period_days": p.period_days,
                     "gb_limit": int(getattr(p, "gb_limit", 0) or 0),
+                    "device_limit": int(getattr(p, "device_limit", 0) or 0),
                     "created_at": p.created_at.isoformat() if p.created_at else None,
                 }
                 for p in plans

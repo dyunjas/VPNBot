@@ -204,7 +204,9 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
       <aside class="sidebar">
         <div class="sidebar-head">
           <div class="sidebar-brand">
-            <div class="sidebar-brand-mark">LN</div>
+            <div class="sidebar-brand-mark">
+              <img src="/miniapp/assets/lunet-logo.png?v=1" alt="Lunet" />
+            </div>
             <div>
               <div class="sidebar-kicker">Internal Tool</div>
               <div class="sidebar-title">Админ-панель</div>
@@ -229,11 +231,6 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
               <span></span><span></span><span></span>
             </button>
             <div class="topbar-title">Админ-панель</div>
-          </div>
-          <div class="topbar-right">
-            <div class="topbar-user" aria-hidden="true">
-              <span class="topbar-user__avatar">AD</span>
-            </div>
           </div>
         </header>
 
