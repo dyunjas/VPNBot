@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 
 from bot.navigation.additional_menu.transaction.keyboards import (
     back_to_profile_kb,
@@ -17,7 +17,7 @@ async def transactions_clb(callback: CallbackQuery, bot_api):
 
     if not txs:
         content = InputMediaPhoto(
-            media=MAIN_MENU_IMG,
+            media=PROFILE_IMG,
             caption="У вас пока нет транзакций"
         )
         await callback.message.edit_media(
@@ -29,7 +29,7 @@ async def transactions_clb(callback: CallbackQuery, bot_api):
 
     keyboard = build_transactions_kb(txs, page=0)
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         caption="Ваши транзакции:"
     )
     await callback.message.edit_media(
@@ -46,7 +46,7 @@ async def transaction_orders_clb(callback: CallbackQuery, bot_api):
 
     if not txs:
         content = InputMediaPhoto(
-            media=MAIN_MENU_IMG,
+            media=PROFILE_IMG,
             caption="У вас пока нет транзакций"
         )
         await callback.message.edit_media(
@@ -58,7 +58,7 @@ async def transaction_orders_clb(callback: CallbackQuery, bot_api):
 
     keyboard = build_transactions_kb(txs, page=page)
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         caption="Ваши транзакции:"
     )
     await callback.message.edit_media(
@@ -97,7 +97,7 @@ async def transaction_detail_clb(callback: CallbackQuery, bot_api):
     )
 
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         caption=text,
         parse_mode="HTML"
     )

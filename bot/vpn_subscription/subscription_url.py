@@ -6,7 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
 from backend.core.logger_config import logger
-from backend.images import MAIN_MENU_IMG
+from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import SubscriptionNotFound, UserNotFound
 from bot.vpn_subscription.keyboards import back_keys_kb
 
@@ -84,18 +84,19 @@ async def _build_subscription_screen(
     auto_renew_text = "включено" if auto_renew else "выключено"
 
     text = (
-        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> <b>Ваша VPN ссылка:</b>\n"
+        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> <b>Ваша подписка активна</b>\n\n"
+        "<b>Ссылка для подключения:</b>\n"
         f"<code>{safe_url}</code>\n\n"
-        "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> "
-        "Трафик расходуется <b>ТОЛЬКО</b> на серверах белых списков. "
-        "Гигабайты можно докупать по цене 2 RUB / гигабайт. "
-        "Гигабайты переносятся между месяцами.</blockquote>\n\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>📆</tg-emoji> Активна до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        f"<tg-emoji emoji-id='5956148757899776734'>📆</tg-emoji> Действует до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
-        "<tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> Серверы уже подготовлены. "
-        "Обновите подписку в приложении.\n\n"
+        "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> "
+        "Гигабайты списываются только на серверах белых списков. "
+        "При необходимости можно докупить трафик по цене <b>2 RUB за 1 GB</b>. "
+        "Остаток трафика переносится на следующий месяц.</blockquote>\n\n"
+        "Если подписка уже добавлена в приложение, просто обновите ее там. "
+        "Если подключаетесь впервые, откройте инструкцию ниже.\n\n"
         "<tg-emoji emoji-id='5877318502947229960'>📖</tg-emoji>"
-        "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b>Инструкция по подключению (нажмите)</b></a>"
+        "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b> Инструкция по подключению</b></a>"
     )
     return text, auto_renew
 
@@ -116,7 +117,7 @@ async def _render_subscription_screen(
 
     text, auto_renew = built
     media = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=SUBSCRIPTION_IMG,
         caption=text,
         parse_mode="HTML",
     )

@@ -15410,3 +15410,95 @@ RuntimeError: BOT_API_TOKEN is not configured
 [2026-07-11 00:42:13] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-07-11 00:42:13] [INFO] root: Database tables initialized
 [2026-07-11 00:42:13] [INFO] root: Database connection successful
+[2026-07-11 20:09:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:10:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:10:01] [INFO] root: Bot started
+[2026-07-11 20:10:01] [INFO] aiogram.dispatcher: Start polling
+[2026-07-11 20:10:02] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 20:10:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:10:03] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:10:04] [INFO] root: Database tables initialized
+[2026-07-11 20:10:04] [INFO] root: Database connection successful
+[2026-07-11 20:10:16] [INFO] aiogram.event: Update id=891136795 is handled. Duration 3186 ms by bot id=7557954606
+[2026-07-11 20:10:29] [INFO] aiogram.event: Update id=891136796 is handled. Duration 3169 ms by bot id=7557954606
+[2026-07-11 20:10:39] [INFO] aiogram.event: Update id=891136797 is handled. Duration 3757 ms by bot id=7557954606
+[2026-07-11 20:10:45] [INFO] aiogram.event: Update id=891136798 is handled. Duration 3579 ms by bot id=7557954606
+[2026-07-11 20:10:50] [INFO] aiogram.event: Update id=891136799 is handled. Duration 4011 ms by bot id=7557954606
+[2026-07-11 20:11:00] [INFO] aiogram.event: Update id=891136800 is handled. Duration 4497 ms by bot id=7557954606
+[2026-07-11 20:11:09] [INFO] aiogram.event: Update id=891136801 is handled. Duration 6382 ms by bot id=7557954606
+[2026-07-11 20:11:16] [INFO] aiogram.event: Update id=891136802 is handled. Duration 4539 ms by bot id=7557954606
+[2026-07-11 20:11:24] [INFO] aiogram.event: Update id=891136803 is handled. Duration 3833 ms by bot id=7557954606
+[2026-07-11 20:11:30] [INFO] aiogram.event: Update id=891136804 is handled. Duration 4923 ms by bot id=7557954606
+[2026-07-11 20:12:06] [INFO] aiogram.event: Update id=891136805 is handled. Duration 3313 ms by bot id=7557954606
+[2026-07-11 20:18:25] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-11 20:18:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:18:25] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-11 20:18:25] [INFO] root: Bot polling cancelled
+[2026-07-11 20:18:25] [INFO] root: Bot stopped
+[2026-07-11 20:18:25] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 20:18:31] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:18:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:18:32] [INFO] root: Bot started
+[2026-07-11 20:18:32] [INFO] aiogram.dispatcher: Start polling
+[2026-07-11 20:18:32] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 20:18:42] [INFO] aiogram.event: Update id=891136806 is handled. Duration 2521 ms by bot id=7557954606
+[2026-07-11 20:18:44] [INFO] aiogram.event: Update id=891136807 is handled. Duration 129 ms by bot id=7557954606
+[2026-07-11 20:18:47] [INFO] aiogram.event: Update id=891136808 is handled. Duration 1217 ms by bot id=7557954606
+[2026-07-11 20:18:50] [INFO] aiogram.event: Update id=891136809 is handled. Duration 200 ms by bot id=7557954606
+[2026-07-11 20:18:54] [INFO] aiogram.event: Update id=891136810 is handled. Duration 2456 ms by bot id=7557954606
+[2026-07-11 20:18:56] [INFO] aiogram.event: Update id=891136811 is handled. Duration 322 ms by bot id=7557954606
+[2026-07-11 20:18:57] [INFO] aiogram.event: Update id=891136812 is handled. Duration 227 ms by bot id=7557954606
+[2026-07-11 20:18:58] [INFO] aiogram.event: Update id=891136813 is handled. Duration 498 ms by bot id=7557954606
+[2026-07-11 20:21:40] [INFO] aiogram.event: Update id=891136814 is handled. Duration 229 ms by bot id=7557954606
+[2026-07-11 20:21:44] [INFO] aiogram.event: Update id=891136815 is handled. Duration 1163 ms by bot id=7557954606
+[2026-07-11 20:21:47] [INFO] aiogram.event: Update id=891136816 is handled. Duration 263 ms by bot id=7557954606
+[2026-07-11 20:21:48] [INFO] aiogram.event: Update id=891136817 is handled. Duration 207 ms by bot id=7557954606
+[2026-07-11 20:21:50] [INFO] aiogram.event: Update id=891136818 is handled. Duration 204 ms by bot id=7557954606
+[2026-07-11 20:22:05] [INFO] aiogram.event: Update id=891136819 is handled. Duration 135 ms by bot id=7557954606
+[2026-07-11 20:22:09] [INFO] aiogram.event: Update id=891136820 is handled. Duration 190 ms by bot id=7557954606
+[2026-07-11 20:22:13] [INFO] aiogram.event: Update id=891136821 is handled. Duration 228 ms by bot id=7557954606
+[2026-07-11 20:22:31] [INFO] aiogram.event: Update id=891136822 is handled. Duration 309 ms by bot id=7557954606
+[2026-07-11 20:22:33] [INFO] aiogram.event: Update id=891136823 is handled. Duration 241 ms by bot id=7557954606
+[2026-07-11 20:22:34] [INFO] aiogram.event: Update id=891136824 is handled. Duration 285 ms by bot id=7557954606
+[2026-07-11 20:22:35] [INFO] aiogram.event: Update id=891136825 is handled. Duration 185 ms by bot id=7557954606
+[2026-07-11 20:22:36] [INFO] aiogram.event: Update id=891136826 is handled. Duration 219 ms by bot id=7557954606
+[2026-07-11 20:22:37] [INFO] aiogram.event: Update id=891136827 is handled. Duration 222 ms by bot id=7557954606
+[2026-07-11 20:23:57] [INFO] aiogram.event: Update id=891136828 is handled. Duration 221 ms by bot id=7557954606
+[2026-07-11 20:23:58] [INFO] aiogram.event: Update id=891136829 is handled. Duration 217 ms by bot id=7557954606
+[2026-07-11 20:24:00] [INFO] aiogram.event: Update id=891136830 is handled. Duration 335 ms by bot id=7557954606
+[2026-07-11 20:27:45] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:27:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:27:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:27:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:28:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:28:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:28:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:29:51] [INFO] aiogram.event: Update id=891136831 is handled. Duration 1294 ms by bot id=7557954606
+[2026-07-11 20:29:54] [INFO] aiogram.event: Update id=891136832 is handled. Duration 695 ms by bot id=7557954606
+[2026-07-11 20:29:55] [INFO] aiogram.event: Update id=891136833 is handled. Duration 498 ms by bot id=7557954606
+[2026-07-11 20:29:56] [INFO] aiogram.event: Update id=891136834 is handled. Duration 359 ms by bot id=7557954606
+[2026-07-11 20:29:58] [INFO] aiogram.event: Update id=891136835 is handled. Duration 203 ms by bot id=7557954606
+[2026-07-11 20:30:32] [INFO] aiogram.event: Update id=891136836 is handled. Duration 533 ms by bot id=7557954606
+[2026-07-11 20:40:34] [INFO] aiogram.event: Update id=891136837 is handled. Duration 289 ms by bot id=7557954606
+[2026-07-11 20:40:39] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-11 20:40:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:40:39] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-11 20:40:39] [INFO] root: Bot polling cancelled
+[2026-07-11 20:40:39] [INFO] root: Bot stopped
+[2026-07-11 20:40:39] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 20:40:46] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:40:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 20:40:47] [INFO] root: Bot started
+[2026-07-11 20:40:47] [INFO] aiogram.dispatcher: Start polling
+[2026-07-11 20:40:48] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 20:40:49] [INFO] aiogram.event: Update id=891136838 is handled. Duration 862 ms by bot id=7557954606
+[2026-07-11 20:41:17] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-07-11 20:41:18] [INFO] aiogram.event: Update id=891136839 is handled. Duration 547 ms by bot id=7557954606
+[2026-07-11 20:41:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-11 20:41:19] [INFO] aiogram.event: Update id=891136840 is handled. Duration 516 ms by bot id=7557954606
+[2026-07-11 20:41:24] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-11 20:41:24] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:41:24] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-11 20:41:24] [INFO] root: Bot polling cancelled
+[2026-07-11 20:41:24] [INFO] root: Bot stopped
+[2026-07-11 20:41:24] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

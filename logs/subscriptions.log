@@ -1374,3 +1374,5 @@ aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socke
 [2026-07-11 00:11:51] [INFO] root: [subscription] reset_user_traffic skipped user_id=40 (remnawave-only mode)
 [2026-07-11 00:11:51] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=40 subscription_id=84 traffic_limit_bytes=32212254720
 [2026-07-11 00:11:51] [INFO] root: [biz][subscription] activate_completed user_id=40 subscription_id=84
+[2026-07-11 20:41:17] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-07-11 20:41:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True

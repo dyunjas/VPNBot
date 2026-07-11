@@ -14,7 +14,7 @@ SERVICE_IMPORTS = {
     "miniapp": ("entry_miniapp:app", "MINIAPP_PORT", 8002),
     "cabinet": ("entry_cabinet:app", "CABINET_PORT", 8003),
     "api": ("entry_api:app", "API_PORT", 8004),
-    "admin": ("entry_admin_frontend:app", "ADMIN_FRONTEND_PORT", 8011),
+    "admin": ("entry_admin:app", "ADMIN_FRONTEND_PORT", 8011),
 }
 
 

@@ -8837,3 +8837,22 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-11 00:42:12] [INFO] root: Settings successfully loaded from .env
 [2026-07-11 00:42:13] [INFO] root: Database tables initialized
 [2026-07-11 00:42:13] [INFO] root: Database connection successful
+[2026-07-11 20:09:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:10:01] [INFO] root: Bot started
+[2026-07-11 20:10:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:10:04] [INFO] root: Database tables initialized
+[2026-07-11 20:10:04] [INFO] root: Database connection successful
+[2026-07-11 20:18:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:18:25] [INFO] root: Bot stopped
+[2026-07-11 20:18:31] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:18:32] [INFO] root: Bot started
+[2026-07-11 20:27:45] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:27:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:28:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:28:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:40:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:40:39] [INFO] root: Bot stopped
+[2026-07-11 20:40:46] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 20:40:47] [INFO] root: Bot started
+[2026-07-11 20:41:24] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-11 20:41:24] [INFO] root: Bot stopped

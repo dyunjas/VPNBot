@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from backend.states import PaymentStates
 from bot.payments import messages as payment_messages
 from bot.payments.keyboards import back_profile_kb, payment_choice_kb
@@ -13,7 +13,7 @@ router = Router()
 @router.callback_query(F.data == "add_funds")
 async def topup_balance_clb(callback: CallbackQuery, state: FSMContext):
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         caption=payment_messages.AMOUNT_PROMPT,
     )
     await callback.message.edit_media(
@@ -32,7 +32,7 @@ async def choose_payment_system_clb(message: Message, state: FSMContext):
             raise ValueError
     except ValueError:
         await message.answer_photo(
-            photo=MAIN_MENU_IMG,
+            photo=PROFILE_IMG,
             caption=payment_messages.AMOUNT_INVALID,
             reply_markup=back_profile_kb(),
         )
@@ -40,7 +40,7 @@ async def choose_payment_system_clb(message: Message, state: FSMContext):
 
     await state.update_data(amount=amount)
     await message.answer_photo(
-        photo=MAIN_MENU_IMG,
+        photo=PROFILE_IMG,
         caption=payment_messages.PAYMENT_METHOD_PROMPT,
         reply_markup=payment_choice_kb(),
     )

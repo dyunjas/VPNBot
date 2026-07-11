@@ -11,7 +11,7 @@ from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.email_templates import render_code_email
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from backend.services.exceptions import UserNotFound
 from backend.states import EmailBindStates
 from bot.navigation.additional_menu.profile.keyboards import profile_kb, email_bind_kb
@@ -101,7 +101,7 @@ async def _render_profile(callback: CallbackQuery, bot_api) -> None:
         f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс:</b> {user.get('balance')} RUB"
     )
 
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+    media = InputMediaPhoto(media=PROFILE_IMG, caption=text)
     await callback.message.edit_media(media=media, reply_markup=profile_kb())
 
 
@@ -136,7 +136,7 @@ async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, b
     )
     await state.clear()
     await state.set_state(EmailBindStates.waiting_for_email)
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+    media = InputMediaPhoto(media=PROFILE_IMG, caption=text)
     await callback.message.edit_media(media=media, reply_markup=email_bind_kb())
     await callback.answer()
 

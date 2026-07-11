@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import SUBSCRIPTION_IMG
 from bot.vpn_subscription.devices_keyboards import device_detail_kb, devices_list_kb
 
 router = Router()
@@ -59,7 +59,7 @@ async def _load_devices(bot_api, tg_id: int) -> list[dict]:
 async def _render_list(callback: CallbackQuery, bot_api, *, page: int = 0) -> None:
     devices = await _load_devices(bot_api, callback.from_user.id)
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=SUBSCRIPTION_IMG,
         caption=_render_devices_text(devices),
     )
     await callback.message.edit_media(
@@ -111,7 +111,7 @@ async def device_detail_clb(callback: CallbackQuery, bot_api):
 
     device = devices[device_id]
     content = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=SUBSCRIPTION_IMG,
         caption=_render_device_detail(device, device_id),
         parse_mode="HTML",
     )

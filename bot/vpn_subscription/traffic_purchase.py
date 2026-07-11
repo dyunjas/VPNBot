@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import InsufficientBalance, SubscriptionNotFound, UserNotFound
 from backend.states import TrafficPurchaseStates
 
@@ -50,7 +50,7 @@ async def buy_traffic_start(
         f"Цена: <b>{TRAFFIC_PRICE_PER_GB_RUB} RUB за 1 GB</b>.\n"
         "Докупленный трафик переносится между месяцами и продлениями."
     )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
     await callback.message.edit_media(media=media, reply_markup=_back_sub_url_kb())
     await state.set_state(TrafficPurchaseStates.waiting_for_gb)
     await callback.answer()
@@ -77,7 +77,7 @@ async def buy_traffic_enter_gb(message: Message, state: FSMContext):
         "Продолжить?"
     )
     await message.answer_photo(
-        photo=MAIN_MENU_IMG,
+        photo=SUBSCRIPTION_IMG,
         caption=text,
         parse_mode="HTML",
         reply_markup=_buy_traffic_confirm_kb(),
@@ -124,5 +124,5 @@ async def buy_traffic_confirm(
         f"Списано: <b>{result.get('charged', price)} RUB</b>\n"
         "Лимит трафика обновлен. Обновите подписку в приложении."
     )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
     await callback.message.edit_media(media=media, reply_markup=_back_sub_url_kb())

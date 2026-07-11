@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes, render_shell
 from backend.core.config import settings
@@ -49,7 +49,7 @@ def create_app():
 
     @app.get("/favicon.ico")
     async def favicon():
-        return RedirectResponse(url="/miniapp/assets/lunet-favicon.ico?v=7", status_code=307)
+        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.ico")
 
     @app.get("/__APP_ENTRY__")
     async def legacy_app_entry():

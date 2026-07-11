@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import BannedUser, InsufficientBalance, PlanNotFound, TooEarlyToRenew, UserNotFound
 from bot.navigation.purchase.keyboards import fail_purchase_kb, success_purchase_kb
 from bot.utils.maintenance import answer_maintenance_callback, is_maintenance_error
@@ -34,7 +34,7 @@ async def purchase_plan_clb(
         return
     except InsufficientBalance:
         text = "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Недостаточно средств, пополните баланс"
-        media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+        media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text)
         await callback.message.edit_media(media=media, reply_markup=fail_purchase_kb())
         await callback.answer()
         return
@@ -72,7 +72,7 @@ async def purchase_plan_clb(
         f"<b><tg-emoji emoji-id='5931472654660800739'>📊</tg-emoji> Лимит гигабайт:</b> {plan.get('gb_limit') if plan.get('gb_limit') else 'безлимит'} GB\n\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Создайте VPN ссылку и начните пользоваться сервисом.</i>"
     )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text)
 
     await callback.message.edit_media(media=media, reply_markup=success_purchase_kb())
     await callback.answer("Подписка оформлена", show_alert=True)

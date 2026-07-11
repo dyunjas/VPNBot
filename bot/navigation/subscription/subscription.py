@@ -1,7 +1,7 @@
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import PlanNotFound
 from bot.navigation.subscription.keyboards import purchase_subscription_plan, subscription_plans_kb
 
@@ -16,7 +16,7 @@ async def subscription_plans_clb(callback: CallbackQuery, bot_api):
         await callback.answer("Нет доступных тарифов", show_alert=True)
         return
 
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption="Выберите тарифный план:")
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption="Выберите тарифный план:")
     await callback.message.edit_media(media=media, reply_markup=subscription_plans_kb(plans))
     await callback.answer()
 
@@ -26,7 +26,7 @@ async def paginate_page_clb(callback: CallbackQuery, bot_api):
     page = int(callback.data.split(":")[1])
     plans = await bot_api.list_plans(tg_id=callback.from_user.id)
 
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption="Выберите тарифный план:")
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption="Выберите тарифный план:")
     await callback.message.edit_media(media=media, reply_markup=subscription_plans_kb(plans, page))
     await callback.answer()
 
@@ -57,7 +57,7 @@ async def select_plan_clb(callback: CallbackQuery, bot_api):
         f"<b><tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройств:</b> {device_text}\n\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Подключиться к VPN можно сразу после оплаты.</i>"
     )
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text, parse_mode="HTML")
+    media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
 
     await callback.message.edit_media(media=media, reply_markup=purchase_subscription_plan(plan_id, page))
     await callback.answer()

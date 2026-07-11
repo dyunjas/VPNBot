@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
 from backend.core.logger_config import logger
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from backend.services.exceptions import PaymentNotConfirmed, TransactionNotFound, UserNotFound
 from backend.states import PaymentStates
 from bot.payments import messages as payment_messages
@@ -67,7 +67,7 @@ async def pay_pally_clb(
 
     await callback.message.edit_media(
         InputMediaPhoto(
-            media=MAIN_MENU_IMG,
+            media=PROFILE_IMG,
             caption=payment_messages.created_caption(
                 method_name="СБП 1",
                 transaction_id=transaction_id,
@@ -130,7 +130,7 @@ async def check_pally_payment_clb(
 
     await callback.message.edit_media(
         InputMediaPhoto(
-            media=MAIN_MENU_IMG,
+            media=PROFILE_IMG,
             caption=payment_messages.success_caption(amount_rub=amount_display),
             parse_mode="HTML",
         ),

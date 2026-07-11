@@ -236,6 +236,40 @@
     aspect-ratio: 16 / 7;
     max-height: 200px;
   }
+  .plans-mobile-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .plans-table-wrap {
+    display: none;
+  }
+  .plans-mobile-card,
+  .plans-mobile-card__head,
+  .plans-mobile-card__grid,
+  .plans-mobile-card__grid > div,
+  .plans-mobile-card__badges {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .plans-mobile-card h4,
+  .plans-mobile-card__grid b,
+  .plans-mobile-card__grid span {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .plans-mobile-card .row-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+    width: 100%;
+  }
+  .plans-mobile-card .row-actions button,
+  .plans-mobile-card .plan-move-btn--mobile {
+    width: 100%;
+    min-width: 0 !important;
+    justify-content: center;
+  }
   .dashboard-signals-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -274,14 +308,6 @@
   .plans-flags,
   .plans-mobile-card__grid {
     grid-template-columns: 1fr;
-  }
-  .plans-mobile-list {
-    display: grid;
-    gap: 10px;
-    margin-top: 8px;
-  }
-  .plans-table-wrap {
-    display: none;
   }
   .toolbar--filters,
   .toolbar--management {

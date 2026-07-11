@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from bot.navigation.additional_menu.referral.keyboards import referral_kb
 from bot.utils.html import html_escape
 
@@ -37,7 +37,7 @@ async def referral_clb(callback: CallbackQuery, bot_api, state: FSMContext):
 
     media = InputMediaPhoto(
         caption=text,
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         parse_mode="HTML"
     )
     await callback.message.edit_media(

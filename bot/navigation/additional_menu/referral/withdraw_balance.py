@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.fsm.context import FSMContext
 
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from backend.states import WithdrawBalance
 
 from bot.navigation.additional_menu.referral.keyboards import (
@@ -35,7 +35,7 @@ async def withdraw_balance_start(callback: CallbackQuery, state: FSMContext, bot
         f"Введите сумму вывода (минимум {MIN_WITHDRAW_AMOUNT} RUB):"
     )
     media = InputMediaPhoto(
-        media=MAIN_MENU_IMG,
+        media=PROFILE_IMG,
         caption=text
     )
     await callback.message.edit_media(media=media, reply_markup=back_referral_kb())
@@ -55,7 +55,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
             "Введите целое положительное число:"
         )
         await message.answer_photo(
-            photo=MAIN_MENU_IMG,
+            photo=PROFILE_IMG,
             caption=text,
             reply_markup=back_referral_kb()
         )
@@ -68,7 +68,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
             f"Введите сумму не меньше {MIN_WITHDRAW_AMOUNT}:"
         )
         await message.answer_photo(
-            photo=MAIN_MENU_IMG,
+            photo=PROFILE_IMG,
             caption=text,
             reply_markup=back_referral_kb()
         )
@@ -86,7 +86,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
             "Введите сумму меньше или равную доступной:"
         )
         await message.answer_photo(
-            photo=MAIN_MENU_IMG,
+            photo=PROFILE_IMG,
             caption=text,
             reply_markup=back_referral_kb()
         )
@@ -96,7 +96,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
 
     text = "<tg-emoji emoji-id=\"5769403330761593044\">👝</tg-emoji> Введите метод вывода (например: карта/СБП/USDT(ТОЛЬКО TRC20) + реквизиты):"
     await message.answer_photo(
-        photo=MAIN_MENU_IMG,
+        photo=PROFILE_IMG,
         caption=text,
         reply_markup=back_referral_kb()
     )
@@ -112,7 +112,7 @@ async def withdraw_balance_method(message: Message, state: FSMContext):
             "<tg-emoji emoji-id=\"5769403330761593044\">👝</tg-emoji> Метод слишком короткий. Введите подробную информацию:"
         )
         await message.answer_photo(
-            photo=MAIN_MENU_IMG,
+            photo=PROFILE_IMG,
             caption=text,
             reply_markup=back_referral_kb()
         )
@@ -128,7 +128,7 @@ async def withdraw_balance_method(message: Message, state: FSMContext):
     )
 
     await message.answer_photo(
-        photo=MAIN_MENU_IMG,
+        photo=PROFILE_IMG,
         caption=text,
         reply_markup=withdraw_confirm_kb()
     )
@@ -139,7 +139,7 @@ async def withdraw_balance_method(message: Message, state: FSMContext):
 async def withdraw_balance_cancel(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     text = "Заявка на вывод отменена."
-    content = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+    content = InputMediaPhoto(media=PROFILE_IMG, caption=text)
     await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
     await callback.answer()
 
@@ -167,7 +167,7 @@ async def withdraw_balance_confirm(
             "Недостаточно средств для вывода (баланс мог измениться).\n"
             "Попробуйте ещё раз."
         )
-        content = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text)
+        content = InputMediaPhoto(media=PROFILE_IMG, caption=text)
         await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
         await callback.answer()
         return
@@ -178,7 +178,7 @@ async def withdraw_balance_confirm(
         "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Заявка на вывод создана и отправлена на рассмотрение.\n\n"
         f"ID заявки: <code>{withdrawal.get('withdrawal', {}).get('id')}</code>"
     )
-    content = InputMediaPhoto(media=MAIN_MENU_IMG, caption=text_user)
+    content = InputMediaPhoto(media=PROFILE_IMG, caption=text_user)
     await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
     await callback.answer()
 

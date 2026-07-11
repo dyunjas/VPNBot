@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 
 from backend.core.logger_config import logger
-from backend.images import MAIN_MENU_IMG
+from backend.images import PROFILE_IMG
 from backend.services.exceptions import PromocodeAlreadyUsed, PromocodeExhausted, PromocodeNotFound, UserNotFound
 from backend.states import PromocodeStates
 from bot.navigation.additional_menu.profile.keyboards import promocode_kb
@@ -14,7 +14,7 @@ router = Router()
 
 @router.callback_query(F.data == "activate_promocode")
 async def enter_promocode_clb(callback: CallbackQuery, state: FSMContext):
-    content = InputMediaPhoto(media=MAIN_MENU_IMG, caption="Введите промокод:")
+    content = InputMediaPhoto(media=PROFILE_IMG, caption="Введите промокод:")
     await callback.message.edit_media(media=content, reply_markup=promocode_kb())
     await state.set_state(PromocodeStates.waiting_for_code)
     await callback.answer()
@@ -56,6 +56,6 @@ async def process_promocode_clb(
             f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс пополнен на <b>{amount} RUB</b>."
         )
 
-    await message.answer_photo(photo=MAIN_MENU_IMG, caption=text, reply_markup=promocode_kb())
+    await message.answer_photo(photo=PROFILE_IMG, caption=text, reply_markup=promocode_kb())
     await state.clear()
 

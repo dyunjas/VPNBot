@@ -25,7 +25,7 @@ python manage.py run bot
 python entry_landing.py
 python entry_miniapp.py
 python entry_cabinet.py
-python entry_admin_frontend.py
+python entry_admin.py
 python entry_api.py
 python entry_bot.py
 ```
