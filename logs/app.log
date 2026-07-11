@@ -15502,3 +15502,17 @@ RuntimeError: BOT_API_TOKEN is not configured
 [2026-07-11 20:41:24] [INFO] root: Bot polling cancelled
 [2026-07-11 20:41:24] [INFO] root: Bot stopped
 [2026-07-11 20:41:24] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 23:58:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 23:58:18] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 23:58:18] [INFO] root: Database tables initialized
+[2026-07-11 23:58:18] [INFO] root: Database connection successful
+[2026-07-11 23:59:10] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 23:59:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 23:59:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-11 23:59:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-11 23:59:24] [INFO] root: Bot started
+[2026-07-11 23:59:24] [INFO] aiogram.dispatcher: Start polling
+[2026-07-11 23:59:25] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136841 is handled. Duration 613 ms by bot id=7557954606
+[2026-07-12 00:04:34] [INFO] root: [bot][stars] admin_stars_topup_paid tg_id=1237947229 charge_id=stxTV8hNxvHSu26x6NWLuBmXLX-Z5Iy6-OTfmuvj_U-qHLV0F-0KDDqOkyXmSzzalgIg05wQwc4WG6Eh2K_mn8OOEgDZZyAcKgBAPTrGjw4Y4PxrhK7mtnA16wFHcc9U9Um amount=1 currency=XTR payload=admin_stars_topup:2ef5555cdd114dacbdcfbd58564bad7f:1
+[2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136842 is handled. Duration 6 ms by bot id=7557954606

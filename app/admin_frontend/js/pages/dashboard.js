@@ -1,6 +1,6 @@
 const SCRIPT_PARTS = [
-  "/admin/js/pages/dashboard/dashboard-01.js?v=6",
-  "/admin/js/pages/dashboard/dashboard-02.js?v=8",
+  "/admin/js/pages/dashboard/dashboard-01.js?v=7",
+  "/admin/js/pages/dashboard/dashboard-02.js?v=9",
 ];
 
 if (!window.dashboard_loaded) {

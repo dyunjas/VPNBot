@@ -3725,3 +3725,7 @@ aiogram.exceptions.TelegramNetworkError: HTTP Client says - ServerDisconnectedEr
 [2026-07-11 20:41:24] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
 [2026-07-11 20:41:24] [INFO] root: Bot polling cancelled
 [2026-07-11 20:41:24] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-11 23:59:24] [INFO] aiogram.dispatcher: Start polling
+[2026-07-11 23:59:25] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136841 is handled. Duration 613 ms by bot id=7557954606
+[2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136842 is handled. Duration 6 ms by bot id=7557954606

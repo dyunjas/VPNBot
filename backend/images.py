@@ -1,3 +1,3 @@
-MAIN_MENU_IMG = "https://ibb.co/C505D3w5"
-SUBSCRIPTION_IMG = "https://ibb.co/zjKG8k3"
-PROFILE_IMG = "https://ibb.co/Kx7VjhgZ"
+MAIN_MENU_IMG = "https://ibb.co/gL2DkPNS"
+SUBSCRIPTION_IMG = "https://ibb.co/PZ67bZqk"
+PROFILE_IMG = "https://ibb.co/XkzJhmhy"

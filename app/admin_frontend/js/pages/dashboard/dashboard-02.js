@@ -205,6 +205,39 @@ function renderMaintenanceCard(state) {
   });
 }
 
+
+
+function bindStarsTopupControls() {
+  const button = q("stars_invoice_create");
+  if (!button) return;
+
+  button.addEventListener("click", async (event) => {
+    const amount = Number(q("stars_invoice_amount")?.value || "0");
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Введите количество Telegram Stars");
+      return;
+    }
+
+    await withButtonLoading(event.currentTarget, async () => {
+      const result = await api("/api/admin/system/stars-invoice", {
+        method: "POST",
+        body: JSON.stringify({ amount: Math.floor(amount) }),
+      });
+
+      const invoiceUrl = result.invoice_url || "";
+      q("stars_invoice_result").innerHTML = invoiceUrl
+        ? `
+          <div class="dashboard-list" style="margin-top:10px">
+            <div><span>Инвойс</span><b>${safeText(result.amount)} Stars</b></div>
+            <div><span>Ссылка</span><b><a href="${safeText(invoiceUrl)}" target="_blank" rel="noopener noreferrer">Открыть оплату</a></b></div>
+          </div>
+        `
+        : "Инвойс создан, но ссылка не получена";
+      showToast("Stars-инвойс создан", "success");
+    }).catch((error) => alert(error.message));
+  });
+}
+
 async function initDashboardPage() {
   if (!(await ensureAuthOrRedirect())) return;
   renderShell({
@@ -241,6 +274,20 @@ async function initDashboardPage() {
           </div>
         </div>
         <div id="maintenance_panel">Загрузка...</div>
+      </div>
+
+      <div class="card dashboard-card dashboard-section-card">
+        <div class="dashboard-section-card__head">
+          <div>
+            <div class="dashboard-section-card__eyebrow">Telegram Stars</div>
+            <h3>Пополнение баланса бота</h3>
+          </div>
+        </div>
+        <div class="toolbar">
+          <input id="stars_invoice_amount" type="number" min="1" step="1" value="100" placeholder="Количество Stars" />
+          <button id="stars_invoice_create" class="btn-primary" type="button">Создать инвойс</button>
+        </div>
+        <div id="stars_invoice_result"></div>
       </div>
       <div class="dashboard-charts-grid">
         ${chartCardHtml({
@@ -283,6 +330,7 @@ async function initDashboardPage() {
     `,
   });
 
+  bindStarsTopupControls();
   bindChartPeriodSwitch();
   await loadDashboard();
 }

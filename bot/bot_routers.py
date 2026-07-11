@@ -13,7 +13,7 @@ from bot.navigation.additional_menu.referral import withdraw_balance
 from bot.vpn_subscription import subscription_url
 from bot.vpn_subscription import devices
 from bot.vpn_subscription import traffic_purchase
-from bot.payments import cryptobot_payment
+from bot.payments import cryptobot_payment, stars_topup
 
 router = Router()
 
@@ -27,6 +27,7 @@ router.include_router(add_funds.router)
 router.include_router(platega_payment.router)
 router.include_router(pally_payment.router)
 router.include_router(cryptobot_payment.router)
+router.include_router(stars_topup.router)
 router.include_router(transaction.router)
 router.include_router(referral.router)
 router.include_router(withdraw_balance.router)
