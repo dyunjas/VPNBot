@@ -36,6 +36,7 @@ from backend.services import (
 )
 from backend.services.exceptions import (
     BannedUser,
+    NotEnoughReferralBalance,
     PaymentNotConfirmed,
     PlanNotFound,
     PromocodeAlreadyUsed,
@@ -119,6 +120,10 @@ class ApplyPromocodePayload(InitPayload):
 class CreateWithdrawalPayload(InitPayload):
     amount: int
     method: str
+
+
+class ReferralTransferPayload(InitPayload):
+    amount: int
 
 
 def _jwt_secret() -> str:
@@ -329,6 +334,8 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=409, detail="Продление доступно за 3 дня до окончания подписки")
     if isinstance(e, BannedUser):
         return HTTPException(status_code=403, detail="banned")
+    if isinstance(e, NotEnoughReferralBalance):
+        return HTTPException(status_code=402, detail="Недостаточно реферального баланса")
     if isinstance(e, PurchaseInProgress):
         return HTTPException(status_code=409, detail="Покупка уже обрабатывается")
     if isinstance(e, TransactionNotFound):

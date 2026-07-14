@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const message = normalizeLoginError(err);
       setInlineError(message, "error");
       const raw = String(err?.message || err || "").toLowerCase();
-      const invalid = raw.includes("login") || raw.includes("password") || raw.includes("credentials") || raw.includes("unauthorized");
+      const invalid = raw.includes("login") || raw.includes("password") || raw.includes("credentials") || raw.includes("unauthorized") || raw.includes("логин") || raw.includes("пароль");
       setFieldState(loginInput?.closest(".login-field"), invalid);
       setFieldState(passwordInput?.closest(".login-field"), invalid);
     });

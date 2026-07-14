@@ -6,6 +6,7 @@ from aiogram.types import LabeledPrice
 from ..common import *
 from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
+from backend.core.business_config import list_business_settings, update_business_settings
 from backend.core.maintenance import (
     MAINTENANCE_MESSAGE,
     disable_maintenance,
@@ -24,6 +25,10 @@ class MaintenanceUpdatePayload(BaseModel):
 
 class StarsInvoicePayload(BaseModel):
     amount: int = Field(gt=0, le=100000)
+
+
+class BusinessSettingsPayload(BaseModel):
+    values: dict[str, str | int | float]
 
 
 @router.get("/system/maintenance", dependencies=[Depends(require_admin_auth)])
@@ -80,3 +85,19 @@ async def admin_system_stars_invoice(payload: StarsInvoicePayload):
         "invoice_url": invoice_url,
         "payload": invoice_payload,
     }
+
+
+@router.get("/system/business-settings", dependencies=[Depends(require_admin_auth)])
+async def admin_system_business_settings():
+    return {"ok": True, "items": list_business_settings()}
+
+
+@router.put("/system/business-settings", dependencies=[Depends(require_admin_auth)])
+async def admin_system_business_settings_update(payload: BusinessSettingsPayload):
+    try:
+        items = update_business_settings(payload.values)
+    except KeyError as exc:
+        raise HTTPException(status_code=400, detail=f"unknown setting: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"ok": True, "items": items}

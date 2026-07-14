@@ -3,7 +3,7 @@ async function bootstrap() {
     setLoader(true, "Загружаем данные...");
     initEvents();
     const initialView = getInitialViewFromUrl();
-    const allowedViews = new Set(["home", "plans", "devices", "profile", "settings"]);
+    const allowedViews = new Set(["home", "plans", "devices", "profile", "referral", "settings"]);
     const targetView = allowedViews.has(initialView) ? initialView : "home";
 
     await Promise.all([
@@ -36,4 +36,3 @@ async function bootstrap() {
 }
 
 if (CAN_BOOT) bootstrap();
-

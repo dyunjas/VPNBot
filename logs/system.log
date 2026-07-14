@@ -8862,3 +8862,430 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-11 23:59:10] [INFO] root: Settings successfully loaded from .env
 [2026-07-11 23:59:24] [INFO] root: Settings successfully loaded from .env
 [2026-07-11 23:59:24] [INFO] root: Bot started
+[2026-07-14 12:33:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:37:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:37:50] [INFO] root: Database tables initialized
+[2026-07-14 12:37:50] [INFO] root: Database connection successful
+[2026-07-14 12:38:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:38:30] [INFO] root: Bot started
+[2026-07-14 12:39:11] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:41:32] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 12:41:44] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 12:46:02] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:47:00] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:48:32] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 12:48:32] [INFO] root: Bot stopped
+[2026-07-14 12:48:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:48:41] [INFO] root: Bot started
+[2026-07-14 12:48:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:48:49] [INFO] root: Database tables initialized
+[2026-07-14 12:48:49] [INFO] root: Database connection successful
+[2026-07-14 12:49:35] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:53:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:53:56] [INFO] root: Database tables initialized
+[2026-07-14 12:53:56] [INFO] root: Database connection successful
+[2026-07-14 12:53:56] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 12:53:56] [INFO] root: Bot stopped
+[2026-07-14 12:54:02] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:54:03] [INFO] root: Bot started
+[2026-07-14 12:54:32] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:56:12] [ERROR] root: [test][error_reporter] delivery_check tg_id=1237947229
+[2026-07-14 12:58:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 12:58:51] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 13:00:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 13:00:25] [INFO] root: Bot stopped
+[2026-07-14 13:00:32] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:32] [INFO] root: Bot started
+[2026-07-14 13:00:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:40] [INFO] root: Database tables initialized
+[2026-07-14 13:00:40] [INFO] root: Database connection successful
+[2026-07-14 13:00:51] [ERROR] root: Bot crashed: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1550, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 72, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 135, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 539, in _wait_for_data
+    await self._waiter
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\proactor_events.py", line 286, in _loop_reading
+    length = fut.result()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 463, in finish_socket_func
+    return ov.getresult()
+           ~~~~~~~~~~~~^^
+ConnectionAbortedError: [WinError 1236] Подключение к сети было разорвано локальной системой
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 789, in _request
+    raise ClientOSError(*exc.args) from exc
+aiohttp.client_exceptions.ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}") from e
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:00:51] [INFO] root: Bot stopped
+[2026-07-14 13:01:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:01:01] [INFO] root: Bot started
+[2026-07-14 13:01:34] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 13:03:47] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:03:58] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 13:07:36] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 13:07:36] [INFO] root: Bot stopped
+[2026-07-14 13:07:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:07:43] [INFO] root: Bot started
+[2026-07-14 13:07:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:07:50] [INFO] root: Database tables initialized
+[2026-07-14 13:07:50] [INFO] root: Database connection successful
+[2026-07-14 13:08:46] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 13:10:20] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:10:32] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 19:17:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:40:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:53:57] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 19:53:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:53:57] [INFO] root: Bot stopped
+[2026-07-14 19:53:59] [INFO] root: Database tables initialized
+[2026-07-14 19:53:59] [INFO] root: Database connection successful
+[2026-07-14 19:54:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:54:04] [INFO] root: Bot started
+[2026-07-14 19:56:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:59:55] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 19:59:55] [INFO] root: Bot stopped
+[2026-07-14 20:00:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:00:02] [INFO] root: Bot started
+[2026-07-14 20:00:10] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:00:10] [INFO] root: Database tables initialized
+[2026-07-14 20:00:10] [INFO] root: Database connection successful
+[2026-07-14 20:12:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:14:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:31] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:32] [INFO] root: Bot started
+[2026-07-14 20:16:33] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:38] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:43] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:44] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:49] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 20:16:50] [INFO] root: Bot stopped
+[2026-07-14 20:16:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:59] [INFO] root: Database tables initialized
+[2026-07-14 20:16:59] [INFO] root: Database connection successful
+[2026-07-14 20:17:00] [INFO] aiogram.dispatcher: Connection established (tryings = 3, bot id = 7557954606)
+[2026-07-14 20:17:31] [INFO] root: Settings successfully loaded from .env

@@ -174,6 +174,7 @@ function menuIcon(kind) {
     partner: "<path d='M9 7h6a3 3 0 0 1 0 6H9a3 3 0 0 1 0-6Z'/><path d='M7 12h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6Z'/>",
     promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
     mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='2'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
+    settings: "<circle cx='12' cy='12' r='3'/><path d='M19 12a7 7 0 0 0-.1-1l2-1.4l-2-3.4l-2.4.9a7 7 0 0 0-1.7-1l-.4-2.5h-4.8l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-.9l-2 3.4l2 1.4a7 7 0 0 0 0 2l-2 1.4l2 3.4l2.4-.9a7 7 0 0 0 1.7 1l.4 2.5h4.8l.4-2.5a7 7 0 0 0 1.7-1l2.4.9l2-3.4l-2-1.4a7 7 0 0 0 .1-1z'/>",
     logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7A1.5 1.5 0 0 1 7.5 5.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
   const icon = map[kind] || map.overview;

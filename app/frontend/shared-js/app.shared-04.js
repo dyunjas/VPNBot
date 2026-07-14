@@ -203,6 +203,7 @@ function initEvents() {
     renderWithdrawals(state.withdrawals);
   });
   $("btn-withdraw-create")?.addEventListener("click", createWithdrawal);
+  $("btn-ref-transfer")?.addEventListener("click", transferReferralBalance);
   $("btn-open-support")?.addEventListener("click", () => {
     const supportUrl = "https://t.me/LunetVPNSupport";
     tg?.openTelegramLink?.(supportUrl);

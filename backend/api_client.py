@@ -183,6 +183,13 @@ class BotApiClient:
     async def get_referral_info(self, *, tg_id: int) -> dict[str, Any]:
         return await self._request_json("GET", f"/api/users/by-tg/{tg_id}/referral")
 
+    async def transfer_referral_balance(self, *, tg_id: int, amount: int) -> dict[str, Any]:
+        return await self._request_json(
+            "POST",
+            f"/api/users/by-tg/{tg_id}/referral/transfer",
+            json={"amount": amount},
+        )
+
     async def create_withdrawal(self, *, tg_id: int, amount: int, method: str) -> dict[str, Any]:
         return await self._request_json(
             "POST",
@@ -262,7 +269,7 @@ class BotApiClient:
             json={"provider_transaction_id": provider_transaction_id},
         )
 
-    async def create_crypto_invoice(self, *, tg_id: int, amount_rub: int, asset: str = "USDT", description: str | None = None, expires_in: int | None = 900) -> dict[str, Any]:
+    async def create_crypto_invoice(self, *, tg_id: int, amount_rub: int, asset: str = "USDT", description: str | None = None, expires_in: int | None = None) -> dict[str, Any]:
         return await self._request_json(
             "POST",
             f"/api/users/by-tg/{tg_id}/payments/crypto",
@@ -281,7 +288,7 @@ class BotApiClient:
             json={"invoice_id": invoice_id},
         )
 
-    async def create_pally_payment(self, *, tg_id: int, amount: float, description: str | None = None, return_url: str | None = None, failed_url: str | None = None, ttl: int = 600) -> dict[str, Any]:
+    async def create_pally_payment(self, *, tg_id: int, amount: float, description: str | None = None, return_url: str | None = None, failed_url: str | None = None, ttl: int | None = None) -> dict[str, Any]:
         return await self._request_json(
             "POST",
             f"/api/users/by-tg/{tg_id}/payments/pally",

@@ -37,9 +37,6 @@ from backend.services.exceptions import (
     UserNotFound,
 )
 
-MIN_WITHDRAW_AMOUNT = 500
-
-
 def _bot_token() -> str:
     token = (settings.BOT_API_TOKEN or "").strip()
     if not token:
@@ -100,6 +97,10 @@ class AutoRenewPayload(BaseModel):
 class WithdrawalPayload(BaseModel):
     amount: int
     method: str
+
+
+class ReferralTransferPayload(BaseModel):
+    amount: int
 
 
 class PromocodePayload(BaseModel):

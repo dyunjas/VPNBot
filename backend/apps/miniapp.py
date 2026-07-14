@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from backend.apps.common import create_fastapi_app, mount_frontend_assets, proxy_api_request, register_legal_routes, render_shell
 from backend.core.config import settings
 
-MINIAPP_BUILD = "20260710-3003"
+MINIAPP_BUILD = "20260714-1903"
 
 
 def create_app():

@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.business_config import get_business_int
 from backend.core.logger_config import logger
 from backend.database.models import SubStatus, Subscription
 from backend.repositories.subscription_repository import SubscriptionRepository
@@ -164,7 +165,8 @@ class SubscriptionService:
             if end and end > now:
                 time_left = end - now
 
-                if time_left > timedelta(days=3):
+                renewal_window_days = get_business_int("SUBSCRIPTION_RENEWAL_WINDOW_DAYS")
+                if time_left > timedelta(days=renewal_window_days):
                     logger.warning(
                         "[biz][subscription] activate_too_early user_id=%s plan_id=%s seconds_left=%s",
                         user_id,
@@ -172,7 +174,7 @@ class SubscriptionService:
                         int(time_left.total_seconds()),
                     )
                     raise TooEarlyToRenew(
-                        "Subscription can ony be renewed within 3 days before expiration"
+                        f"Subscription can only be renewed within {renewal_window_days} days before expiration"
                     )
 
         if not sub:
@@ -198,6 +200,8 @@ class SubscriptionService:
 
         else:
             end = sub.current_period_end
+            previous_plan = await self.sub_repo.get_plan_by_id(int(sub.plan_id))
+            previous_plan_gb = Decimal(getattr(previous_plan, "gb_limit", 0) or 0) if previous_plan else Decimal(0)
 
             if end and end.tzinfo is None:
                 end = end.replace(tzinfo=timezone.utc)
@@ -220,13 +224,25 @@ class SubscriptionService:
                 next_renewal_at=end,
             )
             await self.session.flush()
+            if previous_plan_gb > 0:
+                await self.topup_repo.add_topup(subscription_id=sub.id, gb=previous_plan_gb)
+                await self.activity_service.log_user_event(
+                    user_id=user_id,
+                    category="traffic",
+                    action="traffic_added",
+                    source="system",
+                    traffic_gb=previous_plan_gb,
+                    subscription_id=sub.id,
+                    note="Начисление трафика за продление подписки",
+                )
             logger.info(
-                "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_limit=%s",
+                "[biz][subscription] renewed user_id=%s subscription_id=%s plan_id=%s period_end=%s gb_limit=%s rollover_gb=%s",
                 user_id,
                 sub.id,
                 plan.id,
                 end,
                 plan.gb_limit,
+                previous_plan_gb,
             )
 
         await self._reset_user_traffic_safe(user_id=user_id)

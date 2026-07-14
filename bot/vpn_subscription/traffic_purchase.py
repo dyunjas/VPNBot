@@ -1,14 +1,16 @@
+from decimal import Decimal, ROUND_UP
+
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from backend.core.business_config import get_business_decimal, get_business_int
 from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import InsufficientBalance, SubscriptionNotFound, UserNotFound
 from backend.states import TrafficPurchaseStates
 
 router = Router()
-TRAFFIC_PRICE_PER_GB_RUB = 2
 
 
 def _buy_traffic_confirm_kb():
@@ -46,8 +48,8 @@ async def buy_traffic_start(
 
     text = (
         "<b>Докупка трафика</b>\n\n"
-        "Введите, сколько ГБ хотите докупить (целое число, минимум 1).\n"
-        f"Цена: <b>{TRAFFIC_PRICE_PER_GB_RUB} RUB за 1 GB</b>.\n"
+        f"Введите, сколько ГБ хотите докупить (целое число, минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).\n"
+        f"Цена: <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 GB</b>.\n"
         "Докупленный трафик переносится между месяцами и продлениями."
     )
     media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
@@ -60,13 +62,14 @@ async def buy_traffic_start(
 async def buy_traffic_enter_gb(message: Message, state: FSMContext):
     try:
         gb = int((message.text or "").strip())
-        if gb < 1:
+        min_gb = get_business_int("MIN_TRAFFIC_PURCHASE_GB")
+        if gb < min_gb:
             raise ValueError
     except ValueError:
-        await message.answer("Введите целое число ГБ (минимум 1).")
+        await message.answer(f"Введите целое число ГБ (минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).")
         return
 
-    total = gb * TRAFFIC_PRICE_PER_GB_RUB
+    total = int((Decimal(gb) * get_business_decimal("TRAFFIC_PRICE_PER_GB_RUB")).to_integral_value(rounding=ROUND_UP))
     await state.update_data(traffic_gb=gb, traffic_price=total)
     await state.set_state(TrafficPurchaseStates.waiting_for_confirmation)
 

@@ -2,6 +2,8 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+from backend.core.error_reporter import TelegramErrorReportHandler
+
 LOG_DIR = "logs"
 MAX_BYTES = 10_000_000
 BACKUP_COUNT = 5
@@ -142,6 +144,10 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
 console_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
 logger.addHandler(console_handler)
+
+telegram_error_handler = TelegramErrorReportHandler()
+telegram_error_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
+logger.addHandler(telegram_error_handler)
 
 # Ensure aiogram operational logs are emitted to handlers.
 logging.getLogger("aiogram").setLevel(logging.INFO)

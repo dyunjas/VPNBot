@@ -1,11 +1,9 @@
 ﻿from fastapi import APIRouter
 
 from ..common import *
+from backend.core.business_config import get_business_int, list_business_settings
 
 router = APIRouter()
-
-MIN_WITHDRAW_AMOUNT = 500
-
 
 @router.post("/devices")
 async def mini_devices(payload: InitPayload):
@@ -86,6 +84,7 @@ async def mini_referral_info(payload: InitPayload):
                 "balance": int(account.referral_balance or 0),
                 "percent": int(account.referral_percent or 0),
             },
+            "business_settings": {item["key"]: item["value"] for item in list_business_settings()},
         }
 
 
@@ -97,8 +96,9 @@ async def mini_referral_withdraw(payload: CreateWithdrawalPayload):
     amount = int(payload.amount or 0)
     method = (payload.method or "").strip()
 
-    if amount < MIN_WITHDRAW_AMOUNT:
-        raise HTTPException(400, f"Минимальная сумма вывода: {MIN_WITHDRAW_AMOUNT} RUB")
+    min_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
+    if amount < min_amount:
+        raise HTTPException(400, f"Минимальная сумма вывода: {min_amount} RUB")
     if len(method) < 8:
         raise HTTPException(400, "Укажите способ вывода и реквизиты получателя")
 
@@ -126,6 +126,29 @@ async def mini_referral_withdraw(payload: CreateWithdrawalPayload):
             },
             "message": "Заявка на вывод создана и передана на обработку",
         }
+
+
+@router.post("/referral/transfer")
+async def mini_referral_transfer(payload: ReferralTransferPayload):
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = tg_user["id"]
+    amount = int(payload.amount or 0)
+
+    min_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+    if amount < min_amount:
+        raise HTTPException(400, f"Минимальная сумма перевода: {min_amount} RUB")
+
+    async with async_session() as session:
+        user = await _get_user_or_404(session, tg_id)
+        try:
+            result = await ReferralService(session).transfer_to_user_balance(
+                user_id=user.id,
+                amount=amount,
+            )
+        except Exception as e:
+            raise _map_service_error(e)
+
+        return {"ok": True, **result}
 
 
 @router.post("/referral/withdrawals")

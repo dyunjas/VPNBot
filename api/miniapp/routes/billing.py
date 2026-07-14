@@ -1,6 +1,7 @@
 ﻿from fastapi import APIRouter
 
 from ..common import *
+from backend.core.business_config import get_business_int
 
 router = APIRouter()
 
@@ -144,7 +145,7 @@ async def mini_balance_topup(payload: TopupPayload):
                 amount_rub=int(payload.amount),
                 asset=(payload.asset or "USDT"),
                 description=f"Пополнение баланса на {payload.amount} RUB",
-                expires_in=900,
+                expires_in=get_business_int("CRYPTO_INVOICE_EXPIRES_IN_SEC"),
             )
 
             payment_url = (

@@ -293,6 +293,58 @@
           </div>
         </section>
 
+        <section class="view" id="view-referral">
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Реферальная система</h2>
+                <p class="mini-note">Приглашайте пользователей и переводите начисления на основной баланс.</p>
+              </div>
+            </div>
+            <div class="sub-link-wrap">
+              <div id="ref-link" class="mono link">Ссылка загружается...</div>
+              <div class="row">
+                <button id="btn-copy-ref" class="btn" type="button">Скопировать</button>
+                <button id="btn-open-ref" class="btn btn--ghost" type="button">Открыть</button>
+              </div>
+            </div>
+            <p id="ref-extra" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Перевод на основной баланс</h2>
+                <p class="mini-note">Минимальная сумма перевода — 50 ₽. Средства сразу появятся на основном балансе.</p>
+              </div>
+            </div>
+            <div class="row">
+              <input id="ref-transfer-amount" class="input" inputmode="numeric" placeholder="Сумма в рублях" />
+              <button id="btn-ref-transfer" class="btn" type="button">Перевести</button>
+            </div>
+            <p id="ref-transfer-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Вывод средств</h2>
+                <p class="mini-note">Создайте заявку на внешний вывод реферального баланса.</p>
+              </div>
+            </div>
+            <div class="row">
+              <input id="withdraw-amount" class="input" inputmode="numeric" placeholder="Сумма" />
+              <input id="withdraw-method" class="input" placeholder="Способ и реквизиты" />
+              <button id="btn-withdraw-create" class="btn" type="button">Создать заявку</button>
+            </div>
+            <p id="withdraw-hint" class="muted"></p>
+            <div id="withdraw-list" class="list">Загрузка...</div>
+            <div class="row row--more">
+              <button id="btn-more-withdraw" class="btn btn--ghost" type="button" style="display:none;">Показать ещё</button>
+            </div>
+          </div>
+        </section>
+
         <section class="view" id="view-settings">
           <div class="card glass">
             <div class="card-head">

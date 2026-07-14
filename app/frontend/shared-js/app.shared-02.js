@@ -251,6 +251,10 @@ async function loadStatus() {
 
 async function loadReferral() {
   const data = await api("/api/referral/info");
+  state.businessSettings = {
+    ...(state.businessSettings || {}),
+    ...(data.business_settings || {}),
+  };
   state.referralUrl = data.referral_url || null;
   $("ref-link").textContent = state.referralUrl || "Ссылка недоступна";
 

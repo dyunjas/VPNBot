@@ -4,6 +4,10 @@ from backend.core.logger_config import logger
 
 class Settings(BaseSettings):
     BOT_TOKEN: str
+    ERROR_REPORT_BOT_TOKEN: str | None = None
+    ERROR_REPORT_CHAT_ID: int = -1003921556376
+    ERROR_REPORT_TOPIC_ID: int = 960
+    ERROR_REPORT_MAX_BYTES: int = 32_000
     BOT_API_TOKEN: str | None = None
     API_BASE_URL: str | None = None
     POSTGRES_USER: str
@@ -56,6 +60,14 @@ class Settings(BaseSettings):
     UVICORN_FORWARDED_ALLOW_IPS: str = "127.0.0.1"
     FRONTEND_PROXY_TIMEOUT_SEC: int = 60
     MINIAPP_INITDATA_MAX_AGE_SEC: int = 3600
+    TRAFFIC_PRICE_PER_GB_RUB: str = "2"
+    MIN_TRAFFIC_PURCHASE_GB: int = 1
+    MIN_WITHDRAW_AMOUNT_RUB: int = 500
+    MIN_REFERRAL_TRANSFER_AMOUNT_RUB: int = 50
+    REFERRAL_BONUS_HOURS: int = 24
+    SUBSCRIPTION_RENEWAL_WINDOW_DAYS: int = 3
+    CRYPTO_INVOICE_EXPIRES_IN_SEC: int = 900
+    PALLY_INVOICE_TTL_SEC: int = 600
 
     model_config = SettingsConfigDict(
         env_file=".env",

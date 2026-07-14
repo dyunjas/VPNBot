@@ -63,7 +63,7 @@ class PallyPaymentAPI:
         description: str,
         success_url: Optional[str] = None,
         fail_url: Optional[str] = None,
-        ttl: int = 600,
+        ttl: int,
     ) -> Dict[str, Any]:
         data = OrderedDict(
             [

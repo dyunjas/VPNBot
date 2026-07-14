@@ -7,6 +7,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.logger_config import logger
+from backend.core.business_config import get_business_decimal, get_business_int
 from backend.repositories.user_repository import UserRepository
 from backend.repositories.transaction_repository import TransactionRepository
 
@@ -29,8 +30,6 @@ from backend.services.exceptions import (
 )
 
 USDT_RATE = Decimal("79")
-TRAFFIC_PRICE_PER_GB_RUB = Decimal("2")
-MIN_TRAFFIC_PURCHASE_GB = 1
 
 
 class BillingService:
@@ -222,7 +221,7 @@ class BillingService:
         *,
         asset: str = "USDT",
         description: str | None = None,
-        expires_in: int | None = 900,
+        expires_in: int | None = None,
     ) -> dict:
         logger.info(
             "[biz][billing] crypto_create_requested user_id=%s amount_rub=%s asset=%s",
@@ -247,7 +246,7 @@ class BillingService:
             asset=asset,
             description=description or f"Top up {amount_rub} RUB",
             payload=payload,
-            expires_in=expires_in,
+            expires_in=expires_in or get_business_int("CRYPTO_INVOICE_EXPIRES_IN_SEC"),
         )
 
         await self.tx_repo.create(
@@ -325,13 +324,13 @@ class BillingService:
         description: str | None = None,
         return_url: str | None = None,
         failed_url: str | None = None,
-        ttl: int = 600,
+        ttl: int | None = None,
     ) -> dict:
         logger.info(
             "[biz][billing] pally_create_requested user_id=%s amount=%s ttl=%s",
             user_id,
             amount,
-            ttl,
+            ttl or get_business_int("PALLY_INVOICE_TTL_SEC"),
         )
         user = await self.user_repo.get_by_id(user_id)
         if not user:
@@ -347,7 +346,7 @@ class BillingService:
             description=description or f"Top up {amount} RUB",
             success_url=return_url,
             fail_url=failed_url,
-            ttl=ttl,
+            ttl=ttl or get_business_int("PALLY_INVOICE_TTL_SEC"),
         )
 
         if payment.get("error"):
@@ -540,7 +539,8 @@ class BillingService:
             if end and end.tzinfo is None:
                 end = end.replace(tzinfo=timezone.utc)
 
-            if end and end > now and (end - now) > timedelta(days=3):
+            renewal_window_days = get_business_int("SUBSCRIPTION_RENEWAL_WINDOW_DAYS")
+            if end and end > now and (end - now) > timedelta(days=renewal_window_days):
                 logger.warning(
                     "[biz][billing] buy_subscription_too_early user_id=%s plan_id=%s seconds_left=%s",
                     user_id,
@@ -548,7 +548,7 @@ class BillingService:
                     int((end - now).total_seconds()),
                 )
                 raise TooEarlyToRenew(
-                    "Subscription can ony be renewed within 3 days before expiration"
+                    f"Subscription can only be renewed within {renewal_window_days} days before expiration"
                 )
         except SubscriptionNotFound:
             pass
@@ -623,10 +623,12 @@ class BillingService:
             user_id,
             gb,
         )
-        if gb < MIN_TRAFFIC_PURCHASE_GB:
-            raise ValueError(f"Minimum traffic purchase is {MIN_TRAFFIC_PURCHASE_GB} GB")
+        min_traffic_purchase_gb = get_business_int("MIN_TRAFFIC_PURCHASE_GB")
+        if gb < min_traffic_purchase_gb:
+            raise ValueError(f"Minimum traffic purchase is {min_traffic_purchase_gb} GB")
 
-        price = (Decimal(gb) * TRAFFIC_PRICE_PER_GB_RUB).to_integral_value(rounding=ROUND_UP)
+        price_per_gb = get_business_decimal("TRAFFIC_PRICE_PER_GB_RUB")
+        price = (Decimal(gb) * price_per_gb).to_integral_value(rounding=ROUND_UP)
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")

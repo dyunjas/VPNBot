@@ -13,6 +13,7 @@ from api.bot.common import (
     get_user_service,
     require_bot_auth,
 )
+from backend.core.business_config import get_business_int
 from backend.services import BillingService, TransactionService
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
@@ -63,7 +64,7 @@ async def create_crypto_invoice(tg_id: int, payload: PaymentPayload, user_servic
     user = await _get_user_or_404(user_service, tg_id)
     billing = BillingService(user_service.session)
     try:
-        invoice = await billing.create_crypto_invoice(user_id=user.id, amount_rub=int(payload.amount), asset=payload.asset or "USDT", description=payload.description, expires_in=payload.expires_in or 900)
+        invoice = await billing.create_crypto_invoice(user_id=user.id, amount_rub=int(payload.amount), asset=payload.asset or "USDT", description=payload.description, expires_in=payload.expires_in or get_business_int("CRYPTO_INVOICE_EXPIRES_IN_SEC"))
     except Exception as e:
         raise _map_service_error(e)
     finally:
@@ -103,7 +104,7 @@ async def create_pally_payment(tg_id: int, payload: PaymentPayload, user_service
     user = await _get_user_or_404(user_service, tg_id)
     billing = BillingService(user_service.session)
     try:
-        payment = await billing.create_pally_payment(user_id=user.id, amount=payload.amount, description=payload.description, return_url=payload.return_url, failed_url=payload.failed_url, ttl=payload.ttl or 600)
+        payment = await billing.create_pally_payment(user_id=user.id, amount=payload.amount, description=payload.description, return_url=payload.return_url, failed_url=payload.failed_url, ttl=payload.ttl or get_business_int("PALLY_INVOICE_TTL_SEC"))
     except Exception as e:
         raise _map_service_error(e)
     finally:

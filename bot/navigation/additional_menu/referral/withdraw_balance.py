@@ -2,18 +2,127 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.fsm.context import FSMContext
 
+from backend.core.business_config import get_business_int
 from backend.images import PROFILE_IMG
-from backend.states import WithdrawBalance
+from backend.states import TransferReferralBalance, WithdrawBalance
 
 from bot.navigation.additional_menu.referral.keyboards import (
     back_referral_kb,
+    transfer_confirm_kb,
     withdraw_confirm_kb,
 )
 
 router = Router()
 
 
-MIN_WITHDRAW_AMOUNT = 500
+@router.callback_query(F.data == "transfer_referral_balance")
+async def transfer_referral_balance_start(callback: CallbackQuery, state: FSMContext, bot_api):
+    try:
+        info = await bot_api.get_referral_info(tg_id=callback.from_user.id)
+        referral = info.get("referral") if isinstance(info, dict) else {}
+    except Exception:
+        await callback.message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
+        )
+        return
+
+    balance = int(referral.get("balance") or 0)
+    min_transfer_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+    text = (
+        "<b>Перевод реферального баланса</b>\n\n"
+        f"Доступно: <b>{balance} RUB</b>\n"
+        f"Минимальная сумма перевода: <b>{min_transfer_amount} RUB</b>\n\n"
+        "Введите сумму, которую хотите перевести на основной баланс:"
+    )
+    media = InputMediaPhoto(media=PROFILE_IMG, caption=text)
+    await callback.message.edit_media(media=media, reply_markup=back_referral_kb())
+    await state.set_state(TransferReferralBalance.waiting_for_amount)
+    await callback.answer()
+
+
+@router.message(TransferReferralBalance.waiting_for_amount)
+async def transfer_referral_balance_amount(message: Message, state: FSMContext, bot_api):
+    try:
+        amount = int((message.text or "").strip())
+        if amount <= 0:
+            raise ValueError
+    except ValueError:
+        await message.answer_photo(
+            photo=PROFILE_IMG,
+            caption="Введите целое положительное число.",
+            reply_markup=back_referral_kb(),
+        )
+        return
+
+    min_transfer_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+    if amount < min_transfer_amount:
+        await message.answer_photo(
+            photo=PROFILE_IMG,
+            caption=f"Минимальная сумма перевода — <b>{min_transfer_amount} RUB</b>.",
+            reply_markup=back_referral_kb(),
+        )
+        return
+
+    await state.update_data(transfer_amount=amount)
+    text = (
+        "<b>Подтвердите перевод</b>\n\n"
+        f"Сумма: <b>{amount} RUB</b>\n"
+        "Средства будут списаны с реферального баланса и сразу зачислены на основной баланс."
+    )
+    await message.answer_photo(
+        photo=PROFILE_IMG,
+        caption=text,
+        reply_markup=transfer_confirm_kb(),
+    )
+    await state.set_state(TransferReferralBalance.waiting_for_confirmation)
+
+
+@router.callback_query(TransferReferralBalance.waiting_for_confirmation, F.data == "transfer_cancel")
+async def transfer_referral_balance_cancel(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
+    content = InputMediaPhoto(media=PROFILE_IMG, caption="Перевод отменён.")
+    await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
+    await callback.answer()
+
+
+@router.callback_query(TransferReferralBalance.waiting_for_confirmation, F.data == "transfer_confirm")
+async def transfer_referral_balance_confirm(callback: CallbackQuery, state: FSMContext, bot_api):
+    data = await state.get_data()
+    amount = int(data.get("transfer_amount") or 0)
+    min_transfer_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+    if amount < min_transfer_amount:
+        await state.clear()
+        content = InputMediaPhoto(media=PROFILE_IMG, caption="Сумма перевода некорректна. Попробуйте ещё раз.")
+        await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
+        await callback.answer()
+        return
+
+    try:
+        result = await bot_api.transfer_referral_balance(
+            tg_id=callback.from_user.id,
+            amount=amount,
+        )
+    except Exception:
+        await state.clear()
+        content = InputMediaPhoto(
+            media=PROFILE_IMG,
+            caption="Недостаточно средств на реферальном балансе или баланс уже изменился. Попробуйте ещё раз.",
+        )
+        await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
+        await callback.answer()
+        return
+
+    await state.clear()
+    text = (
+        "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> "
+        "Средства переведены на основной баланс.\n\n"
+        f"Переведено: <b>{int(result.get('amount') or amount)} RUB</b>\n"
+        f"Основной баланс: <b>{int(result.get('balance') or 0)} RUB</b>\n"
+        f"Реферальный баланс: <b>{int(result.get('referral_balance') or 0)} RUB</b>"
+    )
+    content = InputMediaPhoto(media=PROFILE_IMG, caption=text)
+    await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
+    await callback.answer()
 
 
 @router.callback_query(F.data == "withdraw_balance")
@@ -28,11 +137,12 @@ async def withdraw_balance_start(callback: CallbackQuery, state: FSMContext, bot
         return
 
     balance = referral.get("balance", 0)
+    min_withdraw_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
 
     text = (
         "<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji>"
         f"Доступно для вывода: <b>{balance} RUB</b>\n"
-        f"Введите сумму вывода (минимум {MIN_WITHDRAW_AMOUNT} RUB):"
+        f"Введите сумму вывода (минимум {min_withdraw_amount} RUB):"
     )
     media = InputMediaPhoto(
         media=PROFILE_IMG,
@@ -61,11 +171,12 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
         )
         return
 
-    if amount < MIN_WITHDRAW_AMOUNT:
+    min_withdraw_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
+    if amount < min_withdraw_amount:
         text = (
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> "
-            f"Минимальная сумма вывода — <b>{MIN_WITHDRAW_AMOUNT} RUB</b>.\n"
-            f"Введите сумму не меньше {MIN_WITHDRAW_AMOUNT}:"
+            f"Минимальная сумма вывода — <b>{min_withdraw_amount} RUB</b>.\n"
+            f"Введите сумму не меньше {min_withdraw_amount}:"
         )
         await message.answer_photo(
             photo=PROFILE_IMG,
@@ -181,4 +292,3 @@ async def withdraw_balance_confirm(
     content = InputMediaPhoto(media=PROFILE_IMG, caption=text_user)
     await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
     await callback.answer()
-

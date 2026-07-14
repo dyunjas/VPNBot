@@ -33,7 +33,17 @@ class DBSessionMiddleware(BaseMiddleware):
             await self._notify_maintenance(event, data)
             return None
         except Exception:
-            logger.exception("Bot handler failed")
+            user_id = None
+            event_user = data.get("event_from_user")
+            if event_user is not None:
+                user_id = getattr(event_user, "id", None)
+            logger.exception(
+                "Bot handler failed",
+                extra={
+                    "app_context": "Telegram Bot",
+                    "telegram_user_id": user_id,
+                },
+            )
             raise
 
     async def _notify_maintenance(self, event: TelegramObject, data: Dict[str, Any]) -> None:

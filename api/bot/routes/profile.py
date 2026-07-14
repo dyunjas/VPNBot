@@ -3,13 +3,14 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 
 from api.bot.common import (
-    MIN_WITHDRAW_AMOUNT,
+    ReferralTransferPayload,
     WithdrawalPayload,
     _get_user_or_404,
     _map_service_error,
     get_user_service,
     require_bot_auth,
 )
+from backend.core.business_config import get_business_int
 from backend.services import ReferralService, TransactionService, WithdrawalService
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
@@ -46,10 +47,25 @@ async def referral_info(tg_id: int, user_service=Depends(get_user_service)):
     return {"ok": True, "referral": {"balance": int(account.referral_balance or 0), "percent": int(account.referral_percent or 0), "invited_count": int(account.invited_count or 0)}}
 
 
+@router.post("/users/by-tg/{tg_id}/referral/transfer")
+async def referral_transfer_to_balance(tg_id: int, payload: ReferralTransferPayload, user_service=Depends(get_user_service)):
+    amount = int(payload.amount or 0)
+    min_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+    if amount < min_amount:
+        raise HTTPException(status_code=400, detail=f"Минимальная сумма перевода: {min_amount} RUB")
+    user = await _get_user_or_404(user_service, tg_id)
+    try:
+        result = await ReferralService(user_service.session).transfer_to_user_balance(user_id=user.id, amount=amount)
+    except Exception as e:
+        raise _map_service_error(e)
+    return {"ok": True, **result}
+
+
 @router.post("/users/by-tg/{tg_id}/withdrawals")
 async def create_withdrawal(tg_id: int, payload: WithdrawalPayload, user_service=Depends(get_user_service)):
-    if payload.amount < MIN_WITHDRAW_AMOUNT:
-        raise HTTPException(status_code=400, detail=f"Минимальная сумма вывода: {MIN_WITHDRAW_AMOUNT} RUB")
+    min_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
+    if payload.amount < min_amount:
+        raise HTTPException(status_code=400, detail=f"Минимальная сумма вывода: {min_amount} RUB")
     user = await _get_user_or_404(user_service, tg_id)
     try:
         wd = await WithdrawalService(user_service.session).create_withdrawal(user_id=user.id, amount=payload.amount, method=payload.method)

@@ -93,6 +93,10 @@ class CreateWithdrawalPayload(InitPayload):
     method: str
 
 
+class ReferralTransferPayload(InitPayload):
+    amount: int
+
+
 def _extract_auth_date(init_data: str) -> int | None:
     try:
         params = dict(parse_qsl(init_data, keep_blank_values=True))
@@ -238,6 +242,7 @@ __all__ = [
     "BalanceCheckPayload",
     "ApplyPromocodePayload",
     "CreateWithdrawalPayload",
+    "ReferralTransferPayload",
     "_get_tg_user",
     "_get_user_or_404",
     "_map_service_error",

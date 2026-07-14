@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncIterator, Callable
@@ -10,6 +11,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from backend.core.logger_config import logger
 from backend.core.config import settings
 from backend.core.maintenance import MAINTENANCE_MESSAGE, get_maintenance_state
 from backend.database.session import check_connection, init_db
@@ -36,6 +38,8 @@ HOP_BY_HOP_HEADERS = {
     "content-length",
 }
 
+TG_ID_PATH_RE = re.compile(r"/users/by-tg/(-?\d+)(?:/|$)")
+
 
 def _read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -43,6 +47,38 @@ def _read_text(path: Path) -> str:
 
 def no_cache_html(content: str) -> HTMLResponse:
     return HTMLResponse(content=content, headers=NO_CACHE_HEADERS.copy())
+
+
+def _request_context(request: Request) -> str:
+    path = request.url.path or ""
+    if path.startswith("/api/admin"):
+        return "Admin API"
+    if path.startswith("/api/cabinet"):
+        return "Web Cabinet API"
+    if path.startswith("/api/miniapp"):
+        return "Telegram Mini App API"
+    if path.startswith("/api/users/by-tg") or path.startswith("/api/bot"):
+        return "Bot Internal API"
+    if path.startswith("/api/subscription"):
+        return "Subscription API"
+    if path.startswith("/miniapp"):
+        return "Frontend Assets"
+    if path.startswith("/admin"):
+        return "Admin Frontend"
+    if path.startswith("/cabinet"):
+        return "Web Cabinet"
+    return "API"
+
+
+def _request_telegram_user_id(request: Request) -> str | None:
+    match = TG_ID_PATH_RE.search(request.url.path or "")
+    if match:
+        return match.group(1)
+    for key in ("tg_id", "telegram_id", "telegram_user_id", "chat_id"):
+        value = request.query_params.get(key)
+        if value and value.lstrip("-").isdigit():
+            return value
+    return None
 
 
 def create_db_lifespan() -> Callable[[FastAPI], AsyncIterator[None]]:
@@ -58,7 +94,20 @@ def create_db_lifespan() -> Callable[[FastAPI], AsyncIterator[None]]:
 def apply_common_hardening(app: FastAPI) -> None:
     @app.middleware("http")
     async def add_security_headers(request: Request, call_next):
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception:
+            logger.exception(
+                "[app][http] unhandled exception method=%s path=%s query=%s",
+                request.method,
+                request.url.path,
+                request.url.query,
+                extra={
+                    "app_context": _request_context(request),
+                    "telegram_user_id": _request_telegram_user_id(request),
+                },
+            )
+            raise
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")

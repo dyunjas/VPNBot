@@ -2,14 +2,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
 from backend.core.logger_config import logger
+from backend.core.business_config import get_business_int
 from backend.repositories.referral_repository import ReferralRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.subscription_service import SubscriptionService
-from backend.services.exceptions import UserNotFound, BannedUser
+from backend.services.exceptions import UserNotFound, BannedUser, NotEnoughReferralBalance
 
-
-REF_BONUS_HOURS = 24
 
 class ReferralService:
     def __init__(self, session: AsyncSession):
@@ -72,9 +71,10 @@ class ReferralService:
         if updated:
             await self.referral_repo.increase_invited_count(referrer_id)
 
+            bonus_hours = get_business_int("REFERRAL_BONUS_HOURS")
             sub = await self.sub_service.renew_subscription(
                 user_id=referrer_id,
-                duration_hours=REF_BONUS_HOURS,
+                duration_hours=bonus_hours,
             )
 
             try:
@@ -101,7 +101,7 @@ class ReferralService:
                 "[biz][referral] referrer_attached user_id=%s referrer_id=%s bonus_hours=%s",
                 user_id,
                 referrer_id,
-                REF_BONUS_HOURS,
+                bonus_hours,
             )
             return True
 
@@ -174,3 +174,47 @@ class ReferralService:
     async def get_balance(self, user_id: int) -> int:
         account = await self.create_account(user_id)
         return account.referral_balance
+
+    async def transfer_to_user_balance(self, *, user_id: int, amount: int) -> dict[str, int]:
+        amount = int(amount or 0)
+        min_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
+        if amount < min_amount:
+            raise ValueError(f"Minimum referral transfer amount is {min_amount} RUB")
+
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+        if bool(getattr(user, "banned", False)):
+            raise BannedUser("User is banned")
+
+        account = await self.create_account(user_id)
+        updated = await self.referral_repo.decrease_balance_if_enough(
+            user_id=user_id,
+            amount=amount,
+        )
+        if not updated:
+            logger.info(
+                "[biz][referral] transfer_to_balance_insufficient user_id=%s amount=%s referral_balance=%s",
+                user_id,
+                amount,
+                int(account.referral_balance or 0),
+            )
+            raise NotEnoughReferralBalance("Not enough referral balance")
+
+        await self.user_repo.add_balance(user_id=user_id, amount=amount)
+        await self.session.commit()
+
+        fresh_user = await self.user_repo.get_by_id(user_id)
+        fresh_account = await self.referral_repo.get_account(user_id)
+        logger.info(
+            "[biz][referral] transfer_to_balance_completed user_id=%s amount=%s user_balance=%s referral_balance=%s",
+            user_id,
+            amount,
+            int(getattr(fresh_user, "balance", 0) or 0),
+            int(getattr(fresh_account, "referral_balance", 0) or 0),
+        )
+        return {
+            "amount": amount,
+            "balance": int(getattr(fresh_user, "balance", 0) or 0),
+            "referral_balance": int(getattr(fresh_account, "referral_balance", 0) or 0),
+        }

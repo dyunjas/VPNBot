@@ -1268,3 +1268,7 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-07-11 00:11:51] [INFO] root: [biz][billing] buy_subscription_completed user_id=40 subscription_id=84 plan_id=6 charged=165
 [2026-07-11 20:41:17] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
 [2026-07-11 20:41:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-14 19:56:53] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=60 user_balance=60 referral_balance=740
+[2026-07-14 20:00:40] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=50 user_balance=110 referral_balance=690
+[2026-07-14 20:01:21] [INFO] root: [biz][withdrawal] create_requested user_id=100 amount=500 method=Huingyjgfjivvuvubininonibuctft
+[2026-07-14 20:01:21] [INFO] root: [biz][withdrawal] created user_id=100 withdrawal_id=14 amount=500 method=Huingyjgfjivvuvubininonibuctft

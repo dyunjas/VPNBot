@@ -48,8 +48,6 @@ if (IS_MINIAPP_PATH) {
   loaderTextEl = loaderEl.querySelector("#loader-text");
 }
 
-const MIN_WITHDRAW_AMOUNT = 500;
-
 ["copy", "cut", "contextmenu", "selectstart", "dragstart"].forEach((evt) => {
   document.addEventListener(
     evt,
@@ -171,6 +169,10 @@ const state = {
   txVisible: 10,
   withdrawals: [],
   withdrawalsVisible: 10,
+  businessSettings: {
+    MIN_WITHDRAW_AMOUNT_RUB: 500,
+    MIN_REFERRAL_TRANSFER_AMOUNT_RUB: 50,
+  },
 };
 
 function buildCabinetUrl() {

@@ -5,6 +5,7 @@ from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
+from backend.core.business_config import get_business_decimal
 from backend.core.logger_config import logger
 from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import SubscriptionNotFound, UserNotFound
@@ -91,7 +92,7 @@ async def _build_subscription_screen(
         f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
         "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> "
         "Гигабайты списываются только на серверах белых списков. "
-        "При необходимости можно докупить трафик по цене <b>2 RUB за 1 GB</b>. "
+        f"При необходимости можно докупить трафик по цене <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 GB</b>. "
         "Остаток трафика переносится на следующий месяц.</blockquote>\n\n"
         "Если подписка уже добавлена в приложение, просто обновите ее там. "
         "Если подключаетесь впервые, откройте инструкцию ниже.\n\n"

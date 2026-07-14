@@ -26560,3 +26560,610 @@ RuntimeError: BOT_API_TOKEN is not configured
 [2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136841 is handled. Duration 613 ms by bot id=7557954606
 [2026-07-12 00:04:34] [INFO] root: [bot][stars] admin_stars_topup_paid tg_id=1237947229 charge_id=stxTV8hNxvHSu26x6NWLuBmXLX-Z5Iy6-OTfmuvj_U-qHLV0F-0KDDqOkyXmSzzalgIg05wQwc4WG6Eh2K_mn8OOEgDZZyAcKgBAPTrGjw4Y4PxrhK7mtnA16wFHcc9U9Um amount=1 currency=XTR payload=admin_stars_topup:2ef5555cdd114dacbdcfbd58564bad7f:1
 [2026-07-12 00:04:34] [INFO] aiogram.event: Update id=891136842 is handled. Duration 6 ms by bot id=7557954606
+[2026-07-14 12:33:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:37:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:37:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:37:50] [INFO] root: Database tables initialized
+[2026-07-14 12:37:50] [INFO] root: Database connection successful
+[2026-07-14 12:38:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:38:30] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:38:30] [INFO] root: Bot started
+[2026-07-14 12:38:30] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 12:38:31] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 12:38:44] [INFO] aiogram.event: Update id=891136843 is handled. Duration 1636 ms by bot id=7557954606
+[2026-07-14 12:38:47] [INFO] aiogram.event: Update id=891136844 is handled. Duration 402 ms by bot id=7557954606
+[2026-07-14 12:38:49] [INFO] aiogram.event: Update id=891136845 is handled. Duration 304 ms by bot id=7557954606
+[2026-07-14 12:39:11] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:39:13] [INFO] aiogram.event: Update id=891136846 is handled. Duration 16910 ms by bot id=7557954606
+[2026-07-14 12:40:15] [INFO] aiogram.event: Update id=891136847 is not handled. Duration 5 ms by bot id=7557954606
+[2026-07-14 12:41:32] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 12:41:32] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 12:41:44] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 12:46:02] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:46:38] [INFO] aiogram.event: Update id=891136848 is handled. Duration 1920 ms by bot id=7557954606
+[2026-07-14 12:46:39] [INFO] aiogram.event: Update id=891136849 is handled. Duration 370 ms by bot id=7557954606
+[2026-07-14 12:46:41] [INFO] aiogram.event: Update id=891136850 is handled. Duration 265 ms by bot id=7557954606
+[2026-07-14 12:47:00] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:47:01] [INFO] aiogram.event: Update id=891136851 is handled. Duration 16539 ms by bot id=7557954606
+[2026-07-14 12:48:32] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 12:48:32] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 12:48:32] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 12:48:32] [INFO] root: Bot polling cancelled
+[2026-07-14 12:48:32] [INFO] root: Bot stopped
+[2026-07-14 12:48:32] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 12:48:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:48:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:48:41] [INFO] root: Bot started
+[2026-07-14 12:48:41] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 12:48:42] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 12:48:48] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:48:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:48:49] [INFO] root: Database tables initialized
+[2026-07-14 12:48:49] [INFO] root: Database connection successful
+[2026-07-14 12:49:16] [INFO] aiogram.event: Update id=891136852 is handled. Duration 1561 ms by bot id=7557954606
+[2026-07-14 12:49:17] [INFO] aiogram.event: Update id=891136853 is handled. Duration 278 ms by bot id=7557954606
+[2026-07-14 12:49:18] [INFO] aiogram.event: Update id=891136854 is handled. Duration 449 ms by bot id=7557954606
+[2026-07-14 12:49:35] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:49:36] [INFO] aiogram.event: Update id=891136855 is handled. Duration 16565 ms by bot id=7557954606
+[2026-07-14 12:53:55] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:53:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:53:56] [INFO] root: Database tables initialized
+[2026-07-14 12:53:56] [INFO] root: Database connection successful
+[2026-07-14 12:53:56] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 12:53:56] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 12:53:56] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 12:53:56] [INFO] root: Bot polling cancelled
+[2026-07-14 12:53:56] [INFO] root: Bot stopped
+[2026-07-14 12:53:56] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 12:54:02] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 12:54:03] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:54:03] [INFO] root: Bot started
+[2026-07-14 12:54:03] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 12:54:04] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 12:54:12] [INFO] aiogram.event: Update id=891136856 is handled. Duration 1558 ms by bot id=7557954606
+[2026-07-14 12:54:14] [INFO] aiogram.event: Update id=891136857 is handled. Duration 245 ms by bot id=7557954606
+[2026-07-14 12:54:15] [INFO] aiogram.event: Update id=891136858 is handled. Duration 244 ms by bot id=7557954606
+[2026-07-14 12:54:32] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 12:54:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:54:34] [INFO] aiogram.event: Update id=891136859 is handled. Duration 16575 ms by bot id=7557954606
+[2026-07-14 12:56:12] [ERROR] root: [test][error_reporter] delivery_check tg_id=1237947229
+[2026-07-14 12:56:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:58:39] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 12:58:39] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 12:58:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 12:58:51] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 13:00:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:25] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 13:00:25] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 13:00:25] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 13:00:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:00:25] [INFO] root: Bot polling cancelled
+[2026-07-14 13:00:25] [INFO] root: Bot stopped
+[2026-07-14 13:00:25] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 13:00:32] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:00:32] [INFO] root: Bot started
+[2026-07-14 13:00:32] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 13:00:40] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:00:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:00:40] [INFO] root: Database tables initialized
+[2026-07-14 13:00:40] [INFO] root: Database connection successful
+[2026-07-14 13:00:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 13:00:51] [ERROR] root: Bot crashed: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1550, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 72, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 135, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 539, in _wait_for_data
+    await self._waiter
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\proactor_events.py", line 286, in _loop_reading
+    length = fut.result()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py", line 463, in finish_socket_func
+    return ov.getresult()
+           ~~~~~~~~~~~~^^
+ConnectionAbortedError: [WinError 1236] Подключение к сети было разорвано локальной системой
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 789, in _request
+    raise ClientOSError(*exc.args) from exc
+aiohttp.client_exceptions.ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 176, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}") from e
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:00:51] [INFO] root: Bot stopped
+[2026-07-14 13:00:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:01:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:01:01] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:01:01] [INFO] root: Bot started
+[2026-07-14 13:01:01] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 13:01:02] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 13:01:02] [INFO] aiogram.event: Update id=891136860 is handled. Duration 549 ms by bot id=7557954606
+[2026-07-14 13:01:13] [INFO] aiogram.event: Update id=891136861 is handled. Duration 123 ms by bot id=7557954606
+[2026-07-14 13:01:15] [INFO] aiogram.event: Update id=891136862 is handled. Duration 219 ms by bot id=7557954606
+[2026-07-14 13:01:17] [INFO] aiogram.event: Update id=891136863 is handled. Duration 196 ms by bot id=7557954606
+[2026-07-14 13:01:34] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 13:01:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:01:36] [INFO] aiogram.event: Update id=891136864 is handled. Duration 16563 ms by bot id=7557954606
+[2026-07-14 13:03:47] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:03:47] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 13:03:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:03:58] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 13:07:36] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 13:07:36] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 13:07:36] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 13:07:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:07:36] [INFO] root: Bot polling cancelled
+[2026-07-14 13:07:36] [INFO] root: Bot stopped
+[2026-07-14 13:07:36] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 13:07:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:07:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:07:43] [INFO] root: Bot started
+[2026-07-14 13:07:43] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 13:07:44] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 13:07:49] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 13:07:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:07:50] [INFO] root: Database tables initialized
+[2026-07-14 13:07:50] [INFO] root: Database connection successful
+[2026-07-14 13:08:24] [INFO] aiogram.event: Update id=891136865 is handled. Duration 2062 ms by bot id=7557954606
+[2026-07-14 13:08:25] [INFO] aiogram.event: Update id=891136866 is handled. Duration 262 ms by bot id=7557954606
+[2026-07-14 13:08:27] [INFO] aiogram.event: Update id=891136867 is handled. Duration 268 ms by bot id=7557954606
+[2026-07-14 13:08:27] [INFO] aiogram.event: Update id=891136868 is handled. Duration 261 ms by bot id=7557954606
+[2026-07-14 13:08:29] [INFO] aiogram.event: Update id=891136869 is handled. Duration 249 ms by bot id=7557954606
+[2026-07-14 13:08:46] [ERROR] root: [bot][profile_email_bind] smtp_send_failed tg_id=1237947229 email=vladislavisaev0507@gmail.com error=_ssl.c:1015: The handshake operation timed out
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 153, in profile_email_bind_enter_email
+    _smtp_send_code(email, code)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\bot\navigation\additional_menu\profile\profile.py", line 77, in _smtp_send_code
+    with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1036, in __init__
+    SMTP.__init__(self, host, port, local_hostname, timeout,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  source_address)
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 264, in __init__
+    (code, msg) = self.connect(host, port)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 350, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 1043, in _get_socket
+    new_socket = self.context.wrap_socket(new_socket,
+                                          server_hostname=self._host)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1015: The handshake operation timed out
+[2026-07-14 13:08:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:08:48] [INFO] aiogram.event: Update id=891136870 is handled. Duration 16595 ms by bot id=7557954606
+[2026-07-14 13:10:20] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-14 13:10:20] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 13:10:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 13:10:32] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-14 19:06:37] [INFO] aiogram.event: Update id=891136872 is not handled. Duration 146 ms by bot id=7557954606
+[2026-07-14 19:06:37] [INFO] aiogram.event: Update id=891136871 is not handled. Duration 162 ms by bot id=7557954606
+[2026-07-14 19:17:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:28:55] [INFO] aiogram.event: Update id=891136873 is not handled. Duration 73 ms by bot id=7557954606
+[2026-07-14 19:29:16] [INFO] aiogram.event: Update id=891136874 is not handled. Duration 7 ms by bot id=7557954606
+[2026-07-14 19:29:29] [INFO] aiogram.event: Update id=891136875 is not handled. Duration 5 ms by bot id=7557954606
+[2026-07-14 19:29:44] [INFO] aiogram.event: Update id=891136876 is not handled. Duration 5 ms by bot id=7557954606
+[2026-07-14 19:29:58] [INFO] aiogram.event: Update id=891136877 is not handled. Duration 6 ms by bot id=7557954606
+[2026-07-14 19:40:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:53:57] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 19:53:57] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 19:53:57] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 19:53:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 19:53:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:53:57] [INFO] root: Bot polling cancelled
+[2026-07-14 19:53:57] [INFO] root: Bot stopped
+[2026-07-14 19:53:57] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 19:53:58] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 19:53:59] [INFO] root: Database tables initialized
+[2026-07-14 19:53:59] [INFO] root: Database connection successful
+[2026-07-14 19:54:04] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:54:04] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 19:54:04] [INFO] root: Bot started
+[2026-07-14 19:54:04] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 19:54:05] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 19:54:17] [INFO] aiogram.event: Update id=891136878 is handled. Duration 813 ms by bot id=7557954606
+[2026-07-14 19:54:19] [INFO] aiogram.event: Update id=891136879 is handled. Duration 226 ms by bot id=7557954606
+[2026-07-14 19:54:20] [INFO] aiogram.event: Update id=891136880 is handled. Duration 162 ms by bot id=7557954606
+[2026-07-14 19:54:22] [INFO] aiogram.event: Update id=891136881 is handled. Duration 249 ms by bot id=7557954606
+[2026-07-14 19:54:25] [INFO] aiogram.event: Update id=891136882 is handled. Duration 224 ms by bot id=7557954606
+[2026-07-14 19:54:27] [INFO] aiogram.event: Update id=891136883 is handled. Duration 314 ms by bot id=7557954606
+[2026-07-14 19:54:32] [INFO] aiogram.event: Update id=891136884 is handled. Duration 141 ms by bot id=7557954606
+[2026-07-14 19:54:38] [INFO] aiogram.event: Update id=891136885 is handled. Duration 225 ms by bot id=7557954606
+[2026-07-14 19:54:38] [INFO] aiogram.event: Update id=891136886 is handled. Duration 174 ms by bot id=7557954606
+[2026-07-14 19:55:12] [INFO] aiogram.event: Update id=891136887 is handled. Duration 288 ms by bot id=7557954606
+[2026-07-14 19:55:15] [INFO] aiogram.event: Update id=891136888 is handled. Duration 131 ms by bot id=7557954606
+[2026-07-14 19:55:17] [INFO] aiogram.event: Update id=891136889 is handled. Duration 238 ms by bot id=7557954606
+[2026-07-14 19:55:18] [INFO] aiogram.event: Update id=891136890 is handled. Duration 126 ms by bot id=7557954606
+[2026-07-14 19:55:22] [INFO] aiogram.event: Update id=891136891 is handled. Duration 450 ms by bot id=7557954606
+[2026-07-14 19:55:23] [INFO] aiogram.event: Update id=891136892 is handled. Duration 125 ms by bot id=7557954606
+[2026-07-14 19:55:52] [INFO] aiogram.event: Update id=891136893 is handled. Duration 272 ms by bot id=7557954606
+[2026-07-14 19:55:53] [INFO] aiogram.event: Update id=891136894 is handled. Duration 202 ms by bot id=7557954606
+[2026-07-14 19:56:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 19:56:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 19:56:47] [INFO] aiogram.event: Update id=891136895 is handled. Duration 212 ms by bot id=7557954606
+[2026-07-14 19:56:48] [INFO] aiogram.event: Update id=891136896 is handled. Duration 220 ms by bot id=7557954606
+[2026-07-14 19:56:49] [INFO] aiogram.event: Update id=891136897 is handled. Duration 235 ms by bot id=7557954606
+[2026-07-14 19:56:53] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=60 user_balance=60 referral_balance=740
+[2026-07-14 19:56:53] [INFO] aiogram.event: Update id=891136898 is handled. Duration 136 ms by bot id=7557954606
+[2026-07-14 19:57:13] [INFO] aiogram.event: Update id=891136899 is handled. Duration 127 ms by bot id=7557954606
+[2026-07-14 19:57:14] [INFO] aiogram.event: Update id=891136900 is handled. Duration 209 ms by bot id=7557954606
+[2026-07-14 19:57:17] [INFO] aiogram.event: Update id=891136901 is handled. Duration 247 ms by bot id=7557954606
+[2026-07-14 19:57:18] [INFO] aiogram.event: Update id=891136902 is handled. Duration 448 ms by bot id=7557954606
+[2026-07-14 19:57:19] [INFO] aiogram.event: Update id=891136903 is handled. Duration 564 ms by bot id=7557954606
+[2026-07-14 19:57:19] [INFO] aiogram.event: Update id=891136904 is handled. Duration 223 ms by bot id=7557954606
+[2026-07-14 19:57:20] [INFO] aiogram.event: Update id=891136905 is handled. Duration 213 ms by bot id=7557954606
+[2026-07-14 19:57:23] [INFO] aiogram.event: Update id=891136906 is handled. Duration 233 ms by bot id=7557954606
+[2026-07-14 19:57:24] [INFO] aiogram.event: Update id=891136907 is handled. Duration 215 ms by bot id=7557954606
+[2026-07-14 19:59:55] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 19:59:55] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 19:59:55] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 19:59:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 19:59:55] [INFO] root: Bot polling cancelled
+[2026-07-14 19:59:55] [INFO] root: Bot stopped
+[2026-07-14 19:59:55] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 20:00:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:00:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:00:02] [INFO] root: Bot started
+[2026-07-14 20:00:02] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 20:00:03] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 20:00:10] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:00:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:00:10] [INFO] root: Database tables initialized
+[2026-07-14 20:00:10] [INFO] root: Database connection successful
+[2026-07-14 20:00:21] [INFO] aiogram.event: Update id=891136908 is handled. Duration 701 ms by bot id=7557954606
+[2026-07-14 20:00:23] [INFO] aiogram.event: Update id=891136909 is handled. Duration 235 ms by bot id=7557954606
+[2026-07-14 20:00:24] [INFO] aiogram.event: Update id=891136910 is handled. Duration 557 ms by bot id=7557954606
+[2026-07-14 20:00:30] [INFO] aiogram.event: Update id=891136911 is handled. Duration 191 ms by bot id=7557954606
+[2026-07-14 20:00:34] [INFO] aiogram.event: Update id=891136912 is handled. Duration 127 ms by bot id=7557954606
+[2026-07-14 20:00:40] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=50 user_balance=110 referral_balance=690
+[2026-07-14 20:00:41] [INFO] aiogram.event: Update id=891136913 is handled. Duration 229 ms by bot id=7557954606
+[2026-07-14 20:00:43] [INFO] aiogram.event: Update id=891136914 is handled. Duration 143 ms by bot id=7557954606
+[2026-07-14 20:00:46] [INFO] aiogram.event: Update id=891136915 is handled. Duration 150 ms by bot id=7557954606
+[2026-07-14 20:01:00] [INFO] aiogram.event: Update id=891136916 is handled. Duration 329 ms by bot id=7557954606
+[2026-07-14 20:01:01] [INFO] aiogram.event: Update id=891136917 is handled. Duration 138 ms by bot id=7557954606
+[2026-07-14 20:01:04] [INFO] aiogram.event: Update id=891136918 is handled. Duration 300 ms by bot id=7557954606
+[2026-07-14 20:01:08] [INFO] aiogram.event: Update id=891136919 is handled. Duration 173 ms by bot id=7557954606
+[2026-07-14 20:01:11] [INFO] aiogram.event: Update id=891136920 is handled. Duration 204 ms by bot id=7557954606
+[2026-07-14 20:01:18] [INFO] aiogram.event: Update id=891136921 is handled. Duration 160 ms by bot id=7557954606
+[2026-07-14 20:01:21] [INFO] root: [biz][withdrawal] create_requested user_id=100 amount=500 method=Huingyjgfjivvuvubininonibuctft
+[2026-07-14 20:01:21] [INFO] root: [biz][withdrawal] created user_id=100 withdrawal_id=14 amount=500 method=Huingyjgfjivvuvubininonibuctft
+[2026-07-14 20:01:21] [INFO] aiogram.event: Update id=891136922 is handled. Duration 246 ms by bot id=7557954606
+[2026-07-14 20:01:24] [INFO] aiogram.event: Update id=891136923 is handled. Duration 171 ms by bot id=7557954606
+[2026-07-14 20:01:25] [INFO] aiogram.event: Update id=891136924 is handled. Duration 264 ms by bot id=7557954606
+[2026-07-14 20:12:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:14:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:31] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:32] [INFO] root: Bot started
+[2026-07-14 20:16:32] [INFO] aiogram.dispatcher: Start polling
+[2026-07-14 20:16:33] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 20:16:33] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:33] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 20:16:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:37] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:37] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-14 20:16:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:38] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:38] [WARNING] aiogram.dispatcher: Sleep for 1.253709 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-07-14 20:16:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:43] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:43] [WARNING] aiogram.dispatcher: Sleep for 1.232072 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-07-14 20:16:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:44] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:44] [WARNING] aiogram.dispatcher: Sleep for 1.748950 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-07-14 20:16:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:49] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+[2026-07-14 20:16:49] [WARNING] aiogram.dispatcher: Sleep for 1.560182 seconds and try again... (tryings = 2, bot id = 7557954606)
+[2026-07-14 20:16:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-14 20:16:50] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-14 20:16:50] [WARNING] aiogram.dispatcher: Sleep for 2.067943 seconds and try again... (tryings = 3, bot id = 7557954606)
+[2026-07-14 20:16:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:50] [INFO] root: Bot polling cancelled
+[2026-07-14 20:16:50] [INFO] root: Bot stopped
+[2026-07-14 20:16:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-14 20:16:59] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:16:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-14 20:16:59] [INFO] root: Database tables initialized
+[2026-07-14 20:16:59] [INFO] root: Database connection successful
+[2026-07-14 20:17:00] [INFO] aiogram.dispatcher: Connection established (tryings = 3, bot id = 7557954606)
+[2026-07-14 20:17:31] [INFO] root: Settings successfully loaded from .env
+[2026-07-14 20:17:31] [DEBUG] asyncio: Using proactor: IocpProactor

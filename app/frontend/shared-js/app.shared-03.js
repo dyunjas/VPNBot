@@ -282,9 +282,10 @@ async function createWithdrawal() {
   const amount = Number(($("withdraw-amount")?.value || "").trim());
   const method = ($("withdraw-method")?.value || "").trim();
   const hint = $("withdraw-hint");
+  const minWithdrawAmount = Number(state.businessSettings?.MIN_WITHDRAW_AMOUNT_RUB || 500);
 
-  if (!Number.isFinite(amount) || amount < MIN_WITHDRAW_AMOUNT) {
-    const msg = `Минимальная сумма вывода: ${MIN_WITHDRAW_AMOUNT} ₽`;
+  if (!Number.isFinite(amount) || amount < minWithdrawAmount) {
+    const msg = `Минимальная сумма вывода: ${minWithdrawAmount} ₽`;
     if (hint) hint.textContent = msg;
     return toast(msg);
   }
@@ -306,6 +307,39 @@ async function createWithdrawal() {
     if ($("withdraw-method")) $("withdraw-method").value = "";
 
     await Promise.all([loadWithdrawals(), loadProfile(), loadReferral()]);
+  } catch (e) {
+    if (hint) hint.textContent = e.message;
+    toast(e.message);
+    haptic("error");
+  }
+}
+
+async function transferReferralBalance() {
+  const amount = Number(($("ref-transfer-amount")?.value || "").trim());
+  const hint = $("ref-transfer-hint");
+  const minTransferAmount = Number(state.businessSettings?.MIN_REFERRAL_TRANSFER_AMOUNT_RUB || 50);
+
+  if (!Number.isFinite(amount) || amount < minTransferAmount) {
+    const msg = `Минимальная сумма перевода: ${minTransferAmount} ₽`;
+    if (hint) hint.textContent = msg;
+    return toast(msg);
+  }
+
+  const transferAmount = Math.floor(amount);
+  if (!confirm(`Перевести ${transferAmount} ₽ с реферального баланса на основной?`)) {
+    if (hint) hint.textContent = "Перевод отменён";
+    return;
+  }
+
+  haptic();
+  try {
+    const data = await api("/api/referral/transfer", { amount: transferAmount });
+    const msg = `Переведено ${data.amount || transferAmount} ₽. Основной баланс: ${data.balance || 0} ₽`;
+    if (hint) hint.textContent = msg;
+    if ($("ref-transfer-amount")) $("ref-transfer-amount").value = "";
+    toastSuccess("Средства переведены на основной баланс");
+    haptic("success");
+    await Promise.all([loadProfile(), loadReferral()]);
   } catch (e) {
     if (hint) hint.textContent = e.message;
     toast(e.message);
