@@ -19,6 +19,7 @@ from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
 from backend.services.activity_service import ActivityService
 from backend.services import UserService
+from backend.core.loader import bot as runtime_bot
 
 router = APIRouter(tags=["subscription"])
 
@@ -70,7 +71,6 @@ def get_user_service(session: AsyncSession = Depends(get_session)) -> UserServic
 
 
 async def _send_telegram_message(chat_id: int, text: str, *, photo=None, reply_markup=None) -> None:
-    from backend.core.loader import bot as runtime_bot
 
     bot_instance = runtime_bot
     temp_bot: Bot | None = None
@@ -181,15 +181,20 @@ async def _find_latest_subscription(session: AsyncSession, *, user_id: int) -> S
 
 async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription")
+    builder.adjust(1)
+
     if hours >= 48:
-        remaining_text = "через 2 дня"
+        remaining_text = "2 дня"
+    elif hours >= 24:
+        remaining_text = "1 день"
     else:
-        remaining_text = "через 1 день"
+        remaining_text = f"примерно {hours} ч."
+
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Внимание!</b>\n\n"
-        f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка истекает {remaining_text}.\n"
-        "Продлите подписку, чтобы не потерять доступ к сервису."
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подписка скоро закончится</b>\n\n"
+        f"До окончания осталось {remaining_text}. Продлите заранее, чтобы VPN продолжил работать.\n\n"
+        "После продления ссылка останется прежней. Если автопродление включено, проверьте, что на балансе достаточно средств."
     )
     await _safe_notify(
         tg_id,
@@ -197,15 +202,16 @@ async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
         photo=MAIN_MENU_IMG,
         reply_markup=builder.as_markup(),
     )
-
 
 async def _notify_subscription_expired(*, tg_id: int) -> None:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription")
+    builder.adjust(1)
+
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Внимание!</b>\n\n"
-        "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ваша подписка истекла. Доступ к ключам остановлен.\n"
-        "Продлите подписку, чтобы восстановить доступ к сервису."
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji>Подписка закончилась</b>\n\n"
+        "Доступ к VPN временно остановлен. Продлите подписку, и сервис снова заработает на вашей текущей ссылке.\n\n"
+        "Если вы уже продлили подписку, обновите подписку в приложении."
     )
     await _safe_notify(
         tg_id,
@@ -213,7 +219,6 @@ async def _notify_subscription_expired(*, tg_id: int) -> None:
         photo=MAIN_MENU_IMG,
         reply_markup=builder.as_markup(),
     )
-
 
 def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
     for key in ("hwidUserDevice", "userHwidDevice", "hwid_user_device", "device"):
@@ -367,13 +372,13 @@ async def remnawave_webhook(
         short_token = token[:8] if token else ""
         now_dt = connected_at or datetime.now(timezone.utc)
         msg = (
-            "<tg-emoji emoji-id='5839354140261619193'>🛜</tg-emoji> "
-            "<b>Новое устройство подключено к подписке</b>\n\n"
-            f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token}</code>\n"
-            f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device_model or '—'}</b>\n"
-            f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device_os or '—'} / {os_version or '—'}</b>\n"
-            f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%Y-%m-%d %H:%M:%S')}</b>\n\n"
-            "Если это не вы, удалите устройство в меню <b>Подписка</b>."
+            "<b>Подключено новое устройство</b>\n\n"
+            "К вашей подписке добавилось устройство. Если это были вы, ничего делать не нужно.\n\n"
+            f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token or '?'}</code>\n"
+            f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройство: <b>{device_model or 'Не определено'}</b>\n"
+            f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Система: <b>{device_os or '?'} {os_version or ''}</b>\n"
+            f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%d.%m.%Y %H:%M')}</b>\n\n"
+            "Если вы не подключали это устройство, откройте <b>Моя подписка -> Мои устройства</b> и удалите его."
         )
         await _safe_notify(user.tg_id, msg)
 

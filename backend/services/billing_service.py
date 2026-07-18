@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import hashlib
+import hmac
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_UP
 
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.core.business_config import get_business_decimal, get_business_int
 from backend.repositories.user_repository import UserRepository
@@ -197,6 +200,106 @@ class BillingService:
         )
         return tx
 
+    @staticmethod
+    def verify_platega_webhook_headers(*, merchant_id: str | None, secret: str | None) -> bool:
+        expected_merchant_id = (settings.PLATEGA_MERCHANT_ID or "").strip()
+        expected_secret = (settings.PLATEGA_SECRET or "").strip()
+        if not expected_merchant_id or not expected_secret:
+            return False
+        return (
+            hmac.compare_digest(str(merchant_id or "").strip(), expected_merchant_id)
+            and hmac.compare_digest(str(secret or "").strip(), expected_secret)
+        )
+
+    async def confirm_platega_webhook(
+        self,
+        *,
+        provider_transaction_id: str,
+        amount: Decimal | int | float | str,
+        currency: str,
+        status: str,
+        payload: str | None = None,
+        payment_method: int | None = None,
+    ) -> tuple[object, bool]:
+        normalized_status = str(status or "").strip().upper()
+        logger.info(
+            "[biz][billing] platega_webhook_received provider_id=%s status=%s amount=%s currency=%s payment_method=%s payload=%s",
+            provider_transaction_id,
+            normalized_status,
+            amount,
+            currency,
+            payment_method,
+            payload,
+        )
+        tx = await self.tx_repo.get_by_provider_id_for_update(str(provider_transaction_id))
+        if not tx:
+            logger.warning("[biz][billing] platega_webhook_tx_not_found provider_id=%s", provider_transaction_id)
+            raise TransactionNotFound("Transaction not found")
+
+        if tx.paid:
+            logger.info(
+                "[biz][billing] platega_webhook_already_paid provider_id=%s user_id=%s",
+                provider_transaction_id,
+                tx.user_id,
+            )
+            return tx, False
+
+        if normalized_status != "CONFIRMED":
+            logger.warning(
+                "[biz][billing] platega_webhook_not_confirmed provider_id=%s user_id=%s status=%s",
+                provider_transaction_id,
+                tx.user_id,
+                normalized_status,
+            )
+            raise PaymentNotConfirmed("Payment not confirmed")
+
+        if str(currency or "").strip().upper() != "RUB":
+            logger.warning(
+                "[biz][billing] platega_webhook_bad_currency provider_id=%s user_id=%s currency=%s",
+                provider_transaction_id,
+                tx.user_id,
+                currency,
+            )
+            raise PaymentNotConfirmed("Payment currency mismatch")
+
+        try:
+            paid_amount = Decimal(str(amount))
+        except Exception:
+            paid_amount = Decimal(0)
+        expected_amount = Decimal(tx.amount or 0)
+        if paid_amount < expected_amount:
+            logger.warning(
+                "[biz][billing] platega_webhook_underpaid provider_id=%s user_id=%s paid=%s expected=%s",
+                provider_transaction_id,
+                tx.user_id,
+                paid_amount,
+                expected_amount,
+            )
+            raise PaymentNotConfirmed("Payment underpaid")
+
+        await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
+        await self.tx_repo.mark_paid(
+            provider_transaction_id=str(provider_transaction_id),
+            paid_at=datetime.now(timezone.utc),
+        )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="platega_webhook",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден Platega callback {provider_transaction_id}",
+        )
+        await self.session.commit()
+        logger.info(
+            "[biz][billing] platega_webhook_confirmed provider_id=%s user_id=%s amount=%s",
+            provider_transaction_id,
+            tx.user_id,
+            tx.amount,
+        )
+        return tx, True
+
     async def close_clients(self) -> None:
         try:
             await self.platega.close()
@@ -317,6 +420,77 @@ class BillingService:
         )
         return tx
 
+    @staticmethod
+    def verify_crypto_webhook_signature(*, body: bytes, signature: str | None) -> bool:
+        token = (settings.CRYPTOBOT_SECRET or "").strip()
+        if not token or not signature:
+            return False
+        secret = hashlib.sha256(token.encode("utf-8")).digest()
+        expected = hmac.new(secret, body, hashlib.sha256).hexdigest()
+        return hmac.compare_digest(expected.lower(), str(signature).strip().lower())
+
+    async def confirm_crypto_webhook(
+        self,
+        *,
+        invoice_id: int,
+        status: str,
+        update_type: str,
+    ) -> tuple[object, bool]:
+        normalized_status = str(status or "").strip().lower()
+        normalized_update_type = str(update_type or "").strip()
+        logger.info(
+            "[biz][billing] crypto_webhook_received invoice_id=%s update_type=%s status=%s",
+            invoice_id,
+            normalized_update_type,
+            normalized_status,
+        )
+
+        tx = await self.tx_repo.get_by_provider_id_for_update(str(invoice_id))
+        if not tx:
+            logger.warning("[biz][billing] crypto_webhook_tx_not_found invoice_id=%s", invoice_id)
+            raise TransactionNotFound("Transaction not found")
+
+        if tx.paid:
+            logger.info(
+                "[biz][billing] crypto_webhook_already_paid invoice_id=%s user_id=%s",
+                invoice_id,
+                tx.user_id,
+            )
+            return tx, False
+
+        if normalized_update_type != "invoice_paid" or normalized_status != "paid":
+            logger.warning(
+                "[biz][billing] crypto_webhook_not_paid invoice_id=%s user_id=%s update_type=%s status=%s",
+                invoice_id,
+                tx.user_id,
+                normalized_update_type,
+                normalized_status,
+            )
+            raise PaymentNotConfirmed("Invoice not paid")
+
+        await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
+        await self.tx_repo.mark_paid(
+            provider_transaction_id=str(invoice_id),
+            paid_at=datetime.now(timezone.utc),
+        )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="cryptobot_webhook",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден CryptoBot webhook {invoice_id}",
+        )
+        await self.session.commit()
+        logger.info(
+            "[biz][billing] crypto_webhook_confirmed invoice_id=%s user_id=%s amount=%s",
+            invoice_id,
+            tx.user_id,
+            tx.amount,
+        )
+        return tx, True
+
     async def create_pally_payment(
         self,
         user_id: int,
@@ -377,19 +551,20 @@ class BillingService:
             )
             raise ValueError(f"PALLY API error: {payment.get('error')}")
 
-        provider_id = self._extract_pally_id(payment)
-        if not provider_id:
+        provider_bill_id = self._extract_pally_id(payment)
+        if not provider_bill_id:
             logger.error("[biz][billing] pally_create_missing_provider_id user_id=%s", user_id)
             raise ValueError(f"PALLY API did not return bill id: {payment}")
 
         payment_url = self._extract_pally_url(payment)
         if payment_url and "payment_url" not in payment:
             payment["payment_url"] = payment_url
-        payment["id"] = provider_id
+        payment["id"] = payload
+        payment["bill_id"] = provider_bill_id
 
         await self.tx_repo.create(
             user_id=user_id,
-            provider_transaction_id=str(provider_id),
+            provider_transaction_id=payload,
             payment_system="PALLY",
             amount=Decimal(amount),
             created_at=datetime.now(timezone.utc),
@@ -399,12 +574,95 @@ class BillingService:
 
         await self.session.commit()
         logger.info(
-            "[biz][billing] pally_created user_id=%s provider_id=%s amount=%s",
+            "[biz][billing] pally_created user_id=%s inv_id=%s provider_id=%s amount=%s",
             user_id,
-            provider_id,
+            payload,
+            provider_bill_id,
             amount,
         )
         return payment
+
+    @staticmethod
+    def verify_pally_postback_signature(*, inv_id: str, out_sum: str, signature: str) -> bool:
+        token = (settings.PALLY_API_TOKEN or "").strip()
+        if not token or not signature:
+            return False
+        expected = hashlib.md5(f"{out_sum}:{inv_id}:{token}".encode("utf-8")).hexdigest().upper()
+        return hmac.compare_digest(expected, str(signature).strip().upper())
+
+    async def confirm_pally_postback(
+        self,
+        *,
+        inv_id: str,
+        out_sum: str,
+        status: str,
+        trs_id: str | None = None,
+    ) -> tuple[object, bool]:
+        normalized_status = str(status or "").strip().upper()
+        logger.info(
+            "[biz][billing] pally_postback_received inv_id=%s trs_id=%s status=%s out_sum=%s",
+            inv_id,
+            trs_id,
+            normalized_status,
+            out_sum,
+        )
+        tx = await self.tx_repo.get_by_provider_id_for_update(str(inv_id))
+        if not tx:
+            logger.warning("[biz][billing] pally_postback_tx_not_found inv_id=%s trs_id=%s", inv_id, trs_id)
+            raise TransactionNotFound("Transaction not found")
+
+        paid_before = bool(tx.paid)
+        if paid_before:
+            logger.info("[biz][billing] pally_postback_already_paid inv_id=%s user_id=%s", inv_id, tx.user_id)
+            return tx, False
+
+        if normalized_status != "SUCCESS":
+            logger.warning(
+                "[biz][billing] pally_postback_not_success inv_id=%s user_id=%s status=%s",
+                inv_id,
+                tx.user_id,
+                normalized_status,
+            )
+            raise PaymentNotConfirmed("Payment not confirmed")
+
+        try:
+            paid_amount = Decimal(str(out_sum))
+        except Exception:
+            paid_amount = Decimal(0)
+        expected_amount = Decimal(tx.amount or 0)
+        if paid_amount < expected_amount:
+            logger.warning(
+                "[biz][billing] pally_postback_underpaid inv_id=%s user_id=%s paid=%s expected=%s",
+                inv_id,
+                tx.user_id,
+                paid_amount,
+                expected_amount,
+            )
+            raise PaymentNotConfirmed("Payment underpaid")
+
+        await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
+        await self.tx_repo.mark_paid(
+            provider_transaction_id=str(inv_id),
+            paid_at=datetime.now(timezone.utc),
+        )
+        await self.activity_service.log_user_event(
+            user_id=tx.user_id,
+            category="billing",
+            action="payment_confirmed",
+            source="pally_webhook",
+            amount=int(tx.amount or 0),
+            transaction_id_ref=tx.id,
+            note=f"Подтвержден Pally postback {trs_id or inv_id}",
+        )
+        await self.session.commit()
+        logger.info(
+            "[biz][billing] pally_postback_confirmed inv_id=%s trs_id=%s user_id=%s amount=%s",
+            inv_id,
+            trs_id,
+            tx.user_id,
+            tx.amount,
+        )
+        return tx, True
 
     async def confirm_pally_payment(self, provider_transaction_id: str):
         logger.info(

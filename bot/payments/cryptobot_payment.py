@@ -4,10 +4,10 @@ from aiogram.types import CallbackQuery, InputMediaPhoto
 
 from backend.core.logger_config import logger
 from backend.images import PROFILE_IMG
-from backend.services.exceptions import PaymentNotConfirmed, TransactionNotFound, UserNotFound
+from backend.services.exceptions import UserNotFound
 from backend.states import PaymentStates
 from bot.payments import messages as payment_messages
-from bot.payments.keyboards import back_profile_kb, payment_menu_kb
+from bot.payments.keyboards import payment_menu_kb
 
 router = Router()
 
@@ -60,7 +60,7 @@ async def pay_crypto_clb(
     await callback.message.edit_media(
         InputMediaPhoto(
             media=PROFILE_IMG,
-            caption=payment_messages.created_caption(
+            caption=payment_messages.created_auto_caption(
                 method_name="CryptoBot",
                 transaction_id=str(invoice_id),
             ),
@@ -68,63 +68,8 @@ async def pay_crypto_clb(
         ),
         reply_markup=payment_menu_kb(
             invoice_url=pay_url,
-            invoice_id=str(invoice_id),
-            check_prefix="check_payment_crypto",
         ),
     )
 
     await state.update_data(invoice_id=invoice_id)
-    await callback.answer()
-
-
-@router.callback_query(F.data.startswith("check_payment_crypto:"))
-async def check_crypto_payment_clb(
-    callback: CallbackQuery,
-    state: FSMContext,
-    bot_api,
-):
-    invoice_id = int(callback.data.split(":", 1)[1])
-
-    try:
-        result = await bot_api.confirm_crypto_payment(
-            tg_id=callback.from_user.id,
-            invoice_id=invoice_id,
-        )
-    except PaymentNotConfirmed:
-        await callback.answer(payment_messages.NOT_CONFIRMED, show_alert=True)
-        return
-    except TransactionNotFound:
-        await callback.answer(payment_messages.TRANSACTION_NOT_FOUND, show_alert=True)
-        return
-    except Exception as e:
-        logger.exception(f"[CRYPTO] Unexpected error confirming invoice {invoice_id}: {e}")
-        await callback.answer(payment_messages.CONFIRM_ERROR, show_alert=True)
-        return
-
-    amount_display = int(result.get("transaction", {}).get("amount", 0) or 0)
-    bonus = int(result.get("referral_bonus") or 0)
-    referrer_tg_id = result.get("referrer_tg_id")
-    if bonus > 0 and referrer_tg_id:
-        try:
-            await callback.bot.send_message(
-                chat_id=referrer_tg_id,
-                text=payment_messages.referral_bonus_caption(
-                    bonus_rub=bonus,
-                    payment_amount_rub=amount_display,
-                ),
-                parse_mode="HTML",
-            )
-        except Exception:
-            pass
-
-    await callback.message.edit_media(
-        InputMediaPhoto(
-            media=PROFILE_IMG,
-            caption=payment_messages.success_caption(amount_rub=amount_display),
-            parse_mode="HTML",
-        ),
-        reply_markup=back_profile_kb(),
-    )
-
-    await state.clear()
     await callback.answer()

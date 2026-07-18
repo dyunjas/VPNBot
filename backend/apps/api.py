@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from api.admin.endpoints import router as admin_router
 from api.bot.endpoints import router as bot_router
 from api.cabinet.endpoints import router as cabinet_router
+from api.payments.endpoints import router as payments_router
 from api.subscription_url.endpoints import router as subscription_router
 from backend.apps.common import apply_common_hardening
 from backend.core.config import settings
@@ -61,6 +62,7 @@ def create_app():
     app.include_router(cabinet_router)
     app.include_router(subscription_router)
     app.include_router(admin_router)
+    app.include_router(payments_router)
     app.include_router(bot_router)
 
     app.add_middleware(
@@ -74,7 +76,16 @@ def create_app():
     @app.middleware("http")
     async def maintenance_guard(request: Request, call_next):
         path = request.url.path
-        if path.startswith("/api/admin") or path == "/health" or path == "/remnawave-webhook":
+        if (
+            path.startswith("/api/admin")
+            or path in {
+                "/health",
+                "/remnawave-webhook",
+                "/api/payments/pal24-webhook",
+                "/api/payments/platega-webhook",
+                "/api/payments/cryptobot-webhook",
+            }
+        ):
             return await call_next(request)
 
         if is_maintenance_enabled():
@@ -90,4 +101,3 @@ def create_app():
         return {"status": "ok", "service": "api"}
 
     return app
-

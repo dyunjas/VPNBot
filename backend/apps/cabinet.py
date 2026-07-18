@@ -25,7 +25,7 @@ def create_app():
                 '<script defer src="/miniapp/shared-js/app.shared-01.js?v=7"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-02.js?v=14"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-03.js?v=9"></script>',
-                '<script defer src="/miniapp/shared-js/app.shared-04.js?v=6"></script>',
+                '<script defer src="/miniapp/shared-js/app.shared-04.js?v=7"></script>',
                 '<script defer src="/miniapp/shared-js/app.shared-05.js?v=6"></script>',
             ],
             app_entry_url="/miniapp/app.shared.js?v=3",

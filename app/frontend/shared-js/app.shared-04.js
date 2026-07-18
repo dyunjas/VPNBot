@@ -49,6 +49,25 @@ function initTopupMethodPicker() {
   });
 }
 
+let topupRefreshTimer = null;
+
+function scheduleTopupRefresh() {
+  if (topupRefreshTimer) window.clearInterval(topupRefreshTimer);
+  let attempts = 0;
+  const refresh = async () => {
+    attempts += 1;
+    try {
+      await Promise.all([loadProfile(), loadTransactions()]);
+    } catch {}
+    if (attempts >= 12 && topupRefreshTimer) {
+      window.clearInterval(topupRefreshTimer);
+      topupRefreshTimer = null;
+    }
+  };
+  window.setTimeout(refresh, 4000);
+  topupRefreshTimer = window.setInterval(refresh, 10000);
+}
+
 async function createTopup() {
   const amount = Number(($("topup-input")?.value || "").trim());
   const hint = $("topup-hint");
@@ -72,8 +91,9 @@ async function createTopup() {
     if (!tg?.openLink) window.open(data.payment_url, "_blank");
 
     if (hint) {
-      hint.textContent = "После оплаты нажмите «Проверить платежи». Проверим 3 последних платежа.";
+      hint.textContent = "После оплаты баланс обновится автоматически. Обычно это занимает до 1-2 минут.";
     }
+    scheduleTopupRefresh();
     toastSuccess("Ссылка на оплату открыта");
     haptic("success");
   } catch (e) {
@@ -114,34 +134,6 @@ async function buyTraffic() {
   }
 }
 
-async function checkPayments() {
-  haptic();
-  try {
-    const data = await api("/api/balance/check", {});
-
-    if (!data.ok && data.reason === "no_pending") {
-      toast(`Ожидающих платежей нет (проверено: ${data.checked || 0})`);
-      return;
-    }
-
-    if (data.confirmed) {
-      toastSuccess(`Платеж подтвержден (проверено: ${data.checked || 1})`);
-      haptic("success");
-    } else {
-      toast(
-        friendlyErrorMessage(
-          data.message || `Платеж еще не подтвержден (проверено: ${data.checked || 1})`,
-        ),
-      );
-    }
-
-    await Promise.all([loadProfile(), loadTransactions()]);
-  } catch (e) {
-    toast(e.message);
-    haptic("error");
-  }
-}
-
 function initEvents() {
   initTopupMethodPicker();
 
@@ -177,7 +169,6 @@ function initEvents() {
   });
   $("btn-buy-traffic")?.addEventListener("click", buyTraffic);
   $("topup-pay")?.addEventListener("click", createTopup);
-  $("btn-check-payments")?.addEventListener("click", checkPayments);
   $("btn-refresh-tx")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     setButtonBusy(btn, true, null);
