@@ -9,8 +9,7 @@ CREATE_ERROR = "Не удалось создать платеж. Попробу�
 
 def created_auto_caption(*, method_name: str, transaction_id: str) -> str:
     return (
-        "<tg-emoji emoji-id='5927169041595634481'>💵</tg-emoji> Счет создан, перейдите по ссылке для оплаты.\n"
+        "<tg-emoji emoji-id='5927169041595634481'>💵</tg-emoji> Счет создан, перейдите по ссылке для оплаты.\n\n"
         f"<b>Способ оплаты:</b> {method_name}\n"
-        "После оплаты баланс пополнится автоматически. Обычно это занимает до 1-2 минут.\n"
         f"<pre>ID транзакции: {transaction_id}</pre>"
     )

@@ -22,5 +22,6 @@ def payment_choice_kb():
 def payment_menu_kb(invoice_url: str):
     builder = InlineKeyboardBuilder()
     builder.button(text="💳 Оплатить", url=invoice_url)
+    builder.button(text="⬅️ Назад", callback_data="profile")
     builder.adjust(1)
     return builder.as_markup()
