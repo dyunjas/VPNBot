@@ -9290,3 +9290,5 @@ TimeoutError: _ssl.c:1015: The handshake operation timed out
 [2026-07-14 20:17:00] [INFO] aiogram.dispatcher: Connection established (tryings = 3, bot id = 7557954606)
 [2026-07-14 20:17:31] [INFO] root: Settings successfully loaded from .env
 [2026-07-19 00:50:08] [INFO] root: Settings successfully loaded from .env
+[2026-07-19 00:50:11] [INFO] root: Database tables initialized
+[2026-07-19 00:50:11] [INFO] root: Database connection successful

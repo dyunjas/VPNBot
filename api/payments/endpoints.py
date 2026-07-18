@@ -38,20 +38,27 @@ async def _notify_payment(tx, *, referral_bonus: int = 0, referrer_tg_id: int | 
     try:
         await bot.send_message(
             chat_id=int(user.tg_id),
-            text=f"<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Платеж подтвержден.\nБаланс пополнен на {int(tx.amount or 0)} RUB.",
+            text=(
+                "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> "
+                "<b>Платеж подтвержден</b>\n"
+                f"Баланс пополнен на <b>{int(tx.amount or 0)} RUB</b>."
+            ),
+            parse_mode="HTML",
         )
         if referral_bonus > 0 and referrer_tg_id:
             await bot.send_message(
                 chat_id=int(referrer_tg_id),
                 text=(
-                    "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> Бонус за реферала!\n"
-                    f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Начислено: {int(referral_bonus)} RUB\n"
-                    f"<b><tg-emoji emoji-id='5769403330761593044'>💄</tg-emoji> Платеж реферала: {int(tx.amount or 0)} RUB"
+                    "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> "
+                    "<b>Бонус за реферала!</b>\n"
+                    f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Начислено: <b>{int(referral_bonus)} RUB</b>\n"
+                    f"<tg-emoji emoji-id='5769403330761593044'>💄</tg-emoji> Платеж реферала: <b>{int(tx.amount or 0)} RUB</b>"
                 ),
+                parse_mode="HTML",
             )
     except Exception as e:
         logger.warning(
-            "[payments][pal24] notify_user_failed user_id=%s tg_id=%s error=%s",
+            "[payments] notify_user_failed user_id=%s tg_id=%s error=%s",
             getattr(user, "id", None),
             getattr(user, "tg_id", None),
             e,
