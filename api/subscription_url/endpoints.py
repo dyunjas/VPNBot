@@ -200,8 +200,7 @@ async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
         tg_id,
         text,
         photo=MAIN_MENU_IMG,
-        reply_markup=builder.as_markup(),
-        parse_mode="HTML"
+        reply_markup=builder.as_markup()
     )
 
 async def _notify_subscription_expired(*, tg_id: int) -> None:
@@ -218,8 +217,7 @@ async def _notify_subscription_expired(*, tg_id: int) -> None:
         tg_id,
         text,
         photo=MAIN_MENU_IMG,
-        reply_markup=builder.as_markup(),
-        parse_mode="HTML"
+        reply_markup=builder.as_markup()
     )
 
 def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
