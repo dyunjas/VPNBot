@@ -59,12 +59,21 @@ class SubscriptionRepository:
         await self.session.execute(stmt)
     
     async def get_by_user_id(self, user_id: int) -> Subscription | None:
-        res = await self.session.execute(select(Subscription).where(Subscription.user_id == user_id))
+        res = await self.session.execute(
+            select(Subscription)
+            .where(Subscription.user_id == user_id)
+            .order_by(Subscription.current_period_end.desc(), Subscription.id.desc())
+            .limit(1)
+        )
         return res.scalar_one_or_none()
     
     async def get_by_id_for_update(self, user_id: int) -> Subscription | None:
         res = await self.session.execute(
-            select(Subscription).where(Subscription.user_id == user_id).with_for_update()
+            select(Subscription)
+            .where(Subscription.user_id == user_id)
+            .order_by(Subscription.current_period_end.desc(), Subscription.id.desc())
+            .limit(1)
+            .with_for_update()
         )
         return res.scalar_one_or_none()
     

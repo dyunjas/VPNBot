@@ -48,7 +48,7 @@ async def purchase_plan_clb(
         await callback.answer("Ваш аккаунт заблокирован. Покупка недоступна.", show_alert=True)
         return
     except Exception as e:
-        await callback.answer(f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Ошибка оформления подписки: {e}", show_alert=True)
+        await callback.answer(f"Ошибка оформления подписки: {e}; обратитесь в поддержку", show_alert=True)
         return
 
     plan = next((item for item in await bot_api.list_plans(tg_id=tg_id) if int(item.get("id")) == plan_id), None)
