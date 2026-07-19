@@ -9292,3 +9292,10 @@ TimeoutError: _ssl.c:1015: The handshake operation timed out
 [2026-07-19 00:50:08] [INFO] root: Settings successfully loaded from .env
 [2026-07-19 00:50:11] [INFO] root: Database tables initialized
 [2026-07-19 00:50:11] [INFO] root: Database connection successful
+[2026-07-19 15:32:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-19 15:32:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-19 15:32:59] [INFO] root: Bot started
+[2026-07-19 15:33:00] [INFO] root: Database tables initialized
+[2026-07-19 15:33:00] [INFO] root: Database connection successful
+[2026-07-19 15:46:19] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-19 15:46:20] [INFO] root: Bot stopped

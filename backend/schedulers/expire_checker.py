@@ -22,13 +22,13 @@ from backend.services.exceptions import (
 
 async def _notify_subscription_expired(bot, tg_id: int):
     builder = InlineKeyboardBuilder()
-    builder.button(text="Продлить подписку", callback_data="subscription")
+    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
     builder.adjust(1)
 
     text = (
-        "<b>Подписка закончилась</b>\n\n"
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji>Подписка закончилась</b>\n\n"
         "Доступ к VPN временно остановлен. Продлите подписку, и сервис снова заработает на вашей текущей ссылке.\n\n"
-        "Если вы уже оплатили продление, подождите пару минут: статус обновится автоматически."
+        "Если вы уже продлили подписку, обновите подписку в приложении."
     )
 
     await bot.send_photo(
@@ -41,7 +41,7 @@ async def _notify_subscription_expired(bot, tg_id: int):
 
 async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
     builder = InlineKeyboardBuilder()
-    builder.button(text="Продлить подписку", callback_data="subscription")
+    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
     builder.adjust(1)
 
     if hours >= 24:
@@ -50,8 +50,8 @@ async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
         remaining_text = f"примерно {hours} ч."
 
     text = (
-        "<b>Подписка скоро закончится</b>\n\n"
-        f"До окончания осталось {remaining_text}. Лучше продлить заранее, чтобы VPN продолжил работать без паузы.\n\n"
+        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подписка скоро закончится</b>\n\n"
+        f"До окончания осталось {remaining_text}. Продлите заранее, чтобы VPN продолжил работать.\n\n"
         "После продления ссылка останется прежней. Если автопродление включено, проверьте, что на балансе достаточно средств."
     )
 
@@ -65,13 +65,13 @@ async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
 
 async def _notify_subscription_renewed(bot, tg_id: int, end_dt: datetime):
     text = (
-        "<b>Подписка продлена автоматически</b>\n\n"
+        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
         f"Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         "Ссылка для подключения осталась прежней. Средства списаны с вашего баланса."
     )
 
     builder = InlineKeyboardBuilder()
-    builder.button(text="Моя подписка", callback_data="vpn_subscription")
+    builder.button(text="🌙 Моя подписка", callback_data="vpn_subscription")
     builder.adjust(1)
 
     await bot.send_photo(
@@ -175,7 +175,6 @@ async def expire_checker(bot):
                             e,
                         )
 
-                # notify soon
                 if webhook_expiration_mode:
                     continue
 
