@@ -18,8 +18,9 @@ from backend.database.models import User, Subscription, SubStatus
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
 from backend.services.activity_service import ActivityService
-from backend.services import UserService
+from backend.services import BillingService, UserService
 from backend.core.loader import bot as runtime_bot
+from backend.services.exceptions import InsufficientBalance, PurchaseInProgress, TooEarlyToRenew
 
 router = APIRouter(tags=["subscription"])
 
@@ -220,6 +221,25 @@ async def _notify_subscription_expired(*, tg_id: int) -> None:
         reply_markup=builder.as_markup()
     )
 
+
+async def _notify_subscription_renewed(*, tg_id: int, end_dt: datetime) -> None:
+    builder = InlineKeyboardBuilder()
+    builder.button(text="🌙 Моя подписка", callback_data="vpn_subscription")
+    builder.adjust(1)
+
+    text = (
+        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
+        f"Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        "Ссылка для подключения осталась прежней. Средства списаны с вашего баланса."
+    )
+    await _safe_notify(
+        tg_id,
+        text,
+        photo=MAIN_MENU_IMG,
+        reply_markup=builder.as_markup()
+    )
+
+
 def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
     for key in ("hwidUserDevice", "userHwidDevice", "hwid_user_device", "device"):
         value = data.get(key)
@@ -303,17 +323,110 @@ async def remnawave_webhook(
                 return {"ok": True, "event": event, "hours": hours}
 
             if event == "user.expired":
+                user_id = int(user.id)
+                user_tg_id = int(user.tg_id) if user.tg_id else None
                 subscription = await _find_latest_subscription(session, user_id=user.id)
+                if subscription and bool(subscription.auto_renew):
+                    subscription_id = int(subscription.id)
+                    plan_id = int(subscription.plan_id)
+                    billing_service = BillingService(session)
+                    try:
+                        renewed = await billing_service.buy_subscription(
+                            user_id=user_id,
+                            plan_id=plan_id,
+                            auto_renew=True,
+                        )
+                        end = renewed.current_period_end
+                        if end and end.tzinfo is None:
+                            end = end.replace(tzinfo=timezone.utc)
+                        elif end:
+                            end = end.astimezone(timezone.utc)
+
+                        if user_tg_id and end:
+                            await _notify_subscription_renewed(tg_id=user_tg_id, end_dt=end)
+
+                        await ActivityService(session).log_user_event(
+                            user_id=user_id,
+                            category="webhook",
+                            action="subscription_auto_renewed",
+                            source="remnawave",
+                            subscription_id=renewed.id,
+                            note="Получен webhook user.expired, подписка автоматически продлена",
+                        )
+                        await session.commit()
+                        logger.info(
+                            "[webhook][remnawave] expired auto-renewed user_id=%s subscription_id=%s",
+                            user_id,
+                            renewed.id,
+                        )
+                        return {
+                            "ok": True,
+                            "event": event,
+                            "auto_renewed": True,
+                            "subscription_id": renewed.id,
+                        }
+                    except PurchaseInProgress:
+                        await session.rollback()
+                        logger.info(
+                            "[webhook][remnawave] expired auto-renew skipped: purchase in progress user_id=%s subscription_id=%s",
+                            user_id,
+                            subscription_id,
+                        )
+                        return {
+                            "ok": True,
+                            "event": event,
+                            "auto_renew_pending": True,
+                            "subscription_id": subscription_id,
+                        }
+                    except TooEarlyToRenew:
+                        await session.rollback()
+                        logger.info(
+                            "[webhook][remnawave] expired auto-renew skipped: too early user_id=%s subscription_id=%s",
+                            user_id,
+                            subscription_id,
+                        )
+                        return {
+                            "ok": True,
+                            "event": event,
+                            "auto_renew_skipped": "too_early",
+                            "subscription_id": subscription_id,
+                        }
+                    except InsufficientBalance:
+                        await session.rollback()
+                        logger.info(
+                            "[webhook][remnawave] expired auto-renew failed user_id=%s subscription_id=%s reason=%s",
+                            user_id,
+                            subscription_id,
+                            "InsufficientBalance",
+                        )
+                        user = await session.get(User, user_id)
+                        subscription = await _find_latest_subscription(session, user_id=user_id)
+                        activity_service = ActivityService(session)
+                    except Exception as e:
+                        await session.rollback()
+                        logger.exception(
+                            "[webhook][remnawave] expired auto-renew error user_id=%s subscription_id=%s: %s",
+                            user_id,
+                            subscription_id,
+                            e,
+                        )
+                        user = await session.get(User, user_id)
+                        subscription = await _find_latest_subscription(session, user_id=user_id)
+                        activity_service = ActivityService(session)
+                    finally:
+                        await billing_service.close_clients()
+
                 if subscription:
                     expire_at = _parse_iso_dt((payload.data or {}).get("expireAt")) or datetime.now(timezone.utc)
                     subscription.status = SubStatus.expired
                     subscription.current_period_end = expire_at
                     subscription.next_renewal_at = expire_at
-                user.traffic_limit_bytes = 0
-                if user.tg_id:
-                    await _notify_subscription_expired(tg_id=int(user.tg_id))
+                if user:
+                    user.traffic_limit_bytes = 0
+                if user_tg_id:
+                    await _notify_subscription_expired(tg_id=user_tg_id)
                 await activity_service.log_user_event(
-                    user_id=user.id,
+                    user_id=user_id,
                     category="webhook",
                     action="subscription_expired",
                     source="remnawave",
@@ -323,7 +436,7 @@ async def remnawave_webhook(
                 await session.commit()
                 logger.info(
                     "[webhook][remnawave] expired processed user_id=%s subscription_id=%s",
-                    user.id,
+                    user_id,
                     getattr(subscription, "id", None),
                 )
                 return {"ok": True, "event": event, "subscription_id": getattr(subscription, "id", None)}
@@ -378,7 +491,7 @@ async def remnawave_webhook(
             f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройство: <b>{device_model or 'Не определено'}</b>\n"
             f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Система: <b>{device_os or '?'} {os_version or ''}</b>\n"
             f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%d.%m.%Y %H:%M')}</b>\n\n"
-            "Если вы не подключали это устройство, откройте <b>Моя подписка -> Мои устройства</b> и удалите его."
+            "Если вы не подключали это устройство, откройте <b>Моя подписка -> Устройства</b> и удалите его, после обратитесь в поддержку."
         )
         await _safe_notify(user.tg_id, msg)
 
