@@ -3,7 +3,7 @@ from ..common import *
 
 router = APIRouter()
 
-@router.get("/referrals", dependencies=[Depends(require_admin_auth)])
+@router.get("/referrals", dependencies=[Depends(require_support_auth)])
 async def admin_referrals(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
@@ -51,7 +51,7 @@ async def admin_referrals(
     }
 
 
-@router.patch("/referrals/{account_id}", dependencies=[Depends(require_admin_auth)])
+@router.patch("/referrals/{account_id}", dependencies=[Depends(require_support_auth)])
 async def admin_referral_update(
     account_id: int,
     referral_percent: int | None = Query(default=None, ge=0, le=100),

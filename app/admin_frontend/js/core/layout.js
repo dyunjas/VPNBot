@@ -10,24 +10,24 @@ async function ensureAuthOrRedirect() {
 function statusBadge(status) {
   const s = String(status || "").toLowerCase();
   const dict = {
-    active: "Активна",
-    expired: "Истекла",
-    canceled: "Отменена",
-    past_due: "Просрочена",
-    paid: "Оплачено",
-    unpaid: "Не оплачено",
-    yes: "Да",
-    no: "Нет",
-    ok: "Ок",
-    ban: "Забанен",
-    offline: "Оффлайн",
-    pending: "На проверке",
-    approved: "Подтверждена",
-    rejected: "Отклонена",
-    disabled: "Отключена",
+    active: "\u0410\u043a\u0442\u0438\u0432\u043d\u0430",
+    expired: "\u0418\u0441\u0442\u0435\u043a\u043b\u0430",
+    canceled: "\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u0430",
+    past_due: "\u041f\u0440\u043e\u0441\u0440\u043e\u0447\u0435\u043d\u0430",
+    paid: "\u041e\u043f\u043b\u0430\u0447\u0435\u043d\u043e",
+    unpaid: "\u041d\u0435 \u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043e",
+    yes: "\u0414\u0430",
+    no: "\u041d\u0435\u0442",
+    ok: "\u041e\u043a",
+    ban: "\u0417\u0430\u0431\u0430\u043d\u0435\u043d",
+    offline: "\u041e\u0444\u0444\u043b\u0430\u0439\u043d",
+    pending: "\u041d\u0430 \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0435",
+    approved: "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0430",
+    rejected: "\u041e\u0442\u043a\u043b\u043e\u043d\u0435\u043d\u0430",
+    disabled: "\u041e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u0430",
   };
 
-  const label = dict[s] || String(status || "—");
+  const label = dict[s] || String(status || "\u2014");
 
   if (["active", "yes", "paid", "ok", "approved"].includes(s)) {
     return `<span class="badge ok">${label}</span>`;
@@ -51,6 +51,77 @@ function safeText(v) {
   if (v === null || v === undefined || v === "") return "—";
   if (typeof v === "object") return "объект";
   return escapeHtml(v);
+}
+
+const TABLER_ICON_PATHS = {
+  check: '<path d="M5 12l5 5l10 -10" />',
+  x: '<path d="M18 6l-12 12" /><path d="M6 6l12 12" />',
+  edit: '<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" />',
+  trash: '<path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3h6v3" />',
+  download: '<path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4v12" />',
+  copy: '<path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" /><path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />',
+  eye: '<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />',
+  eyeOff: '<path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674" /><path d="M10.18 6.18a8.737 8.737 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6a13.69 13.69 0 0 1 -1.475 2.207" /><path d="M3 3l18 18" />',
+  arrowUp: '<path d="M12 5l0 14" /><path d="M18 11l-6 -6" /><path d="M6 11l6 -6" />',
+  arrowDown: '<path d="M12 5l0 14" /><path d="M18 13l-6 6" /><path d="M6 13l6 6" />',
+  plus: '<path d="M12 5l0 14" /><path d="M5 12l14 0" />',
+  save: '<path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" /><path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M14 4l0 4l-6 0l0 -4" />',
+  external: '<path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" />',
+  info: '<path d="M12 9h.01" /><path d="M11 12h1v4h1" /><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18" />',
+  dots: '<path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />',
+  sun: '<path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 12h1" /><path d="M20 12h1" /><path d="M12 3v1" /><path d="M12 20v1" /><path d="M5.6 5.6l.7 .7" /><path d="M17.7 17.7l.7 .7" /><path d="M18.4 5.6l-.7 .7" /><path d="M6.3 17.7l-.7 .7" />',
+  moon: '<path d="M12 3c.132 0 .263 .003 .393 .01a7.5 7.5 0 0 0 7.92 10.865a9 9 0 1 1 -8.313 -10.875z" />',
+  user: '<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />',
+  users: '<path d="M9 7a4 4 0 1 0 0 8a4 4 0 0 0 0 -8" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4" /><path d="M16 11a3 3 0 1 0 0 -6" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />',
+  calendarStats: '<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v11a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M8 16h2l2 -3l2 5l2 -4h2" />',
+  receipt: '<path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2z" /><path d="M9 7h6" /><path d="M9 11h6" /><path d="M9 15h4" />',
+  creditCard: '<path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M3 10h18" /><path d="M7 15h.01" /><path d="M11 15h2" />',
+  wallet: '<path d="M17 8v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M16 12h4v4h-4a2 2 0 0 1 0 -4" />',
+  ticket: '<path d="M15 5l4 4l-2 2a2.83 2.83 0 0 0 0 4l-2 2l-4 -4l-4 4l-4 -4l2 -2a2.83 2.83 0 0 0 0 -4l2 -2l4 4z" /><path d="M13 7l-6 6" /><path d="M17 11l-6 6" />',
+  link: '<path d="M9 15l6 -6" /><path d="M11 6l.5 -.5a3.5 3.5 0 0 1 5 5l-.5 .5" /><path d="M13 18l-.5 .5a3.5 3.5 0 0 1 -5 -5l.5 -.5" />',
+  speakerphone: '<path d="M18 8a3 3 0 0 1 0 6" /><path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" /><path d="M12 8l5 -3v12l-5 -3h-7a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2h7" />',
+  fileText: '<path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 9h1" /><path d="M9 13h6" /><path d="M9 17h6" />',
+  shield: '<path d="M12 3l7 4v5c0 5 -3.5 7.5 -7 9c-3.5 -1.5 -7 -4 -7 -9v-5z" /><path d="M9 12l2 2l4 -4" />',
+  logout: '<path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12" /><path d="M18 9l3 3l-3 3" />',
+};
+
+function tablerIcon(name, className = "") {
+  const paths = TABLER_ICON_PATHS[name] || TABLER_ICON_PATHS.info;
+  return `<svg class="tabler-icon ${className || ""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths}</svg>`;
+}
+
+function inferActionIcon(label, className = "") {
+  const text = String(label || "").toLowerCase();
+  const cls = String(className || "").toLowerCase();
+  if (cls.includes("danger") || text.includes("удал") || text.includes("отклон") || text.includes("выключ")) return "trash";
+  if (cls.includes("success") || text.includes("подтверд") || text.includes("включ")) return "check";
+  if (text.includes("измен") || text.includes("редакт")) return "edit";
+  if (text.includes("сохран")) return "save";
+  if (text.includes("скач")) return "download";
+  if (text.includes("копир")) return "copy";
+  if (text.includes("откры")) return "external";
+  if (text.includes("детал")) return "eye";
+  if (text.includes("скры")) return "eyeOff";
+  if (text.includes("выше") || text.includes("поднять")) return "arrowUp";
+  if (text.includes("ниже") || text.includes("опустить")) return "arrowDown";
+  if (text.includes("трафик") || text.includes("+")) return "plus";
+  return "dots";
+}
+
+function inferContextIcon(title = "") {
+  const text = String(title || "").toLowerCase();
+  if (text.includes("подпис") || text.includes("РїРѕРґРїРёСЃ")) return "calendarStats";
+  if (text.includes("тариф") || text.includes("С‚Р°СЂРёС„")) return "receipt";
+  if (text.includes("транзак") || text.includes("плат") || text.includes("С‚СЂР°РЅР·Р°Рє") || text.includes("РїР»Р°С‚")) return "creditCard";
+  if (text.includes("вывод") || text.includes("РІС‹РІРѕРґ")) return "wallet";
+  if (text.includes("рефера") || text.includes("РµС„РµСЂР")) return "users";
+  if (text.includes("парт") || text.includes("ссыл") || text.includes("РїР°СЂС‚") || text.includes("СЃСЃС‹Р»")) return "link";
+  if (text.includes("промо") || text.includes("РїСЂРѕРјРѕ")) return "ticket";
+  if (text.includes("рассыл") || text.includes("СЂР°СЃСЃС‹Р»")) return "speakerphone";
+  if (text.includes("лог") || text.includes("файл") || text.includes("Р»РѕРі") || text.includes("С„Р°Р№Р»")) return "fileText";
+  if (text.includes("польз") || text.includes("user") || text.includes("РїРѕР»СЊР·")) return "user";
+  if (text.includes("статус") || text.includes("бан") || text.includes("СЃС‚Р°С‚") || text.includes("Р±Р°РЅ")) return "shield";
+  return "fileText";
 }
 
 function formatDateTime(value) {
@@ -77,6 +148,34 @@ function bindEnterSubmit(inputIds, buttonId) {
 
 function closeAllFancySelects() {
   document.querySelectorAll(".fancy-select.open").forEach((el) => el.classList.remove("open"));
+}
+
+function closeAllPopupMenus(except = null) {
+  document.querySelectorAll(".popup-menu.open").forEach((menu) => {
+    if (menu === except) return;
+    menu.classList.remove("open");
+    const trigger = menu.querySelector(".popup-menu__trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+  });
+}
+
+function initPopupMenus(root = document) {
+  const scope = root instanceof HTMLElement || root instanceof Document ? root : document;
+  scope.querySelectorAll(".popup-menu").forEach((menu) => {
+    if (menu.dataset.popupInit === "1") return;
+    menu.dataset.popupInit = "1";
+    const trigger = menu.querySelector(".popup-menu__trigger");
+    if (!trigger) return;
+
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = menu.classList.contains("open");
+      closeAllPopupMenus(menu);
+      menu.classList.toggle("open", !isOpen);
+      trigger.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+    });
+  });
 }
 
 function initFancySelects(root = document) {
@@ -144,10 +243,21 @@ function initFancySelects(root = document) {
 
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".fancy-select")) closeAllFancySelects();
+  if (!e.target.closest(".popup-menu")) closeAllPopupMenus();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeAllFancySelects();
+    closeAllPopupMenus();
+  }
 });
 
 const ADMIN_MENU = [
   { key: "dashboard", href: "/admin/dashboard", label: "Обзор", icon: "overview" },
+  { key: "maintenance", href: "/admin/maintenance", label: "Техработы", icon: "settings" },
+  { key: "admins", href: "/admin/admins", label: "Администраторы", icon: "users" },
+  { key: "legal", href: "/admin/legal", label: "Документы", icon: "logs" },
   { key: "users", href: "/admin/users", label: "Пользователи", icon: "users" },
   { key: "subscriptions", href: "/admin/subscriptions", label: "Подписки", icon: "subs" },
   { key: "plans", href: "/admin/plans", label: "Тарифы", icon: "plans" },
@@ -159,8 +269,10 @@ const ADMIN_MENU = [
   { key: "broadcast", href: "/admin/broadcast", label: "Рассылки", icon: "mail" },
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
 ];
+const SUPPORT_MENU_KEYS = new Set(["users", "subscriptions", "transactions", "referrals"]);
 
 const DESKTOP_SIDEBAR_STORAGE_KEY = "adminDesktopSidebarCollapsed";
+const ADMIN_THEME_STORAGE_KEY = "adminTheme";
 
 function menuIcon(kind) {
   const map = {
@@ -181,8 +293,23 @@ function menuIcon(kind) {
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg>`;
 }
 
+function getAdminRole() {
+  return window.ADMIN_SESSION?.role || "superadmin";
+}
+
+function getVisibleAdminMenu() {
+  if (getAdminRole() === "support") {
+    return ADMIN_MENU.filter((item) => SUPPORT_MENU_KEYS.has(item.key));
+  }
+  return ADMIN_MENU;
+}
+
+function canAccessAdminPage(activeKey) {
+  return getAdminRole() !== "support" || SUPPORT_MENU_KEYS.has(activeKey);
+}
+
 function renderMenu(activeKey) {
-  return ADMIN_MENU.map((item) => `
+  return getVisibleAdminMenu().map((item) => `
     <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
       <span class="menu-ico">${menuIcon(item.icon)}</span>
       <span class="menu-label">${item.label}</span>
@@ -193,16 +320,20 @@ function renderMenu(activeKey) {
 function renderQuickNav() {
   return `
     <option value="">Быстрый переход</option>
-    ${ADMIN_MENU.filter((m) => m.key !== "dashboard").map((m) => `<option value="${m.href}">${m.label}</option>`).join("")}
+    ${getVisibleAdminMenu().filter((m) => m.key !== "dashboard").map((m) => `<option value="${m.href}">${m.label}</option>`).join("")}
   `;
 }
 
 function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
+  if (!canAccessAdminPage(activeKey)) {
+    window.location.replace("/admin/users");
+    return;
+  }
   document.body.innerHTML = `
     <button id="mobile_nav_overlay" class="mobile-nav-overlay" type="button" aria-label="Закрыть меню"></button>
 
-    <div class="app">
-      <aside class="sidebar">
+    <div class="app tailadmin-shell">
+      <aside class="sidebar tailadmin-sidebar">
         <div class="sidebar-head">
           <div class="sidebar-brand">
             <div class="sidebar-brand-mark">
@@ -218,12 +349,12 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
         <nav class="menu">${renderMenu(activeKey)}</nav>
 
         <div class="sidebar-footer">
-          <button id="logout" class="btn-logout">Выход</button>
+          <button id="logout" class="btn-logout">${tablerIcon("logout", "btn-logout__icon")}<span>Выход</span></button>
         </div>
       </aside>
 
-      <main class="main">
-        <header class="topbar">
+      <main class="main tailadmin-main">
+        <header class="topbar tailadmin-header">
           <div class="topbar-left">
             <button id="mobile_nav_toggle" class="mobile-nav-toggle" type="button" aria-label="Открыть меню">
               <span></span><span></span><span></span>
@@ -233,27 +364,30 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
             </button>
             <div class="topbar-title">Админ-панель</div>
           </div>
+          <div class="topbar-right">
+            <button id="theme_toggle" class="theme-toggle" type="button" aria-label="Темная тема" title="Переключить тему">
+              ${tablerIcon("sun", "theme-toggle__icon theme-toggle__icon--sun")}
+              ${tablerIcon("moon", "theme-toggle__icon theme-toggle__icon--moon")}
+            </button>
+          </div>
         </header>
 
-        <section class="page-shell">
-          <div class="page-header-card">
+        <section class="page-shell tailadmin-content">
+          <div class="page-header-card tailadmin-page-heading">
             <div>
               <div class="crumbs">Главная / ${title}</div>
               <div class="page-title">${title}</div>
               <div class="page-sub">${subtitle}</div>
             </div>
-            <select id="quick_nav" class="top-select">${renderQuickNav()}</select>
           </div>
 
           <section id="content">${contentHtml}</section>
-
-          <footer class="page-footer">Админ-панель · Все права защищены</footer>
         </section>
       </main>
     </div>
   `;
 
-  q("logout").addEventListener("click", async () => {
+  const logoutAdmin = async () => {
     try {
       await fetch(`${API_BASE}/api/admin/auth/logout`, {
         method: "POST",
@@ -261,13 +395,27 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
       });
     } catch {}
     window.location.replace("/admin/login");
-  });
+  };
 
-  q("quick_nav").addEventListener("change", (e) => {
-    const val = e.target.value;
-    if (val) window.location.href = val;
-  });
-  document.body.classList.remove("dark");
+  q("logout").addEventListener("click", logoutAdmin);
+
+  const applyTheme = (theme) => {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark", isDark);
+    document.documentElement.dataset.adminTheme = isDark ? "dark" : "light";
+    const themeToggle = q("theme_toggle");
+    if (themeToggle) {
+      themeToggle.classList.toggle("is-dark", isDark);
+      themeToggle.setAttribute("aria-label", isDark ? "Светлая тема" : "Темная тема");
+      themeToggle.setAttribute("title", isDark ? "Включить светлую тему" : "Включить темную тему");
+    }
+  };
+
+  let savedTheme = "light";
+  try {
+    savedTheme = window.localStorage.getItem(ADMIN_THEME_STORAGE_KEY) || "light";
+  } catch {}
+  applyTheme(savedTheme === "dark" ? "dark" : "light");
 
   const applyDesktopSidebarState = (collapsed) => {
     document.body.classList.toggle("desktop-sidebar-collapsed", collapsed);
@@ -302,6 +450,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   const navToggle = q("mobile_nav_toggle");
   const navOverlay = q("mobile_nav_overlay");
   const desktopTopbarToggle = q("desktop_topbar_toggle");
+  const themeToggle = q("theme_toggle");
 
   if (navToggle) {
     navToggle.addEventListener("click", () => {
@@ -311,6 +460,15 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   }
   if (desktopTopbarToggle) {
     desktopTopbarToggle.addEventListener("click", toggleDesktopSidebar);
+  }
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const nextTheme = document.body.classList.contains("dark") ? "light" : "dark";
+      applyTheme(nextTheme);
+      try {
+        window.localStorage.setItem(ADMIN_THEME_STORAGE_KEY, nextTheme);
+      } catch {}
+    });
   }
   if (navOverlay) navOverlay.addEventListener("click", closeMobileNav);
 
@@ -339,6 +497,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
   }
 
   initFancySelects(document);
+  initPopupMenus(document);
 }
 
 async function renderSessionInfo() {
@@ -350,3 +509,191 @@ function renderPager(meta, prevBtn, nextBtn, label) {
   prevBtn.disabled = meta.page <= 1;
   nextBtn.disabled = meta.page >= meta.pages;
 }
+
+function sortableTh(label, key, activeKey, direction = "asc", extraClass = "") {
+  const active = key === activeKey;
+  const dir = String(direction || "asc").toLowerCase() === "desc" ? "desc" : "asc";
+  return `
+    <th class="${extraClass}">
+      <button class="sort-th ${active ? "is-active" : ""}" data-sort-key="${key}" data-sort-dir="${active ? dir : ""}" type="button">
+        <span>${safeText(label)}</span>
+        <span class="sort-th__icon" aria-hidden="true"></span>
+      </button>
+    </th>
+  `;
+}
+
+function bindSortableTable(root, state, onChange) {
+  const scope = root instanceof HTMLElement || root instanceof Document ? root : document;
+  scope.querySelectorAll(".sort-th[data-sort-key]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const key = button.dataset.sortKey || "";
+      if (!key) return;
+      const currentKey = state.sortBy;
+      const currentDir = String(state.sortDir || "asc").toLowerCase() === "desc" ? "desc" : "asc";
+      state.sortBy = key;
+      state.sortDir = currentKey === key && currentDir === "asc" ? "desc" : "asc";
+      state.page = 1;
+      await onChange(button);
+    });
+  });
+}
+
+function setTableRefreshing(tableOrTbody, refreshing) {
+  const tableWrap = tableOrTbody?.closest?.(".table-wrap") || null;
+  tableWrap?.classList.toggle("table-wrap--refreshing", Boolean(refreshing));
+}
+
+function closeAllRowActionMenus(except = null) {
+  document.querySelectorAll(".row-action-menu.open").forEach((menu) => {
+    if (menu === except) return;
+    menu.classList.remove("open");
+    menu.closest("td")?.classList.remove("table-actions-cell--open");
+    menu.querySelector(".row-action-menu__trigger")?.setAttribute("aria-expanded", "false");
+  });
+}
+
+function initRowActionMenus(root = document) {
+  const scope = root instanceof HTMLElement || root instanceof Document ? root : document;
+  scope.querySelectorAll(".row-action-menu").forEach((menu) => {
+    if (menu.dataset.rowMenuInit === "1") return;
+    menu.dataset.rowMenuInit = "1";
+    const trigger = menu.querySelector(".row-action-menu__trigger");
+    if (!trigger) return;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const isOpen = menu.classList.contains("open");
+      closeAllRowActionMenus(menu);
+      menu.classList.toggle("open", !isOpen);
+      menu.closest("td")?.classList.toggle("table-actions-cell--open", !isOpen);
+      trigger.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+    });
+  });
+}
+
+function mountRowActionMenu(cell, ariaLabel = "Действия") {
+  if (!cell) return null;
+  cell.classList.add("table-actions-cell");
+  cell.innerHTML = `
+    <div class="row-action-menu">
+      <button class="row-action-menu__trigger" type="button" aria-label="${safeText(ariaLabel)}" aria-haspopup="menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="row-action-menu__panel" role="menu"></div>
+    </div>
+  `;
+  initRowActionMenus(cell);
+  return cell.querySelector(".row-action-menu__panel");
+}
+
+function createRowActionButton(label, className, onClick) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `row-action-menu__item ${className || ""}`.trim();
+  button.setAttribute("role", "menuitem");
+  button.innerHTML = `${tablerIcon(inferActionIcon(label, className), "row-action-menu__icon")}<span>${safeText(label)}</span>`;
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeAllRowActionMenus();
+    onClick(event, button);
+  });
+  return button;
+}
+
+function closeRowContextMenu() {
+  document.querySelector(".row-context-layer")?.remove();
+  document.querySelectorAll("tr.row-context-active").forEach((row) => row.classList.remove("row-context-active"));
+  document.body.classList.remove("row-context-open");
+}
+
+function createRowContextButton(label, className, onClick, keepOpen = false) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `row-action-menu__item ${className || ""}`.trim();
+  button.setAttribute("role", "menuitem");
+  button.innerHTML = `${tablerIcon(inferActionIcon(label, className), "row-action-menu__icon")}<span>${safeText(label)}</span>`;
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (!keepOpen) closeRowContextMenu();
+    onClick(event, button);
+  });
+  return button;
+}
+
+function showRowContextMenu(anchor, items = [], options = {}) {
+  if (!anchor) return null;
+  closeRowContextMenu();
+  closeAllRowActionMenus();
+
+  const layer = document.createElement("div");
+  layer.className = "row-context-layer";
+
+  const menu = document.createElement("div");
+  menu.className = `row-context-menu ${options.className || ""}`.trim();
+  menu.setAttribute("role", "menu");
+  menu.addEventListener("click", (event) => event.stopPropagation());
+
+  if (options.title) {
+    const title = document.createElement("div");
+    title.className = "row-context-menu__title";
+    title.innerHTML = `
+      <div class="row-context-menu__title-main">
+        ${tablerIcon(options.icon || inferContextIcon(options.title), "row-context-menu__title-icon")}<span>${safeText(options.title)}</span>
+      </div>
+      <button class="row-context-menu__close" type="button" aria-label="Закрыть окно">&times;</button>
+    `;
+    title.querySelector(".row-context-menu__close")?.addEventListener("click", closeRowContextMenu);
+    menu.appendChild(title);
+  }
+
+  if (Array.isArray(options.meta) && options.meta.length) {
+    const meta = document.createElement("div");
+    meta.className = "row-context-menu__meta";
+    options.meta.forEach((item) => {
+      const cell = document.createElement("div");
+      const label = document.createElement("span");
+      const value = document.createElement("b");
+      label.textContent = item.label;
+      if (item.html) {
+        value.innerHTML = item.html;
+      } else {
+        value.textContent = item.value ?? "—";
+      }
+      cell.append(label, value);
+      meta.appendChild(cell);
+    });
+    menu.appendChild(meta);
+  }
+
+  const body = document.createElement("div");
+  body.className = "row-context-menu__body";
+  if (typeof options.render === "function") {
+    options.render(body, closeRowContextMenu);
+  } else {
+    items.forEach((item) => {
+      body.appendChild(createRowContextButton(item.label, item.className, item.onClick, Boolean(item.keepOpen)));
+    });
+  }
+  menu.appendChild(body);
+
+  layer.appendChild(menu);
+  document.body.appendChild(layer);
+  anchor.classList.add("row-context-active");
+  document.body.classList.add("row-context-open");
+
+  requestAnimationFrame(() => layer.classList.add("open"));
+  return menu;
+}
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".row-action-menu")) closeAllRowActionMenus();
+  if (event.target.closest(".row-context-layer") && !event.target.closest(".row-context-menu")) closeRowContextMenu();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeAllRowActionMenus();
+    closeRowContextMenu();
+  }
+});

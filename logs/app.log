@@ -16174,3 +16174,1172 @@ TimeoutError: _ssl.c:1015: The handshake operation timed out
 [2026-07-19 15:46:20] [INFO] root: Bot polling cancelled
 [2026-07-19 15:46:20] [INFO] root: Bot stopped
 [2026-07-19 15:46:20] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-23 23:30:10] [INFO] root: Settings successfully loaded from .env
+[2026-07-23 23:30:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-23 23:30:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-23 23:30:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-23 23:30:22] [INFO] root: Database tables initialized
+[2026-07-23 23:30:22] [INFO] root: Database connection successful
+[2026-07-23 23:48:37] [INFO] root: Settings successfully loaded from .env
+[2026-07-23 23:48:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-23 23:48:39] [INFO] root: Database tables initialized
+[2026-07-23 23:48:39] [INFO] root: Database connection successful
+[2026-07-23 23:49:05] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-23 23:49:06] [WARNING] root: [admin][health] check failed key=telegram err=Telegram server says - Unauthorized
+[2026-07-23 23:49:31] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-23 23:49:31] [WARNING] root: [admin][health] check failed key=telegram err=Telegram server says - Unauthorized
+[2026-07-23 23:49:34] [WARNING] root: [admin][health] check failed key=telegram err=Telegram server says - Unauthorized
+[2026-07-23 23:49:34] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-23 23:58:38] [WARNING] root: [admin][health] check failed key=telegram err=Telegram server says - Unauthorized
+[2026-07-24 00:23:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 00:23:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 00:23:37] [INFO] root: Database tables initialized
+[2026-07-24 00:23:37] [INFO] root: Database connection successful
+[2026-07-24 00:23:37] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 00:23:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 00:49:48] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 01:17:32] [ERROR] root: [app][http] unhandled exception method=GET path=/admin/users query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\apps\admin_frontend.py", line 43, in page_handler
+    return _render_admin_page(page_name)
+  File "C:\Users\dyunj\VPNBot\backend\apps\admin_frontend.py", line 26, in _render_admin_page
+    html = (ADMIN_FRONTEND_DIR / f"{name}.html").read_text(encoding="utf-8")
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\pathlib\_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\pathlib\_abc.py", line 633, in read_text
+    return f.read()
+           ~~~~~~^^
+  File "<frozen codecs>", line 325, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xcf in position 154: invalid continuation byte
+[2026-07-24 01:17:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 01:19:46] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 01:19:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 01:57:47] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 02:09:47] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 02:10:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 02:10:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 02:10:09] [INFO] root: Database tables initialized
+[2026-07-24 02:10:09] [INFO] root: Database connection successful
+[2026-07-24 02:10:26] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 02:10:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 02:10:32] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:17:23] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 16:17:24] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 16:17:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 16:17:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 16:17:26] [INFO] root: Database tables initialized
+[2026-07-24 16:17:26] [INFO] root: Database connection successful
+[2026-07-24 16:18:24] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:18:51] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:18:55] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:18:56] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:18:57] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:18:59] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:19:00] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:19:01] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:22:47] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:22:58] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:39:33] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:39:40] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:39:42] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:47:49] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:47:53] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 16:56:12] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:01:12] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:01:15] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:12:09] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:12:12] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:13:13] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:19:57] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:20:05] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 135, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-24 17:20:05] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 17:20:30] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:21:15] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:28:36] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:28:42] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:28:54] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:28:55] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:28:55] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:30:21] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:32:09] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:32:18] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:33:37] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:36:09] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:44:00] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:56:09] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:56:16] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:56:39] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:57:40] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:58:52] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 17:58:54] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 18:06:36] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 18:06:37] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 18:06:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 18:06:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 18:06:39] [INFO] root: Database tables initialized
+[2026-07-24 18:06:39] [INFO] root: Database connection successful
+[2026-07-24 21:23:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:23:36] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:23:36] [INFO] root: Bot started
+[2026-07-24 21:23:36] [INFO] aiogram.dispatcher: Start polling
+[2026-07-24 21:23:39] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-24 21:23:39] [ERROR] root: Bot crashed: Telegram server says - Unauthorized
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+        bot=bot,
+    ...<2 lines>...
+        content=raw_result,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 127, in check_response
+    raise TelegramUnauthorizedError(method=method, message=description)
+aiogram.exceptions.TelegramUnauthorizedError: Telegram server says - Unauthorized
+[2026-07-24 21:23:39] [INFO] root: Bot stopped
+[2026-07-24 21:23:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:25:28] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:25:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:25:29] [INFO] root: Bot started
+[2026-07-24 21:25:29] [INFO] aiogram.dispatcher: Start polling
+[2026-07-24 21:25:32] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-07-24 21:25:35] [INFO] aiogram.event: Update id=891137374 is handled. Duration 574 ms by bot id=7557954606
+[2026-07-24 21:25:37] [INFO] aiogram.event: Update id=891137375 is handled. Duration 222 ms by bot id=7557954606
+[2026-07-24 21:25:39] [INFO] aiogram.event: Update id=891137376 is handled. Duration 245 ms by bot id=7557954606
+[2026-07-24 21:25:40] [INFO] aiogram.event: Update id=891137377 is handled. Duration 245 ms by bot id=7557954606
+[2026-07-24 21:25:41] [INFO] aiogram.event: Update id=891137378 is handled. Duration 215 ms by bot id=7557954606
+[2026-07-24 21:25:42] [INFO] aiogram.event: Update id=891137379 is handled. Duration 238 ms by bot id=7557954606
+[2026-07-24 21:25:43] [INFO] aiogram.event: Update id=891137380 is handled. Duration 219 ms by bot id=7557954606
+[2026-07-24 21:25:46] [INFO] aiogram.event: Update id=891137381 is handled. Duration 121 ms by bot id=7557954606
+[2026-07-24 21:25:47] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=СБП 2
+[2026-07-24 21:25:47] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=2
+[2026-07-24 21:25:48] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=bd7b71d7-8ca4-4ed5-af8f-fb298cdf80dc amount=5.0
+[2026-07-24 21:25:48] [INFO] aiogram.event: Update id=891137382 is handled. Duration 1608 ms by bot id=7557954606
+[2026-07-24 21:27:17] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:29:44] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:29:46] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:04] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:13] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:14] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:14] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:15] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:16] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:42] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:43] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:44] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:44] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:45] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:36:47] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:37:34] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:37:43] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:37:44] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:37:45] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:37:46] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:43:52] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:45:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:45:26] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:45:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:46:30] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:46:53] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:47:26] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:48:05] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:48:07] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:48:12] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:48:23] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:48:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:48:24] [INFO] root: Database tables initialized
+[2026-07-24 21:48:24] [INFO] root: Database connection successful
+[2026-07-24 21:48:28] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:28] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:30] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:56] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:57] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:57] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:58] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:59] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:50:59] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:53:43] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:53:44] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:53:46] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:53:47] [WARNING] root: [admin][health] check failed key=remnawave err=Server disconnected
+[2026-07-24 21:53:57] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 21:53:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:53:58] [INFO] root: Database tables initialized
+[2026-07-24 21:53:58] [INFO] root: Database connection successful
+[2026-07-24 21:54:00] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/server-load query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 460, in admin_system_server_load
+    return await asyncio.to_thread(_collect_server_load)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 296, in _collect_server_load
+    return _collect_server_load_fallback()
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 225, in _collect_server_load_fallback
+    "status": _metric_status(cpu_percent),
+              ^^^^^^^^^^^^^^
+NameError: name '_metric_status' is not defined
+[2026-07-24 21:54:00] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 21:54:02] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/server-load query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 460, in admin_system_server_load
+    return await asyncio.to_thread(_collect_server_load)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 296, in _collect_server_load
+    return _collect_server_load_fallback()
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 225, in _collect_server_load_fallback
+    "status": _metric_status(cpu_percent),
+              ^^^^^^^^^^^^^^
+NameError: name '_metric_status' is not defined
+[2026-07-24 21:54:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:08:50] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:09:22] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:15:26] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/server-load query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 460, in admin_system_server_load
+    async def admin_system_business_settings_update(payload: BusinessSettingsPayload):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 296, in _collect_server_load
+    ]
+    
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 225, in _collect_server_load_fallback
+    pass
+    
+NameError: name '_metric_status' is not defined
+[2026-07-24 22:15:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:16:05] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:16:05] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:16:05] [INFO] root: Database tables initialized
+[2026-07-24 22:16:05] [INFO] root: Database connection successful
+[2026-07-24 22:16:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:16:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:17:15] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/admins query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 47, in admin_access_list
+    "items": [_admin_access_public(row) for row in rows],
+              ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 22, in _admin_access_public
+    user = admin.user
+           ^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1131, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 922, in _load_for_state
+    raise orm_exc.DetachedInstanceError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Admin at 0x27e25ae7750> is not bound to a Session; lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+[2026-07-24 22:17:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:18:16] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/admins query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 47, in admin_access_list
+    "items": [_admin_access_public(row) for row in rows],
+              ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 22, in _admin_access_public
+    user = admin.user
+           ^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1131, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 922, in _load_for_state
+    raise orm_exc.DetachedInstanceError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Admin at 0x27e259a9450> is not bound to a Session; lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+[2026-07-24 22:18:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:18:17] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/admins query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 47, in admin_access_list
+    "items": [_admin_access_public(row) for row in rows],
+              ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\admins.py", line 22, in _admin_access_public
+    user = admin.user
+           ^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1131, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 922, in _load_for_state
+    raise orm_exc.DetachedInstanceError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Admin at 0x27e25b129e0> is not bound to a Session; lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+[2026-07-24 22:18:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:20:47] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:20:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:21:11] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:21:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:21:12] [INFO] root: Database tables initialized
+[2026-07-24 22:21:12] [INFO] root: Database connection successful
+[2026-07-24 22:21:44] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:21:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:21:45] [INFO] root: Database tables initialized
+[2026-07-24 22:21:45] [INFO] root: Database connection successful
+[2026-07-24 22:23:23] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:23:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:23:24] [INFO] root: Database tables initialized
+[2026-07-24 22:23:24] [INFO] root: Database connection successful
+[2026-07-24 22:23:39] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:23:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:26:50] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:27:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:27:35] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:28:02] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:28:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:28:03] [INFO] root: Database tables initialized
+[2026-07-24 22:28:03] [INFO] root: Database connection successful
+[2026-07-24 22:35:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:35:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:36:01] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:36:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:36:27] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:38:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:38:06] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:38:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-24 22:38:18] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 22:38:18] [INFO] root: Database tables initialized
+[2026-07-24 22:38:18] [INFO] root: Database connection successful
+[2026-07-24 23:53:40] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 425, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-24 23:53:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 23:53:42] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 425, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-24 23:53:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 23:53:43] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 425, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-24 23:53:43] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 425, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-24 23:53:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-24 23:53:44] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:19:55] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-25 00:19:55] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-25 00:19:55] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:20:12] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-25 00:21:34] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/auth/login query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\auth.py", line 136, in admin_auth_login
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+                                                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: comparing strings with non-ASCII characters is not supported
+[2026-07-25 00:21:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:21:36] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/auth/login query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\auth.py", line 136, in admin_auth_login
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+                                                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: comparing strings with non-ASCII characters is not supported
+[2026-07-25 00:21:36] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/auth/login query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\auth.py", line 136, in admin_auth_login
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+                                                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: comparing strings with non-ASCII characters is not supported
+[2026-07-25 00:21:36] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/auth/login query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\auth.py", line 136, in admin_auth_login
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+                                                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: comparing strings with non-ASCII characters is not supported
+[2026-07-25 00:21:36] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/auth/login query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\auth.py", line 136, in admin_auth_login
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+                                                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: comparing strings with non-ASCII characters is not supported
+[2026-07-25 00:21:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:21:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:21:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:21:56] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:28:39] [ERROR] root: [app][http] unhandled exception method=POST path=/api/admin/system/stars-invoice query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 425, in admin_system_stars_invoice
+    temp_bot = Bot(token=bot_token, session=create_telegram_session())
+               ^^^
+NameError: name 'Bot' is not defined
+[2026-07-25 00:28:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:38:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 00:38:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:38:43] [INFO] root: Database tables initialized
+[2026-07-25 00:38:43] [INFO] root: Database connection successful
+[2026-07-25 00:51:06] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 00:51:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:51:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 00:51:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:51:15] [INFO] root: Database tables initialized
+[2026-07-25 00:51:15] [INFO] root: Database connection successful
+[2026-07-25 00:52:21] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3760 after=3860
+[2026-07-25 00:58:16] [INFO] aiogram.dispatcher: Polling stopped
+[2026-07-25 00:58:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-25 00:58:16] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-07-25 00:58:16] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-25 00:58:16] [INFO] root: Bot polling cancelled
+[2026-07-25 00:58:16] [INFO] root: Bot stopped
+[2026-07-25 00:58:16] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'

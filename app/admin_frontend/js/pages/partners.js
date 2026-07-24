@@ -8,93 +8,68 @@ function renderPartnerDetails(details) {
   return `
     <div class="partner-details">
       <div class="partner-details__summary">
-        <div><span>Привязанных пользователей</span><b>${safeText(summary.attributed_users)}</b></div>
-        <div><span>Пользователей с оплатами</span><b>${safeText(summary.paid_users)}</b></div>
-        <div><span>Всего пополнений</span><b>${safeText(summary.paid_topups)}</b></div>
-        <div><span>Общая сумма</span><b>${safeText(summary.paid_amount)} RUB</b></div>
-        <div><span>Последнее пополнение</span><b>${formatDateTime(summary.last_payment_at)}</b></div>
+        <div><span>Привязано</span><b>${safeText(summary.attributed_users)}</b><small>пользователей</small></div>
+        <div><span>С оплатами</span><b>${safeText(summary.paid_users)}</b><small>пользователей</small></div>
+        <div><span>Пополнений</span><b>${safeText(summary.paid_topups)}</b><small>всего</small></div>
+        <div><span>Сумма</span><b>${safeText(summary.paid_amount)} RUB</b><small>оборот</small></div>
+        <div><span>Последняя оплата</span><b>${formatDateTime(summary.last_payment_at)}</b><small>по ссылке</small></div>
       </div>
 
       <div class="partner-details__grid">
         <div class="partner-details__card">
           <h4>Пользователи по ссылке</h4>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>User ID</th>
-                  <th>Telegram ID</th>
-                  <th>Username</th>
-                  <th>Пополнений</th>
-                  <th>Сумма</th>
-                  <th>Макс. чек</th>
-                  <th>Последнее пополнение</th>
-                  <th>Пришёл по ссылке</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${
-                  users.length
-                    ? users
-                        .map(
-                          (user) => `
-                            <tr>
-                              <td>${safeText(user.user_id)}</td>
-                              <td>${safeText(user.tg_id)}</td>
-                              <td>${safeText(user.username)}</td>
-                              <td>${safeText(user.paid_topups)}</td>
-                              <td>${safeText(user.paid_amount)} RUB</td>
-                              <td>${safeText(user.max_paid_amount)} RUB</td>
-                              <td>${formatDateTime(user.last_paid_at)}</td>
-                              <td>${formatDateTime(user.attributed_at)}</td>
-                            </tr>
-                          `,
-                        )
-                        .join("")
-                    : "<tr><td colspan='8'>Нет пользователей по этой ссылке</td></tr>"
-                }
-              </tbody>
-            </table>
+          <div class="partner-details__list">
+            ${
+              users.length
+                ? users
+                    .map(
+                      (user) => `
+                        <div class="partner-details__item">
+                          <div class="partner-details__item-main">
+                            <b>${safeText(user.username || `User #${user.user_id}`)}</b>
+                            <span>ID ${safeText(user.user_id)} · TG ${safeText(user.tg_id)}</span>
+                          </div>
+                          <div class="partner-details__item-grid">
+                            <div><span>Пополнений</span><b>${safeText(user.paid_topups)}</b></div>
+                            <div><span>Сумма</span><b>${safeText(user.paid_amount)} RUB</b></div>
+                            <div><span>Макс. чек</span><b>${safeText(user.max_paid_amount)} RUB</b></div>
+                            <div><span>Пришёл</span><b>${formatDateTime(user.attributed_at)}</b></div>
+                            <div class="partner-details__item-wide"><span>Последняя оплата</span><b>${formatDateTime(user.last_paid_at)}</b></div>
+                          </div>
+                        </div>
+                      `,
+                    )
+                    .join("")
+                : "<div class='partner-details__empty'>Нет пользователей по этой ссылке</div>"
+            }
           </div>
         </div>
 
         <div class="partner-details__card">
           <h4>Последние пополнения</h4>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>TX ID</th>
-                  <th>User ID</th>
-                  <th>Telegram ID</th>
-                  <th>Username</th>
-                  <th>Сумма</th>
-                  <th>Система</th>
-                  <th>Дата оплаты</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${
-                  payments.length
-                    ? payments
-                        .map(
-                          (payment) => `
-                            <tr>
-                              <td>${safeText(payment.transaction_id)}</td>
-                              <td>${safeText(payment.user_id)}</td>
-                              <td>${safeText(payment.tg_id)}</td>
-                              <td>${safeText(payment.username)}</td>
-                              <td>${safeText(payment.amount)} RUB</td>
-                              <td>${safeText(payment.payment_system)}</td>
-                              <td>${formatDateTime(payment.paid_at)}</td>
-                            </tr>
-                          `,
-                        )
-                        .join("")
-                    : "<tr><td colspan='7'>Нет оплаченных пополнений</td></tr>"
-                }
-              </tbody>
-            </table>
+          <div class="partner-details__list">
+            ${
+              payments.length
+                ? payments
+                    .map(
+                      (payment) => `
+                        <div class="partner-details__item partner-details__item--payment">
+                          <div class="partner-details__item-main">
+                            <b>${safeText(payment.amount)} RUB</b>
+                            <span>${safeText(payment.payment_system || "—")} · ${formatDateTime(payment.paid_at)}</span>
+                          </div>
+                          <div class="partner-details__item-grid">
+                            <div><span>TX</span><b>${safeText(payment.transaction_id)}</b></div>
+                            <div><span>User ID</span><b>${safeText(payment.user_id)}</b></div>
+                            <div><span>Telegram</span><b>${safeText(payment.tg_id)}</b></div>
+                            <div><span>Username</span><b>${safeText(payment.username || "—")}</b></div>
+                          </div>
+                        </div>
+                      `,
+                    )
+                    .join("")
+                : "<div class='partner-details__empty'>Нет оплаченных пополнений</div>"
+            }
           </div>
         </div>
       </div>
@@ -132,6 +107,26 @@ async function togglePartnerDetails(item, hostRow, triggerBtn) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  function closePartnerModal() {
+    const modal = q("partner_modal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("user-modal-open");
+  }
+
+  function openPartnerModal() {
+    q("partner_name").value = "";
+    q("partner_code").value = "";
+    const created = q("created_link");
+    if (created) {
+      created.style.display = "none";
+      created.innerHTML = "";
+    }
+    q("partner_modal").hidden = false;
+    document.body.classList.add("user-modal-open");
+    setTimeout(() => q("partner_name")?.focus(), 0);
+  }
+
   if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "partners",
@@ -140,20 +135,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     contentHtml: `
       <div class="page-shell">
         <div class="card">
-          <h3>Создать ссылку</h3>
-          <div class="form-grid">
-            <input id="partner_name" type="text" placeholder="Название партнёра" />
-            <input id="partner_code" type="text" placeholder="Код ссылки (необязательно)" />
+          <div class="admin-section-head">
+            <h3>Ссылки</h3>
+            <div class="toolbar toolbar--compact">
+              <button id="reload_partners" type="button">Обновить</button>
+              <button id="open_create_partner" class="btn-primary" type="button">Создать ссылку</button>
+            </div>
           </div>
-          <div class="toolbar" style="margin-top:10px">
-            <button id="create_partner" class="btn-primary">Создать</button>
-            <button id="reload_partners">Обновить список</button>
-          </div>
-          <div id="created_link" class="summary-list" style="margin-top:10px; display:none;"></div>
-        </div>
-
-        <div class="card">
-          <h3>Ссылки</h3>
           <div class="toolbar">
             <input id="search" type="text" placeholder="Поиск по названию или коду" />
             <button id="apply" class="btn-primary">Фильтр</button>
@@ -171,11 +159,33 @@ document.addEventListener("DOMContentLoaded", async () => {
                   <th>Сумма пополнений</th>
                   <th>Статус</th>
                   <th>Создана</th>
-                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
             </table>
+          </div>
+        </div>
+
+        <div id="partner_modal" class="user-modal admin-form-modal" hidden>
+          <button id="partner_modal_overlay" class="user-modal__overlay" type="button" aria-label="Закрыть окно"></button>
+          <div class="user-modal__dialog admin-form-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="partner_modal_title">
+            <div class="user-modal__topbar">
+              <div>
+                <div class="user-modal__eyebrow">Партнёрская система</div>
+                <h3 id="partner_modal_title" class="user-modal__title">Создание ссылки</h3>
+              </div>
+              <button id="partner_modal_close" class="user-modal__close" type="button" aria-label="Закрыть окно">×</button>
+            </div>
+            <div class="admin-form-modal__body">
+              <div class="form-grid">
+                <input id="partner_name" type="text" placeholder="Название партнёра" />
+                <input id="partner_code" type="text" placeholder="Код ссылки (необязательно)" />
+              </div>
+              <div id="created_link" class="summary-list" style="display:none;"></div>
+              <div class="admin-form-modal__actions">
+                <button id="create_partner" class="btn-primary" type="button">Создать</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -201,53 +211,62 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${safeText(item.paid_amount)} RUB</td>
         <td>${item.is_active ? statusBadge("active") : statusBadge("disabled")}</td>
         <td>${formatDateTime(item.created_at)}</td>
-        <td></td>
       `;
       const detailsTr = document.createElement("tr");
       detailsTr.className = "partner-details-row";
       detailsTr.style.display = "none";
       detailsTr.dataset.open = "0";
-      detailsTr.innerHTML = `<td colspan="10"></td>`;
+      detailsTr.innerHTML = `<td colspan="9"></td>`;
 
-      const actions = document.createElement("div");
-      actions.className = "row-actions";
-
-      const copy = document.createElement("button");
-      copy.className = "btn-outline-primary";
-      copy.textContent = "Копировать";
-      copy.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(item.url);
-        showToast("Ссылка скопирована", "success");
-      });
-
-      const details = document.createElement("button");
-      details.className = "btn-outline-primary js-partner-details";
-      details.textContent = "Детали";
-      details.addEventListener("click", async (event) => {
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
         event.stopPropagation();
-        await togglePartnerDetails(item, detailsTr, event.currentTarget);
+        showRowContextMenu(tr, [
+          {
+            label: "Копировать ссылку",
+            onClick: async () => {
+              await navigator.clipboard.writeText(item.url);
+              showToast("Ссылка скопирована", "success");
+            },
+          },
+          {
+            label: detailsTr.dataset.open === "1" ? "Скрыть детали" : "Детали",
+            onClick: async (event, button) => {
+              await togglePartnerDetails(item, detailsTr, button);
+            },
+          },
+          {
+            label: item.is_active ? "Выключить" : "Включить",
+            className: item.is_active ? "row-action-menu__item--danger" : "row-action-menu__item--success",
+            onClick: async (event, button) => {
+              await withButtonLoading(button, async () => {
+                await api(`/api/admin/partners/${item.id}`, {
+                  method: "PATCH",
+                  body: JSON.stringify({ is_active: !item.is_active }),
+                });
+                await loadPartners();
+              }).catch((error) => alert(error.message));
+            },
+          },
+        ], {
+          title: `Партнер #${item.id}`,
+          meta: [
+            { label: "Название", value: item.name },
+            { label: "Код", value: item.code },
+            { label: "Ссылка", value: item.url },
+            { label: "Новые пользователи", value: item.new_users },
+            { label: "Оплаченные пополнения", value: item.paid_topups },
+            { label: "Сумма", value: `${item.paid_amount} RUB` },
+            { label: "Статус", html: item.is_active ? statusBadge("active") : statusBadge("disabled") },
+            { label: "Создана", value: formatDateTime(item.created_at) },
+          ],
+        });
       });
-
-      const toggle = document.createElement("button");
-      toggle.className = item.is_active ? "btn-danger" : "btn-success";
-      toggle.textContent = item.is_active ? "Выключить" : "Включить";
-      toggle.addEventListener("click", async (event) => {
-        await withButtonLoading(event.currentTarget, async () => {
-          await api(`/api/admin/partners/${item.id}`, {
-            method: "PATCH",
-            body: JSON.stringify({ is_active: !item.is_active }),
-          });
-          await loadPartners();
-        }).catch((error) => alert(error.message));
-      });
-
-      actions.append(copy, details, toggle);
-      tr.querySelector("td:last-child").appendChild(actions);
       tbody.appendChild(tr);
       tbody.appendChild(detailsTr);
 
       if (partnerState.expandedPartnerId === item.id) {
-        details.click();
+        togglePartnerDetails(item, detailsTr, document.createElement("button"));
       }
     });
   }
@@ -289,6 +308,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(event.currentTarget, async () => {
       await loadPartners();
     }).catch((error) => alert(error.message));
+  });
+
+  q("open_create_partner").addEventListener("click", openPartnerModal);
+  q("partner_modal_overlay")?.addEventListener("click", closePartnerModal);
+  q("partner_modal_close")?.addEventListener("click", closePartnerModal);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closePartnerModal();
   });
 
   try {

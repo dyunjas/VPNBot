@@ -28,7 +28,7 @@ function showToast(message, kind = "error") {
   const root = document.getElementById("toast-root");
   const el = document.createElement("div");
   el.className = `toast toast-${kind}`;
-  el.textContent = String(message || "РЎРѕР±С‹С‚РёРµ");
+  el.textContent = String(message || "Событие");
   root.appendChild(el);
   setTimeout(() => {
     el.classList.add("hide");
@@ -40,7 +40,17 @@ window.alert = (msg) => showToast(msg, "error");
 
 function extractApiErrorMessage(detail) {
   if (detail === null || detail === undefined) return "";
-  if (typeof detail === "string") return detail.trim();
+  if (typeof detail === "string") {
+    const value = detail.trim();
+    if ((value.startsWith("{") && value.endsWith("}")) || (value.startsWith("[") && value.endsWith("]"))) {
+      try {
+        return extractApiErrorMessage(JSON.parse(value));
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  }
   if (typeof detail === "number" || typeof detail === "boolean") return String(detail);
   if (Array.isArray(detail)) {
     return detail
@@ -70,15 +80,15 @@ function translateValidationMessage(raw) {
   const lower = text.toLowerCase();
 
   const fieldMap = {
-    name: "РЅР°Р·РІР°РЅРёРµ",
-    code: "РєРѕРґ",
-    login: "Р»РѕРіРёРЅ",
-    password: "РїР°СЂРѕР»СЊ",
-    amount: "СЃСѓРјРјР°",
-    usages: "РєРѕР»РёС‡РµСЃС‚РІРѕ Р°РєС‚РёРІР°С†РёР№",
-    text: "С‚РµРєСЃС‚",
-    image: "РёР·РѕР±СЂР°Р¶РµРЅРёРµ",
-    parse_mode: "СЂРµР¶РёРј С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ",
+    name: "название",
+    code: "код",
+    login: "логин",
+    password: "пароль",
+    amount: "сумма",
+    usages: "количество активаций",
+    text: "текст",
+    image: "изображение",
+    parse_mode: "режим форматирования",
   };
 
   const match = text.match(/^([a-zA-Z0-9_.\[\]-]+)\s*:\s*(.+)$/);
@@ -95,40 +105,40 @@ function translateValidationMessage(raw) {
   const msgLower = message.toLowerCase();
 
   if (msgLower.includes("string should have at least 1 character")) {
-    return field ? `РџРѕР»Рµ В«${field}В» РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј` : "РўРµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј";
+    return field ? `Поле «${field}» не может быть пустым` : "Текстовое поле не может быть пустым";
   }
   if (msgLower.includes("field required")) {
-    return field ? `РџРѕР»Рµ В«${field}В» РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ` : "РќРµ Р·Р°РїРѕР»РЅРµРЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїРѕР»Рµ";
+    return field ? `Поле «${field}» обязательно для заполнения` : "Не заполнено обязательное поле";
   }
   if (msgLower.includes("string should have at least")) {
     const count = message.match(/at least\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј ${count} СЃРёРјРІРѕР»Р°(РѕРІ)` : "РЎР»РёС€РєРѕРј РєРѕСЂРѕС‚РєРѕРµ Р·РЅР°С‡РµРЅРёРµ";
+    return field && count ? `Поле «${field}» должно содержать минимум ${count} символа(ов)` : "Слишком короткое значение";
   }
   if (msgLower.includes("string should have at most")) {
     const count = message.match(/at most\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РЅРµ Р±РѕР»СЊС€Рµ ${count} СЃРёРјРІРѕР»РѕРІ` : "РЎР»РёС€РєРѕРј РґР»РёРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ";
-  }
-  if (msgLower.includes("input should be greater than")) {
-    const count = message.match(/greater than\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ ${count}` : "Р—РЅР°С‡РµРЅРёРµ СЃР»РёС€РєРѕРј РјР°Р»РµРЅСЊРєРѕРµ";
+    return field && count ? `Поле «${field}» должно содержать не больше ${count} символов` : "Слишком длинное значение";
   }
   if (msgLower.includes("input should be greater than or equal to")) {
     const count = message.match(/greater than or equal to\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РјРµРЅСЊС€Рµ ${count}` : "Р—РЅР°С‡РµРЅРёРµ СЃР»РёС€РєРѕРј РјР°Р»РµРЅСЊРєРѕРµ";
+    return field && count ? `Поле «${field}» должно быть не меньше ${count}` : "Значение слишком маленькое";
   }
-  if (msgLower.includes("input should be less than")) {
-    const count = message.match(/less than\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ ${count}` : "Р—РЅР°С‡РµРЅРёРµ СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕРµ";
+  if (msgLower.includes("input should be greater than")) {
+    const count = message.match(/greater than\s+(\d+)/i)?.[1];
+    return field && count ? `Поле «${field}» должно быть больше ${count}` : "Значение слишком маленькое";
   }
   if (msgLower.includes("input should be less than or equal to")) {
     const count = message.match(/less than or equal to\s+(\d+)/i)?.[1];
-    return field && count ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ Р±РѕР»СЊС€Рµ ${count}` : "Р—РЅР°С‡РµРЅРёРµ СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕРµ";
+    return field && count ? `Поле «${field}» должно быть не больше ${count}` : "Значение слишком большое";
+  }
+  if (msgLower.includes("input should be less than")) {
+    const count = message.match(/less than\s+(\d+)/i)?.[1];
+    return field && count ? `Поле «${field}» должно быть меньше ${count}` : "Значение слишком большое";
   }
   if (msgLower.includes("input should be a valid integer")) {
-    return field ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»С‹Рј С‡РёСЃР»РѕРј` : "Р’РІРµРґРёС‚Рµ С†РµР»РѕРµ С‡РёСЃР»Рѕ";
+    return field ? `Поле «${field}» должно быть целым числом` : "Введите целое число";
   }
   if (msgLower.includes("input should be a valid number")) {
-    return field ? `РџРѕР»Рµ В«${field}В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РёСЃР»РѕРј` : "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ";
+    return field ? `Поле «${field}» должно быть числом` : "Введите число";
   }
 
   return text;
@@ -139,15 +149,33 @@ function friendlyAdminErrorMessage(detail, context = {}) {
   const s = raw.toLowerCase();
   const path = String(context.path || "");
 
-  if (!raw) return "РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°";
+  if (!raw) return "Произошла ошибка";
   if (s.includes("failed to fetch") || s.includes("networkerror") || s.includes("load failed")) {
-    return "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє СЃРµСЂРІРµСЂСѓ";
+    return "Не удалось подключиться к серверу";
   }
   if (s.includes("request entity too large")) {
-    return "Р¤Р°Р№Р» СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№";
+    return "Файл слишком большой";
+  }
+  if (s === "not found" || s.includes('"detail":"not found"')) {
+    return path.includes("/logs/") ? "Файл лога не найден" : "Запрашиваемый ресурс не найден";
+  }
+  if (s.includes("log file not found")) {
+    return "Файл лога не найден";
+  }
+  if (s.includes("amount must be > 0")) {
+    return "Сумма должна быть больше 0";
+  }
+  if (s.includes("gb must be > 0")) {
+    return "Количество GB должно быть больше 0";
+  }
+  if (s.includes("promocode") && s.includes("already")) {
+    return "Промокод с таким кодом уже существует";
+  }
+  if (s.includes("promocode") && s.includes("not found")) {
+    return "Промокод не найден";
   }
   if (s.includes("unauthorized") || s.includes("invalid token") || s.includes("token expired")) {
-    return "РЎРµСЃСЃРёСЏ РёСЃС‚РµРєР»Р°. Р’РѕР№РґРёС‚Рµ Р·Р°РЅРѕРІРѕ.";
+    return "Сессия истекла. Войдите заново.";
   }
   if (path.includes("/auth/login") && (
     s.includes("incorrect") ||
@@ -157,17 +185,17 @@ function friendlyAdminErrorMessage(detail, context = {}) {
     s.includes("unauthorized") ||
     s.includes("not found")
   )) {
-    return "РќРµРІРµСЂРЅС‹Р№ Р»РѕРіРёРЅ РёР»Рё РїР°СЂРѕР»СЊ";
+    return "Неверный логин или пароль";
   }
-  if (s.includes("forbidden") || s.includes("access denied")) return "Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰С‘РЅ";
-  if (s.includes("validation") || s.includes("invalid input")) return "РџСЂРѕРІРµСЂСЊС‚Рµ РІРІРµРґС‘РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ";
+  if (s.includes("forbidden") || s.includes("access denied")) return "Доступ запрещен";
+  if (s.includes("validation") || s.includes("invalid input")) return "Проверьте введенные данные";
   if (raw.includes("body.") || raw.includes("query.") || raw.includes("path.")) {
     return translateValidationMessage(raw);
   }
   return raw;
 }
 
-function toErrorMessage(err, fallback = "РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°") {
+function toErrorMessage(err, fallback = "Произошла ошибка") {
   if (!err) return fallback;
   if (typeof err === "string") return err;
   if (err instanceof Error) return err.message || fallback;
@@ -175,12 +203,12 @@ function toErrorMessage(err, fallback = "РџСЂРѕРёР·РѕС€Р»Р° �
 }
 
 window.addEventListener("error", (event) => {
-  const message = toErrorMessage(event.error || event.message, "РќРµРѕР¶РёРґР°РЅРЅР°СЏ РѕС€РёР±РєР° РЅР° СЃС‚СЂР°РЅРёС†Рµ");
+  const message = toErrorMessage(event.error || event.message, "Неожиданная ошибка на странице");
   showToast(message, "error");
 });
 
 window.addEventListener("unhandledrejection", (event) => {
-  const message = toErrorMessage(event.reason, "РћС€РёР±РєР° РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР°");
+  const message = toErrorMessage(event.reason, "Ошибка выполнения запроса");
   showToast(message, "error");
 });
 
@@ -210,8 +238,14 @@ async function hasAdminSession() {
       method: "GET",
       credentials: "include",
     });
-    return res.ok;
+    if (!res.ok) {
+      window.ADMIN_SESSION = null;
+      return false;
+    }
+    window.ADMIN_SESSION = await res.json();
+    return true;
   } catch {
+    window.ADMIN_SESSION = null;
     return false;
   }
 }
@@ -244,7 +278,7 @@ async function api(path, options = {}) {
     const detail = data?.error?.message || data?.detail || data?.message || data;
     let err = friendlyAdminErrorMessage(detail, { path }) || `HTTP ${res.status}`;
     if (res.status === 413 || String(err).toLowerCase().includes("request entity too large")) {
-      err = "Р¤Р°Р№Р» СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№ РґР»СЏ Р·Р°РіСЂСѓР·РєРё. РЈРјРµРЅСЊС€РёС‚Рµ СЂР°Р·РјРµСЂ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РёР»Рё СѓРІРµР»РёС‡СЊС‚Рµ Р»РёРјРёС‚ client_max_body_size РІ nginx.";
+      err = "Файл слишком большой для загрузки. Уменьшите размер изображения или увеличьте лимит client_max_body_size в nginx.";
     }
     showToast(err, "error");
     throw new Error(err);

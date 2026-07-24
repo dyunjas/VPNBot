@@ -1,4 +1,5 @@
 from .auth import router as auth_router
+from .admins import router as admins_router
 from .users import router as users_router
 from .subscriptions import router as subscriptions_router
 from .plans import router as plans_router
@@ -10,9 +11,11 @@ from .logs import router as logs_router
 from .promocodes import router as promocodes_router
 from .partners import router as partners_router
 from .system import router as system_router
+from .legal import router as legal_router
 
 __all__ = [
     "auth_router",
+    "admins_router",
     "users_router",
     "subscriptions_router",
     "plans_router",
@@ -24,4 +27,5 @@ __all__ = [
     "promocodes_router",
     "partners_router",
     "system_router",
+    "legal_router",
 ]

@@ -14,6 +14,33 @@
               </div>
               <div class="cabinet-hero__side">
                 <div id="home-balance" class="cabinet-balance">0 ₽</div>
+                <div class="app-popup app-popup--right">
+                  <button class="app-popup__trigger" type="button" aria-label="Быстрые действия" aria-haspopup="menu">
+                    <span></span><span></span><span></span>
+                  </button>
+                  <div class="app-popup__panel" role="menu">
+                    <button class="app-popup__item" data-popup-action="topup" type="button" role="menuitem">
+                      <svg class="app-popup__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z" /><path d="M4 10h16" /><path d="M8 15h3" /></svg>
+                      <span>Пополнить баланс</span>
+                    </button>
+                    <button class="app-popup__item" data-popup-action="copy-sub" type="button" role="menuitem">
+                      <svg class="app-popup__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2" /><path d="M5 15V7a2 2 0 0 1 2-2h8" /></svg>
+                      <span>Скопировать VPN</span>
+                    </button>
+                    <button class="app-popup__item" data-popup-action="referral" type="button" role="menuitem">
+                      <svg class="app-popup__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3" /><path d="M3 21v-2a5 5 0 0 1 5-5h1" /><circle cx="17" cy="17" r="3" /><path d="M14 8h4v4" /><path d="M18 8l-5 5" /></svg>
+                      <span>Реферальная ссылка</span>
+                    </button>
+                    <button class="app-popup__item" data-popup-action="support" type="button" role="menuitem">
+                      <svg class="app-popup__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 3l4-1a9 9 0 1 0-2-2" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></svg>
+                      <span>Поддержка</span>
+                    </button>
+                    <button class="app-popup__item app-popup__item--danger" data-popup-action="logout" data-cabinet-only="1" type="button" role="menuitem">
+                      <svg class="app-popup__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5" /><path d="M15 12H3" /><path d="M14 4h5v16h-5" /></svg>
+                      <span>Выйти</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 

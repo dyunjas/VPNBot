@@ -78,14 +78,13 @@ function renderBroadcastHistory(items) {
             <th>Успешно</th>
             <th>Ошибки</th>
             <th>Тип</th>
-            <th>Действие</th>
           </tr>
         </thead>
         <tbody>
           ${items
             .map(
               (item) => `
-                <tr>
+                <tr class="is-clickable-row" data-job-id="${safeText(item.job_id)}">
                   <td>${formatDateTime(item.created_at)}</td>
                   <td>${broadcastStatusLabel(item.status)}</td>
                   <td title="${safeText(item.text || "")}">${safeText(broadcastTextPreview(item.text))}</td>
@@ -93,9 +92,6 @@ function renderBroadcastHistory(items) {
                   <td>${safeText(item.success)}</td>
                   <td>${safeText(item.failed)}</td>
                   <td>${item.has_image ? "Текст + изображение" : "Только текст"}</td>
-                  <td>
-                    <button class="btn-outline-primary js-open-broadcast" data-job-id="${safeText(item.job_id)}" type="button">Открыть</button>
-                  </td>
                 </tr>
               `,
             )
@@ -114,12 +110,33 @@ async function loadBroadcastHistory() {
     const data = await api("/api/admin/broadcast/history?limit=20");
     const items = data.items || [];
     host.innerHTML = renderBroadcastHistory(items);
-    host.querySelectorAll(".js-open-broadcast").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const jobId = btn.getAttribute("data-job-id") || "";
+    host.querySelectorAll("tr[data-job-id]").forEach((row) => {
+      row.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const jobId = row.getAttribute("data-job-id") || "";
         if (!jobId) return;
-        currentBroadcastJobId = jobId;
-        await pollBroadcast(jobId);
+        const item = items.find((entry) => String(entry.job_id) === String(jobId)) || {};
+        showRowContextMenu(row, [
+          {
+            label: "Открыть",
+            onClick: async () => {
+              currentBroadcastJobId = jobId;
+              await pollBroadcast(jobId);
+            },
+          },
+        ], {
+          title: "Рассылка",
+          meta: [
+            { label: "Job ID", value: jobId },
+            { label: "Статус", html: broadcastStatusLabel(item.status) },
+            { label: "Получатели", value: item.total },
+            { label: "Успешно", value: item.success },
+            { label: "Ошибки", value: item.failed },
+            { label: "Тип", value: item.has_image ? "Текст + изображение" : "Только текст" },
+            { label: "Создана", value: formatDateTime(item.created_at) },
+            { label: "Текст", value: broadcastTextPreview(item.text) },
+          ],
+        });
       });
     });
   } catch (err) {
@@ -181,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <button id="send" class="btn-primary">Запустить рассылку</button>
           </div>
         </div>
-        <div class="card">
+        <div class="card broadcast-result-card">
           <h3>Результат</h3>
           <div id="result">Результат появится после запуска</div>
         </div>

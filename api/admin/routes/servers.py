@@ -4,7 +4,7 @@ from ..common import *
 
 router = APIRouter()
 
-@router.get("/servers", dependencies=[Depends(require_admin_auth)])
+@router.get("/servers", dependencies=[Depends(require_superadmin_auth)])
 async def admin_servers():
     async with async_session() as session:
         repo = ServerRepository(session)
@@ -27,7 +27,7 @@ async def admin_servers():
         ],
     }
 
-@router.post("/servers", dependencies=[Depends(require_admin_auth)])
+@router.post("/servers", dependencies=[Depends(require_superadmin_auth)])
 async def admin_server_create(payload: ServerCreatePayload):
     async with async_session() as session:
         server = Server(
@@ -50,7 +50,7 @@ async def admin_server_create(payload: ServerCreatePayload):
         return {"ok": True, "server_id": server.id}
 
 
-@router.patch("/servers/{server_id}", dependencies=[Depends(require_admin_auth)])
+@router.patch("/servers/{server_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_server_update(server_id: int, payload: ServerUpdatePayload):
     async with async_session() as session:
         server = _http_404_if_none(await session.get(Server, server_id), "server not found")
@@ -62,7 +62,7 @@ async def admin_server_update(server_id: int, payload: ServerUpdatePayload):
         return {"ok": True}
 
 
-@router.post("/servers/{server_id}/action", dependencies=[Depends(require_admin_auth)])
+@router.post("/servers/{server_id}/action", dependencies=[Depends(require_superadmin_auth)])
 async def admin_server_action(server_id: int, payload: ServerActionPayload):
     async with async_session() as session:
         admin_service = AdminService(session)
@@ -80,7 +80,7 @@ async def admin_server_action(server_id: int, payload: ServerActionPayload):
             raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.delete("/servers/{server_id}", dependencies=[Depends(require_admin_auth)])
+@router.delete("/servers/{server_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_server_delete(server_id: int):
     async with async_session() as session:
         server = _http_404_if_none(await session.get(Server, server_id), "server not found")

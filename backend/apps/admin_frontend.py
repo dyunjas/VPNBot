@@ -9,6 +9,9 @@ from backend.core.config import settings
 ADMIN_PAGES = (
     "login",
     "dashboard",
+    "maintenance",
+    "admins",
+    "legal",
     "users",
     "subscriptions",
     "plans",

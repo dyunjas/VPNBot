@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Инвайтов</th><th>Баланс</th><th>Процент</th><th>Создан</th><th>Действия</th></tr>
+              <tr><th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Инвайтов</th><th>Баланс</th><th>Процент</th><th>Создан</th></tr>
             </thead>
             <tbody id="tbody"></tbody>
           </table>
@@ -52,43 +52,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${r.referral_balance} RUB</td>
         <td>${r.referral_percent}%</td>
         <td>${formatDateTime(r.created_at)}</td>
-        <td></td>
       `;
-      const row = document.createElement("div");
-      row.className = "row-actions";
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showRowContextMenu(tr, [], {
+          title: `Реферал #${r.id}`,
+          className: "row-context-menu--form",
+          meta: [
+            { label: "Пользователь", value: r.user_id },
+            { label: "Telegram", value: r.tg_id || "—" },
+            { label: "Username", value: r.username || "—" },
+            { label: "Инвайтов", value: r.invited_count },
+            { label: "Баланс", value: `${r.referral_balance} RUB` },
+            { label: "Процент", value: `${r.referral_percent}%` },
+            { label: "Создан", value: formatDateTime(r.created_at) },
+          ],
+          render: (menu) => {
+            const p = document.createElement("input");
+            p.type = "number";
+            p.min = "0";
+            p.max = "100";
+            p.value = String(r.referral_percent);
+            p.placeholder = "Процент";
 
-      const p = document.createElement("input");
-      p.type = "number";
-      p.min = "0";
-      p.max = "100";
-      p.value = String(r.referral_percent);
-      p.title = "Процент";
-      p.style.width = "100px";
+            const b = document.createElement("input");
+            b.type = "number";
+            b.min = "0";
+            b.value = String(r.referral_balance);
+            b.placeholder = "Баланс";
 
-      const b = document.createElement("input");
-      b.type = "number";
-      b.min = "0";
-      b.value = String(r.referral_balance);
-      b.title = "Баланс";
-      b.style.width = "120px";
+            const save = createRowContextButton("Сохранить", "row-action-menu__item--success", async (event, button) => {
+              const params = new URLSearchParams({
+                referral_percent: p.value,
+                referral_balance: b.value,
+              });
+              await withButtonLoading(button, async () => {
+                await api(`/api/admin/referrals/${r.id}?${params.toString()}`, { method: "PATCH" });
+                await loadRows();
+                showToast("Реферальные данные обновлены", "success");
+              }).catch((err) => alert(err.message));
+            });
 
-      const save = document.createElement("button");
-      save.className = "btn-primary";
-      save.textContent = "Сохранить";
-      save.addEventListener("click", async (e) => {
-        const params = new URLSearchParams({
-          referral_percent: p.value,
-          referral_balance: b.value,
+            menu.append(p, b, save);
+            setTimeout(() => p.focus(), 0);
+          },
         });
-        await withButtonLoading(e.currentTarget, async () => {
-          await api(`/api/admin/referrals/${r.id}?${params.toString()}`, { method: "PATCH" });
-          await loadRows();
-          showToast("Реферальные данные обновлены", "success");
-        }).catch((err) => alert(err.message));
       });
-
-      row.append(p, b, save);
-      tr.querySelector("td:last-child").appendChild(row);
       q("tbody").appendChild(tr);
     });
 

@@ -118,7 +118,7 @@ def _jwt_secret() -> str:
     return (settings.SECRET_KEY or "").strip()
 
 
-def _create_admin_access_token(login: str) -> str:
+def _create_admin_access_token(login: str, role: str = "superadmin", admin_id: int | None = None) -> str:
     secret = _jwt_secret()
     if not secret:
         raise HTTPException(status_code=503, detail="SECRET_KEY is not configured")
@@ -127,6 +127,8 @@ def _create_admin_access_token(login: str) -> str:
     payload = {
         "sub": login,
         "scope": "admin:web",
+        "role": role,
+        "admin_id": admin_id,
         "exp": int(expire_at.timestamp()),
         "iat": int(datetime.now(timezone.utc).timestamp()),
     }
@@ -156,6 +158,20 @@ async def require_admin_auth(
     if payload.get("scope") != "admin:web":
         raise HTTPException(status_code=401, detail="Unauthorized")
     return payload
+
+
+async def require_superadmin_auth(auth=Depends(require_admin_auth)) -> dict:
+    role = auth.get("role") or "superadmin"
+    if role != "superadmin":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return auth
+
+
+async def require_support_auth(auth=Depends(require_admin_auth)) -> dict:
+    role = auth.get("role") or "superadmin"
+    if role not in {"superadmin", "support"}:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return auth
 
 
 class LoginPayload(BaseModel):
@@ -311,6 +327,8 @@ __all__ = [
     "_create_admin_access_token",
     "_decode_admin_access_token",
     "require_admin_auth",
+    "require_superadmin_auth",
+    "require_support_auth",
     "LoginPayload",
     "UserActionPayload",
     "SubscriptionCreatePayload",

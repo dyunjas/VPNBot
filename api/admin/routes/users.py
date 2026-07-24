@@ -49,7 +49,7 @@ async def _send_user_status_change_notification(*, tg_id: int, action: str) -> N
         if temp_bot is not None:
             await temp_bot.session.close()
 
-@router.get("/users", dependencies=[Depends(require_admin_auth)])
+@router.get("/users", dependencies=[Depends(require_support_auth)])
 async def admin_users(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
@@ -159,7 +159,7 @@ async def admin_users(
     }
 
 
-@router.get("/users/{user_id}", dependencies=[Depends(require_admin_auth)])
+@router.get("/users/{user_id}", dependencies=[Depends(require_support_auth)])
 async def admin_user_details(user_id: int):
     now = datetime.now(timezone.utc)
     async with async_session() as session:
@@ -249,7 +249,7 @@ async def admin_user_details(user_id: int):
     }
 
 
-@router.post("/users/{user_id}/action", dependencies=[Depends(require_admin_auth)])
+@router.post("/users/{user_id}/action", dependencies=[Depends(require_support_auth)])
 async def admin_user_action(user_id: int, payload: UserActionPayload):
     async with async_session() as session:
         user = _http_404_if_none(await session.get(User, user_id), "user not found")

@@ -24,7 +24,13 @@ function openLogDownload(filename) {
       }
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
+        let detail = text;
+        try {
+          detail = text ? JSON.parse(text) : text;
+        } catch {
+          detail = text;
+        }
+        throw new Error(friendlyAdminErrorMessage(detail, { path: `/api/admin/logs/${encoded}/download` }) || `HTTP ${res.status}`);
       }
       return res.blob();
     })
@@ -59,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <table>
             <thead>
               <tr>
-                <th>Файл</th><th>Размер</th><th>Обновлен</th><th>Действие</th>
+                <th>Файл</th><th>Размер</th><th>Обновлен</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
@@ -77,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!items.length) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="4">Файлы логов не найдены</td>`;
+      tr.innerHTML = `<td colspan="3">Файлы логов не найдены</td>`;
       tbody.appendChild(tr);
       return;
     }
@@ -89,17 +95,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td class="mono">${safeText(item.filename)}</td>
         <td>${formatBytes(item.size_bytes)}</td>
         <td>${updatedAt}</td>
-        <td><button class="btn-primary js-download" data-file="${encodeURIComponent(item.filename)}">Скачать</button></td>
       `;
-      tbody.appendChild(tr);
-    });
-
-    tbody.querySelectorAll(".js-download").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const encoded = btn.getAttribute("data-file") || "";
-        const filename = decodeURIComponent(encoded);
-        openLogDownload(filename);
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showRowContextMenu(tr, [
+          {
+            label: "Скачать",
+            onClick: () => openLogDownload(item.filename),
+          },
+        ], {
+          title: item.filename,
+          meta: [
+            { label: "Файл", value: item.filename },
+            { label: "Размер", value: formatBytes(item.size_bytes) },
+            { label: "Обновлен", value: updatedAt },
+          ],
+        });
       });
+      tbody.appendChild(tr);
     });
   }
 

@@ -4,10 +4,7 @@ async function loadDashboard() {
 
   try {
     await renderSessionInfo();
-    const [data, maintenanceData] = await Promise.all([
-      api(`/api/admin/stats?chart_period=${encodeURIComponent(dashboardState.chartPeriod)}`),
-      api("/api/admin/system/maintenance"),
-    ]);
+    const data = await api(`/api/admin/stats?chart_period=${encodeURIComponent(dashboardState.chartPeriod)}`);
     const s = data.stats || {};
 
     const cards = [
@@ -30,7 +27,7 @@ async function loadDashboard() {
       `)
       .join("");
 
-    q("quick").innerHTML = `
+    if (q("quick")) q("quick").innerHTML = `
       <div class="dashboard-list">
         <div><span>Пользователи в системе</span><b>${s.total_users || 0}</b></div>
         <div><span>Забаненные пользователи</span><b>${s.banned_users || 0}</b></div>
@@ -40,16 +37,7 @@ async function loadDashboard() {
       </div>
     `;
 
-    q("health").innerHTML = `
-      <div class="dashboard-list dashboard-list--statuses">
-        <div><span>Подписки</span><b>Активных: ${s.active_subscriptions || 0}</b></div>
-        <div><span>Платежи</span><b>Оплачено: ${s.paid_transactions || 0}</b></div>
-        <div><span>Оборот</span><b>За месяц: ${s.month_revenue || 0} ₽</b></div>
-        <div><span>Модерация</span><b>Заблокировано: ${s.banned_users || 0}</b></div>
-      </div>
-    `;
-
-    q("signals").innerHTML = `
+    if (q("signals")) q("signals").innerHTML = `
       <div class="dashboard-signals-grid">
         <div class="signal-row"><span>Пользователи</span><b>${s.total_users || 0}</b></div>
         <div class="signal-row"><span>Подписок активных</span><b>${s.active_subscriptions || 0}</b></div>
@@ -58,8 +46,6 @@ async function loadDashboard() {
         <div class="signal-row"><span>Пользователей в бане</span><b>${s.banned_users || 0}</b></div>
       </div>
     `;
-
-    renderMaintenanceCard(maintenanceData.maintenance || {});
 
     const paymentsSeries = s.payments_chart || [];
     const usersSeries = s.users_chart || [];
@@ -150,6 +136,66 @@ function bindChartPeriodSwitch() {
 function syncChartPeriodButtons() {
   document.querySelectorAll(".chart-period").forEach((btn) => {
     btn.classList.toggle("is-active", btn.dataset.period === dashboardState.chartPeriod);
+  });
+}
+
+function healthStatusLabel(status) {
+  const value = String(status || "").toLowerCase();
+  if (value === "ok") return "Работает";
+  if (value === "warn") return "Проверьте";
+  return "Ошибка";
+}
+
+function formatLatency(value) {
+  const ms = Number(value);
+  if (!Number.isFinite(ms) || ms < 0) return "—";
+  if (ms >= 1000) return `${(ms / 1000).toFixed(1)} с`;
+  return `${Math.round(ms)} мс`;
+}
+
+function renderSystemHealthCard(data) {
+  const host = q("health");
+  if (!host) return;
+
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const checkedAt = data?.checked_at ? formatDateTime(data.checked_at) : "—";
+
+  host.innerHTML = `
+    <div class="system-health">
+      <div class="system-health__bar">
+        <span>Последняя проверка: ${safeText(checkedAt)}</span>
+        <button id="system_health_refresh" class="system-health__refresh" type="button">Обновить</button>
+      </div>
+      <div class="system-health__grid">
+        ${items.map((item) => {
+          const status = String(item.status || "danger").toLowerCase();
+          const label = item.label || item.key || "Сервис";
+          const checked = item.checked_at ? formatDateTime(item.checked_at) : "—";
+          return `
+            <div class="system-health__item system-health__item--${status}">
+              <div class="system-health__item-top">
+                <span class="system-health__dot"></span>
+                <b>${safeText(label)}</b>
+                <span class="system-health__status">${healthStatusLabel(status)}</span>
+              </div>
+              <div class="system-health__message">${safeText(item.message || "Нет данных")}</div>
+              <div class="system-health__meta">
+                <span>${safeText(checked)}</span>
+                <span>${safeText(formatLatency(item.latency_ms))}</span>
+              </div>
+            </div>
+          `;
+        }).join("") || '<div class="system-health__empty">Нет данных проверки</div>'}
+      </div>
+    </div>
+  `;
+
+  q("system_health_refresh")?.addEventListener("click", async (event) => {
+    await withButtonLoading(event.currentTarget, async () => {
+      const next = await api("/api/admin/system/health");
+      renderSystemHealthCard(next);
+      showToast("Статус системы обновлен", "success");
+    }).catch((error) => alert(error.message));
   });
 }
 
@@ -246,36 +292,6 @@ async function initDashboardPage() {
     subtitle: "Пользователи, подписки, пополнения и состояние системы",
     contentHtml: `
       <div class="dashboard-grid-stats dashboard-grid-stats--strict" id="stats"></div>
-      <div class="dashboard-layout dashboard-overview-grid">
-        <div class="card dashboard-card dashboard-section-card">
-          <div class="dashboard-section-card__head">
-            <div>
-              <div class="dashboard-section-card__eyebrow">Сводка</div>
-              <h3>Общее состояние системы</h3>
-            </div>
-          </div>
-          <div id="quick">Загрузка...</div>
-        </div>
-        <div class="card dashboard-card dashboard-section-card">
-          <div class="dashboard-section-card__head">
-            <div>
-              <div class="dashboard-section-card__eyebrow">Статусы</div>
-              <h3>Ключевые индикаторы</h3>
-            </div>
-          </div>
-          <div id="health">Загрузка...</div>
-        </div>
-      </div>
-      <div class="card dashboard-card dashboard-section-card">
-        <div class="dashboard-section-card__head">
-          <div>
-            <div class="dashboard-section-card__eyebrow">Система</div>
-            <h3>Техработы</h3>
-          </div>
-        </div>
-        <div id="maintenance_panel">Загрузка...</div>
-      </div>
-
       <div class="card dashboard-card dashboard-section-card">
         <div class="dashboard-section-card__head">
           <div>
@@ -292,7 +308,7 @@ async function initDashboardPage() {
       <div class="dashboard-charts-grid">
         ${chartCardHtml({
           prefix: "payments_chart",
-          title: "График платежей",
+          title: "Выручка по периодам",
           subtitle: "Загрузка...",
           controls: `
             <div id="payments_chart_periods" class="chart-periods">
@@ -309,23 +325,14 @@ async function initDashboardPage() {
         })}
         ${chartCardHtml({
           prefix: "subscriptions_chart",
-          title: "Купленные подписки",
+          title: "Покупки подписок",
           subtitle: "Загрузка...",
         })}
         ${chartCardHtml({
           prefix: "activation_chart",
-          title: "Конверсия в подписку",
+          title: "Конверсия регистраций",
           subtitle: "Загрузка...",
         })}
-      </div>
-      <div class="card dashboard-card dashboard-section-card">
-        <div class="dashboard-section-card__head">
-          <div>
-            <div class="dashboard-section-card__eyebrow">Мониторинг</div>
-            <h3>Оперативные индикаторы</h3>
-          </div>
-        </div>
-        <div id="signals" class="signals">Загрузка...</div>
       </div>
     `,
   });

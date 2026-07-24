@@ -4,7 +4,7 @@ from ..common import *
 
 router = APIRouter()
 
-@router.get("/plans", dependencies=[Depends(require_admin_auth)])
+@router.get("/plans", dependencies=[Depends(require_superadmin_auth)])
 async def admin_plans(
     sort_by: str = Query(default="display_order"),
     sort_dir: Literal["asc", "desc"] = Query(default="asc"),
@@ -46,7 +46,7 @@ async def admin_plans(
     }
 
 
-@router.post("/plans", dependencies=[Depends(require_admin_auth)])
+@router.post("/plans", dependencies=[Depends(require_superadmin_auth)])
 async def admin_plan_create(payload: PlanCreatePayload):
     async with async_session() as session:
         exists = await session.scalar(select(SubscriptionPlan.id).where(SubscriptionPlan.name == payload.name))
@@ -78,7 +78,7 @@ async def admin_plan_create(payload: PlanCreatePayload):
         return {"ok": True, "plan_id": plan.id}
 
 
-@router.patch("/plans/{plan_id}", dependencies=[Depends(require_admin_auth)])
+@router.patch("/plans/{plan_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
     async with async_session() as session:
         plan = _http_404_if_none(await session.get(SubscriptionPlan, plan_id), "plan not found")
@@ -117,7 +117,7 @@ async def admin_plan_update(plan_id: int, payload: PlanUpdatePayload):
         return {"ok": True}
 
 
-@router.post("/plans/{plan_id}/move", dependencies=[Depends(require_admin_auth)])
+@router.post("/plans/{plan_id}/move", dependencies=[Depends(require_superadmin_auth)])
 async def admin_plan_move(plan_id: int, payload: PlanMovePayload):
     async with async_session() as session:
         plans = list(
@@ -145,7 +145,7 @@ async def admin_plan_move(plan_id: int, payload: PlanMovePayload):
         return {"ok": True}
 
 
-@router.delete("/plans/{plan_id}", dependencies=[Depends(require_admin_auth)])
+@router.delete("/plans/{plan_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_plan_delete(plan_id: int):
     async with async_session() as session:
         plan = _http_404_if_none(await session.get(SubscriptionPlan, plan_id), "plan not found")

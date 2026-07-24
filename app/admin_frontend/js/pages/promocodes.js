@@ -1,4 +1,20 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  function closePromocodeModal() {
+    const modal = q("promocode_modal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("user-modal-open");
+  }
+
+  function openPromocodeModal() {
+    q("new_code").value = "";
+    q("new_amount").value = "";
+    q("new_usages").value = "1";
+    q("promocode_modal").hidden = false;
+    document.body.classList.add("user-modal-open");
+    setTimeout(() => q("new_code")?.focus(), 0);
+  }
+
   if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "promocodes",
@@ -7,9 +23,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     contentHtml: `
       <div class="page-shell">
         <div class="card">
-          <h3>Список промокодов</h3>
-          <div class="toolbar">
-            <button id="reload" class="btn-primary">Обновить</button>
+          <div class="admin-section-head">
+            <h3>Список промокодов</h3>
+            <div class="toolbar toolbar--compact">
+              <button id="reload" type="button">Обновить</button>
+              <button id="open_create_promocode" class="btn-primary" type="button">Создать</button>
+            </div>
           </div>
           <div class="table-wrap">
             <table>
@@ -22,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                   <th>Использовано</th>
                   <th>Создан</th>
                   <th>Последняя активация</th>
-                  <th>Действие</th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
@@ -30,15 +48,26 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
         </div>
 
-        <div class="card">
-          <h3>Создать промокод</h3>
-          <div class="form-grid">
-            <input id="new_code" type="text" placeholder="Код (например, WELCOME500)" />
-            <input id="new_amount" type="number" placeholder="Сумма начисления" />
-            <input id="new_usages" type="number" placeholder="Количество активаций" value="1" />
-          </div>
-          <div class="toolbar" style="margin-top:10px">
-            <button id="create_promocode" class="btn-primary">Создать</button>
+        <div id="promocode_modal" class="user-modal admin-form-modal" hidden>
+          <button id="promocode_modal_overlay" class="user-modal__overlay" type="button" aria-label="Закрыть окно"></button>
+          <div class="user-modal__dialog admin-form-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="promocode_modal_title">
+            <div class="user-modal__topbar">
+              <div>
+                <div class="user-modal__eyebrow">Промокоды</div>
+                <h3 id="promocode_modal_title" class="user-modal__title">Создание промокода</h3>
+              </div>
+              <button id="promocode_modal_close" class="user-modal__close" type="button" aria-label="Закрыть окно">×</button>
+            </div>
+            <div class="admin-form-modal__body">
+              <div class="form-grid">
+                <input id="new_code" type="text" placeholder="Код (например, WELCOME500)" />
+                <input id="new_amount" type="number" placeholder="Сумма начисления" />
+                <input id="new_usages" type="number" placeholder="Количество активаций" value="1" />
+              </div>
+              <div class="admin-form-modal__actions">
+                <button id="create_promocode" class="btn-primary" type="button">Создать</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,25 +89,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${safeText(promo.used_count)}</td>
         <td>${formatDateTime(promo.created_at)}</td>
         <td>${formatDateTime(promo.activated_at)}</td>
-        <td class="row-actions">
-          <button class="btn-danger" data-delete="${promo.id}">Удалить</button>
-        </td>
       `;
-      q("tbody").appendChild(tr);
-    });
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showRowContextMenu(tr, [
+          {
+            label: "Удалить",
+            className: "row-action-menu__item--danger",
+            onClick: async (event, button) => {
+              if (!confirm(`Удалить промокод #${promo.id}? Действие необратимо.`)) return;
 
-    q("tbody").querySelectorAll("button[data-delete]").forEach((b) => {
-      b.addEventListener("click", async (e) => {
-        const promocodeId = Number(b.getAttribute("data-delete") || "0");
-        if (!promocodeId) return;
-        if (!confirm(`Удалить промокод #${promocodeId}? Действие необратимо.`)) return;
-
-        await withButtonLoading(e.currentTarget, async () => {
-          await api(`/api/admin/promocodes/${promocodeId}`, { method: "DELETE" });
-          await loadPromocodes();
-          showToast("Промокод удален", "success");
-        }).catch((err) => alert(err.message));
+              await withButtonLoading(button, async () => {
+                await api(`/api/admin/promocodes/${promo.id}`, { method: "DELETE" });
+                await loadPromocodes();
+                showToast("Промокод удален", "success");
+              }).catch((err) => alert(err.message));
+            },
+          },
+        ], {
+          title: `Промокод #${promo.id}`,
+          meta: [
+            { label: "Код", value: promo.code },
+            { label: "Сумма", value: promo.amount },
+            { label: "Осталось", value: promo.usages_left },
+            { label: "Использовано", value: promo.used_count },
+            { label: "Создан", value: formatDateTime(promo.created_at) },
+            { label: "Последняя активация", value: formatDateTime(promo.activated_at) },
+          ],
+        });
       });
+      q("tbody").appendChild(tr);
     });
   }
 
@@ -98,6 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       q("new_amount").value = "";
       q("new_usages").value = "1";
       await loadPromocodes();
+      closePromocodeModal();
       showToast("Промокод создан", "success");
     }).catch((err) => alert(err.message));
   });
@@ -106,6 +148,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(e.currentTarget, async () => {
       await loadPromocodes();
     }).catch((err) => alert(err.message));
+  });
+
+  q("open_create_promocode").addEventListener("click", openPromocodeModal);
+  q("promocode_modal_overlay")?.addEventListener("click", closePromocodeModal);
+  q("promocode_modal_close")?.addEventListener("click", closePromocodeModal);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closePromocodeModal();
   });
 
   try {

@@ -1,4 +1,4 @@
-const usersState = { page: 1, pages: 1, selectedUserId: null };
+const usersState = { page: 1, pages: 1, selectedUserId: null, sortBy: "created_at", sortDir: "desc" };
 
 function formatTraffic(bytes) {
   const value = Number(bytes || 0);
@@ -84,20 +84,6 @@ function renderUsersLayout() {
       <div class="card filter-card">
         <div class="toolbar toolbar--filters">
           <input id="search" type="text" placeholder="Поиск: Telegram ID / username / email" />
-          <select id="sort_by">
-            <option value="created_at">Дата создания</option>
-            <option value="id">ID</option>
-            <option value="updated_at">Дата обновления</option>
-            <option value="tg_id">Telegram ID</option>
-            <option value="username">Username</option>
-            <option value="email">Email</option>
-            <option value="balance">Баланс</option>
-            <option value="subscription_end">Дата окончания подписки</option>
-          </select>
-          <select id="sort_dir">
-            <option value="desc">По убыванию</option>
-            <option value="asc">По возрастанию</option>
-          </select>
           <select id="banned">
             <option value="all">Все</option>
             <option value="exclude">Только не заблокированные</option>
@@ -113,7 +99,12 @@ function renderUsersLayout() {
           <table>
             <thead>
               <tr>
-                <th>ID</th><th>Telegram ID</th><th>Username</th><th>Баланс</th><th>Подписка</th><th>Бан</th><th>Действия</th>
+                ${sortableTh("ID", "id", usersState.sortBy, usersState.sortDir)}
+                ${sortableTh("Telegram ID", "tg_id", usersState.sortBy, usersState.sortDir)}
+                ${sortableTh("Username", "username", usersState.sortBy, usersState.sortDir)}
+                ${sortableTh("Баланс", "balance", usersState.sortBy, usersState.sortDir)}
+                ${sortableTh("Подписка", "subscription_end", usersState.sortBy, usersState.sortDir)}
+                <th>Бан</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
@@ -161,8 +152,31 @@ function closeUserModal() {
 function openUserModal() {
   const modal = q("user_modal");
   if (!modal) return;
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
   modal.hidden = false;
+  modal.scrollTop = 0;
+  modal.querySelector(".user-modal__dialog")?.scrollTo({ top: 0, left: 0 });
   document.body.classList.add("user-modal-open");
+}
+
+function renderUsersTableHead() {
+  const thead = document.querySelector(".users-table-card thead");
+  if (!thead) return;
+  thead.innerHTML = `
+    <tr>
+      ${sortableTh("ID", "id", usersState.sortBy, usersState.sortDir)}
+      ${sortableTh("Telegram ID", "tg_id", usersState.sortBy, usersState.sortDir)}
+      ${sortableTh("Username", "username", usersState.sortBy, usersState.sortDir)}
+      ${sortableTh("Баланс", "balance", usersState.sortBy, usersState.sortDir)}
+      ${sortableTh("Подписка", "subscription_end", usersState.sortBy, usersState.sortDir)}
+      <th>Бан</th>
+    </tr>
+  `;
+  bindSortableTable(thead, usersState, async (button) => {
+    await withButtonLoading(button, loadUsers).catch((error) => alert(error.message));
+  });
 }
 
 async function userAction(userId, action, extra = {}) {
@@ -310,70 +324,50 @@ async function loadUserDetails(userId) {
   await loadUsers();
 }
 
-function actionBtn(label, className, onClick) {
-  const button = document.createElement("button");
-  button.textContent = label;
-  button.className = className || "";
-  button.addEventListener("click", (event) => {
-    event.stopPropagation();
-    onClick();
-  });
-  return button;
-}
-
 async function loadUsers() {
+  const tbody = q("tbody");
+  setTableRefreshing(tbody, true);
   const params = new URLSearchParams({
     page: String(usersState.page),
     page_size: "25",
     search: q("search").value || "",
-    sort_by: q("sort_by").value,
-    sort_dir: q("sort_dir").value,
+    sort_by: usersState.sortBy,
+    sort_dir: usersState.sortDir,
     banned: q("banned").value,
   });
 
-  const data = await api(`/api/admin/users?${params.toString()}`);
-  const items = data.items || [];
-  const meta = data.meta || { page: 1, pages: 1, total: 0 };
-  usersState.pages = meta.pages;
+  try {
+    const data = await api(`/api/admin/users?${params.toString()}`);
+    const items = data.items || [];
+    const meta = data.meta || { page: 1, pages: 1, total: 0 };
+    usersState.pages = meta.pages;
 
-  q("tbody").innerHTML = "";
-  items.forEach((user) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${safeText(user.id)}</td>
-      <td>${safeText(user.tg_id)}</td>
-      <td>${safeText(user.username)}</td>
-      <td>${safeText(user.balance)}</td>
-      <td>${user.subscription_active ? statusBadge("active") : statusBadge("expired")}</td>
-      <td>${user.banned ? statusBadge("ban") : statusBadge("ok")}</td>
-      <td></td>
-    `;
+    renderUsersTableHead();
+    tbody.innerHTML = "";
+    items.forEach((user) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${safeText(user.id)}</td>
+        <td>${safeText(user.tg_id)}</td>
+        <td>${safeText(user.username || "—")}</td>
+        <td><span class="money-cell">${safeText(user.balance)} RUB</span></td>
+        <td>${user.subscription_active ? statusBadge("active") : statusBadge("expired")}</td>
+        <td>${user.banned ? statusBadge("ban") : statusBadge("ok")}</td>
+      `;
 
-    if (usersState.selectedUserId === user.id) {
-      tr.classList.add("selected-user");
-    }
+      if (usersState.selectedUserId === user.id) {
+        tr.classList.add("selected-user");
+      }
 
-    tr.style.cursor = "pointer";
-    tr.addEventListener("click", () => loadUserDetails(user.id));
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", () => loadUserDetails(user.id));
+      tbody.appendChild(tr);
+    });
 
-    const actions = document.createElement("div");
-    actions.className = "row-actions";
-    actions.appendChild(actionBtn("Открыть", "btn-outline-primary", () => loadUserDetails(user.id)));
-    actions.appendChild(actionBtn("+100", "btn-outline-success", () => userAction(user.id, "add_balance", { amount: 100 })));
-    actions.appendChild(actionBtn("-100", "btn-outline-danger", () => userAction(user.id, "sub_balance", { amount: 100 })));
-    actions.appendChild(
-      actionBtn(
-        user.banned ? "Разбан" : "Бан",
-        user.banned ? "btn-success" : "btn-danger",
-        () => userAction(user.id, user.banned ? "unban" : "ban"),
-      ),
-    );
-
-    tr.querySelector("td:last-child").appendChild(actions);
-    q("tbody").appendChild(tr);
-  });
-
-  renderPager(meta, q("prev"), q("next"), q("meta"));
+    renderPager(meta, q("prev"), q("next"), q("meta"));
+  } finally {
+    setTableRefreshing(tbody, false);
+  }
 }
 
 function bindModalControls() {
@@ -425,6 +419,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   bindModalControls();
+  renderUsersTableHead();
 
   q("apply").addEventListener("click", async (event) => {
     await withButtonLoading(event.currentTarget, async () => {

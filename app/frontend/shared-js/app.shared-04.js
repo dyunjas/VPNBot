@@ -134,7 +134,80 @@ async function buyTraffic() {
   }
 }
 
+function closeAppPopups(except = null) {
+  document.querySelectorAll(".app-popup.is-open").forEach((popup) => {
+    if (popup === except) return;
+    popup.classList.remove("is-open");
+    popup.querySelector(".app-popup__trigger")?.setAttribute("aria-expanded", "false");
+  });
+}
+
+function initAppPopups() {
+  document.querySelectorAll(".app-popup").forEach((popup) => {
+    if (popup.dataset.popupInit === "1") return;
+    popup.dataset.popupInit = "1";
+
+    const trigger = popup.querySelector(".app-popup__trigger");
+    if (!trigger) return;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const isOpen = popup.classList.contains("is-open");
+      closeAppPopups(popup);
+      popup.classList.toggle("is-open", !isOpen);
+      trigger.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+      haptic();
+    });
+  });
+
+  document.querySelectorAll("[data-cabinet-only]").forEach((el) => {
+    el.hidden = !IS_CABINET_PATH;
+  });
+}
+
+function focusAfterViewSwitch(id) {
+  window.setTimeout(() => {
+    const el = $(id);
+    if (!el) return;
+    el.focus?.({ preventScroll: true });
+    el.scrollIntoView?.({ behavior: "smooth", block: "center" });
+  }, 80);
+}
+
+async function handlePopupAction(action) {
+  closeAppPopups();
+  haptic();
+
+  if (action === "topup") {
+    switchView("profile");
+    focusAfterViewSwitch("topup-input");
+    return;
+  }
+
+  if (action === "copy-sub") {
+    $("btn-copy-sub")?.click();
+    return;
+  }
+
+  if (action === "referral") {
+    switchView("referral");
+    await loadReferral().catch(() => {});
+    $("btn-copy-ref")?.click();
+    return;
+  }
+
+  if (action === "support") {
+    $("btn-open-support")?.click();
+    return;
+  }
+
+  if (action === "logout") {
+    $("btn-cabinet-logout")?.click();
+  }
+}
+
 function initEvents() {
+  initAppPopups();
   initTopupMethodPicker();
 
   document.querySelectorAll(".tab").forEach((tab) => {
@@ -155,6 +228,18 @@ function initEvents() {
       haptic();
       switchView(btn.dataset.open);
     });
+  });
+  document.querySelectorAll("[data-popup-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      handlePopupAction(btn.dataset.popupAction);
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".app-popup")) closeAppPopups();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeAppPopups();
   });
 
   $("promo-apply")?.addEventListener("click", applyPromocode);

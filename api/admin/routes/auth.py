@@ -1,13 +1,18 @@
 import time
 import hmac
+import hashlib
+import secrets
 from fastapi import APIRouter, Request, Response
 from ..common import *
+from backend.database.models import Admin
 
 router = APIRouter()
 _LOGIN_ATTEMPTS: dict[str, list[float]] = {}
 _LOGIN_WINDOW_SEC = 300
 _LOGIN_MAX_ATTEMPTS = 5
 _ADMIN_COOKIE_NAME = "admin_access_token"
+_PASSWORD_HASH_ALG = "pbkdf2_sha256"
+_PASSWORD_HASH_ITERATIONS = 260000
 
 
 def _login_rate_key(request: Request, login: str) -> str:
@@ -24,6 +29,36 @@ def _login_allowed(key: str) -> bool:
     attempts.append(now)
     _LOGIN_ATTEMPTS[key] = attempts
     return True
+
+
+def hash_admin_password(password: str) -> str:
+    salt = secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        bytes.fromhex(salt),
+        _PASSWORD_HASH_ITERATIONS,
+    ).hex()
+    return f"{_PASSWORD_HASH_ALG}${_PASSWORD_HASH_ITERATIONS}${salt}${digest}"
+
+
+def verify_admin_password(password: str, password_hash: str | None) -> bool:
+    if not password_hash:
+        return False
+    try:
+        alg, iterations_raw, salt, expected = password_hash.split("$", 3)
+        if alg != _PASSWORD_HASH_ALG:
+            return False
+        iterations = int(iterations_raw)
+        digest = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            bytes.fromhex(salt),
+            iterations,
+        ).hex()
+        return hmac.compare_digest(digest, expected)
+    except (TypeError, ValueError):
+        return False
 
 
 def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
@@ -93,20 +128,44 @@ def _fill_amount_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_m
 async def admin_auth_login(payload: LoginPayload, request: Request, response: Response):
     expected_login = (settings.ADMIN_WEB_LOGIN or "").strip()
     expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
-    if not expected_login or not expected_password:
-        raise HTTPException(
-            status_code=503,
-            detail="ADMIN_WEB_LOGIN and ADMIN_WEB_PASSWORD must be configured",
-        )
     key = _login_rate_key(request, payload.login)
     if not _login_allowed(key):
         raise HTTPException(status_code=429, detail="Too many login attempts")
-    login_ok = hmac.compare_digest(payload.login, expected_login)
-    password_ok = hmac.compare_digest(payload.password, expected_password)
-    if not login_ok or not password_ok:
+
+    login = payload.login.strip()
+    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
+    if is_master_login and hmac.compare_digest(payload.password, expected_password):
+        _LOGIN_ATTEMPTS.pop(key, None)
+        access_token = _create_admin_access_token(login, role="superadmin", admin_id=None)
+        max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
+        response.set_cookie(
+            key=_ADMIN_COOKIE_NAME,
+            value=access_token,
+            max_age=max_age,
+            httponly=True,
+            secure=request.url.scheme == "https",
+            samesite="lax",
+            path="/",
+        )
+        return {"ok": True, "login": login, "role": "superadmin"}
+
+    admin = None
+    async with async_session() as session:
+        admin = (
+            await session.execute(
+                select(Admin).where(
+                    func.lower(Admin.login) == login.lower(),
+                    Admin.is_active.is_(True),
+                )
+            )
+        ).scalar_one_or_none()
+
+    role = admin.role.value if admin and hasattr(admin.role, "value") else str(admin.role) if admin else ""
+    if role != "support" or not verify_admin_password(payload.password, admin.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
     _LOGIN_ATTEMPTS.pop(key, None)
-    access_token = _create_admin_access_token(payload.login)
+    access_token = _create_admin_access_token(login, role=role, admin_id=admin.id)
     max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
     response.set_cookie(
         key=_ADMIN_COOKIE_NAME,
@@ -117,12 +176,12 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
         samesite="lax",
         path="/",
     )
-    return {"ok": True, "login": payload.login}
+    return {"ok": True, "login": login, "role": role}
 
 
 @router.get("/auth/me")
 async def admin_auth_me(auth=Depends(require_admin_auth)):
-    return {"ok": True, "login": auth.get("sub"), "scope": auth.get("scope")}
+    return {"ok": True, "login": auth.get("sub"), "scope": auth.get("scope"), "role": auth.get("role")}
 
 
 @router.post("/auth/logout")
@@ -131,12 +190,12 @@ async def admin_auth_logout(response: Response):
     return {"ok": True}
 
 
-@router.get("/health", dependencies=[Depends(require_admin_auth)])
+@router.get("/health", dependencies=[Depends(require_superadmin_auth)])
 async def admin_health():
     return {"ok": True, "service": "admin-api"}
 
 
-@router.get("/stats", dependencies=[Depends(require_admin_auth)])
+@router.get("/stats", dependencies=[Depends(require_superadmin_auth)])
 async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default="14d")):
     now = datetime.now(timezone.utc)
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)

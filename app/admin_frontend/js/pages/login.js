@@ -8,7 +8,7 @@ function normalizeLoginError(err) {
   if (raw.includes("networkerror") || raw.includes("failed to fetch") || raw.includes("load failed")) {
     return "Не удалось подключиться к серверу";
   }
-  if (raw.includes("forbidden") || raw.includes("access denied")) return "Доступ запрещён";
+  if (raw.includes("forbidden") || raw.includes("access denied")) return "Доступ запрещен";
   if (raw.includes("http 500")) return "Ошибка сервера";
   if (raw.includes("http 503")) return "Сервис временно недоступен";
   return String(err?.message || err || "Не удалось выполнить вход");

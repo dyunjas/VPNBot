@@ -3,7 +3,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 
-from ..common import Query, require_admin_auth
+from ..common import Query, require_superadmin_auth
 
 router = APIRouter()
 
@@ -17,7 +17,7 @@ def _safe_log_path(filename: str) -> Path:
     return candidate
 
 
-@router.get("/logs", dependencies=[Depends(require_admin_auth)])
+@router.get("/logs", dependencies=[Depends(require_superadmin_auth)])
 async def admin_logs_list(
     limit: int = Query(default=100, ge=1, le=500),
 ):
@@ -45,7 +45,7 @@ async def admin_logs_list(
     return {"ok": True, "items": items}
 
 
-@router.get("/logs/{filename}/download", dependencies=[Depends(require_admin_auth)])
+@router.get("/logs/{filename:path}/download", dependencies=[Depends(require_superadmin_auth)])
 async def admin_logs_download(filename: str):
     path = _safe_log_path(filename)
     if not path.exists() or not path.is_file():

@@ -10,7 +10,7 @@ from backend.database.models import UserDevice
 from backend.database.session import async_session
 from backend.services.exceptions import DeviceNotFound, UserNotFound
 from backend.services.hwid_service import HwidService
-from ..common import require_admin_auth
+from ..common import require_superadmin_auth
 
 
 # DTOs
@@ -77,7 +77,7 @@ class TopUsersResponse(BaseModel):
 router = APIRouter(prefix="/api/hwid", tags=["hwid"])
 
 
-@router.get("/devices", dependencies=[Depends(require_admin_auth)])
+@router.get("/devices", dependencies=[Depends(require_superadmin_auth)])
 async def get_all_devices(
     size: int = Query(10, ge=1, le=100),
     start: int = Query(0, ge=0),
@@ -102,7 +102,7 @@ async def get_all_devices(
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/devices", dependencies=[Depends(require_admin_auth)])
+@router.post("/devices", dependencies=[Depends(require_superadmin_auth)])
 async def create_device(data: CreateUserHwidDeviceRequestDto):
     async with async_session() as session:
         service = HwidService(session)
@@ -131,7 +131,7 @@ async def create_device(data: CreateUserHwidDeviceRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/devices/delete", dependencies=[Depends(require_admin_auth)])
+@router.post("/devices/delete", dependencies=[Depends(require_superadmin_auth)])
 async def delete_device(data: DeleteUserHwidDeviceRequestDto):
     async with async_session() as session:
         service = HwidService(session)
@@ -155,7 +155,7 @@ async def delete_device(data: DeleteUserHwidDeviceRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/devices/delete-all", dependencies=[Depends(require_admin_auth)])
+@router.post("/devices/delete-all", dependencies=[Depends(require_superadmin_auth)])
 async def delete_all_devices(data: DeleteAllUserHwidDevicesRequestDto):
     async with async_session() as session:
         service = HwidService(session)
@@ -177,7 +177,7 @@ async def delete_all_devices(data: DeleteAllUserHwidDevicesRequestDto):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/stats", dependencies=[Depends(require_admin_auth)])
+@router.get("/devices/stats", dependencies=[Depends(require_superadmin_auth)])
 async def get_stats():
     async with async_session() as session:
         service = HwidService(session)
@@ -188,7 +188,7 @@ async def get_stats():
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/top-users", dependencies=[Depends(require_admin_auth)])
+@router.get("/devices/top-users", dependencies=[Depends(require_superadmin_auth)])
 async def get_top_users(
     size: int = Query(10, ge=1, le=100),
     start: int = Query(0, ge=0),
@@ -207,7 +207,7 @@ async def get_top_users(
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/devices/{userUuid}", dependencies=[Depends(require_admin_auth)])
+@router.get("/devices/{userUuid}", dependencies=[Depends(require_superadmin_auth)])
 async def get_user_devices(userUuid: str):
     async with async_session() as session:
         service = HwidService(session)

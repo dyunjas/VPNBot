@@ -5,7 +5,7 @@ from ..common import *
 router = APIRouter()
 
 
-@router.get("/partners", dependencies=[Depends(require_admin_auth)])
+@router.get("/partners", dependencies=[Depends(require_superadmin_auth)])
 async def admin_partners(search: str | None = Query(default=None)):
     async with async_session() as session:
         service = PartnerService(session)
@@ -30,7 +30,7 @@ async def admin_partners(search: str | None = Query(default=None)):
     }
 
 
-@router.post("/partners", dependencies=[Depends(require_admin_auth)])
+@router.post("/partners", dependencies=[Depends(require_superadmin_auth)])
 async def admin_partner_create(payload: PartnerLinkCreatePayload):
     async with async_session() as session:
         service = PartnerService(session)
@@ -55,7 +55,7 @@ async def admin_partner_create(payload: PartnerLinkCreatePayload):
     }
 
 
-@router.patch("/partners/{link_id}", dependencies=[Depends(require_admin_auth)])
+@router.patch("/partners/{link_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_partner_update(link_id: int, payload: PartnerLinkUpdatePayload):
     async with async_session() as session:
         service = PartnerService(session)
@@ -66,7 +66,7 @@ async def admin_partner_update(link_id: int, payload: PartnerLinkUpdatePayload):
     return {"ok": True}
 
 
-@router.get("/partners/{link_id}/details", dependencies=[Depends(require_admin_auth)])
+@router.get("/partners/{link_id}/details", dependencies=[Depends(require_superadmin_auth)])
 async def admin_partner_details(link_id: int):
     async with async_session() as session:
         service = PartnerService(session)

@@ -1,4 +1,193 @@
-const subState = { page: 1, pages: 1 };
+const subState = { page: 1, pages: 1, sortBy: "current_period_end", sortDir: "desc" };
+
+function closeSubscriptionModal() {
+  const modal = q("subscription_modal");
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.classList.remove("user-modal-open");
+}
+
+function openSubscriptionModal(mode) {
+  const modal = q("subscription_modal");
+  if (!modal) return;
+  const titles = {
+    bulk: "Массовое продление",
+    create: "Создание подписки",
+    edit: "Редактирование подписки",
+    traffic: "Добавить трафик",
+  };
+  q("subscription_modal_title").textContent = titles[mode] || "Действие с подпиской";
+  document.querySelectorAll(".subscription-modal-panel").forEach((panel) => {
+    panel.hidden = panel.dataset.panel !== mode;
+  });
+  modal.hidden = false;
+  modal.scrollTop = 0;
+  modal.querySelector(".user-modal__dialog")?.scrollTo({ top: 0, left: 0 });
+  document.body.classList.add("user-modal-open");
+
+  const focusMap = {
+    bulk: "bulk_days",
+    create: "new_user_id",
+    edit: "edit_plan_id",
+    traffic: "traffic_gb",
+  };
+  setTimeout(() => q(focusMap[mode])?.focus(), 0);
+}
+
+function renderSubscriptionsTableHead() {
+  const thead = document.querySelector(".subscriptions-table thead");
+  if (!thead) return;
+  thead.innerHTML = `
+    <tr>
+      ${sortableTh("ID", "id", subState.sortBy, subState.sortDir)}
+      ${sortableTh("Пользователь", "user_id", subState.sortBy, subState.sortDir)}
+      <th>Telegram</th>
+      <th>Тариф</th>
+      ${sortableTh("Статус", "status", subState.sortBy, subState.sortDir)}
+      <th>Авто</th>
+      <th>Устройства</th>
+      ${sortableTh("Окончание", "current_period_end", subState.sortBy, subState.sortDir)}
+    </tr>
+  `;
+  bindSortableTable(thead, subState, async (button) => {
+    await withButtonLoading(button, loadRows).catch((error) => alert(error.message));
+  });
+}
+
+function renderSubscriptionInlineEdit(subscription, button) {
+  const body = button.closest(".row-context-menu")?.querySelector(".row-context-menu__body");
+  if (!body) return;
+  const status = subscription.status || "";
+  body.innerHTML = `
+    <div class="row-context-inline-form">
+      <input data-sub-field="plan_id" type="number" value="${escapeHtml(subscription.plan_id || "")}" placeholder="ID тарифа" />
+      <select data-sub-field="status">
+        <option value="">Статус</option>
+        <option value="active" ${status === "active" ? "selected" : ""}>Активна</option>
+        <option value="past_due" ${status === "past_due" ? "selected" : ""}>Просрочена</option>
+        <option value="expired" ${status === "expired" ? "selected" : ""}>Истекла</option>
+        <option value="canceled" ${status === "canceled" ? "selected" : ""}>Отменена</option>
+      </select>
+      <input data-sub-field="device_limit" type="number" value="${escapeHtml(subscription.device_limit ?? 0)}" placeholder="Лимит устройств" />
+      <input data-sub-field="extend_days" type="number" placeholder="Продлить на дней" />
+      <div class="row-context-inline-form__actions">
+        <button class="btn-secondary" type="button" data-inline-cancel>Назад</button>
+        <button class="btn-primary" type="button" data-inline-save>Сохранить</button>
+      </div>
+    </div>
+  `;
+  initFancySelects(body);
+
+  body.querySelector("[data-inline-cancel]")?.addEventListener("click", () => closeRowContextMenu());
+  body.querySelector("[data-inline-save]")?.addEventListener("click", async (event) => {
+    const field = (name) => body.querySelector(`[data-sub-field="${name}"]`);
+    const payload = {};
+    if (field("plan_id").value) payload.plan_id = Number(field("plan_id").value);
+    if (field("status").value) payload.status = field("status").value;
+    if (field("device_limit").value !== "") payload.device_limit = Number(field("device_limit").value || "0");
+    if (field("extend_days").value) payload.extend_days = Number(field("extend_days").value);
+
+    await withButtonLoading(event.currentTarget, async () => {
+      await api(`/api/admin/subscriptions/${subscription.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+      await loadRows();
+      closeRowContextMenu();
+      showToast("Подписка обновлена", "success");
+    }).catch((error) => alert(error.message));
+  });
+}
+
+async function loadRows() {
+  const tbody = q("tbody");
+  setTableRefreshing(tbody, true);
+  const params = new URLSearchParams({
+    page: String(subState.page),
+    page_size: "25",
+    search: q("search").value || "",
+    status: q("status").value,
+    sort_by: subState.sortBy,
+    sort_dir: subState.sortDir,
+  });
+
+  try {
+    const data = await api(`/api/admin/subscriptions?${params.toString()}`);
+    const items = data.items || [];
+    const meta = data.meta || { page: 1, pages: 1, total: 0 };
+    subState.pages = meta.pages;
+
+    renderSubscriptionsTableHead();
+    tbody.innerHTML = "";
+    items.forEach((subscription) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${subscription.id}</td>
+        <td>${subscription.user_id}</td>
+        <td>${subscription.tg_id || ""}</td>
+        <td>${subscription.plan_name || subscription.plan_id}</td>
+        <td>${statusBadge(subscription.status)}</td>
+        <td>${subscription.auto_renew ? statusBadge("yes") : statusBadge("no")}</td>
+        <td>${subscription.device_limit ?? 0}</td>
+        <td>${formatDateTime(subscription.current_period_end)}</td>
+      `;
+
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showRowContextMenu(tr, [
+          {
+            label: "Изменить",
+            keepOpen: true,
+            onClick: (event, button) => {
+              renderSubscriptionInlineEdit(subscription, button);
+            },
+          },
+          {
+            label: "+ трафик",
+            className: "row-action-menu__item--success",
+            onClick: () => {
+              q("traffic_sub_id").value = subscription.id;
+              q("traffic_gb").value = "";
+              openSubscriptionModal("traffic");
+              q("traffic_gb").focus();
+            },
+          },
+          {
+            label: "Удалить",
+            className: "row-action-menu__item--danger",
+            onClick: async (event, button) => {
+              if (!confirm(`Удалить подписку #${subscription.id}? Действие необратимо.`)) return;
+
+              await withButtonLoading(button, async () => {
+                await api(`/api/admin/subscriptions/${subscription.id}`, { method: "DELETE" });
+                await loadRows();
+                showToast("Подписка удалена", "success");
+              }).catch((error) => alert(error.message));
+            },
+          },
+        ], {
+          title: `Подписка #${subscription.id}`,
+          meta: [
+            { label: "Пользователь", value: subscription.user_id },
+            { label: "Telegram", value: subscription.tg_id || "—" },
+            { label: "Тариф", value: subscription.plan_name || subscription.plan_id },
+            { label: "Статус", html: statusBadge(subscription.status) },
+            { label: "Автопродление", html: subscription.auto_renew ? statusBadge("yes") : statusBadge("no") },
+            { label: "Устройств", value: subscription.device_limit ?? 0 },
+            { label: "Окончание", value: formatDateTime(subscription.current_period_end) },
+          ],
+        });
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    renderPager(meta, q("prev"), q("next"), q("meta"));
+  } finally {
+    setTableRefreshing(tbody, false);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (!(await ensureAuthOrRedirect())) return;
@@ -20,31 +209,37 @@ document.addEventListener("DOMContentLoaded", async () => {
               <option value="canceled">Отменена</option>
             </select>
             <button id="apply" class="btn-primary">Фильтр</button>
+            <button id="open_bulk_extend" type="button">Продлить</button>
+            <button id="open_create_sub" class="btn-primary" type="button">Создать</button>
           </div>
         </div>
 
-        <div class="content-grid subscriptions-grid">
-          <div class="card">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th><th>Пользователь</th><th>Telegram</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Устройств</th><th>Окончание</th><th>Действия</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody"></tbody>
-              </table>
-            </div>
-            <div class="pager">
-              <button id="prev">Назад</button>
-              <span id="meta"></span>
-              <button id="next">Вперед</button>
-            </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table class="subscriptions-table">
+              <thead></thead>
+              <tbody id="tbody"></tbody>
+            </table>
           </div>
+          <div class="pager">
+            <button id="prev">Назад</button>
+            <span id="meta"></span>
+            <button id="next">Вперед</button>
+          </div>
+        </div>
 
-          <div class="content-stack">
-            <div class="card">
-              <h3>Массовое продление</h3>
+        <div id="subscription_modal" class="user-modal admin-form-modal" hidden>
+          <button id="subscription_modal_overlay" class="user-modal__overlay" type="button" aria-label="Закрыть окно"></button>
+          <div class="user-modal__dialog admin-form-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="subscription_modal_title">
+            <div class="user-modal__topbar">
+              <div>
+                <div class="user-modal__eyebrow">Подписки</div>
+                <h3 id="subscription_modal_title" class="user-modal__title">Действие с подпиской</h3>
+              </div>
+              <button id="subscription_modal_close" class="user-modal__close" type="button" aria-label="Закрыть окно">×</button>
+            </div>
+
+            <div class="subscription-modal-panel admin-form-modal__body" data-panel="bulk" hidden>
               <div class="section-title">Продлевает срок в панели и в локальной базе, затем рассылает уведомления в Telegram.</div>
               <div class="form-grid" style="margin-top:10px">
                 <select id="bulk_target">
@@ -54,26 +249,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </select>
                 <input id="bulk_days" type="number" min="1" step="1" placeholder="На сколько дней продлить" />
               </div>
-              <div class="toolbar" style="margin-top:10px">
-                <button id="bulk_extend" class="btn-primary">Продлить выбранным</button>
+              <div class="admin-form-modal__actions">
+                <button id="bulk_extend" class="btn-primary" type="button">Продлить выбранным</button>
               </div>
             </div>
 
-            <div class="card">
-              <h3>Создать подписку</h3>
+            <div class="subscription-modal-panel admin-form-modal__body" data-panel="create" hidden>
               <div class="form-grid">
                 <input id="new_user_id" type="number" placeholder="ID пользователя" />
                 <input id="new_plan_id" type="number" placeholder="ID тарифа" />
               </div>
-              <div class="toolbar" style="margin-top:10px">
+              <div class="admin-form-modal__actions">
                 <label class="plans-flag subscription-auto-flag"><input id="new_auto" type="checkbox" /> <span>Автопродление</span></label>
-                <button id="create_sub" class="btn-primary">Создать</button>
+                <button id="create_sub" class="btn-primary" type="button">Создать</button>
               </div>
             </div>
 
-            <div class="card">
-              <h3>Редактирование подписки</h3>
-              <div class="toolbar">
+            <div class="subscription-modal-panel admin-form-modal__body" data-panel="edit" hidden>
+              <div class="form-grid">
                 <input id="edit_sub_id" type="number" placeholder="ID подписки" />
                 <input id="edit_plan_id" type="number" placeholder="ID тарифа (опционально)" />
                 <select id="edit_status">
@@ -85,16 +278,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </select>
                 <input id="edit_device_limit" type="number" placeholder="Лимит устройств" />
                 <input id="edit_extend_days" type="number" placeholder="Продлить на дней" />
-                <button id="update_sub">Сохранить</button>
+              </div>
+              <div class="admin-form-modal__actions">
+                <button id="update_sub" type="button">Сохранить</button>
               </div>
             </div>
 
-            <div class="card">
-              <h3>Добавить трафик</h3>
-              <div class="toolbar">
+            <div class="subscription-modal-panel admin-form-modal__body" data-panel="traffic" hidden>
+              <div class="form-grid">
                 <input id="traffic_sub_id" type="number" placeholder="ID активной подписки" />
                 <input id="traffic_gb" type="number" min="1" step="1" placeholder="Сколько GB добавить" />
-                <button id="add_traffic" class="btn-primary">Начислить трафик</button>
+              </div>
+              <div class="admin-form-modal__actions">
+                <button id="add_traffic" class="btn-primary" type="button">Начислить трафик</button>
               </div>
             </div>
           </div>
@@ -102,76 +298,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
     `,
   });
-
-  async function loadRows() {
-    const params = new URLSearchParams({
-      page: String(subState.page),
-      page_size: "25",
-      search: q("search").value || "",
-      status: q("status").value,
-    });
-    const data = await api(`/api/admin/subscriptions?${params.toString()}`);
-    const items = data.items || [];
-    const meta = data.meta || { page: 1, pages: 1, total: 0 };
-    subState.pages = meta.pages;
-
-    q("tbody").innerHTML = "";
-    items.forEach((subscription) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${subscription.id}</td>
-        <td>${subscription.user_id}</td>
-        <td>${subscription.tg_id || ""}</td>
-        <td>${subscription.plan_name || subscription.plan_id}</td>
-        <td>${statusBadge(subscription.status)}</td>
-        <td>${subscription.auto_renew ? "Да" : "Нет"}</td>
-        <td>${subscription.device_limit ?? 0}</td>
-        <td>${formatDateTime(subscription.current_period_end)}</td>
-        <td class="row-actions">
-          <button data-edit="${subscription.id}">Изменить</button>
-          <button class="btn-outline-primary" data-traffic="${subscription.id}">+ трафик</button>
-          <button class="btn-danger" data-delete="${subscription.id}">Удалить</button>
-        </td>
-      `;
-      q("tbody").appendChild(tr);
-    });
-
-    q("tbody").querySelectorAll("button[data-edit]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const subscriptionId = Number(button.getAttribute("data-edit") || "0");
-        const subscription = items.find((item) => Number(item.id) === subscriptionId);
-        q("edit_sub_id").value = button.getAttribute("data-edit");
-        if (subscription) {
-          q("edit_plan_id").value = subscription.plan_id || "";
-          q("edit_status").value = subscription.status || "";
-          q("edit_device_limit").value = subscription.device_limit ?? 0;
-        }
-      });
-    });
-
-    q("tbody").querySelectorAll("button[data-traffic]").forEach((button) => {
-      button.addEventListener("click", () => {
-        q("traffic_sub_id").value = button.getAttribute("data-traffic");
-        q("traffic_gb").focus();
-      });
-    });
-
-    q("tbody").querySelectorAll("button[data-delete]").forEach((button) => {
-      button.addEventListener("click", async (event) => {
-        const subscriptionId = Number(button.getAttribute("data-delete") || "0");
-        if (!subscriptionId) return;
-        if (!confirm(`Удалить подписку #${subscriptionId}? Действие необратимо.`)) return;
-
-        await withButtonLoading(event.currentTarget, async () => {
-          await api(`/api/admin/subscriptions/${subscriptionId}`, { method: "DELETE" });
-          await loadRows();
-          showToast("Подписка удалена", "success");
-        }).catch((error) => alert(error.message));
-      });
-    });
-
-    renderPager(meta, q("prev"), q("next"), q("meta"));
-  }
 
   q("apply").addEventListener("click", async (event) => {
     await withButtonLoading(event.currentTarget, async () => {
@@ -207,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }),
       });
       await loadRows();
+      closeSubscriptionModal();
       showToast("Подписка создана", "success");
     }).catch((error) => alert(error.message));
   });
@@ -227,6 +354,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify(payload),
       });
       await loadRows();
+      closeSubscriptionModal();
       showToast("Подписка обновлена", "success");
     }).catch((error) => alert(error.message));
   });
@@ -243,6 +371,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify({ gb }),
       });
       await loadRows();
+      closeSubscriptionModal();
       showToast("Трафик начислен", "success");
     }).catch((error) => alert(error.message));
   });
@@ -266,6 +395,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify({ target, days }),
       });
       await loadRows();
+      closeSubscriptionModal();
       const failed = Array.isArray(result.failed) ? result.failed : [];
       showToast(
         `Продлено: ${result.updated || 0}. Уведомления: ${result.notified || 0}. Ошибки: ${failed.length}.`,
@@ -281,8 +411,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     }).catch((error) => alert(error.message));
   });
 
+  q("open_bulk_extend").addEventListener("click", () => openSubscriptionModal("bulk"));
+  q("open_create_sub").addEventListener("click", () => {
+    q("new_user_id").value = "";
+    q("new_plan_id").value = "";
+    q("new_auto").checked = false;
+    openSubscriptionModal("create");
+  });
+  q("subscription_modal_overlay")?.addEventListener("click", closeSubscriptionModal);
+  q("subscription_modal_close")?.addEventListener("click", closeSubscriptionModal);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeSubscriptionModal();
+  });
+
   try {
     await renderSessionInfo();
+    renderSubscriptionsTableHead();
     bindEnterSubmit(["search"], "apply");
     bindEnterSubmit(["bulk_days"], "bulk_extend");
     bindEnterSubmit(["new_user_id", "new_plan_id"], "create_sub");

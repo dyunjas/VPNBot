@@ -246,7 +246,7 @@ async def _run_broadcast_job(
         await _persist_broadcast_job(job)
 
 
-@router.post("/broadcast/upload", dependencies=[Depends(require_admin_auth)])
+@router.post("/broadcast/upload", dependencies=[Depends(require_superadmin_auth)])
 async def admin_broadcast_upload(
     text: str = Form(...),
     parse_mode: Literal["HTML", "MarkdownV2"] = Form("HTML"),
@@ -313,7 +313,7 @@ async def admin_broadcast_upload(
     }
 
 
-@router.get("/broadcast/jobs/{job_id}", dependencies=[Depends(require_admin_auth)])
+@router.get("/broadcast/jobs/{job_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_broadcast_status(job_id: str):
     async with BROADCAST_JOBS_LOCK:
         job = BROADCAST_JOBS.get(job_id)
@@ -327,7 +327,7 @@ async def admin_broadcast_status(job_id: str):
         return {"ok": True, "job": _history_public(history_item)}
 
 
-@router.get("/broadcast/history", dependencies=[Depends(require_admin_auth)])
+@router.get("/broadcast/history", dependencies=[Depends(require_superadmin_auth)])
 async def admin_broadcast_history(limit: int = Query(default=20, ge=1, le=100)):
     async with async_session() as session:
         items = list(

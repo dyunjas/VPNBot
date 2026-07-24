@@ -4,7 +4,7 @@ from backend.core import loader as bot_loader
 
 router = APIRouter()
 
-@router.get("/withdrawals", dependencies=[Depends(require_admin_auth)])
+@router.get("/withdrawals", dependencies=[Depends(require_superadmin_auth)])
 async def admin_withdrawals(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
@@ -50,7 +50,7 @@ async def admin_withdrawals(
     }
 
 
-@router.post("/withdrawals/{withdrawal_id}/{action}", dependencies=[Depends(require_admin_auth)])
+@router.post("/withdrawals/{withdrawal_id}/{action}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_withdrawal_action(withdrawal_id: int, action: Literal["approve", "reject"]):
     async with async_session() as session:
         w = _http_404_if_none(await session.get(ReferralWithdrawal, withdrawal_id), "withdrawal not found")

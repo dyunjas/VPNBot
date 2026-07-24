@@ -7,7 +7,7 @@ from ..common import *
 router = APIRouter()
 
 
-@router.get("/transactions", dependencies=[Depends(require_admin_auth)])
+@router.get("/transactions", dependencies=[Depends(require_support_auth)])
 async def admin_transactions(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
@@ -74,7 +74,7 @@ async def admin_transactions(
     }
 
 
-@router.post("/transactions/{transaction_id}/confirm", dependencies=[Depends(require_admin_auth)])
+@router.post("/transactions/{transaction_id}/confirm", dependencies=[Depends(require_support_auth)])
 async def admin_transaction_confirm(transaction_id: int):
     async with async_session() as session:
         tx = _http_404_if_none(await session.get(Transaction, transaction_id), "transaction not found")

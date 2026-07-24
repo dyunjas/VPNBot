@@ -50,7 +50,7 @@ async def _notify_bulk_extend(users: list[tuple[User, datetime]], days: int) -> 
     return sent
 
 
-@router.get("/subscriptions", dependencies=[Depends(require_admin_auth)])
+@router.get("/subscriptions", dependencies=[Depends(require_support_auth)])
 async def admin_subscriptions(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
@@ -112,7 +112,7 @@ async def admin_subscriptions(
     }
 
 
-@router.post("/subscriptions", dependencies=[Depends(require_admin_auth)])
+@router.post("/subscriptions", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_create(payload: SubscriptionCreatePayload):
     async with async_session() as session:
         user = _http_404_if_none(await session.get(User, payload.user_id), "user not found")
@@ -142,7 +142,7 @@ async def admin_subscription_create(payload: SubscriptionCreatePayload):
             raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.patch("/subscriptions/{subscription_id}", dependencies=[Depends(require_admin_auth)])
+@router.patch("/subscriptions/{subscription_id}", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_update(subscription_id: int, payload: SubscriptionUpdatePayload):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
@@ -223,7 +223,7 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         return {"ok": True}
 
 
-@router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_admin_auth)])
+@router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_add_traffic(subscription_id: int, payload: SubscriptionTrafficPayload):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
@@ -268,7 +268,7 @@ async def admin_subscription_add_traffic(subscription_id: int, payload: Subscrip
         }
 
 
-@router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_admin_auth)])
+@router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload):
     async with async_session() as session:
         now = datetime.now(timezone.utc)
@@ -351,7 +351,7 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
         }
 
 
-@router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_admin_auth)])
+@router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_delete(subscription_id: int):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")

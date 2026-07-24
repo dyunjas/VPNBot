@@ -4,7 +4,7 @@ from ..common import *
 router = APIRouter()
 
 
-@router.get("/promocodes", dependencies=[Depends(require_admin_auth)])
+@router.get("/promocodes", dependencies=[Depends(require_superadmin_auth)])
 async def admin_promocodes():
     async with async_session() as session:
         promos = list(
@@ -40,7 +40,7 @@ async def admin_promocodes():
     }
 
 
-@router.post("/promocodes", dependencies=[Depends(require_admin_auth)])
+@router.post("/promocodes", dependencies=[Depends(require_superadmin_auth)])
 async def admin_promocode_create(payload: PromocodeCreatePayload):
     code = payload.code.strip()
     async with async_session() as session:
@@ -60,7 +60,7 @@ async def admin_promocode_create(payload: PromocodeCreatePayload):
     return {"ok": True, "promocode_id": promo.id}
 
 
-@router.delete("/promocodes/{promocode_id}", dependencies=[Depends(require_admin_auth)])
+@router.delete("/promocodes/{promocode_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_promocode_delete(promocode_id: int):
     async with async_session() as session:
         promo = _http_404_if_none(await session.get(Promocode, promocode_id), "promocode not found")

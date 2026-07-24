@@ -279,6 +279,143 @@
   background: linear-gradient(180deg, #ffffff 0%, #fff6f7 100%);
 }
 
+.system-health {
+  display: grid;
+  gap: 12px;
+}
+
+.system-health__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.system-health__refresh {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--brand-2);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.system-health__refresh:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-soft);
+}
+
+.system-health__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.system-health__item {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: none;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.system-health__item:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-soft);
+}
+
+.system-health__item-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.system-health__item-top b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.system-health__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--muted);
+  box-shadow: 0 0 0 4px rgba(113, 128, 154, 0.12);
+}
+
+.system-health__item--ok .system-health__dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.12);
+}
+
+.system-health__item--warn .system-health__dot {
+  background: var(--warn);
+  box-shadow: 0 0 0 4px rgba(199, 106, 18, 0.13);
+}
+
+.system-health__item--danger .system-health__dot {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+}
+
+.system-health__status {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.system-health__item--ok .system-health__status {
+  color: var(--ok);
+}
+
+.system-health__item--warn .system-health__status {
+  color: var(--warn);
+}
+
+.system-health__item--danger .system-health__status {
+  color: var(--danger);
+}
+
+.system-health__message {
+  min-height: 22px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.system-health__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.system-health__empty {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  padding: 14px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}
+
 .maintenance-card {
   gap: 16px;
 }

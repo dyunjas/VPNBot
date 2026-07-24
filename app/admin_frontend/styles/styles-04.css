@@ -114,8 +114,7 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(8, 16, 32, 0.48);
-  backdrop-filter: blur(8px);
+  background: rgba(8, 16, 32, 0.32);
 }
 .user-modal__dialog {
   position: relative;

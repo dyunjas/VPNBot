@@ -78,6 +78,19 @@ async def init_db():
         )
         await conn.execute(
             text(
+                "ALTER TABLE vpn_admins "
+                "ADD COLUMN IF NOT EXISTS login VARCHAR(64)"
+            )
+        )
+        await conn.execute(
+            text(
+                "ALTER TABLE vpn_admins "
+                "ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)"
+            )
+        )
+        await conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_vpn_admins_login ON vpn_admins(login)"))
+        await conn.execute(
+            text(
                 "UPDATE vpn_subscriptions s "
                 "SET device_limit = COALESCE(p.device_limit, 3) "
                 "FROM vpn_subscription_plans p "

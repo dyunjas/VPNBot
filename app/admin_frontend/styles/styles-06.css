@@ -365,8 +365,17 @@
     padding: 18px;
   }
   .dashboard-overview-panel__grid,
-  .dashboard-health-grid {
+  .dashboard-health-grid,
+  .system-health__grid {
     grid-template-columns: 1fr;
+  }
+  .system-health__bar,
+  .system-health__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .system-health__refresh {
+    width: 100%;
   }
   .maintenance-card__top {
     flex-direction: column;

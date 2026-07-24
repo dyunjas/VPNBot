@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Сумма</th><th>Метод</th><th>Статус</th><th>Дата</th><th>Действия</th></tr>
+              <tr><th>ID</th><th>Пользователь</th><th>TG</th><th>Username</th><th>Сумма</th><th>Метод</th><th>Статус</th><th>Дата</th></tr>
             </thead>
             <tbody id="tbody"></tbody>
           </table>
@@ -57,34 +57,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${safeText(w.method)}</td>
         <td>${statusBadge(w.status)}</td>
         <td>${formatDateTime(w.created_at)}</td>
-        <td></td>
       `;
-      const row = document.createElement("div");
-      row.className = "row-actions";
-      const approve = document.createElement("button");
-      approve.className = "btn-ok";
-      approve.textContent = "Подтвердить";
-      approve.disabled = w.status !== "pending";
-      approve.addEventListener("click", async (e) => {
-        await withButtonLoading(e.currentTarget, async () => {
-          await api(`/api/admin/withdrawals/${w.id}/approve`, { method: "POST" });
-          await loadRows();
-          showToast(`Заявка #${w.id} подтверждена`, "success");
-        }).catch((err) => alert(err.message));
-      });
-      const reject = document.createElement("button");
-      reject.className = "btn-danger";
-      reject.textContent = "Отклонить";
-      reject.disabled = w.status !== "pending";
-      reject.addEventListener("click", async (e) => {
-        await withButtonLoading(e.currentTarget, async () => {
-          await api(`/api/admin/withdrawals/${w.id}/reject`, { method: "POST" });
-          await loadRows();
-          showToast(`Заявка #${w.id} отклонена`, "success");
-        }).catch((err) => alert(err.message));
-      });
-      row.append(approve, reject);
-      tr.querySelector("td:last-child").appendChild(row);
+      if (w.status === "pending") {
+        tr.classList.add("is-clickable-row");
+        tr.addEventListener("click", (event) => {
+          event.stopPropagation();
+          showRowContextMenu(tr, [
+            {
+              label: "Подтвердить",
+              className: "row-action-menu__item--success",
+              onClick: async (event, button) => {
+                await withButtonLoading(button, async () => {
+                  await api(`/api/admin/withdrawals/${w.id}/approve`, { method: "POST" });
+                  await loadRows();
+                  showToast(`Заявка #${w.id} подтверждена`, "success");
+                }).catch((err) => alert(err.message));
+              },
+            },
+            {
+              label: "Отклонить",
+              className: "row-action-menu__item--danger",
+              onClick: async (event, button) => {
+                await withButtonLoading(button, async () => {
+                  await api(`/api/admin/withdrawals/${w.id}/reject`, { method: "POST" });
+                  await loadRows();
+                  showToast(`Заявка #${w.id} отклонена`, "success");
+                }).catch((err) => alert(err.message));
+              },
+            },
+          ], {
+            title: `Заявка #${w.id}`,
+            meta: [
+              { label: "Пользователь", value: w.user_id },
+              { label: "Telegram", value: w.tg_id || "—" },
+              { label: "Username", value: w.username || "—" },
+              { label: "Сумма", value: `${w.amount} RUB` },
+              { label: "Метод", value: w.method },
+              { label: "Статус", html: statusBadge(w.status) },
+              { label: "Дата", value: formatDateTime(w.created_at) },
+            ],
+          });
+        });
+      }
       q("tbody").appendChild(tr);
     });
 

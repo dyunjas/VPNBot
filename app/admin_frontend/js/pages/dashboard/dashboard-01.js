@@ -60,11 +60,6 @@ function chartCardHtml({ prefix, title, subtitle, controls = "" }) {
   `;
 }
 
-function chartPointPath(points) {
-  if (!points.length) return "";
-  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
-}
-
 function compactChartLabel(label) {
   const text = String(label || "").trim();
   if (!text) return "";
@@ -87,85 +82,123 @@ function buildXAxisLabels(items, points, width, padding) {
       const isLast = index === points.length - 1;
       const visible = isFirst || isLast || index % step === 0;
       if (!visible) return "";
-      return `<text x="${point.x}" y="${width > 720 ? 228 : 232}" text-anchor="middle">${safeText(labels[index])}</text>`;
+      return `<text x="${point.x}" y="294" text-anchor="middle">${safeText(labels[index])}</text>`;
     })
     .join("");
 }
 
 function buildChartSvg(chartId, items, values, options = {}) {
   const width = 920;
-  const height = 240;
-  const padding = { top: 18, right: 14, bottom: 42, left: 18 };
+  const height = 335;
+  const padding = { top: 22, right: 22, bottom: 66, left: 50 };
   const innerWidth = width - padding.left - padding.right;
   const innerHeight = height - padding.top - padding.bottom;
   const maxValue = Math.max(...values, 1);
   const minValue = options.minValue || 0;
   const denominator = Math.max(maxValue - minValue, 1);
   const step = items.length > 1 ? innerWidth / (items.length - 1) : 0;
+  const baseline = padding.top + innerHeight;
 
   const points = items.map((item, index) => {
     const value = Number(values[index] || 0);
     const ratio = Math.max(0, Math.min(1, (value - minValue) / denominator));
     return {
-      x: Number((padding.left + step * index).toFixed(1)),
+      x: Number((padding.left + (items.length > 1 ? step * index : innerWidth / 2)).toFixed(1)),
       y: Number((padding.top + innerHeight - ratio * innerHeight).toFixed(1)),
       value,
     };
   });
 
-  const linePath = chartPointPath(points);
-  const areaPath = points.length
-    ? `${linePath} L ${points[points.length - 1].x} ${padding.top + innerHeight} L ${points[0].x} ${padding.top + innerHeight} Z`
-    : "";
-
+  const valueFormatter = options.valueFormatter || ((value) => formatNumber(value));
   const gridLines = [0, 0.25, 0.5, 0.75, 1]
     .map((ratio) => {
-      const y = padding.top + innerHeight - ratio * innerHeight;
-      return `<line x1="${padding.left}" y1="${y.toFixed(1)}" x2="${width - padding.right}" y2="${y.toFixed(1)}" />`;
-    })
-    .join("");
-
-  const xLabels = buildXAxisLabels(items, points, width, padding);
-
-  const markers = points
-    .map((point, index) => {
-      const item = items[index];
-      const tooltip = options.tooltipBuilder ? options.tooltipBuilder(item, point.value) : `${item.label || item.key || ""}`;
-      const r = index === points.length - 1 ? 5.5 : 4.5;
+      const y = Number((padding.top + innerHeight - ratio * innerHeight).toFixed(1));
+      const gridValue = minValue + ratio * denominator;
       return `
-        <g class="metric-chart__point" data-index="${index}">
-          <circle class="metric-chart__point-halo" cx="${point.x}" cy="${point.y}" r="${(r + 5).toFixed(1)}"></circle>
-          <circle class="metric-chart__point-dot" cx="${point.x}" cy="${point.y}" r="${r}"></circle>
-          <title>${safeText(tooltip)}</title>
+        <g>
+          <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" />
+          <text x="${padding.left - 14}" y="${y + 4}" text-anchor="end">${safeText(valueFormatter(gridValue))}</text>
         </g>
       `;
     })
     .join("");
 
-  const gradientAreaId = `metric-area-gradient-${chartId}`;
-  const gradientLineId = `metric-line-gradient-${chartId}`;
+  const xLabels = buildXAxisLabels(items, points, width, padding);
+  const slotWidth = innerWidth / Math.max(items.length, 1);
+  const barWidth = Math.max(10, Math.min(22, slotWidth * 0.48));
+  const bars = points
+    .map((point, index) => {
+      const item = items[index];
+      const h = Math.max(3, baseline - point.y);
+      const tooltip = options.tooltipBuilder ? options.tooltipBuilder(item, point.value) : `${item.label || item.key || ""}`;
+      return `
+        <g class="metric-bar-chart__bar" data-chart-label="${safeText(item.label || item.key || "")}" data-chart-value="${safeText(valueFormatter(point.value))}" data-chart-meta="${safeText(tooltip)}">
+          <rect x="${(point.x - barWidth / 2).toFixed(1)}" y="${(baseline - h).toFixed(1)}" width="${barWidth.toFixed(1)}" height="${h.toFixed(1)}" rx="3"></rect>
+        </g>
+      `;
+    })
+    .join("");
+
+  const gradientBarId = `metric-bar-gradient-${chartId}`;
 
   return `
-    <svg class="metric-chart__svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <svg class="metric-chart__svg metric-chart__svg--tailadmin metric-chart__svg--tailadmin-bars" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
       <defs>
-        <linearGradient id="${gradientAreaId}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--brand)" stop-opacity="0.30" />
-          <stop offset="100%" stop-color="var(--brand)" stop-opacity="0.03" />
-        </linearGradient>
-        <linearGradient id="${gradientLineId}" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#8ca2ff" />
-          <stop offset="55%" stop-color="var(--brand)" />
-          <stop offset="100%" stop-color="var(--brand-2)" />
+        <linearGradient id="${gradientBarId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3c50e0" />
+          <stop offset="100%" stop-color="#3c50e0" />
         </linearGradient>
       </defs>
-      <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="var(--surface-soft)" />
+      <rect class="metric-chart__frame" x="0" y="0" width="${width}" height="${height}" rx="0" />
       <g class="metric-chart__grid">${gridLines}</g>
-      ${areaPath ? `<path class="metric-chart__area" style="fill:url(#${gradientAreaId})" d="${areaPath}"></path>` : ""}
-      ${linePath ? `<path class="metric-chart__line" style="stroke:url(#${gradientLineId})" d="${linePath}"></path>` : ""}
-      ${markers}
+      <g style="fill:url(#${gradientBarId})">${bars}</g>
       <g class="metric-chart__axis">${xLabels}</g>
     </svg>
   `;
+}
+
+function bindMetricChartTooltip(host) {
+  if (!host || host.dataset.chartTooltipInit === "1") return;
+  host.dataset.chartTooltipInit = "1";
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "metric-chart-tooltip";
+  tooltip.hidden = true;
+  host.appendChild(tooltip);
+
+  const moveTooltip = (event, bar) => {
+    const wrap = host.getBoundingClientRect();
+    const label = bar.dataset.chartLabel || "";
+    const value = bar.dataset.chartValue || "";
+    const meta = bar.dataset.chartMeta || "";
+    tooltip.innerHTML = `
+      <div class="metric-chart-tooltip__top">
+        <span>${safeText(label)}</span>
+        <b>${safeText(value)}</b>
+      </div>
+      <div class="metric-chart-tooltip__meta">${safeText(meta)}</div>
+    `;
+    tooltip.hidden = false;
+
+    const tooltipWidth = tooltip.offsetWidth || 220;
+    const tooltipHeight = tooltip.offsetHeight || 88;
+    const left = Math.min(Math.max(event.clientX - wrap.left + 14, 10), Math.max(wrap.width - tooltipWidth - 10, 10));
+    const top = Math.max(event.clientY - wrap.top - tooltipHeight - 12, 10);
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  };
+
+  host.querySelectorAll(".metric-bar-chart__bar").forEach((bar) => {
+    bar.addEventListener("pointerenter", (event) => {
+      bar.classList.add("is-hovered");
+      moveTooltip(event, bar);
+    });
+    bar.addEventListener("pointermove", (event) => moveTooltip(event, bar));
+    bar.addEventListener("pointerleave", () => {
+      bar.classList.remove("is-hovered");
+      tooltip.hidden = true;
+    });
+  });
 }
 
 function buildMetricLegend(items, valueGetter, valueFormatter, metaBuilder) {
@@ -222,20 +255,13 @@ function renderMetricChart({
   const total = typeof totalValue === "number" ? totalValue : values.reduce((sum, value) => sum + value, 0);
   if (totalEl) totalEl.textContent = totalFormatter(total);
 
+  host.dataset.chartTooltipInit = "0";
   host.innerHTML = `
-    <div class="metric-chart">
-      ${buildChartSvg(hostId, items, values, { tooltipBuilder })}
-      ${buildMetricLegend(
-        items,
-        valueGetter,
-        valueFormatter,
-        legendMetaBuilder || ((item) => {
-          if (showCountBelow) return `${countFormatter(item.count || 0)} записей`;
-          return "";
-        }),
-      )}
+    <div class="metric-chart metric-chart--flowbite">
+      ${buildChartSvg(hostId, items, values, { tooltipBuilder, valueFormatter })}
     </div>
   `;
+  bindMetricChartTooltip(host);
 }
 
 function buildActivationSeries(usersSeries, subscriptionsSeries) {
@@ -356,24 +382,6 @@ async function initDashboardPage() {
           </div>
           <div id="quick">Загрузка...</div>
         </div>
-        <div class="card dashboard-card dashboard-section-card">
-          <div class="dashboard-section-card__head">
-            <div>
-              <div class="dashboard-section-card__eyebrow">Статусы</div>
-              <h3>Ключевые индикаторы</h3>
-            </div>
-          </div>
-          <div id="health">Загрузка...</div>
-        </div>
-      </div>
-      <div class="card dashboard-card dashboard-section-card">
-        <div class="dashboard-section-card__head">
-          <div>
-            <div class="dashboard-section-card__eyebrow">Система</div>
-            <h3>Техработы</h3>
-          </div>
-        </div>
-        <div id="maintenance_panel">Загрузка...</div>
       </div>
       <div class="card dashboard-card dashboard-section-card">
         <div class="dashboard-section-card__head">
@@ -391,7 +399,7 @@ async function initDashboardPage() {
       <div class="dashboard-charts-grid">
         ${chartCardHtml({
           prefix: "payments_chart",
-          title: "График платежей",
+          title: "Выручка по периодам",
           subtitle: "Загрузка...",
           controls: `
             <div id="payments_chart_periods" class="chart-periods">
@@ -408,12 +416,12 @@ async function initDashboardPage() {
         })}
         ${chartCardHtml({
           prefix: "subscriptions_chart",
-          title: "Купленные подписки",
+          title: "Покупки подписок",
           subtitle: "Загрузка...",
         })}
         ${chartCardHtml({
           prefix: "activation_chart",
-          title: "Конверсия в подписку",
+          title: "Конверсия регистраций",
           subtitle: "Загрузка...",
         })}
       </div>
