@@ -193,7 +193,7 @@ async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
         remaining_text = f"примерно {hours} ч."
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подписка скоро закончится</b>\n\n"
+        "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Ваша подписка скоро закончится</b>\n\n"
         f"До окончания осталось {remaining_text}. Продлите заранее, чтобы VPN продолжил работать.\n\n"
         "После продления ссылка останется прежней. Если автопродление включено, проверьте, что на балансе достаточно средств."
     )
@@ -210,7 +210,7 @@ async def _notify_subscription_expired(*, tg_id: int) -> None:
     builder.adjust(1)
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji>Подписка закончилась</b>\n\n"
+        "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Ваша подписка закончилась</b>\n\n"
         "Доступ к VPN временно остановлен. Продлите подписку, и сервис снова заработает на вашей текущей ссылке.\n\n"
         "Если вы уже продлили подписку, обновите подписку в приложении."
     )
@@ -228,7 +228,7 @@ async def _notify_subscription_renewed(*, tg_id: int, end_dt: datetime) -> None:
     builder.adjust(1)
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
+        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Ваша подписка продлена автоматически</b>\n\n"
         f"Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         "Ссылка для подключения осталась прежней. Средства списаны с вашего баланса."
     )
@@ -485,11 +485,10 @@ async def remnawave_webhook(
         short_token = token[:8] if token else ""
         now_dt = connected_at or datetime.now(timezone.utc)
         msg = (
-            "<b>Подключено новое устройство</b>\n\n"
-            "К вашей подписке добавилось устройство. Если это были вы, ничего делать не нужно.\n\n"
+            "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Новое устройство подключено!</b>\n\n"
             f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token or '?'}</code>\n"
-            f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Устройство: <b>{device_model or 'Не определено'}</b>\n"
-            f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Система: <b>{device_os or '?'} {os_version or ''}</b>\n"
+            f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device_model or 'Не определено'}</b>\n"
+            f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device_os or '?'} {os_version or ''}</b>\n"
             f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%d.%m.%Y %H:%M')}</b>\n\n"
             "Если вы не подключали это устройство, откройте <b>Моя подписка -> Устройства</b> и удалите его, после обратитесь в поддержку."
         )

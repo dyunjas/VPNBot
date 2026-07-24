@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+﻿from datetime import datetime, timezone
 from html import escape
 
 from aiogram import F, Router
@@ -91,13 +91,11 @@ async def _build_subscription_screen(
         f"<tg-emoji emoji-id='5956148757899776734'>📆</tg-emoji> Действует до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
         f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
         "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> "
-        "Гигабайты списываются только на серверах белых списков. "
+        "Гигабайты расходуются только на серверах белых списков. "
         f"При необходимости можно докупить трафик по цене <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 GB</b>. "
         "Остаток трафика переносится на следующий месяц.</blockquote>\n\n"
-        "Если подписка уже добавлена в приложение, просто обновите ее там. "
-        "Если подключаетесь впервые, откройте инструкцию ниже.\n\n"
         "<tg-emoji emoji-id='5877318502947229960'>📖</tg-emoji>"
-        "<a href='https://telegra.ph/Lunet-VPN---instrukciya-12-18'><b> Инструкция по подключению</b></a>"
+        f"<a href='{safe_url}'><b> Инструкция по подключению</b></a>"
     )
     return text, auto_renew
 

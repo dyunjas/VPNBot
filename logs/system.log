@@ -10307,3 +10307,19 @@ NameError: name 'Bot' is not defined
 [2026-07-25 00:51:15] [INFO] root: Database connection successful
 [2026-07-25 00:58:16] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
 [2026-07-25 00:58:16] [INFO] root: Bot stopped
+[2026-07-25 02:12:32] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 02:12:33] [INFO] root: Bot started
+[2026-07-25 02:12:58] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-25 02:12:58] [INFO] root: Bot stopped
+[2026-07-25 02:13:09] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 02:13:10] [INFO] root: Bot started
+[2026-07-25 02:14:02] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-25 02:14:02] [INFO] root: Bot stopped
+[2026-07-25 02:14:12] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 02:14:12] [INFO] root: Bot started
+[2026-07-25 02:29:38] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-25 02:29:39] [INFO] root: Bot stopped
+[2026-07-25 02:29:45] [INFO] root: Settings successfully loaded from .env
+[2026-07-25 02:29:45] [INFO] root: Bot started
+[2026-07-25 02:32:07] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-25 02:32:08] [INFO] root: Bot stopped

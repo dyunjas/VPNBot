@@ -1209,3 +1209,7 @@ Traceback (most recent call last):
     temp_bot = Bot(token=bot_token, session=create_telegram_session())
                ^^^
 NameError: name 'Bot' is not defined
+[2026-07-25 01:57:19] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-25 01:57:19] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29735141
+[2026-07-25 01:57:21] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-25 01:57:21] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29735139
