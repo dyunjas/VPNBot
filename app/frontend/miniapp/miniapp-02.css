@@ -46,7 +46,29 @@
 .is-miniapp .btn:active,
 .is-miniapp .pay-method:active,
 .is-miniapp .link-button:active {
-  transform: scale(.975);
+  transform: none;
+}
+
+.is-miniapp .btn::after,
+.is-miniapp .pay-method::after {
+  display: none !important;
+  animation: none !important;
+}
+
+.is-miniapp .btn:hover,
+.is-miniapp .pay-method:hover,
+.is-miniapp .link-button:hover,
+.is-miniapp .btn:active,
+.is-miniapp .pay-method:active,
+.is-miniapp .link-button:active {
+  filter: none !important;
+  transform: none !important;
+}
+
+.is-miniapp .cabinet-features,
+.is-miniapp .card:has(#tx-list),
+.is-miniapp .card:has(#withdraw-list) {
+  display: none !important;
 }
 
 .is-miniapp .topup-panel__actions .btn,
@@ -116,6 +138,15 @@
 
 .is-miniapp .tab__label {
   font-size: 11px;
+}
+
+.is-miniapp #view-home .app-popup,
+.is-miniapp #promo-hint,
+.is-miniapp #topup-hint,
+.is-miniapp #traffic-hint,
+.is-miniapp #ref-transfer-hint,
+.is-miniapp #withdraw-hint {
+  display: none !important;
 }
 
 .is-miniapp .app-loader {

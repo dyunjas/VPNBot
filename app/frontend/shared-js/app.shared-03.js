@@ -286,20 +286,20 @@ async function createWithdrawal() {
 
   if (!Number.isFinite(amount) || amount < minWithdrawAmount) {
     const msg = `Минимальная сумма вывода: ${minWithdrawAmount} ₽`;
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     return toast(msg);
   }
 
   if (method.length < 8) {
     const msg = "Укажите способ вывода и реквизиты подробнее";
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     return toast(msg);
   }
 
   haptic();
   try {
     const data = await api("/api/referral/withdraw", { amount: Math.floor(amount), method });
-    if (hint) hint.textContent = data.message || "Заявка отправлена";
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = data.message || "Заявка отправлена";
     toastSuccess(data.message || "Заявка на вывод создана");
     haptic("success");
 
@@ -308,7 +308,7 @@ async function createWithdrawal() {
 
     await Promise.all([loadWithdrawals(), loadProfile(), loadReferral()]);
   } catch (e) {
-    if (hint) hint.textContent = e.message;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
     toast(e.message);
     haptic("error");
   }
@@ -321,13 +321,13 @@ async function transferReferralBalance() {
 
   if (!Number.isFinite(amount) || amount < minTransferAmount) {
     const msg = `Минимальная сумма перевода: ${minTransferAmount} ₽`;
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     return toast(msg);
   }
 
   const transferAmount = Math.floor(amount);
   if (!confirm(`Перевести ${transferAmount} ₽ с реферального баланса на основной?`)) {
-    if (hint) hint.textContent = "Перевод отменён";
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = "Перевод отменён";
     return;
   }
 
@@ -335,13 +335,13 @@ async function transferReferralBalance() {
   try {
     const data = await api("/api/referral/transfer", { amount: transferAmount });
     const msg = `Переведено ${data.amount || transferAmount} ₽. Основной баланс: ${data.balance || 0} ₽`;
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     if ($("ref-transfer-amount")) $("ref-transfer-amount").value = "";
     toastSuccess("Средства переведены на основной баланс");
     haptic("success");
     await Promise.all([loadProfile(), loadReferral()]);
   } catch (e) {
-    if (hint) hint.textContent = e.message;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
     toast(e.message);
     haptic("error");
   }

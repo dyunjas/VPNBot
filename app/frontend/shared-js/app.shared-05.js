@@ -16,10 +16,10 @@ async function bootstrap() {
     revealApp();
     setLoader(false);
 
-    if (targetView !== "profile") {
+    if (!IS_MINIAPP_PATH && targetView !== "profile") {
       void loadTransactions().catch(() => {});
     }
-    void loadWithdrawals().catch(() => {});
+    if (!IS_MINIAPP_PATH) void loadWithdrawals().catch(() => {});
   } catch (e) {
     if (e?.code === "BANNED" || String(e?.message || "").toLowerCase().includes("banned")) {
       showBannedScreen();

@@ -6,13 +6,13 @@ async function applyPromocode() {
   try {
     const data = await api("/api/promocode/apply", { code });
     const hint = $("promo-hint");
-    if (hint) hint.textContent = `Начислено: +${data.amount_added || 0} ₽`;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = `Начислено: +${data.amount_added || 0} ₽`;
     toastSuccess("Промокод применен");
     haptic("success");
     await loadProfile();
   } catch (e) {
     const hint = $("promo-hint");
-    if (hint) hint.textContent = e.message;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
     toast(e.message);
     haptic("error");
   }
@@ -74,7 +74,7 @@ async function createTopup() {
 
   if (!Number.isFinite(amount) || amount <= 0) {
     const msg = "Введите корректную сумму";
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     return toast(msg);
   }
 
@@ -90,14 +90,14 @@ async function createTopup() {
     tg?.openLink?.(data.payment_url);
     if (!tg?.openLink) window.open(data.payment_url, "_blank");
 
-    if (hint) {
+    if (hint && !IS_MINIAPP_PATH) {
       hint.textContent = "После оплаты баланс обновится автоматически. Обычно это занимает до 1-2 минут.";
     }
     scheduleTopupRefresh();
     toastSuccess("Ссылка на оплату открыта");
     haptic("success");
   } catch (e) {
-    if (hint) hint.textContent = e.message;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
     toast(e.message);
     haptic("error");
   }
@@ -111,7 +111,7 @@ async function buyTraffic() {
 
   if (!Number.isFinite(gb) || gb <= 0) {
     const msg = "Введите количество ГБ больше 0";
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     return toast(msg);
   }
 
@@ -121,12 +121,12 @@ async function buyTraffic() {
     const data = await api("/api/subscription/traffic/buy", { gb: Math.floor(gb) });
     if (input) input.value = "";
     const msg = `Добавлено ${data.gb_added} ГБ, списано ${data.charged} ₽`;
-    if (hint) hint.textContent = msg;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
     toastSuccess(msg);
     haptic("success");
     await Promise.all([loadStatus(), loadProfile()]);
   } catch (e) {
-    if (hint) hint.textContent = e.message;
+    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
     toast(e.message);
     haptic("error");
   } finally {

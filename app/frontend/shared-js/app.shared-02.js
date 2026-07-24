@@ -77,10 +77,10 @@ function switchView(view) {
 
   if (view === "plans") loadPlans();
   if (view === "devices") loadDevices();
-  if (view === "profile") loadTransactions();
+  if (view === "profile" && !IS_MINIAPP_PATH) loadTransactions();
   if (view === "referral") {
     loadReferral();
-    loadWithdrawals();
+    if (!IS_MINIAPP_PATH) loadWithdrawals();
   }
 }
 
