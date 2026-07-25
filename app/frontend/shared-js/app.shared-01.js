@@ -43,7 +43,7 @@ if (IS_MINIAPP_PATH) {
   loaderEl.id = "app-loader";
   loaderEl.className = "app-loader";
   loaderEl.innerHTML =
-    '<div class="loader-card"><div class="loader-ring"></div><div id="loader-text" class="loader-text">Загружаем данные...</div></div>';
+    '<div class="loader-card"><div class="loader-ring"></div><div id="loader-text" class="loader-text">Загружаем кабинет...</div></div>';
   document.body.appendChild(loaderEl);
   loaderTextEl = loaderEl.querySelector("#loader-text");
 }
@@ -95,7 +95,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function setLoader(visible, text = "Загружаем данные...") {
+function setLoader(visible, text = "Загружаем кабинет...") {
   if (!IS_MINIAPP_PATH || !loaderEl) return;
   if (loaderTextEl) loaderTextEl.textContent = text;
   loaderEl.classList.toggle("app-loader--hidden", !visible);

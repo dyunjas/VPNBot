@@ -1,6 +1,6 @@
 async function bootstrap() {
   try {
-    setLoader(true, "Загружаем данные...");
+    setLoader(true, "Загружаем кабинет...");
     initEvents();
     const initialView = getInitialViewFromUrl();
     const allowedViews = new Set(["home", "plans", "devices", "profile", "referral", "settings"]);

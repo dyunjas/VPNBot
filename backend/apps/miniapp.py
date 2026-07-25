@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from backend.apps.common import create_fastapi_app, mount_frontend_assets, proxy_api_request, register_legal_routes, render_shell
 from backend.core.config import settings
 
-MINIAPP_BUILD = "20260725-0004"
+MINIAPP_BUILD = "20260726-0006"
 
 
 def create_app():
@@ -19,26 +19,10 @@ def create_app():
             stylesheet_urls=[
                 "/miniapp/shared-tokens.css?v=1",
                 "/miniapp/shared-ui.css?v=9",
-                "/miniapp/miniapp.css?v=10",
+                "/miniapp/miniapp.css?v=16",
             ],
             head_scripts=[
                 '<script src="https://telegram.org/js/telegram-web-app.js"></script>',
-                (
-                    "<style>"
-                    "body.is-miniapp{"
-                    "background:"
-                    "radial-gradient(circle at top left, rgba(255,255,255,.28), transparent 28%),"
-                    "linear-gradient(180deg,#5b7cfa 0%,#4f74f7 100%) !important;"
-                    "background-color:#5b7cfa !important;"
-                    "}"
-                    ".is-miniapp .pay-method--active{"
-                    "border-color:#4c6fff !important;"
-                    "background:linear-gradient(180deg,#f3f6ff 0%,#ebf1ff 100%) !important;"
-                    "box-shadow:0 0 0 2px rgba(76,111,255,.26),0 12px 28px rgba(76,111,255,.16) !important;"
-                    "}"
-                    ".is-miniapp .bottom-nav,.is-miniapp .tab{border-color:#dbe6f6 !important;}"
-                    "</style>"
-                ),
             ],
             bootstrap_scripts=[
                 (

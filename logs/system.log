@@ -11813,3 +11813,23 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-07-26 01:03:13] [INFO] root: Bot started
 [2026-07-26 01:04:03] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
 [2026-07-26 01:04:03] [INFO] root: Bot stopped
+[2026-07-26 02:22:47] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 02:22:51] [INFO] root: Bot started
+[2026-07-26 02:28:41] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-07-26 02:28:42] [INFO] root: Bot stopped
+[2026-07-26 02:28:52] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 02:28:53] [INFO] root: Bot started
+[2026-07-26 02:34:10] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+[2026-07-26 02:34:22] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-07-26 02:54:56] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 02:54:57] [INFO] root: Database tables initialized
+[2026-07-26 02:54:57] [INFO] root: Database connection successful
+[2026-07-26 02:59:33] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 02:59:33] [INFO] root: Database tables initialized
+[2026-07-26 02:59:33] [INFO] root: Database connection successful
+[2026-07-26 03:03:58] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 03:03:58] [INFO] root: Database tables initialized
+[2026-07-26 03:03:58] [INFO] root: Database connection successful
+[2026-07-26 03:05:15] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 03:05:15] [INFO] root: Database tables initialized
+[2026-07-26 03:05:15] [INFO] root: Database connection successful
