@@ -14,7 +14,7 @@ from backend.email_templates import render_code_email
 from backend.images import PROFILE_IMG
 from backend.services.exceptions import UserNotFound
 from backend.states import EmailBindStates
-from bot.navigation.additional_menu.profile.keyboards import profile_kb, email_bind_kb
+from bot.navigation.additional_menu.email.keyboards import email_bind_kb, email_bind_cancel_kb
 from bot.utils.html import html_escape
 
 
@@ -86,39 +86,8 @@ def _smtp_send_code(email: str, code: str, purpose: str = "bind") -> None:
             server.send_message(msg)
 
 
-async def _render_profile(callback: CallbackQuery, bot_api) -> None:
-    tg_id = callback.from_user.id
-    resp = await bot_api.get_user_by_tg_id(tg_id)
-    user = resp.get("user") if isinstance(resp, dict) else resp
-    username = "-" if not user.get("username") else f"@{html_escape(user.get('username'))}"
-    email = user.get("email") or "не привязана"
-
-    text = (
-        f"<b><tg-emoji emoji-id='6005928962163742139'>🌝</tg-emoji> Пользователь №{user.get('id')}:</b>\n"
-        f"<b><tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Юзернейм:</b> {username}\n"
-        f"<b><tg-emoji emoji-id='5874948844935974490'>⭐️</tg-emoji> ID:</b> <code>{user.get('tg_id')}</code>\n"
-        f"<b><tg-emoji emoji-id='5879785854284599288'>✉️</tg-emoji> Почта:</b> {html_escape(email)}\n"
-        f"<b><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс:</b> {user.get('balance')} RUB"
-    )
-
-    media = InputMediaPhoto(media=PROFILE_IMG, caption=text)
-    await callback.message.edit_media(media=media, reply_markup=profile_kb())
-
-
-@router.callback_query(F.data == "profile")
-async def profile_clb(callback: CallbackQuery, bot_api):
-    try:
-        await _render_profile(callback, bot_api)
-    except UserNotFound:
-        await callback.message.answer(
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
-        )
-        return
-    await callback.answer()
-
-
-@router.callback_query(F.data == "profile_email_bind")
-async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, bot_api):
+@router.callback_query(F.data == "email_bind")
+async def email_bind_start(callback: CallbackQuery, state: FSMContext, bot_api):
     try:
         resp = await bot_api.get_user_by_tg_id(callback.from_user.id)
         user = resp.get("user") if isinstance(resp, dict) else resp
@@ -130,9 +99,9 @@ async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, b
 
     current_email = html_escape(user.get("email") or "-")
     text = (
-        "<b><tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Привязка почты</b>\n"
-        f"Текущая почта: <code>{current_email}</code>\n\n"
-        "Если вы хотите изменить почту, введите новую почту. На нее будет отправлен код подтверждения."
+        "<b><tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Привязка почты</b>\n\n"
+        "Укадите email — он понадобится, если возникнут проблемы с Telegram или вашим аккаунтом.\n\n"
+        "Отправьте адрес электронной почты, который хотите привязать/обновить к аккаунту."
     )
     await state.clear()
     await state.set_state(EmailBindStates.waiting_for_email)
@@ -142,7 +111,7 @@ async def profile_email_bind_start(callback: CallbackQuery, state: FSMContext, b
 
 
 @router.message(EmailBindStates.waiting_for_email)
-async def profile_email_bind_enter_email(message: Message, state: FSMContext, bot_api):
+async def email_bind_enter_email(message: Message, state: FSMContext, bot_api):
     email = (message.text or "").strip().lower()
     if not EMAIL_RE.match(email):
         await message.answer("Введите корректный email адрес.")
@@ -153,33 +122,40 @@ async def profile_email_bind_enter_email(message: Message, state: FSMContext, bo
         _smtp_send_code(email, code)
     except Exception as e:
         logger.exception(
-            "[bot][profile_email_bind] smtp_send_failed tg_id=%s email=%s error=%s",
+            "[bot][email_bind] smtp_send_failed tg_id=%s email=%s error=%s",
             message.from_user.id,
             email,
             e,
         )
-        await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Непредвиденная ошибка при отправке кода. Попробуйте позже.")
+        await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Непредвиденная ошибка при отправке кода. Попробуйте позже.")
         return
 
     _put_code(message.from_user.id, email, code)
     await state.update_data(pending_email=email)
     await state.set_state(EmailBindStates.waiting_for_code)
     await message.answer(
-        "<tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji><b>Код отправлен на почту.</b>\n"
-        "Введите 6-значный код для подтверждения привязки."
+        "<tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji><b> Код подтверждения отправлен на почту.</b>\n"
+        "Введите 6-значный код для подтверждения привязки.",
+        reply_markup=email_bind_cancel_kb()
     )
 
 
 @router.message(EmailBindStates.waiting_for_code)
-async def profile_email_bind_verify_code(message: Message, state: FSMContext, bot_api):
+async def email_bind_verify_code(message: Message, state: FSMContext, bot_api):
     raw_code = (message.text or "").strip()
     if not raw_code.isdigit() or len(raw_code) != 6:
-        await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Введите корректный 6-значный код.")
+        await message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Введите корректный 6-значный код.", 
+            reply_markup=email_bind_cancel_kb()
+            )
         return
 
     ok, email = _verify_code(message.from_user.id, raw_code)
     if not ok or not email:
-        await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Неверный или просроченный код. Запросите код заново через кнопку «Почта» в профиле.")
+        await message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Неверный или просроченный код. Запросите код заново через кнопку «Почта».",
+            reply_markup=email_bind_cancel_kb()
+            )
         return
 
     try:
@@ -187,7 +163,10 @@ async def profile_email_bind_verify_code(message: Message, state: FSMContext, bo
         user_data = user.get("user") if isinstance(user, dict) else user
         await bot_api.update_email(user_id=int(user_data["id"]), email=email)
     except ValueError:
-        await message.answer("<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Эта почта уже привязана к другому аккаунту.")
+        await message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji>Эта почта уже привязана к другому аккаунту.",
+            reply_markup=email_bind_cancel_kb()
+            )
         await state.clear()
         return
     except UserNotFound:

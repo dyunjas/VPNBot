@@ -1,4 +1,4 @@
-from decimal import Decimal, ROUND_UP
+﻿from decimal import Decimal, ROUND_UP
 
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
@@ -15,15 +15,15 @@ router = Router()
 
 def _buy_traffic_confirm_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="✅ Подтвердить", callback_data="buy_traffic_confirm")
-    builder.button(text="⬅️ Назад", callback_data="vpn_subscription")
+    builder.button(text="Подтвердить", callback_data="buy_traffic_confirm", icon_custom_emoji_id="5776375003280838798", style="success")
+    builder.button(text="Отмена", callback_data="vpn_subscription", icon_custom_emoji_id="5778527486270770928", style="danger")
     builder.adjust(1)
     return builder.as_markup()
 
 
 def _back_sub_url_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="⬅️К подписке", callback_data="vpn_subscription")
+    builder.button(text="К подписке", callback_data="vpn_subscription", icon_custom_emoji_id="5877536313623711363", style="primary")
     builder.adjust(1)
     return builder.as_markup()
 
@@ -47,10 +47,10 @@ async def buy_traffic_start(
         return
 
     text = (
-        "<b>Докупка трафика</b>\n\n"
-        f"Введите, сколько ГБ хотите докупить (целое число, минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).\n"
-        f"Цена: <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 GB</b>.\n"
-        "Докупленный трафик переносится между месяцами и продлениями."
+        f"Введите количество гигабайт, которое хотите купить(целое число, минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).\n\n"
+        f"<blockquote><tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Стоимость: <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 ГБ</b>\n"
+        "<tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji> Минимальный объем: <b>1 ГБ</b></blockquote>\n\n"
+        "<i><tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Докупленный трафик переносится между месяцами.</i>"
     )
     media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
     await callback.message.edit_media(media=media, reply_markup=_back_sub_url_kb())
@@ -66,7 +66,7 @@ async def buy_traffic_enter_gb(message: Message, state: FSMContext):
         if gb < min_gb:
             raise ValueError
     except ValueError:
-        await message.answer(f"Введите целое число ГБ (минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).")
+        await message.answer(f"<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Введите целое число гигабайт (минимум {get_business_int('MIN_TRAFFIC_PURCHASE_GB')}).")
         return
 
     total = int((Decimal(gb) * get_business_decimal("TRAFFIC_PRICE_PER_GB_RUB")).to_integral_value(rounding=ROUND_UP))
@@ -74,10 +74,9 @@ async def buy_traffic_enter_gb(message: Message, state: FSMContext):
     await state.set_state(TrafficPurchaseStates.waiting_for_confirmation)
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подтверждение</b>\n\n"
-        f"Добавить: <b>+{gb} GB</b>\n"
-        f"К списанию: <b>{total} RUB</b>\n\n"
-        "Продолжить?"
+        "Проверьте данные перед оплатой:\n\n"
+        f"<blockquote> <tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji> Будет добавлено: <b>{gb} ГБ</b>\n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> К списанию: <b>{total} RUB</b></blockquote>"
     )
     await message.answer_photo(
         photo=SUBSCRIPTION_IMG,
@@ -123,9 +122,9 @@ async def buy_traffic_confirm(
 
     text = (
         "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Трафик докуплен</b>\n\n"
-        f"Добавлено: <b>+{gb} GB</b>\n"
-        f"Списано: <b>{result.get('charged', price)} RUB</b>\n"
-        "Лимит трафика обновлен. Обновите подписку в приложении."
+        f"<blockquote> <tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji>Добавлено: <b>{gb} ГБ</b>\n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Списано: <b>{result.get('charged', price)} RUB</b></blockquote>\n\n"
+        "<i><tg-emoji emoji-id=\"6005843436479975944\">🔁</tg-emoji> Обновите подписку в приложении, чтобы изменение отобразилось.</i>"
     )
     media = InputMediaPhoto(media=SUBSCRIPTION_IMG, caption=text, parse_mode="HTML")
     await callback.message.edit_media(media=media, reply_markup=_back_sub_url_kb())

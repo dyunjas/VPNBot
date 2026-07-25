@@ -6,7 +6,7 @@ from backend.core.logger_config import logger
 from backend.images import PROFILE_IMG
 from backend.services.exceptions import PromocodeAlreadyUsed, PromocodeExhausted, PromocodeNotFound, UserNotFound
 from backend.states import PromocodeStates
-from bot.navigation.additional_menu.profile.keyboards import promocode_kb
+from bot.navigation.additional_menu.balance.keyboards import promocode_kb
 
 
 router = Router()
@@ -52,10 +52,9 @@ async def process_promocode_clb(
         return
     else:
         text = (
-            "<tg-emoji emoji-id='5825794181183836432'>✅</tg-emoji> <b>Промокод активирован!</b>\n\n"
-            f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс пополнен на <b>{amount} RUB</b>."
+            "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Промокод активирован!</b>\n"
+            f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Баланс пополнен на <b>{amount} RUB</b>."
         )
 
     await message.answer_photo(photo=PROFILE_IMG, caption=text, reply_markup=promocode_kb())
     await state.clear()
-

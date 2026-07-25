@@ -24,12 +24,12 @@ async def referral_clb(callback: CallbackQuery, bot_api, state: FSMContext):
     share_referral_url = f"https://t.me/share/url?url={referral_url}"
 
     text = (
-        "<b>Приглашайте друзей и зарабатывайте\n</b>"
-        "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> +1 день VPN \n"
-        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> +{referral.get('percent')}% с каждого пополнения друга\n\n"
-        "<tg-emoji emoji-id='5931472654660800739'>📉</tg-emoji> Ваша статистика:\n"
-        f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> Приглашено: {referral.get('invited_count')} чел\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Баланс: {referral.get('balance')} RUB\n\n"
+        "<b>Приглашайте друзей и зарабатывайте\n\n</b>"
+        "<blockquote><tg-emoji emoji-id='5963213811597970978'>🎁</tg-emoji> +1 день VPN \n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> +{referral.get('percent')}% с каждого пополнения друга</blockquote>\n\n"
+        "<blockquote><tg-emoji emoji-id='5931472654660800739'>📉</tg-emoji> Ваша статистика:\n"
+        f"<tg-emoji emoji-id='5920344347152224466'>👤</tg-emoji> Приглашено: {referral.get('invited_count')} чел\n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Баланс: {referral.get('balance')} RUB</blockquote>\n\n"
         "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ваша ссылка:\n"
         f"<code>{html_escape(referral_url)}</code>\n"
         "<i><tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Совет: делитесь ссылкой с друзьями, публикуйте в чатах и соцсетях</i>"

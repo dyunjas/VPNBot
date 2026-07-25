@@ -1,3 +1,5 @@
+﻿from html import escape
+
 from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
@@ -30,6 +32,29 @@ def _device_title(device: dict, device_id: int) -> str:
     )
 
 
+def _device_emoji(platform: str, user_agent: str) -> str:
+    raw = f"{platform} {user_agent}".lower()
+    if "android" in raw:
+        return "<tg-emoji emoji-id='5819078828017849357'>📱</tg-emoji>"
+    if any(value in raw for value in ("apple", "ios", "iphone", "ipad", "macos", "mac os", "darwin")):
+        return "<tg-emoji emoji-id='5818920837645867167'>📱</tg-emoji>"
+    if "windows" in raw:
+        return "<tg-emoji emoji-id='5818956713507689486'>💻</tg-emoji>"
+    return "<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji>"
+
+
+def _app_version(user_agent: str) -> str:
+    value = (user_agent or "").strip()
+    if not value or value == "—":
+        return "—"
+
+    first_part = value.split(maxsplit=1)[0]
+    parts = [part for part in first_part.split("/") if part]
+    if len(parts) >= 2:
+        return f"{parts[0]} {parts[1]}"
+    return "—"
+
+
 def _render_devices_text(devices: list[dict]) -> str:
     if not devices:
         return "У вас пока нет устройств."
@@ -42,13 +67,18 @@ def _render_device_detail(device: dict, device_id: int) -> str:
     platform = device.get("device_os") or device.get("platform") or "—"
     os_version = device.get("os_version") or device.get("osVersion") or "—"
     user_agent = device.get("user_agent") or device.get("userAgent") or "—"
+    app_version = _app_version(str(user_agent))
+    device_emoji = _device_emoji(str(platform), str(user_agent))
     return (
-        f"<b>{_device_title(device, device_id)}</b>\n\n"
-        f"<b>Модель:</b> {model}\n"
-        f"<b>Платформа:</b> {platform}\n"
-        f"<b>Версия ОС:</b> {os_version}\n"
-        f"<b>User-Agent:</b> {user_agent}\n"
-        f"<b>HWID:</b>\n<code>{hwid}</code>"
+        f"{device_emoji} <b>{escape(str(_device_title(device, device_id)))}</b>\n\n"
+        "<blockquote>"
+        f"<tg-emoji emoji-id='5877318502947229960'>💻</tg-emoji> Модель: <b>{escape(str(model))}</b>\n"
+        f"<tg-emoji emoji-id='5985774024968379294'>🖊</tg-emoji> Платформа: <b>{escape(str(platform))}</b>\n"
+        f"<tg-emoji emoji-id='5935938364086685805'>➕</tg-emoji> Версия ОС: <b>{escape(str(os_version))}</b>\n"
+        f"<tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji> Версия приложения: <b>{escape(app_version)}</b>\n"
+        "</blockquote>\n\n"
+        f"<b>User-Agent:</b> <code>{escape(str(user_agent))}</code>\n\n"
+        f"<b>HWID:</b> <code>{escape(str(hwid))}</code>"
     )
 
 

@@ -2,8 +2,8 @@ from aiogram import Router
 
 from bot.navigation.main_menu import main_menu
 from bot.navigation.additional_menu.information import information
-from bot.navigation.additional_menu.profile import profile
-from bot.navigation.additional_menu.profile import promocode
+from bot.navigation.additional_menu.email import email
+from bot.navigation.additional_menu.balance import balance, promocode
 from bot.navigation.subscription import subscription
 from bot.navigation.purchase import purchase
 from bot.payments import add_funds, platega_payment, pally_payment
@@ -19,7 +19,8 @@ router = Router()
 
 router.include_router(main_menu.router)
 router.include_router(information.router)
-router.include_router(profile.router)
+router.include_router(email.router)
+router.include_router(balance.router)
 router.include_router(subscription.router)
 router.include_router(purchase.router)
 router.include_router(promocode.router)

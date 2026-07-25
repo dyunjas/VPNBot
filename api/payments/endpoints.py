@@ -4,6 +4,7 @@ import json
 from urllib.parse import parse_qs
 
 from aiogram import Bot
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse, Response
 
@@ -35,24 +36,29 @@ async def _notify_payment(tx, *, referral_bonus: int = 0, referrer_tg_id: int | 
 
     session = create_telegram_session()
     bot = Bot(token=settings.BOT_TOKEN, session=session)
+    text = (
+        "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Платеж подтвержден</b>\n\n"
+        f"Баланс пополнен на <b>{int(tx.amount or 0)} RUB</b>.\n\n"
+        "<blockquote>При возникновении вопросов обращайтесь в поддержку @LunetVpnSupport.</blockquote>"
+    )
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Назад", callback_data="main_menu", icon_custom_emoji_id="5877536313623711363", style="primary")
+    reply_markup = builder.as_markup()
     try:
         await bot.send_message(
             chat_id=int(user.tg_id),
-            text=(
-                "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> "
-                "<b>Платеж подтвержден</b>\n"
-                f"Баланс пополнен на <b>{int(tx.amount or 0)} RUB</b>."
-            ),
+            text=text,
             parse_mode="HTML",
+            reply_markup=reply_markup,
         )
         if referral_bonus > 0 and referrer_tg_id:
             await bot.send_message(
                 chat_id=int(referrer_tg_id),
                 text=(
-                    "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> "
-                    "<b>Бонус за реферала!</b>\n"
-                    f"<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> Начислено: <b>{int(referral_bonus)} RUB</b>\n"
-                    f"<tg-emoji emoji-id='5769403330761593044'>💄</tg-emoji> Платеж реферала: <b>{int(tx.amount or 0)} RUB</b>"
+                    "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> <b>Бонус за приглашенного друга!</b>\n\n"
+                    f"<blockquote><tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji> На ваш баланс начислено: <b>{int(referral_bonus)} RUB</b>\n"
+                    f"<tg-emoji emoji-id='5769403330761593044'>💄</tg-emoji> Платеж реферала: <b>{int(tx.amount or 0)} RUB</b></blockquote>\n\n"
+                    "<i>Спасибо, что рекомендуете наш сервис!</i>"
                 ),
                 parse_mode="HTML",
             )

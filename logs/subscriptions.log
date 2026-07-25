@@ -1376,3 +1376,44 @@ aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socke
 [2026-07-11 00:11:51] [INFO] root: [biz][subscription] activate_completed user_id=40 subscription_id=84
 [2026-07-11 20:41:17] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
 [2026-07-11 20:41:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] activate_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] created user_id=96 subscription_id=85 plan_id=1 period_end=2026-08-24 13:30:41.306407+00:00 gb_added=30.00
+[2026-07-25 18:30:41] [INFO] root: [subscription] reset_user_traffic skipped user_id=96 (remnawave-only mode)
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=96 subscription_id=85 traffic_limit_bytes=32212254720
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] activate_completed user_id=96 subscription_id=85
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] activate_requested user_id=101 plan_id=5 auto_renew=False
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] created user_id=101 subscription_id=86 plan_id=5 period_end=2027-07-20 18:13:38.023104+00:00 gb_added=360.00
+[2026-07-25 23:13:38] [INFO] root: [subscription] reset_user_traffic skipped user_id=101 (remnawave-only mode)
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=101 subscription_id=86 traffic_limit_bytes=386547056640
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] activate_completed user_id=101 subscription_id=86
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_requested user_id=100 duration_hours=24
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_extended user_id=100 subscription_id=83 new_period_end=2027-07-05 00:43:00.882641+00:00
+[2026-07-25 23:13:39] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_completed user_id=100 subscription_id=83
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=5 auto_renew=False
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] created user_id=102 subscription_id=87 plan_id=5 period_end=2027-07-20 18:20:34.036992+00:00 gb_added=360.00
+[2026-07-25 23:20:34] [INFO] root: [subscription] reset_user_traffic skipped user_id=102 (remnawave-only mode)
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=87 traffic_limit_bytes=386547056640
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=87
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] created user_id=102 subscription_id=88 plan_id=1 period_end=2026-08-24 18:22:25.360743+00:00 gb_added=30.00
+[2026-07-25 23:22:25] [INFO] root: [subscription] reset_user_traffic skipped user_id=102 (remnawave-only mode)
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=88 traffic_limit_bytes=32212254720
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=88
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] created user_id=102 subscription_id=89 plan_id=1 period_end=2026-08-24 18:23:16.653849+00:00 gb_added=30.00
+[2026-07-25 23:23:16] [INFO] root: [subscription] reset_user_traffic skipped user_id=102 (remnawave-only mode)
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=89 traffic_limit_bytes=32212254720
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=89
+[2026-07-25 23:47:21] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-07-25 23:47:24] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=391915765760
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=397284474880
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5

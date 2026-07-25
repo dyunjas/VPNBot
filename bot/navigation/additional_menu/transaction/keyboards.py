@@ -26,7 +26,7 @@ def build_transactions_kb(transactions, page: int = 0):
     if nav_buttons:
         builder.row(*nav_buttons)
 
-    builder.row(InlineKeyboardButton(text="⬅️ В профиль", callback_data="profile"))
+    builder.row(InlineKeyboardButton(text="⬅️ В главное меню", callback_data="main_menu"))
 
     return builder
 
@@ -40,7 +40,6 @@ def back_to_transactions_bt(page):
 
 def back_to_profile_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="⬅️ Назад", callback_data="profile")
+    builder.button(text="⬅️ Назад", callback_data="main_menu")
     builder.adjust(1)
     return builder.as_markup()
-

@@ -13,14 +13,6 @@ from bot.utils.html import html_escape
 
 router = Router()
 
-WELCOME_TEXT = (
-    "<b>Добро пожаловать в Lunet!</b>\n\n"
-    "<b>В нашем сервисе:</b>\n"
-    "⚡ Нет ограничений по скорости\n"
-    "🔒 Полная безопасность ваших данных\n"
-    "🌐 Совместимость со всеми платформами"
-)
-
 CAPTCHA_ANIMALS = [
     ("cat", "🐱 Кошка"),
     ("dog", "🐶 Собака"),
@@ -31,10 +23,25 @@ CAPTCHA_ANIMALS = [
 ]
 
 
+def build_profile_text(user: dict) -> str:
+    username = "-" if not user.get("username") else f"@{html_escape(user.get('username'))}"
+    email = user.get("email") or "не привязана"
+
+    return (
+        f"<b><tg-emoji emoji-id='5920344347152224466'>👤</tg-emoji> Профиль:</b> {username}\n\n"
+        f"<blockquote><b>——<tg-emoji emoji-id='5936017305585586269'>🪪</tg-emoji> ID:</b> <code>{user.get('tg_id')}</code>\n"
+        f"<b>——<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Баланс:</b> {user.get('balance')} RUB\n"
+        f"<b>——<tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Почта:</b> {html_escape(email)}</blockquote>\n\n"
+        "<tg-emoji emoji-id='5771695636411847302'>📢</tg-emoji> Канал: @LunetVpnBot\n"
+        "<tg-emoji emoji-id='5906995262378741881'>🙋</tg-emoji> Поддержка: @LunetVpnSupport\n\n"
+        "<blockquote><i><tg-emoji emoji-id='5874960879434338403'>🔎</tg-emoji> Нажмите кнопку 'Купить подписку', чтобы приобрести подписку.</i></blockquote>"
+    )
+
+
 def _build_captcha_markup(options: list[tuple[str, str]]):
     builder = InlineKeyboardBuilder()
     for code, label in options:
-        builder.button(text=label, callback_data=f"captcha:{code}")
+        builder.button(text=label, callback_data=f"captcha:{code}", style="primary")
     builder.adjust(2, 2)
     return builder.as_markup()
 
@@ -93,25 +100,36 @@ async def _edit_captcha(
         )
 
 
-async def _render_welcome(message_or_callback: Message | CallbackQuery) -> None:
+async def _render_welcome(
+    message_or_callback: Message | CallbackQuery,
+    *,
+    user: dict | None = None,
+    bot_api=None,
+) -> None:
+    if user is None:
+        resp = await bot_api.get_user_by_tg_id(message_or_callback.from_user.id)
+        user = resp.get("user") if isinstance(resp, dict) else resp
+
+    text = build_profile_text(user)
+
     if isinstance(message_or_callback, Message):
         await message_or_callback.answer_photo(
             photo=MAIN_MENU_IMG,
-            caption=WELCOME_TEXT,
+            caption=text,
             reply_markup=main_menu_kb(),
         )
         return
 
     if message_or_callback.message:
         await message_or_callback.message.edit_media(
-            media=InputMediaPhoto(media=MAIN_MENU_IMG, caption=WELCOME_TEXT),
+            media=InputMediaPhoto(media=MAIN_MENU_IMG, caption=text),
             reply_markup=main_menu_kb(),
         )
     else:
         await message_or_callback.bot.send_photo(
             chat_id=message_or_callback.from_user.id,
             photo=MAIN_MENU_IMG,
-            caption=WELCOME_TEXT,
+            caption=text,
             reply_markup=main_menu_kb(),
         )
 
@@ -121,11 +139,11 @@ async def _grant_trial_and_notify(*, message: Message | None, bot, tg_id: int, t
         return
 
     text = (
-        "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> <b>Вам выдан тестовый период.</b>\n\n"
-        "Перейдите в меню «Подписка», чтобы посмотреть детали."
+        "<tg-emoji emoji-id='5963213811597970978'>🎁</tg-emoji> <b>Вам выдан тестовый период.</b>\n\n"
+        "Перейдите в меню «Моя подписка», чтобы посмотреть детали."
     )
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Подписка", callback_data="vpn_subscription")
+    builder.button(text="Моя подписка", callback_data="vpn_subscription", icon_custom_emoji_id="6005570495603282482", style="primary")
     if message:
         await message.answer(text, reply_markup=builder.as_markup())
         return
@@ -177,13 +195,19 @@ async def _process_post_registration_links(
             if username
             else html_escape(full_name or str(tg_id))
         )
+
+        builder = InlineKeyboardBuilder()
+        builder.button(text="Баланс", callback_data="balance_menu", icon_custom_emoji_id="5769403330761593044", style="success")
+
         await bot.send_message(
             chat_id=referrer.get("user", referrer).get("tg_id"),
             text=(
-                "<tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> У вас новый реферал!\n"
-                f"<tg-emoji emoji-id='5879770735999717115'>👤</tg-emoji> {referral_name}\n"
-                "<tg-emoji emoji-id='5875180111744995604'>🎁</tg-emoji> Начислено: 1 день VPN"
+                "<b><tg-emoji emoji-id='5994502837327892086'>🎉</tg-emoji> Новый реферал!</b>\n\n"
+                "По вашей ссылке зарегистрировался пользователь:\n\n"
+                f"<blockquote><tg-emoji emoji-id='5920344347152224466'>👤</tg-emoji> {referral_name}</blockquote>\n\n"
+                "<tg-emoji emoji-id='5963213811597970978'>🎁</tg-emoji> Вам начислен бонус — 1 день VPN."
             ),
+            reply_markup=builder.as_markup()
         )
 
 
@@ -213,7 +237,8 @@ async def start_cmd(
         return
 
     await state.clear()
-    await _render_welcome(message)
+    user_data = user.get("user") if isinstance(user, dict) else user
+    await _render_welcome(message, user=user_data)
 
 
 @router.callback_query(F.data.startswith("captcha:"))
@@ -247,7 +272,7 @@ async def captcha_answer(
             if callback.message:
                 await callback.message.edit_text(
                     text=(
-                        "<b>Проверка не пройдена</b>\n\n"
+                        "<b><tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Проверка не пройдена</b>\n\n"
                         "Вы исчерпали 3 попытки. Начните сначала через /start."
                     ),
                     reply_markup=None,
@@ -300,24 +325,41 @@ async def captcha_answer(
         await callback.message.delete()
         await callback.message.answer_photo(
             photo=MAIN_MENU_IMG,
-            caption=WELCOME_TEXT,
+            caption=build_profile_text(user),
             reply_markup=main_menu_kb(),
         )
     else:
         await callback.bot.send_photo(
             chat_id=tg_id,
             photo=MAIN_MENU_IMG,
-            caption=WELCOME_TEXT,
+            caption=build_profile_text(user),
             reply_markup=main_menu_kb(),
         )
+
+    await state.clear()
 
 
 @router.callback_query(F.data == "main_menu")
-async def main_menu_clb(callback: CallbackQuery):
-    media = InputMediaPhoto(media=MAIN_MENU_IMG, caption=WELCOME_TEXT)
-    if callback.message:
-        await callback.message.edit_media(
-            media=media,
-            reply_markup=main_menu_kb(),
+async def main_menu_clb(callback: CallbackQuery, bot_api, state: FSMContext):
+    try:
+        await _render_welcome(callback, bot_api=bot_api)
+    except UserNotFound:
+        await callback.message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
         )
+        return
     await callback.answer()
+    await state.clear()
+
+
+@router.callback_query(F.data == "profile")
+async def profile_clb(callback: CallbackQuery, bot_api):
+    try:
+        await _render_welcome(callback, bot_api=bot_api)
+    except UserNotFound:
+        await callback.message.answer(
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
+        )
+        return
+    await callback.answer()
+

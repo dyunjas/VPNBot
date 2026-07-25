@@ -1279,3 +1279,123 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-07-25 01:57:19] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29735141
 [2026-07-25 01:57:21] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
 [2026-07-25 01:57:21] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29735139
+[2026-07-25 16:56:50] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=50 user_balance=215 referral_balance=90
+[2026-07-25 16:58:56] [INFO] root: [biz][referral] transfer_to_balance_completed user_id=100 amount=50 user_balance=265 referral_balance=40
+[2026-07-25 17:02:52] [INFO] root: [biz][referral] transfer_to_balance_insufficient user_id=100 amount=1000 referral_balance=40
+[2026-07-25 17:10:30] [INFO] root: [biz][withdrawal] create_requested user_id=100 amount=500 method=+79827826361 сбп
+[2026-07-25 17:10:30] [INFO] root: [biz][withdrawal] created user_id=100 withdrawal_id=15 amount=500 method=+79827826361 сбп
+[2026-07-25 17:22:08] [INFO] root: [biz][user] email_updated user_id=100 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-07-25 17:37:05] [INFO] root: [biz][user] email_updated user_id=100 old=vladislavisaev0507@gmail.com new=vladislavisaev0507@gmail.com
+[2026-07-25 18:30:41] [INFO] root: [biz][billing] buy_subscription_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-25 18:30:41] [INFO] root: [biz][billing] charge_balance_requested user_id=96 amount=95
+[2026-07-25 18:30:41] [INFO] root: [biz][billing] charge_balance_completed user_id=96 amount=95
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] activate_requested user_id=96 plan_id=1 auto_renew=True
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] created user_id=96 subscription_id=85 plan_id=1 period_end=2026-08-24 13:30:41.306407+00:00 gb_added=30.00
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=96 subscription_id=85 traffic_limit_bytes=32212254720
+[2026-07-25 18:30:41] [INFO] root: [biz][subscription] activate_completed user_id=96 subscription_id=85
+[2026-07-25 18:30:43] [INFO] root: [biz][billing] buy_subscription_completed user_id=96 subscription_id=85 plan_id=1 charged=95
+[2026-07-25 20:41:54] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-25 20:41:54] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29667666
+[2026-07-25 20:59:01] [INFO] root: [biz][promo] activate_requested user_id=100 code=А
+[2026-07-25 21:08:03] [INFO] root: [biz][promo] activate_requested user_id=100 code=А
+[2026-07-25 21:14:49] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=2
+[2026-07-25 21:14:49] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=aeb2441c-6e5a-48e0-8a3c-ae9486b570e7 amount=5.0
+[2026-07-25 21:19:41] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 21:19:42] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58011435 amount_rub=5 amount_crypto=0.07
+[2026-07-25 21:21:13] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 21:21:13] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58011571 amount_rub=5 amount_crypto=0.07
+[2026-07-25 21:22:13] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 21:22:13] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58011645 amount_rub=5 amount_crypto=0.07
+[2026-07-25 21:24:24] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 21:24:25] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58011844 amount_rub=5 amount_crypto=0.07
+[2026-07-25 21:25:20] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 21:25:21] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58011922 amount_rub=5 amount_crypto=0.07
+[2026-07-25 22:35:50] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 22:35:50] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58017401 amount_rub=5 amount_crypto=0.07
+[2026-07-25 22:36:00] [INFO] root: [biz][billing] crypto_webhook_received invoice_id=58017401 update_type=invoice_paid status=paid
+[2026-07-25 22:36:00] [INFO] root: [biz][billing] crypto_webhook_confirmed invoice_id=58017401 user_id=100 amount=5
+[2026-07-25 22:36:14] [INFO] root: [biz][billing] crypto_webhook_received invoice_id=58017401 update_type=invoice_paid status=paid
+[2026-07-25 22:36:14] [INFO] root: [biz][billing] crypto_webhook_already_paid invoice_id=58017401 user_id=100
+[2026-07-25 22:48:24] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 22:48:24] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58018419 amount_rub=5 amount_crypto=0.07
+[2026-07-25 22:48:32] [INFO] root: [biz][billing] crypto_webhook_received invoice_id=58018419 update_type=invoice_paid status=paid
+[2026-07-25 22:48:32] [INFO] root: [biz][billing] crypto_webhook_confirmed invoice_id=58018419 user_id=100 amount=5
+[2026-07-25 22:48:46] [INFO] root: [biz][billing] crypto_webhook_received invoice_id=58018419 update_type=invoice_paid status=paid
+[2026-07-25 22:48:46] [INFO] root: [biz][billing] crypto_webhook_already_paid invoice_id=58018419 user_id=100
+[2026-07-25 22:53:49] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-25 22:53:50] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58018872 amount_rub=5 amount_crypto=0.07
+[2026-07-25 22:53:57] [INFO] root: [biz][billing] crypto_webhook_received invoice_id=58018872 update_type=invoice_paid status=paid
+[2026-07-25 22:53:57] [INFO] root: [biz][billing] crypto_webhook_confirmed invoice_id=58018872 user_id=100 amount=5
+[2026-07-25 23:13:38] [INFO] root: [biz][user] created user_id=101 tg_id=7875834910 username=LunetVpnSupport
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] activate_requested user_id=101 plan_id=5 auto_renew=False
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] created user_id=101 subscription_id=86 plan_id=5 period_end=2027-07-20 18:13:38.023104+00:00 gb_added=360.00
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=101 subscription_id=86 traffic_limit_bytes=386547056640
+[2026-07-25 23:13:38] [INFO] root: [biz][subscription] activate_completed user_id=101 subscription_id=86
+[2026-07-25 23:13:39] [INFO] root: [biz][referral] account_created user_id=101 account_id=76
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_requested user_id=100 duration_hours=24
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_extended user_id=100 subscription_id=83 new_period_end=2027-07-05 00:43:00.882641+00:00
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-25 23:13:39] [INFO] root: [biz][subscription] renew_completed user_id=100 subscription_id=83
+[2026-07-25 23:13:40] [INFO] root: [biz][referral] referrer_attached user_id=101 referrer_id=100 bonus_hours=24
+[2026-07-25 23:19:51] [INFO] root: [biz][user] balance_added user_id=101 amount=100 before=0 after=100
+[2026-07-25 23:20:12] [INFO] root: [biz][billing] buy_subscription_requested user_id=101 plan_id=1 auto_renew=True
+[2026-07-25 23:20:12] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=101 plan_id=1 seconds_left=31121606
+[2026-07-25 23:20:34] [INFO] root: [biz][user] created user_id=102 tg_id=7875834910 username=LunetVpnSupport
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=5 auto_renew=False
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] created user_id=102 subscription_id=87 plan_id=5 period_end=2027-07-20 18:20:34.036992+00:00 gb_added=360.00
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=87 traffic_limit_bytes=386547056640
+[2026-07-25 23:20:34] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=87
+[2026-07-25 23:20:41] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=0 after=100
+[2026-07-25 23:20:47] [INFO] root: [biz][billing] buy_subscription_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:20:47] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=102 plan_id=1 seconds_left=31121986
+[2026-07-25 23:21:50] [INFO] root: [biz][billing] buy_subscription_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:21:50] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=102 plan_id=1 seconds_left=31121923
+[2026-07-25 23:22:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:22:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=102 plan_id=1 seconds_left=31121913
+[2026-07-25 23:22:25] [INFO] root: [biz][billing] buy_subscription_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:22:25] [INFO] root: [biz][billing] charge_balance_requested user_id=102 amount=95
+[2026-07-25 23:22:25] [INFO] root: [biz][billing] charge_balance_completed user_id=102 amount=95
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] created user_id=102 subscription_id=88 plan_id=1 period_end=2026-08-24 18:22:25.360743+00:00 gb_added=30.00
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=88 traffic_limit_bytes=32212254720
+[2026-07-25 23:22:25] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=88
+[2026-07-25 23:22:27] [INFO] root: [biz][billing] buy_subscription_completed user_id=102 subscription_id=88 plan_id=1 charged=95
+[2026-07-25 23:23:12] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=5 after=105
+[2026-07-25 23:23:12] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=105 after=205
+[2026-07-25 23:23:16] [INFO] root: [biz][billing] buy_subscription_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:23:16] [INFO] root: [biz][billing] charge_balance_requested user_id=102 amount=95
+[2026-07-25 23:23:16] [INFO] root: [biz][billing] charge_balance_completed user_id=102 amount=95
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] activate_requested user_id=102 plan_id=1 auto_renew=True
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] created user_id=102 subscription_id=89 plan_id=1 period_end=2026-08-24 18:23:16.653849+00:00 gb_added=30.00
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=102 subscription_id=89 traffic_limit_bytes=32212254720
+[2026-07-25 23:23:16] [INFO] root: [biz][subscription] activate_completed user_id=102 subscription_id=89
+[2026-07-25 23:23:18] [INFO] root: [biz][billing] buy_subscription_completed user_id=102 subscription_id=89 plan_id=1 charged=95
+[2026-07-25 23:24:38] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=2
+[2026-07-25 23:24:38] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=d33946ab-cefc-41af-8a1f-3d0078c7efaa amount=5.0
+[2026-07-25 23:47:21] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-07-25 23:47:24] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-07-25 23:58:12] [INFO] root: [biz][billing] buy_traffic_requested user_id=100 gb=5
+[2026-07-25 23:58:12] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=10
+[2026-07-25 23:58:12] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=10
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=386547056640
+[2026-07-25 23:58:12] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-07-25 23:58:13] [INFO] root: [biz][billing] buy_traffic_completed user_id=100 subscription_id=83 gb=5 charged=10
+[2026-07-26 00:04:53] [INFO] root: [biz][billing] buy_traffic_requested user_id=100 gb=5
+[2026-07-26 00:04:53] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=10
+[2026-07-26 00:04:53] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=10
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=391915765760
+[2026-07-26 00:04:53] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-07-26 00:04:54] [INFO] root: [biz][billing] buy_traffic_completed user_id=100 subscription_id=83 gb=5 charged=10
+[2026-07-26 00:08:03] [INFO] root: [biz][billing] buy_traffic_requested user_id=100 gb=5
+[2026-07-26 00:08:03] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=10
+[2026-07-26 00:08:03] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=10
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=397284474880
+[2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-07-26 00:08:04] [INFO] root: [biz][billing] buy_traffic_completed user_id=100 subscription_id=83 gb=5 charged=10
+[2026-07-26 01:03:35] [INFO] root: [biz][promo] activate_requested user_id=100 code=промокод
+[2026-07-26 01:03:35] [INFO] root: [biz][promo] activated user_id=100 code=промокод amount=100 balance_before=250 balance_after=350
+[2026-07-26 01:03:47] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-26 01:03:47] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29756352

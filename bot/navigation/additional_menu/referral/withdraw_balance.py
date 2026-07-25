@@ -29,9 +29,8 @@ async def transfer_referral_balance_start(callback: CallbackQuery, state: FSMCon
     balance = int(referral.get("balance") or 0)
     min_transfer_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
     text = (
-        "<b>Перевод реферального баланса</b>\n\n"
-        f"Доступно: <b>{balance} RUB</b>\n"
-        f"Минимальная сумма перевода: <b>{min_transfer_amount} RUB</b>\n\n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Доступно: <b>{balance} RUB</b>\n"
+        f"<tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Минимальная сумма перевода: <b>{min_transfer_amount} RUB</b>\n\n"
         "Введите сумму, которую хотите перевести на основной баланс:"
     )
     media = InputMediaPhoto(media=PROFILE_IMG, caption=text)
@@ -49,7 +48,7 @@ async def transfer_referral_balance_amount(message: Message, state: FSMContext, 
     except ValueError:
         await message.answer_photo(
             photo=PROFILE_IMG,
-            caption="Введите целое положительное число.",
+            caption="<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Введите целое положительное число.",
             reply_markup=back_referral_kb(),
         )
         return
@@ -58,15 +57,15 @@ async def transfer_referral_balance_amount(message: Message, state: FSMContext, 
     if amount < min_transfer_amount:
         await message.answer_photo(
             photo=PROFILE_IMG,
-            caption=f"Минимальная сумма перевода — <b>{min_transfer_amount} RUB</b>.",
+            caption=f"<tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Минимальная сумма перевода — <b>{min_transfer_amount} RUB</b>.",
             reply_markup=back_referral_kb(),
         )
         return
 
     await state.update_data(transfer_amount=amount)
     text = (
-        "<b>Подтвердите перевод</b>\n\n"
-        f"Сумма: <b>{amount} RUB</b>\n"
+        "<b><tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Подтвердите перевод</b>\n\n"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Сумма: <b>{amount} RUB</b>\n"
         "Средства будут списаны с реферального баланса и сразу зачислены на основной баланс."
     )
     await message.answer_photo(
@@ -80,7 +79,7 @@ async def transfer_referral_balance_amount(message: Message, state: FSMContext, 
 @router.callback_query(TransferReferralBalance.waiting_for_confirmation, F.data == "transfer_cancel")
 async def transfer_referral_balance_cancel(callback: CallbackQuery, state: FSMContext):
     await state.clear()
-    content = InputMediaPhoto(media=PROFILE_IMG, caption="Перевод отменён.")
+    content = InputMediaPhoto(media=PROFILE_IMG, caption="<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Перевод отменён.")
     await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
     await callback.answer()
 
@@ -92,7 +91,7 @@ async def transfer_referral_balance_confirm(callback: CallbackQuery, state: FSMC
     min_transfer_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
     if amount < min_transfer_amount:
         await state.clear()
-        content = InputMediaPhoto(media=PROFILE_IMG, caption="Сумма перевода некорректна. Попробуйте ещё раз.")
+        content = InputMediaPhoto(media=PROFILE_IMG, caption="<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Сумма перевода некорректна. Попробуйте ещё раз.")
         await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
         await callback.answer()
         return
@@ -106,7 +105,7 @@ async def transfer_referral_balance_confirm(callback: CallbackQuery, state: FSMC
         await state.clear()
         content = InputMediaPhoto(
             media=PROFILE_IMG,
-            caption="Недостаточно средств на реферальном балансе или баланс уже изменился. Попробуйте ещё раз.",
+            caption="<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Недостаточно средств на реферальном балансе или баланс уже изменился. Попробуйте ещё раз.",
         )
         await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
         await callback.answer()
@@ -116,9 +115,7 @@ async def transfer_referral_balance_confirm(callback: CallbackQuery, state: FSMC
     text = (
         "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> "
         "Средства переведены на основной баланс.\n\n"
-        f"Переведено: <b>{int(result.get('amount') or amount)} RUB</b>\n"
-        f"Основной баланс: <b>{int(result.get('balance') or 0)} RUB</b>\n"
-        f"Реферальный баланс: <b>{int(result.get('referral_balance') or 0)} RUB</b>"
+        f"<tg-emoji emoji-id=\"5967390100357648692\">💵</tg-emoji> Основной баланс: <b>{int(result.get('balance') or 0)} RUB</b>\n"
     )
     content = InputMediaPhoto(media=PROFILE_IMG, caption=text)
     await callback.message.edit_media(media=content, reply_markup=back_referral_kb())
@@ -140,9 +137,9 @@ async def withdraw_balance_start(callback: CallbackQuery, state: FSMContext, bot
     min_withdraw_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
 
     text = (
-        "<tg-emoji emoji-id='5956148757899776734'>⭐️</tg-emoji>"
-        f"Доступно для вывода: <b>{balance} RUB</b>\n"
-        f"Введите сумму вывода (минимум {min_withdraw_amount} RUB):"
+        f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Доступно: <b>{balance} RUB</b>\n"
+        f"<tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Минимальная сумма вывода: <b>{min_withdraw_amount} RUB</b>\n\n"
+        f"Введите сумму, которую хотите вывести:"
     )
     media = InputMediaPhoto(
         media=PROFILE_IMG,
@@ -161,8 +158,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
             raise ValueError
     except ValueError:
         text = (
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> "
-            "Введите целое положительное число:"
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Введите целое положительное число:"
         )
         await message.answer_photo(
             photo=PROFILE_IMG,
@@ -174,9 +170,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
     min_withdraw_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
     if amount < min_withdraw_amount:
         text = (
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> "
-            f"Минимальная сумма вывода — <b>{min_withdraw_amount} RUB</b>.\n"
-            f"Введите сумму не меньше {min_withdraw_amount}:"
+            f"<tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Минимальная сумма вывода — <b>{min_withdraw_amount} RUB</b>."
         )
         await message.answer_photo(
             photo=PROFILE_IMG,
@@ -193,8 +187,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
         text = (
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> "
             "Недостаточно средств для вывода.\n\n"
-            f"Доступно: <b>{balance} RUB</b>\n"
-            "Введите сумму меньше или равную доступной:"
+            f"<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Доступно: <b>{balance} RUB</b>\n"
         )
         await message.answer_photo(
             photo=PROFILE_IMG,
@@ -205,7 +198,7 @@ async def withdraw_balance_amount(message: Message, state: FSMContext, bot_api):
 
     await state.update_data(amount=amount)
 
-    text = "<tg-emoji emoji-id=\"5769403330761593044\">👝</tg-emoji> Введите метод вывода (например: карта/СБП/USDT(ТОЛЬКО TRC20) + реквизиты):"
+    text = "<tg-emoji emoji-id='5769403330761593044'>👛</tg-emoji> Укажите метод вывода (например: карта/СБП/USDT(ТОЛЬКО TRC20) + реквизиты):"
     await message.answer_photo(
         photo=PROFILE_IMG,
         caption=text,
@@ -219,8 +212,7 @@ async def withdraw_balance_method(message: Message, state: FSMContext):
     method = (message.text or "").strip()
     if len(method) < 8:
         text = (
-            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> "
-            "<tg-emoji emoji-id=\"5769403330761593044\">👝</tg-emoji> Метод слишком короткий. Введите подробную информацию:"
+            "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Метод слишком короткий. Укажите подробную информацию:"
         )
         await message.answer_photo(
             photo=PROFILE_IMG,

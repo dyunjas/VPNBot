@@ -2,6 +2,7 @@
 
 import os
 from datetime import datetime, timezone
+from html import escape
 from typing import Any, AsyncGenerator
 
 from aiogram import Bot
@@ -193,9 +194,11 @@ async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
         remaining_text = f"примерно {hours} ч."
 
     text = (
-        "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Ваша подписка скоро закончится</b>\n\n"
-        f"До окончания осталось {remaining_text}. Продлите заранее, чтобы VPN продолжил работать.\n\n"
-        "После продления ссылка останется прежней. Если автопродление включено, проверьте, что на балансе достаточно средств."
+        "<b><tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Ваша подписка скоро закончится</b>\n\n"
+        f"До окончания осталось <b>{remaining_text}</b>.\n\n"
+        "<blockquote> Продлите подписку заранее, чтобы VPN продолжил работать без перерыва. </blockquote>\n\n"
+        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> После продления ссылка для подключения останется прежней.\n\n"
+        "<i><tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Если автопродление включено, убедитесь, что на балансе достаточно средств.</i>"
     )
     await _safe_notify(
         tg_id,
@@ -206,13 +209,14 @@ async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
 
 async def _notify_subscription_expired(*, tg_id: int) -> None:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription", icon_custom_emoji_id="5967456680940671207", style="primary")
     builder.adjust(1)
 
     text = (
-        "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Ваша подписка закончилась</b>\n\n"
-        "Доступ к VPN временно остановлен. Продлите подписку, и сервис снова заработает на вашей текущей ссылке.\n\n"
-        "Если вы уже продлили подписку, обновите подписку в приложении."
+        "<b><tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Ваша подписка закончилась</b>\n\n"
+        "Доступ к VPN временно приостановлен.\n\n"
+        "<blockquote> Продлите подписку, и сервис снова заработает по вашей текущей ссылке. </blockquote>\n\n"
+        "<i><tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Если вы уже продлили подписку, обновите её в VPN-приложении.</i>"
     )
     await _safe_notify(
         tg_id,
@@ -228,9 +232,10 @@ async def _notify_subscription_renewed(*, tg_id: int, end_dt: datetime) -> None:
     builder.adjust(1)
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Ваша подписка продлена автоматически</b>\n\n"
-        f"Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
-        "Ссылка для подключения осталась прежней. Средства списаны с вашего баланса."
+        "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
+        f"<blockquote> <tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        "<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Средства списаны с вашего баланса </blockquote>\n\n"
+        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ссылка для подключения осталась прежней."
     )
     await _safe_notify(
         tg_id,
@@ -248,14 +253,31 @@ def _extract_hwid_device(data: dict[str, Any]) -> dict[str, Any]:
     return {}
 
 
-def _extract_token_from_url(url: str | None) -> str | None:
-    if not isinstance(url, str):
-        return None
-    value = url.strip().rstrip("/")
+def _device_emoji(platform: str, user_agent: str) -> str:
+    raw = f"{platform} {user_agent}".lower()
+    if "android" in raw:
+        return "<tg-emoji emoji-id='5819078828017849357'>📱</tg-emoji>"
+    if any(value in raw for value in ("apple", "ios", "iphone", "ipad", "macos", "mac os", "darwin")):
+        return "<tg-emoji emoji-id='5818920837645867167'>📱</tg-emoji>"
+    if "windows" in raw:
+        return "<tg-emoji emoji-id='5818956713507689486'>💻</tg-emoji>"
+    return "<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji>"
+
+
+def _app_version(user_agent: str) -> str:
+    value = (user_agent or "").strip()
     if not value:
-        return None
-    parts = value.split("/")
-    return parts[-1] if parts else None
+        return "—"
+
+    first_part = value.split(maxsplit=1)[0]
+    parts = [part for part in first_part.split("/") if part]
+    if len(parts) >= 2:
+        return f"{parts[0]} {parts[1]}"
+    return "—"
+
+
+def _device_title(device_model: str | None, device_os: str | None, hwid: str | None) -> str:
+    return device_model or device_os or hwid or "Устройство"
 
 
 @router.post("/remnawave-webhook")
@@ -468,31 +490,37 @@ async def remnawave_webhook(
         )
         return {"ok": False, "error": "user_not_found"}
 
-    connected_at = _parse_iso_dt(hwid_device.get("createdAt")) or _parse_iso_dt(payload.timestamp) or datetime.now(timezone.utc)
     device_model = _clip(hwid_device.get("deviceModel"), 64)
     device_os = _clip(hwid_device.get("platform"), 32)
     os_version = _clip(hwid_device.get("osVersion"), 32)
+    user_agent = _clip(hwid_device.get("userAgent"), 512)
 
     if user.tg_id:
-        res_sub = await user_service.session.execute(
-            select(Subscription)
-            .where(Subscription.user_id == user.id, Subscription.status == SubStatus.active)
-            .order_by(Subscription.current_period_end.desc())
-            .limit(1)
-        )
-        active_sub = res_sub.scalar_one_or_none()
-        token = (getattr(active_sub, "subscription_token", None) or _extract_token_from_url(user.subscription_url) or "")
-        short_token = token[:8] if token else ""
-        now_dt = connected_at or datetime.now(timezone.utc)
+        device_emoji = _device_emoji(device_os or "", user_agent or "")
+        app_version = _app_version(user_agent or "")
+        title = _device_title(device_model, device_os, hwid)
         msg = (
-            "<b><tg-emoji emoji-id=\"5920482576379679165\">🔕</tg-emoji> Новое устройство подключено!</b>\n\n"
-            f"<tg-emoji emoji-id='6005570495603282482'>🔑</tg-emoji> Подписка: <code>{short_token or '?'}</code>\n"
-            f"<tg-emoji emoji-id='5967816500415827773'>💻</tg-emoji> Модель: <b>{device_model or 'Не определено'}</b>\n"
-            f"<tg-emoji emoji-id='5877318502947229960'>🧩</tg-emoji> Платформа: <b>{device_os or '?'} {os_version or ''}</b>\n"
-            f"<tg-emoji emoji-id='5778605968208170641'>🕒</tg-emoji> Время: <b>{now_dt.strftime('%d.%m.%Y %H:%M')}</b>\n\n"
+            "<b><tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Новое устройство подключено!</b>\n\n"
+            f"{device_emoji} <b>{escape(str(title))}</b>\n\n"
+            "<blockquote>"
+            f"<tg-emoji emoji-id='5877318502947229960'>💻</tg-emoji> Модель: <b>{escape(str(device_model or '—'))}</b>\n"
+            f"<tg-emoji emoji-id='5985774024968379294'>🖊</tg-emoji> Платформа: <b>{escape(str(device_os or '—'))}</b>\n"
+            f"<tg-emoji emoji-id='5935938364086685805'>➕</tg-emoji> Версия ОС: <b>{escape(str(os_version or '—'))}</b>\n"
+            f"<tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji> Версия приложения: <b>{escape(app_version)}</b>\n"
+            "</blockquote>\n\n"
+            f"<b>User-Agent:</b> <code>{escape(str(user_agent or '—'))}</code>\n\n"
+            f"<b>HWID:</b> <code>{escape(str(hwid or '—'))}</code>\n\n"
             "Если вы не подключали это устройство, откройте <b>Моя подписка -> Устройства</b> и удалите его, после обратитесь в поддержку."
         )
-        await _safe_notify(user.tg_id, msg)
+        builder = InlineKeyboardBuilder()
+        builder.button(
+            text="Устройства",
+            callback_data="subscription_devices",
+            icon_custom_emoji_id="5877318502947229960",
+            style="primary",
+        )
+        builder.adjust(1)
+        await _safe_notify(user.tg_id, msg, reply_markup=builder.as_markup())
 
     logger.info(
         "[webhook][remnawave] processed scope=%s event=%s user_id=%s hwid=%s",

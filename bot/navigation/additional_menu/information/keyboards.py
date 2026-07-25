@@ -1,14 +1,14 @@
-﻿from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 def information_kb():
     builder = InlineKeyboardBuilder()
 
-    builder.button(text="💬 Канал", url="https://t.me/LunetVpn")
-    builder.button(text="🚀 Оферта", url="https://lunetpn.ru/terms/offer/")
-    builder.button(text="🔐 Политика конфиденциальности", url="https://lunetpn.ru/terms/privacy/")
-    builder.button(text="💼 Пользовательское соглашение", url="https://lunetpn.ru/terms/")
-    builder.button(text="🚨 Поддержка", url="https://t.me/LunetVPNSupport")
-    builder.button(text="🪐 Главное меню", callback_data="main_menu")
+    builder.button(text="Поддержка", url="https://t.me/LunetVPNSupport", icon_custom_emoji_id="5906995262378741881", style="danger")
+    builder.button(text="Канал", url="https://t.me/LunetVpn", icon_custom_emoji_id="5771695636411847302", style="primary")
+    builder.button(text="Оферта", url="https://lunetpn.ru/terms/offer/", icon_custom_emoji_id="5877597667231534929", style="primary")
+    builder.button(text="Политика конфиденциальности", url="https://lunetpn.ru/terms/privacy/", icon_custom_emoji_id="5877597667231534929", style="primary")
+    builder.button(text="Пользовательское соглашение", url="https://lunetpn.ru/terms/", icon_custom_emoji_id="5877597667231534929", style="primary")
+    builder.button(text="Назад", callback_data="main_menu", icon_custom_emoji_id="5877536313623711363", style="primary")
     builder.adjust(1, 1, 1, 1)
     return builder.as_markup()

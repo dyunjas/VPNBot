@@ -82,20 +82,16 @@ async def _build_subscription_screen(
 
     safe_url = escape(subscription_url, quote=False)
     auto_renew = bool(subscription.get("auto_renew", False))
-    auto_renew_text = "включено" if auto_renew else "выключено"
+    auto_renew_text = "да" if auto_renew else "нет"
 
     text = (
-        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> <b>Ваша подписка активна</b>\n\n"
-        "<b>Ссылка для подключения:</b>\n"
+        "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Ваша подписка активна</b>\n\n"
+        "<b><tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ссылка для подключения:</b>\n"
         f"<code>{safe_url}</code>\n\n"
-        f"<tg-emoji emoji-id='5956148757899776734'>📆</tg-emoji> Действует до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
-        f"<tg-emoji emoji-id='5877410604225924969'>♻️</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
-        "<blockquote><tg-emoji emoji-id='5879785854284599288'>⚙️</tg-emoji> "
-        "Гигабайты расходуются только на серверах белых списков. "
-        f"При необходимости можно докупить трафик по цене <b>{get_business_decimal('TRAFFIC_PRICE_PER_GB_RUB')} RUB за 1 GB</b>. "
-        "Остаток трафика переносится на следующий месяц.</blockquote>\n\n"
-        "<tg-emoji emoji-id='5877318502947229960'>📖</tg-emoji>"
-        f"<a href='{safe_url}'><b> Инструкция по подключению</b></a>"
+        f"<tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Действует до: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        f"<tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Автопродление: <b>{escape(auto_renew_text, quote=False)}</b>\n\n"
+        "<blockquote><tg-emoji emoji-id='5877260593903177342'>⚙</tg-emoji> Гигабайты расходуются только на серверах белых списков. При необходимости их можно докупить по кнопке ниже.</blockquote>\n\n"
+        f"<tg-emoji emoji-id='5956561916573782596'>📄</tg-emoji><a href='{safe_url}'><b> Инструкция по подключению</b></a>"
     )
     return text, auto_renew
 

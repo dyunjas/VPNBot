@@ -3,10 +3,10 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 def referral_kb(share_link_url):
     builder = InlineKeyboardBuilder()
-    builder.button(text="💳 Перевести на основной баланс", callback_data="transfer_referral_balance")
-    builder.button(text="💸 Вывести", callback_data="withdraw_balance")
-    builder.button(text="📥 Поделиться", url=share_link_url)
-    builder.button(text="⬅️ Назад", callback_data="profile")
+    builder.button(text="Перевести на основной баланс", callback_data="transfer_referral_balance", icon_custom_emoji_id="5967390100357648692", style="success")
+    builder.button(text="Вывести", callback_data="withdraw_balance", icon_custom_emoji_id="5811989245761426317", style="success")
+    builder.button(text="Поделиться", url=share_link_url, icon_custom_emoji_id="5899757765743615694", style="primary")
+    builder.button(text="Назад", callback_data="profile", icon_custom_emoji_id="5877536313623711363", style="primary")
 
     builder.adjust(1)
     return builder.as_markup()
@@ -14,7 +14,7 @@ def referral_kb(share_link_url):
 
 def back_referral_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="⬅️ Назад", callback_data="referral")
+    builder.button(text="Назад", callback_data="referral", icon_custom_emoji_id="5877536313623711363", style="primary")
 
     builder.adjust(1)
     return builder.as_markup()
@@ -22,8 +22,8 @@ def back_referral_kb():
 
 def withdraw_confirm_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="✅ Подтвердить", callback_data="withdraw_confirm")
-    builder.button(text="❌ Отмена", callback_data="withdraw_cancel")
+    builder.button(text="Подтвердить", callback_data="withdraw_confirm", icon_custom_emoji_id="5776375003280838798", style="success")
+    builder.button(text="Отмена", callback_data="withdraw_cancel", icon_custom_emoji_id="5778527486270770928", style="danger")
 
     builder.adjust(1)
     return builder.as_markup()
@@ -31,17 +31,8 @@ def withdraw_confirm_kb():
 
 def transfer_confirm_kb():
     builder = InlineKeyboardBuilder()
-    builder.button(text="✅ Подтвердить перевод", callback_data="transfer_confirm")
-    builder.button(text="❌ Отмена", callback_data="transfer_cancel")
-
-    builder.adjust(1)
-    return builder.as_markup()
-
-
-def admin_withdraw_kb(withdrawal_id: int):
-    builder = InlineKeyboardBuilder()
-    builder.button(text="Approve", callback_data=f"admin_withdraw:approve:{withdrawal_id}")
-    builder.button(text="Reject", callback_data=f"admin_withdraw:reject:{withdrawal_id}")
+    builder.button(text="Подтвердить перевод", callback_data="transfer_confirm", icon_custom_emoji_id="5776375003280838798", style="success")
+    builder.button(text="Отмена", callback_data="transfer_cancel", icon_custom_emoji_id="5778527486270770928", style="danger")
 
     builder.adjust(1)
     return builder.as_markup()

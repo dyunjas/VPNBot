@@ -68,7 +68,6 @@ class Settings(BaseSettings):
     SUBSCRIPTION_RENEWAL_WINDOW_DAYS: int = 3
     CRYPTO_INVOICE_EXPIRES_IN_SEC: int = 900
     PALLY_INVOICE_TTL_SEC: int = 600
-
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
