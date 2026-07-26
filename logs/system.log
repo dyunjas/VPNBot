@@ -11833,3 +11833,5 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-07-26 03:05:15] [INFO] root: Settings successfully loaded from .env
 [2026-07-26 03:05:15] [INFO] root: Database tables initialized
 [2026-07-26 03:05:15] [INFO] root: Database connection successful
+[2026-07-26 16:48:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 16:48:17] [INFO] root: Settings successfully loaded from .env

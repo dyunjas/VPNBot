@@ -21249,3 +21249,14 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=11
 [2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=6bd62a49-f40a-4a79-9479-95d75eff3f8e amount=5.0
 [2026-07-26 03:18:19] [INFO] aiogram.event: Update id=891138066 is handled. Duration 145 ms by bot id=7557954606
+[2026-07-26 03:22:15] [INFO] aiogram.event: Update id=891138067 is handled. Duration 292 ms by bot id=7557954606
+[2026-07-26 03:22:16] [INFO] aiogram.event: Update id=891138068 is handled. Duration 242 ms by bot id=7557954606
+[2026-07-26 03:23:32] [INFO] aiogram.event: Update id=891138069 is not handled. Duration 8 ms by bot id=7557954606
+[2026-07-26 16:48:16] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 16:48:17] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 16:48:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 16:48:18] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 16:48:18] [INFO] root: Database tables initialized
+[2026-07-26 16:48:18] [INFO] root: Database connection successful
+[2026-07-26 16:48:18] [INFO] root: Database tables initialized
+[2026-07-26 16:48:18] [INFO] root: Database connection successful

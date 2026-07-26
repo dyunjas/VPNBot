@@ -32,7 +32,7 @@ def build_profile_text(user: dict) -> str:
         f"<blockquote><b>——<tg-emoji emoji-id='5936017305585586269'>🪪</tg-emoji> ID:</b> <code>{user.get('tg_id')}</code>\n"
         f"<b>——<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Баланс:</b> {user.get('balance')} RUB\n"
         f"<b>——<tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Почта:</b> {html_escape(email)}</blockquote>\n\n"
-        "<tg-emoji emoji-id='5771695636411847302'>📢</tg-emoji> Канал: @LunetVpnBot\n"
+        "<tg-emoji emoji-id='5771695636411847302'>📢</tg-emoji> Канал: @LunetVpn\n"
         "<tg-emoji emoji-id='5906995262378741881'>🙋</tg-emoji> Поддержка: @LunetVpnSupport\n\n"
         "<blockquote><i><tg-emoji emoji-id='5874960879434338403'>🔎</tg-emoji> Нажмите кнопку 'Купить подписку', чтобы приобрести подписку.</i></blockquote>"
     )

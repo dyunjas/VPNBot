@@ -1399,3 +1399,7 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-07-26 01:03:35] [INFO] root: [biz][promo] activated user_id=100 code=промокод amount=100 balance_before=250 balance_after=350
 [2026-07-26 01:03:47] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
 [2026-07-26 01:03:47] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29756352
+[2026-07-26 03:09:18] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-26 03:09:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29748822
+[2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=11
+[2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=6bd62a49-f40a-4a79-9479-95d75eff3f8e amount=5.0

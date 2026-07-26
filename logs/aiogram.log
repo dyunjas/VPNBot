@@ -6339,3 +6339,8 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-07-26 02:51:42] [INFO] aiogram.event: Update id=891138062 is handled. Duration 210 ms by bot id=7557954606
 [2026-07-26 02:51:42] [INFO] aiogram.event: Update id=891138063 is handled. Duration 159 ms by bot id=7557954606
 [2026-07-26 02:51:46] [INFO] aiogram.event: Update id=891138064 is handled. Duration 195 ms by bot id=7557954606
+[2026-07-26 03:17:39] [INFO] aiogram.event: Update id=891138065 is not handled. Duration 7 ms by bot id=7557954606
+[2026-07-26 03:18:19] [INFO] aiogram.event: Update id=891138066 is handled. Duration 145 ms by bot id=7557954606
+[2026-07-26 03:22:15] [INFO] aiogram.event: Update id=891138067 is handled. Duration 292 ms by bot id=7557954606
+[2026-07-26 03:22:16] [INFO] aiogram.event: Update id=891138068 is handled. Duration 242 ms by bot id=7557954606
+[2026-07-26 03:23:32] [INFO] aiogram.event: Update id=891138069 is not handled. Duration 8 ms by bot id=7557954606

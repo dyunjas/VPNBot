@@ -183,7 +183,7 @@ async def _find_latest_subscription(session: AsyncSession, *, user_id: int) -> S
 
 async def _notify_expiration_warning(*, tg_id: int, hours: int) -> None:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription", icon_custom_emoji_id="5967456680940671207", style="primary")
     builder.adjust(1)
 
     if hours >= 48:
@@ -228,7 +228,7 @@ async def _notify_subscription_expired(*, tg_id: int) -> None:
 
 async def _notify_subscription_renewed(*, tg_id: int, end_dt: datetime) -> None:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Моя подписка", callback_data="vpn_subscription")
+    builder.button(text="Моя подписка", callback_data="vpn_subscription", icon_custom_emoji_id="6005570495603282482", style="primary")
     builder.adjust(1)
 
     text = (
