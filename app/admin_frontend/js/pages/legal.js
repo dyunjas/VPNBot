@@ -39,7 +39,6 @@ async function loadLegalList() {
 async function loadLegalDocument() {
   const editor = q("legal_editor");
   const title = q("legal_doc_title");
-  const link = q("legal_doc_link");
   if (editor) {
     editor.disabled = true;
     editor.value = "Загрузка...";
@@ -48,12 +47,8 @@ async function loadLegalDocument() {
   const data = await api(`/api/admin/legal/${legalState.activeKey}`);
   legalState.current = data;
   if (title) title.textContent = data.title || "Документ";
-  if (link) {
-    link.href = data.url || "#";
-    link.textContent = "Открыть";
-  }
   if (editor) {
-    editor.value = data.html || "";
+    editor.value = data.content || data.html || "";
     editor.disabled = false;
     updateLegalStats();
   }
@@ -94,10 +89,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div>
               <div class="dashboard-section-card__eyebrow">Legal</div>
               <h3 id="legal_doc_title">Документ</h3>
-              <div class="section-title">Редактируйте полный HTML страницы. Сохранение сразу меняет публичную страницу.</div>
+              <div class="section-title">Редактируйте текст документа. Простые HTML-теги для форматирования поддерживаются.</div>
             </div>
             <div class="toolbar toolbar--compact legal-editor-actions">
-              <a id="legal_doc_link" class="btn-secondary legal-preview-link" href="#" target="_blank" rel="noopener noreferrer">Открыть</a>
               <button id="legal_reload" type="button">Обновить</button>
               <button id="legal_save" class="btn-primary" type="button">Сохранить</button>
             </div>

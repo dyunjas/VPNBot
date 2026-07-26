@@ -11904,3 +11904,24 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-26 18:24:03] [INFO] root: Database tables initialized
 [2026-07-26 18:24:03] [INFO] root: Database connection successful
 [2026-07-26 18:49:42] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:13:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:13:09] [INFO] root: Database tables initialized
+[2026-07-26 20:13:09] [INFO] root: Database connection successful
+[2026-07-26 20:21:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:21:15] [INFO] root: Database tables initialized
+[2026-07-26 20:21:15] [INFO] root: Database connection successful
+[2026-07-26 20:21:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:04] [INFO] root: Database tables initialized
+[2026-07-26 20:40:04] [INFO] root: Database connection successful
+[2026-07-26 20:40:09] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:10] [INFO] root: Database tables initialized
+[2026-07-26 20:40:10] [INFO] root: Database connection successful
+[2026-07-26 20:40:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:15] [INFO] root: Database tables initialized
+[2026-07-26 20:40:15] [INFO] root: Database connection successful
+[2026-07-26 20:40:20] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:21] [INFO] root: Database tables initialized
+[2026-07-26 20:40:21] [INFO] root: Database connection successful
+[2026-07-26 20:40:25] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 21:08:10] [INFO] root: Settings successfully loaded from .env

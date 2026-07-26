@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     title: "Рассылки",
     subtitle: "Долгие рассылки выполняются в фоне, статус обновляется автоматически",
     contentHtml: `
-      <div class="content-grid">
+      <div class="content-grid broadcast-page-grid">
         <div class="card broadcast-card">
           <h3>Новая рассылка</h3>
           <div class="toolbar broadcast-toolbar">

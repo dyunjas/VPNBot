@@ -5,6 +5,7 @@ import platform
 import shutil
 import socket
 import time
+from pathlib import Path
 
 from aiogram import Bot
 from aiogram.types import LabeledPrice
@@ -116,6 +117,42 @@ def _format_uptime(seconds: float | int | None) -> str:
     if hours:
         return f"{hours}h {minutes}m"
     return f"{minutes}m"
+
+
+def _system_uptime_seconds() -> float | None:
+    if psutil is not None:
+        try:
+            return max(0.0, time.time() - float(psutil.boot_time()))
+        except Exception:
+            pass
+    if platform.system().lower() == "windows":
+        try:
+            import ctypes
+
+            get_tick_count64 = ctypes.windll.kernel32.GetTickCount64
+            get_tick_count64.restype = ctypes.c_ulonglong
+            return float(get_tick_count64()) / 1000.0
+        except Exception:
+            pass
+    try:
+        return float(Path("/proc/uptime").read_text(encoding="utf-8").split()[0])
+    except Exception:
+        return None
+
+
+def _safe_load_average(cpu_percent: float | None = None) -> tuple[float, float, float] | None:
+    try:
+        if hasattr(os, "getloadavg"):
+            return tuple(round(float(value), 2) for value in os.getloadavg())
+    except (AttributeError, OSError):
+        pass
+    if cpu_percent is None:
+        return None
+    cores = max(int(os.cpu_count() or 1), 1)
+    synthetic_load = round(max(0.0, float(cpu_percent)) / 100.0 * cores, 2)
+    return (synthetic_load, synthetic_load, synthetic_load)
+
+
 def _metric_status(percent: float | None, *, warn: float = 70, danger: float = 90) -> str:
     if percent is None:
         return "warn"
@@ -243,7 +280,8 @@ def _collect_server_load_fallback() -> dict:
     process_percent = 0.0
     if memory and memory.get("total") and process_memory.get("rss"):
         process_percent = round((float(process_memory["rss"]) / float(memory["total"])) * 100, 2)
-    load_average = os.getloadavg() if hasattr(os, "getloadavg") else None
+    load_average = _safe_load_average(cpu_percent)
+    uptime_seconds = _system_uptime_seconds()
 
     metrics = [
         {
@@ -304,7 +342,8 @@ def _collect_server_load_fallback() -> dict:
         "metrics_source": "stdlib",
         "metrics": metrics,
         "summary": {
-            "uptime": "—",
+            "uptime_seconds": int(uptime_seconds) if uptime_seconds is not None else None,
+            "uptime": _format_uptime(uptime_seconds),
             "load_average": load_average,
             "cpu_count": os.cpu_count(),
         },
@@ -331,7 +370,8 @@ def _collect_server_load() -> dict:
     process_memory = process.memory_info()
     process_percent = float(process.memory_percent())
     boot_time = float(psutil.boot_time())
-    load_average = os.getloadavg() if hasattr(os, "getloadavg") else None
+    load_average = _safe_load_average(cpu_percent)
+    uptime_seconds = max(0.0, time.time() - boot_time)
     cpu_freq = psutil.cpu_freq()
 
     result["metrics"] = [
@@ -388,8 +428,8 @@ def _collect_server_load() -> dict:
         },
     ]
     result["summary"] = {
-        "uptime_seconds": int(time.time() - boot_time),
-        "uptime": _format_uptime(time.time() - boot_time),
+        "uptime_seconds": int(uptime_seconds),
+        "uptime": _format_uptime(uptime_seconds),
         "boot_time": _to_iso(datetime.fromtimestamp(boot_time, timezone.utc)),
         "load_average": load_average,
         "cpu_count": psutil.cpu_count(logical=True),

@@ -270,6 +270,12 @@ const ADMIN_MENU = [
   { key: "logs", href: "/admin/logs", label: "Логи", icon: "logs" },
 ];
 const SUPPORT_MENU_KEYS = new Set(["users", "subscriptions", "transactions", "referrals"]);
+const ADMIN_MENU_GROUPS = [
+  { label: "", keys: ["dashboard", "maintenance", "admins", "legal"] },
+  { label: "Управление", keys: ["users", "subscriptions", "plans", "transactions", "withdrawals"] },
+  { label: "Продвижение", keys: ["referrals", "partners", "promocodes", "broadcast"] },
+  { label: "Система", keys: ["logs"] },
+];
 
 const DESKTOP_SIDEBAR_STORAGE_KEY = "adminDesktopSidebarCollapsed";
 const ADMIN_THEME_STORAGE_KEY = "adminTheme";
@@ -309,12 +315,40 @@ function canAccessAdminPage(activeKey) {
 }
 
 function renderMenu(activeKey) {
-  return getVisibleAdminMenu().map((item) => `
-    <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
-      <span class="menu-ico">${menuIcon(item.icon)}</span>
-      <span class="menu-label">${item.label}</span>
-    </a>
-  `).join("");
+  const visible = getVisibleAdminMenu();
+  const visibleByKey = new Map(visible.map((item) => [item.key, item]));
+  const groupedKeys = new Set();
+
+  const groupedHtml = ADMIN_MENU_GROUPS.map((group) => {
+    const links = group.keys
+      .map((key) => {
+        const item = visibleByKey.get(key);
+        if (!item) return "";
+        groupedKeys.add(key);
+        return `
+          <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
+            <span class="menu-ico">${menuIcon(item.icon)}</span>
+            <span class="menu-label">${item.label}</span>
+          </a>
+        `;
+      })
+      .join("");
+    if (!links) return "";
+    const title = group.label ? `<div class="menu-section-title">${group.label}</div>` : "";
+    return `<div class="menu-section">${title}${links}</div>`;
+  }).join("");
+
+  const rest = visible
+    .filter((item) => !groupedKeys.has(item.key))
+    .map((item) => `
+      <a href="${item.href}" data-menu-key="${item.key}" class="${activeKey === item.key ? "active" : ""}">
+        <span class="menu-ico">${menuIcon(item.icon)}</span>
+        <span class="menu-label">${item.label}</span>
+      </a>
+    `)
+    .join("");
+
+  return rest ? `${groupedHtml}<div class="menu-section"><div class="menu-section-title">Другое</div>${rest}</div>` : groupedHtml;
 }
 
 function renderQuickNav() {
@@ -340,7 +374,7 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
               <img src="/miniapp/assets/lunet-logo.png?v=1" alt="Lunet" />
             </div>
             <div>
-              <div class="sidebar-kicker">Internal Tool</div>
+              <div class="sidebar-kicker">Lunet</div>
               <div class="sidebar-title">Админ-панель</div>
             </div>
           </div>

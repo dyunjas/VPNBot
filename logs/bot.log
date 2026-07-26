@@ -32390,3 +32390,33 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-26 18:46:22] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58091301 amount_rub=5 amount_crypto=0.07
 [2026-07-26 18:49:42] [INFO] root: Settings successfully loaded from .env
 [2026-07-26 18:49:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:13:07] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:13:08] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:13:09] [INFO] root: Database tables initialized
+[2026-07-26 20:13:09] [INFO] root: Database connection successful
+[2026-07-26 20:21:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:21:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:21:15] [INFO] root: Database tables initialized
+[2026-07-26 20:21:15] [INFO] root: Database connection successful
+[2026-07-26 20:21:21] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:21:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:40:03] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:04] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:40:04] [INFO] root: Database tables initialized
+[2026-07-26 20:40:04] [INFO] root: Database connection successful
+[2026-07-26 20:40:09] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:40:10] [INFO] root: Database tables initialized
+[2026-07-26 20:40:10] [INFO] root: Database connection successful
+[2026-07-26 20:40:14] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:40:15] [INFO] root: Database tables initialized
+[2026-07-26 20:40:15] [INFO] root: Database connection successful
+[2026-07-26 20:40:20] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 20:40:21] [INFO] root: Database tables initialized
+[2026-07-26 20:40:21] [INFO] root: Database connection successful
+[2026-07-26 20:40:25] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 20:40:25] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-07-26 21:08:10] [INFO] root: Settings successfully loaded from .env
+[2026-07-26 21:08:11] [DEBUG] asyncio: Using proactor: IocpProactor
