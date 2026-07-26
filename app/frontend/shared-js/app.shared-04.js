@@ -6,13 +6,13 @@ async function applyPromocode() {
   try {
     const data = await api("/api/promocode/apply", { code });
     const hint = $("promo-hint");
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = `Начислено: +${data.amount_added || 0} ₽`;
+    if (hint) hint.textContent = "";
     toastSuccess("Промокод применен");
     haptic("success");
     await loadProfile();
   } catch (e) {
     const hint = $("promo-hint");
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
+    if (hint) hint.textContent = "";
     toast(e.message);
     haptic("error");
   }
@@ -74,7 +74,7 @@ async function createTopup() {
 
   if (!Number.isFinite(amount) || amount <= 0) {
     const msg = "Введите корректную сумму";
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
+    if (hint) hint.textContent = "";
     return toast(msg);
   }
 
@@ -90,14 +90,12 @@ async function createTopup() {
     tg?.openLink?.(data.payment_url);
     if (!tg?.openLink) window.open(data.payment_url, "_blank");
 
-    if (hint && !IS_MINIAPP_PATH) {
-      hint.textContent = "После оплаты баланс обновится автоматически. Обычно это занимает до 1-2 минут.";
-    }
+    if (hint) hint.textContent = "";
     scheduleTopupRefresh();
     toastSuccess("Ссылка на оплату открыта");
     haptic("success");
   } catch (e) {
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
+    if (hint) hint.textContent = "";
     toast(e.message);
     haptic("error");
   }
@@ -111,7 +109,7 @@ async function buyTraffic() {
 
   if (!Number.isFinite(gb) || gb <= 0) {
     const msg = "Введите количество ГБ больше 0";
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
+    if (hint) hint.textContent = "";
     return toast(msg);
   }
 
@@ -121,12 +119,12 @@ async function buyTraffic() {
     const data = await api("/api/subscription/traffic/buy", { gb: Math.floor(gb) });
     if (input) input.value = "";
     const msg = `Добавлено ${data.gb_added} ГБ, списано ${data.charged} ₽`;
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = msg;
+    if (hint) hint.textContent = "";
     toastSuccess(msg);
     haptic("success");
     await Promise.all([loadStatus(), loadProfile()]);
   } catch (e) {
-    if (hint && !IS_MINIAPP_PATH) hint.textContent = e.message;
+    if (hint) hint.textContent = "";
     toast(e.message);
     haptic("error");
   } finally {
@@ -172,6 +170,16 @@ function focusAfterViewSwitch(id) {
     el.focus?.({ preventScroll: true });
     el.scrollIntoView?.({ behavior: "smooth", block: "center" });
   }, 80);
+}
+
+function openSubscriptionUrl() {
+  if (!state.subscriptionUrl) {
+    toast("Ссылка недоступна");
+    return false;
+  }
+  tg?.openLink?.(state.subscriptionUrl);
+  if (!tg?.openLink) window.open(state.subscriptionUrl, "_blank");
+  return true;
 }
 
 async function handlePopupAction(action) {
@@ -245,12 +253,11 @@ function initEvents() {
   $("promo-apply")?.addEventListener("click", applyPromocode);
   $("btn-quick-connect")?.addEventListener("click", async () => {
     haptic();
-    if (!state.subscriptionUrl) {
-      toast("Ссылка недоступна");
-      return;
-    }
-    tg?.openLink?.(state.subscriptionUrl);
-    if (!tg?.openLink) window.open(state.subscriptionUrl, "_blank");
+    openSubscriptionUrl();
+  });
+  $("btn-sub-details")?.addEventListener("click", () => {
+    haptic();
+    openSubscriptionUrl();
   });
   $("btn-buy-traffic")?.addEventListener("click", buyTraffic);
   $("topup-pay")?.addEventListener("click", createTopup);
@@ -336,9 +343,7 @@ function initEvents() {
   });
 
   $("btn-open-sub")?.addEventListener("click", () => {
-    if (!state.subscriptionUrl) return toast("Ссылка недоступна");
-    tg?.openLink?.(state.subscriptionUrl);
-    if (!tg?.openLink) window.open(state.subscriptionUrl, "_blank");
+    openSubscriptionUrl();
   });
 
   $("btn-copy-ref")?.addEventListener("click", async () => {

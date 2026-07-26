@@ -34,6 +34,23 @@ class MessageOrNameFilter(logging.Filter):
         return bool(self._message_tokens and any(token in message for token in self._message_tokens))
 
 
+class BenignNetworkNoiseFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        message = record.getMessage().lower()
+        if "invalid http request received" in message:
+            return False
+
+        if (
+            (record.name or "").lower() == "asyncio"
+            and "exception in callback _proactorbasepipetransport._call_connection_lost" in message
+            and record.exc_info
+            and issubclass(record.exc_info[0], ConnectionResetError)
+        ):
+            return False
+
+        return True
+
+
 def _file_handler(filename: str, level: int = logging.DEBUG) -> RotatingFileHandler:
     handler = RotatingFileHandler(
         os.path.join(LOG_DIR, filename),
@@ -148,6 +165,10 @@ logger.addHandler(console_handler)
 telegram_error_handler = TelegramErrorReportHandler()
 telegram_error_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
 logger.addHandler(telegram_error_handler)
+
+benign_network_noise_filter = BenignNetworkNoiseFilter()
+for handler in logger.handlers:
+    handler.addFilter(benign_network_noise_filter)
 
 # Ensure aiogram operational logs are emitted to handlers.
 logging.getLogger("aiogram").setLevel(logging.INFO)

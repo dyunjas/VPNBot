@@ -112,6 +112,12 @@ function formatDate(iso) {
   return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("ru-RU");
 }
 
+function formatDateOnly(iso) {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "-" : d.toLocaleDateString("ru-RU");
+}
+
 function calcDaysLeft(endIso) {
   if (!endIso) return 0;
   const end = new Date(endIso);
@@ -231,7 +237,7 @@ async function loadStatus() {
 
   $("sub-title").textContent = "Подписка активна";
   $("sub-days-left").textContent = String(daysLeft);
-  $("sub-end-date").textContent = formatDate(sub.current_period_end);
+  $("sub-end-date").textContent = formatDateOnly(sub.current_period_end);
   $("sub-traffic-text").textContent = `${formatGbValue(usedBytes)} / ${formatGbValue(limitBytes)}`;
   $("sub-badge").textContent = "Активна";
   progressFill?.style.setProperty("width", `${usedPercent}%`);
@@ -259,5 +265,7 @@ async function loadReferral() {
   $("ref-link").textContent = state.referralUrl || "Ссылка недоступна";
 
   const r = data.referral || {};
-  $("ref-extra").textContent = `Процент: ${r.percent || 0}% | Приглашено: ${r.invited_count || 0} | Баланс: ${r.balance || 0} ₽`;
+  $("ref-extra").textContent = IS_CABINET_PATH
+    ? ""
+    : `Процент: ${r.percent || 0}% | Приглашено: ${r.invited_count || 0} | Баланс: ${r.balance || 0} ₽`;
 }

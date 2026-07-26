@@ -6,7 +6,7 @@
   <title>Вход в кабинет | Lunet</title>
   <meta name="description" content="Вход в веб-кабинет Lunet по коду из email или Telegram." />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=15" />
+  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=20" />
 </head>
 <body>
   <main class="auth-page">
@@ -16,9 +16,7 @@
           <img class="auth-card__logo" src="/miniapp/assets/lunet-logo-sign.png" alt="Lunet" />
         </div>
         <div class="auth-card__head">
-          <div class="auth-card__eyebrow">Авторизация</div>
           <h2>Войти в кабинет</h2>
-          <p class="subtitle">Подтвердите вход удобным способом и получите доступ к кабинету.</p>
         </div>
 
         <div class="auth-switch" role="tablist" aria-label="Способ входа">
@@ -28,7 +26,6 @@
 
         <form id="form_email" class="auth-form" autocomplete="on">
           <div id="email_request_block" class="auth-step auth-step--request">
-            <div class="step-title">Шаг 1. Получить код на email</div>
             <label class="field">
               <span>Email</span>
               <input id="email" type="email" placeholder="user@example.com" required />
@@ -39,7 +36,6 @@
           </div>
 
           <div id="email_verify_block" class="auth-step auth-step--verify is-hidden">
-            <div class="step-title">Шаг 2. Введите код из письма</div>
             <label class="field">
               <span>Код</span>
               <input id="email_code" type="text" placeholder="Введите код" required />
@@ -52,7 +48,6 @@
 
         <form id="form_telegram" class="auth-form is-hidden" autocomplete="off">
           <div id="tg_request_block" class="auth-step auth-step--request">
-            <div class="step-title">Шаг 1. Получить код в Telegram</div>
             <label class="field">
               <span>Telegram ID</span>
               <input id="tg_id" type="text" inputmode="numeric" placeholder="Например: 123456789" required />
@@ -63,7 +58,6 @@
           </div>
 
           <div id="tg_verify_block" class="auth-step auth-step--verify is-hidden">
-            <div class="step-title">Шаг 2. Введите код из Telegram</div>
             <label class="field">
               <span>Код</span>
               <input id="tg_code" type="text" placeholder="Введите код" required />
@@ -79,13 +73,6 @@
     </section>
 
     <footer class="auth-footer">
-      <div class="auth-footer__top">
-        <span>© Lunet</span>
-        <span class="auth-footer__dot">•</span>
-        <span>Веб-кабинет</span>
-        <span class="auth-footer__dot">•</span>
-        <span>Поддержка 08:00–22:00 МСК</span>
-      </div>
       <div class="auth-footer__links">
         <a href="https://t.me/LunetVPNSupportBot" class="auth-footer__link" target="_blank" rel="noopener noreferrer">Техподдержка</a>
         <a href="/terms/" class="auth-footer__link">Пользовательское соглашение</a>

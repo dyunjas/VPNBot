@@ -1293,3 +1293,11 @@ NameError: name 'Bot' is not defined
 [2026-07-26 03:09:18] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29748822
 [2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=11
 [2026-07-26 03:18:10] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=6bd62a49-f40a-4a79-9479-95d75eff3f8e amount=5.0
+[2026-07-26 18:33:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-07-26 18:33:57] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=29693343
+[2026-07-26 18:33:58] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=4 auto_renew=True
+[2026-07-26 18:33:58] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=4 seconds_left=29693342
+[2026-07-26 18:46:15] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=2
+[2026-07-26 18:46:15] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=75fe48b9-2658-4a17-9f0b-06ca00120c90 amount=5.0
+[2026-07-26 18:46:22] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=5 asset=USDT
+[2026-07-26 18:46:22] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=58091301 amount_rub=5 amount_crypto=0.07
