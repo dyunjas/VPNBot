@@ -90,7 +90,7 @@ function buildXAxisLabels(items, points, width, padding) {
 function buildChartSvg(chartId, items, values, options = {}) {
   const width = 920;
   const height = 335;
-  const padding = { top: 22, right: 22, bottom: 66, left: 50 };
+  const padding = { top: 22, right: 22, bottom: 66, left: 60 };
   const innerWidth = width - padding.left - padding.right;
   const innerHeight = height - padding.top - padding.bottom;
   const maxValue = Math.max(...values, 1);

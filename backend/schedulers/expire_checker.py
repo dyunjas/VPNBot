@@ -15,6 +15,8 @@ from backend.services import (
 )
 from backend.services.exceptions import (
     InsufficientBalance,
+    PlanNotFound,
+    PurchaseInProgress,
     TooEarlyToRenew,
     UserNotFound
 )
@@ -22,13 +24,14 @@ from backend.services.exceptions import (
 
 async def _notify_subscription_expired(bot, tg_id: int):
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription", icon_custom_emoji_id="5967456680940671207", style="primary")
     builder.adjust(1)
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji>Подписка закончилась</b>\n\n"
-        "Доступ к VPN временно остановлен. Продлите подписку, и сервис снова заработает на вашей текущей ссылке.\n\n"
-        "Если вы уже продлили подписку, обновите подписку в приложении."
+        "<b><tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Ваша подписка закончилась</b>\n\n"
+        "Доступ к VPN временно приостановлен.\n\n"
+        "<blockquote> Продлите подписку, и сервис снова заработает по вашей текущей ссылке. </blockquote>\n\n"
+        "<i><tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Если вы уже продлили подписку, обновите её в VPN-приложении.</i>"
     )
 
     await bot.send_photo(
@@ -41,18 +44,22 @@ async def _notify_subscription_expired(bot, tg_id: int):
 
 async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Продлить подписку", callback_data="subscription")
+    builder.button(text="Продлить подписку", callback_data="subscription", icon_custom_emoji_id="5967456680940671207", style="primary")
     builder.adjust(1)
 
-    if hours >= 24:
-        remaining_text = "примерно 1 день"
+    if hours >= 48:
+        remaining_text = "2 дня"
+    elif hours >= 24:
+        remaining_text = "1 день"
     else:
         remaining_text = f"примерно {hours} ч."
 
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>⚠️</tg-emoji> Подписка скоро закончится</b>\n\n"
-        f"До окончания осталось {remaining_text}. Продлите заранее, чтобы VPN продолжил работать.\n\n"
-        "После продления ссылка останется прежней. Если автопродление включено, проверьте, что на балансе достаточно средств."
+        "<b><tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Ваша подписка скоро закончится</b>\n\n"
+        f"До окончания осталось <b>{remaining_text}</b>.\n\n"
+        "<blockquote> Продлите подписку заранее, чтобы VPN продолжил работать без перерыва. </blockquote>\n\n"
+        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> После продления ссылка для подключения останется прежней.\n\n"
+        "<i><tg-emoji emoji-id='6005843436479975944'>🔁</tg-emoji> Если автопродление включено, убедитесь, что на балансе достаточно средств.</i>"
     )
 
     await bot.send_photo(
@@ -65,13 +72,14 @@ async def _notify_subscription_ending_soon(bot, tg_id: int, hours: int):
 
 async def _notify_subscription_renewed(bot, tg_id: int, end_dt: datetime):
     text = (
-        "<b><tg-emoji emoji-id='5881702736843511327'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
-        f"Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
-        "Ссылка для подключения осталась прежней. Средства списаны с вашего баланса."
+        "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Подписка продлена автоматически</b>\n\n"
+        f"<blockquote> <tg-emoji emoji-id='5967412305338568701'>📅</tg-emoji> Новая дата окончания: <b>{end_dt:%d.%m.%Y %H:%M}</b>\n"
+        "<tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Средства списаны с вашего баланса </blockquote>\n\n"
+        "<tg-emoji emoji-id='5877465816030515018'>🔗</tg-emoji> Ссылка для подключения осталась прежней."
     )
 
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌙 Моя подписка", callback_data="vpn_subscription")
+    builder.button(text="Моя подписка", callback_data="vpn_subscription", icon_custom_emoji_id="6005570495603282482", style="primary")
     builder.adjust(1)
 
     await bot.send_photo(
@@ -165,7 +173,14 @@ async def expire_checker(bot):
 
                         continue
 
-                    except (InsufficientBalance, TooEarlyToRenew):
+                    except (InsufficientBalance, PlanNotFound, PurchaseInProgress, TooEarlyToRenew) as e:
+                        logger.warning(
+                            "auto-renew skipped user_id=%s sub_id=%s plan_id=%s reason=%s",
+                            sub.user_id,
+                            sub.id,
+                            sub.plan_id,
+                            type(e).__name__,
+                        )
                         pass
                     except Exception as e:
                         logger.error(

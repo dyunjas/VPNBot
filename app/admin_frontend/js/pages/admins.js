@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `<span class="badge ok">${safeText(roleLabel(value))}</span>`;
   };
 
+  const adminStatusBadge = (isActive) => (
+    isActive
+      ? `<span class="badge ok">Активен</span>`
+      : `<span class="badge danger">Отключен</span>`
+  );
+
   if (!(await ensureAuthOrRedirect())) return;
   renderShell({
     activeKey: "admins",
@@ -88,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td><b>#${safeText(admin.user_id)}</b><span class="table-sub">${safeText(admin.username || "—")}</span></td>
         <td>${safeText(admin.tg_id || "—")}</td>
         <td>${roleBadge(admin.role)}</td>
-        <td>${statusBadge(admin.is_active ? "active" : "disabled")}</td>
+        <td>${adminStatusBadge(admin.is_active)}</td>
         <td>${formatDateTime(admin.created_at)}</td>
       `;
       tr.addEventListener("click", () => openAdminCard(tr, admin));
@@ -106,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         { label: "Telegram", value: admin.tg_id || "—" },
         { label: "Username", value: admin.username || "—" },
         { label: "Роль", html: roleBadge(admin.role) },
-        { label: "Статус", html: statusBadge(admin.is_active ? "active" : "disabled") },
+        { label: "Статус", html: adminStatusBadge(admin.is_active) },
       ],
       render: (body, close) => {
         const form = document.createElement("div");

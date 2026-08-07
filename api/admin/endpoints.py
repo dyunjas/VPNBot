@@ -15,6 +15,8 @@ from api.admin.routes import (
     partners_router,
     promocodes_router,
     system_router,
+    diagnostics_router,
+    exports_router,
 )
 
 router = APIRouter(prefix="/api/admin", tags=["admin-web"])
@@ -32,3 +34,5 @@ router.include_router(legal_router)
 router.include_router(promocodes_router)
 router.include_router(partners_router)
 router.include_router(system_router)
+router.include_router(diagnostics_router)
+router.include_router(exports_router)

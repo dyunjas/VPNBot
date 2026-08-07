@@ -235,12 +235,18 @@ class RemnaWaveService:
         current = getattr(subscription, "subscription_token", None)
         if current == token:
             return
+        subscription_id = getattr(subscription, "id", None)
         try:
-            await self.sub_repo.set_subscription_token(subscription_id=subscription.id, token=token)
+            await self.sub_repo.set_subscription_token(subscription_id=subscription_id, token=token)
             await self.session.commit()
             subscription.subscription_token = token
-        except Exception:
-            logger.exception("[remnawave] persist subscription token failed subscription_id=%s", getattr(subscription, "id", None))
+        except Exception as e:
+            await self.session.rollback()
+            logger.warning(
+                "[remnawave] persist subscription token skipped subscription_id=%s err=%s",
+                subscription_id,
+                e,
+            )
 
     def _iso_or_none(self, dt) -> str | None:
         if not dt:
@@ -553,8 +559,9 @@ class RemnaWaveService:
                 subscription_url=sub_url,
             )
             await self.session.commit()
-        except Exception:
-            logger.exception("[remnawave] persist binding failed user_id=%s", user_id)
+        except Exception as e:
+            await self.session.rollback()
+            logger.warning("[remnawave] persist binding skipped user_id=%s err=%s", user_id, e)
 
     async def _fetch_remote_by_id(self, *, remote_id: int) -> tuple[int, str | None, str | None]:
         remote = await self._fetch_remote_user_by_id(remote_id=remote_id)

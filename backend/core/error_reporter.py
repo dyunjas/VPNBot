@@ -152,7 +152,6 @@ class TelegramErrorReportHandler(logging.Handler):
         telegram_user_id = _telegram_user_id(record, message)
 
         report = (
-            "Lunet Infrastructure\n\n"
             "⚠️ Ошибка во время работы\n\n"
             f"Тип: {exc_type}\n"
             "Ошибок в отчёте: 1\n"
@@ -167,7 +166,6 @@ class TelegramErrorReportHandler(logging.Handler):
             report += f"\nTraceback:\n{exception_text}\n"
 
         caption = (
-            "<b>Lunet Infrastructure</b>\n\n"
             "⚠️ Ошибка во время работы\n\n"
             f"<b>Тип:</b> <code>{html.escape(exc_type)}</code>\n"
             "<b>Ошибок в отчёте:</b> 1\n"

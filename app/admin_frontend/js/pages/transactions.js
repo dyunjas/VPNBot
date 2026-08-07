@@ -38,6 +38,34 @@ async function confirmPayment(id, button, amount, providerId) {
   }).catch((error) => alert(error.message));
 }
 
+function openTransactionMenu(row, transaction) {
+  const actions = [];
+  if (!transaction.paid) {
+    actions.push({
+      label: "Подтвердить платеж",
+      className: "row-action-menu__item--success",
+      onClick: (event, button) =>
+        confirmPayment(transaction.id, button, transaction.amount, transaction.transaction_id),
+    });
+  }
+
+  showRowContextMenu(row, actions, {
+    title: `Транзакция #${transaction.id}`,
+    icon: transaction.paid ? "check" : "creditCard",
+    meta: [
+      { label: "Пользователь", value: transaction.user_id },
+      { label: "Telegram", value: transaction.tg_id || "—" },
+      { label: "Username", value: transaction.username || "—" },
+      { label: "Provider ID", value: transaction.transaction_id || "—" },
+      { label: "Сумма", value: `${transaction.amount} RUB` },
+      { label: "Система", value: transaction.payment_system || "—" },
+      { label: "Статус", html: statusBadge(transaction.paid ? "paid" : "unpaid") },
+      { label: "Создана", value: formatDateTime(transaction.created_at) },
+      { label: "Оплачена", value: formatDateTime(transaction.paid_at) },
+    ],
+  });
+}
+
 async function loadRows() {
   const tbody = q("tbody");
   setTableRefreshing(tbody, true);
@@ -74,32 +102,11 @@ async function loadRows() {
         <td>${formatDateTime(transaction.paid_at)}</td>
       `;
 
-      if (!transaction.paid) {
-        tr.classList.add("is-clickable-row");
-        tr.addEventListener("click", (event) => {
-          event.stopPropagation();
-          showRowContextMenu(tr, [
-            {
-              label: "Подтвердить платеж",
-              className: "row-action-menu__item--success",
-              onClick: (event, button) =>
-                confirmPayment(transaction.id, button, transaction.amount, transaction.transaction_id),
-            },
-          ], {
-            title: `Транзакция #${transaction.id}`,
-            meta: [
-              { label: "Пользователь", value: transaction.user_id },
-              { label: "Telegram", value: transaction.tg_id || "—" },
-              { label: "Username", value: transaction.username || "—" },
-              { label: "Provider ID", value: transaction.transaction_id || "—" },
-              { label: "Сумма", value: `${transaction.amount} RUB` },
-              { label: "Система", value: transaction.payment_system || "—" },
-              { label: "Статус", html: statusBadge(transaction.paid ? "paid" : "unpaid") },
-              { label: "Создана", value: formatDateTime(transaction.created_at) },
-            ],
-          });
-        });
-      }
+      tr.classList.add("is-clickable-row");
+      tr.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openTransactionMenu(tr, transaction);
+      });
 
       tbody.appendChild(tr);
     });
@@ -126,6 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </select>
         <input id="payment_system" type="text" placeholder="Платежная система" />
         <button id="apply" class="btn-primary">Фильтр</button>
+        <button id="export_transactions" type="button">CSV</button>
       </div>
       <div class="card">
         <div class="table-wrap">
@@ -147,6 +155,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(event.currentTarget, async () => {
       txState.page = 1;
       await loadRows();
+    }).catch((error) => alert(error.message));
+  });
+
+  q("export_transactions").addEventListener("click", async (event) => {
+    const params = new URLSearchParams({
+      paid: q("paid").value,
+      payment_system: q("payment_system").value || "",
+      search: q("search").value || "",
+    });
+    await withButtonLoading(event.currentTarget, async () => {
+      await downloadAdminFile(`/api/admin/export/transactions?${params.toString()}`, "transactions.csv");
     }).catch((error) => alert(error.message));
   });
 

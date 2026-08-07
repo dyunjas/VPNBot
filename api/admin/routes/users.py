@@ -182,6 +182,32 @@ async def admin_user_details(user_id: int):
         txs = (
             await session.execute(select(Transaction).where(Transaction.user_id == user_id).order_by(Transaction.created_at.desc()).limit(25))
         ).scalars().all()
+        subscriptions = (
+            await session.execute(
+                select(Subscription, SubscriptionPlan.name, SubscriptionPlan.price)
+                .outerjoin(SubscriptionPlan, SubscriptionPlan.id == Subscription.plan_id)
+                .where(Subscription.user_id == user_id)
+                .order_by(Subscription.current_period_end.desc(), Subscription.id.desc())
+                .limit(20)
+            )
+        ).all()
+        referral = (
+            await session.execute(select(ReferralAccount).where(ReferralAccount.user_id == user_id))
+        ).scalar_one_or_none()
+        invited_count = int(
+            await session.scalar(select(func.count(User.id)).where(User.referrer_id == user_id)) or 0
+        )
+        paid_total = int(
+            await session.scalar(
+                select(func.coalesce(func.sum(Transaction.amount), 0)).where(
+                    Transaction.user_id == user_id,
+                    Transaction.paid.is_(True),
+                )
+            ) or 0
+        )
+        transaction_total = int(
+            await session.scalar(select(func.count(Transaction.id)).where(Transaction.user_id == user_id)) or 0
+        )
         activities = await activity_service.list_user_events(user_id=user_id, limit=100)
         topups = (
             await session.execute(
@@ -208,8 +234,25 @@ async def admin_user_details(user_id: int):
             "banned": bool(user.banned),
             "traffic_limit_bytes": int(user.traffic_limit_bytes or 0),
             "subscription_token": sub.subscription_token if sub else None,
+            "subscription_url": user.subscription_url,
+            "remnawave_user_id": user.remnawave_user_id,
+            "remnawave_user_uuid": user.remnawave_user_uuid,
             "created_at": _to_iso(user.created_at),
             "updated_at": _to_iso(user.updated_at),
+        },
+        "summary": {
+            "paid_total": paid_total,
+            "transactions_total": transaction_total,
+            "activities_total": len(activities),
+            "subscriptions_total": len(subscriptions),
+            "invited_count": invited_count,
+        },
+        "referral": {
+            "account_id": referral.id if referral else None,
+            "invited_count": int(referral.invited_count or 0) if referral else invited_count,
+            "referral_balance": int(referral.referral_balance or 0) if referral else 0,
+            "referral_percent": int(referral.referral_percent or 0) if referral else 0,
+            "created_at": _to_iso(referral.created_at) if referral else None,
         },
         "subscription": {
             "id": sub.id if sub else None,
@@ -222,6 +265,24 @@ async def admin_user_details(user_id: int):
             "auto_renew": bool(sub.auto_renew) if sub else None,
             "topup_gb": float(topup_gb or 0),
         },
+        "subscriptions": [
+            {
+                "id": item.id,
+                "plan_id": item.plan_id,
+                "plan_name": row_plan_name,
+                "plan_price": int(row_plan_price or 0) if row_plan_price is not None else None,
+                "status": item.status.value if item.status else None,
+                "auto_renew": bool(item.auto_renew),
+                "device_limit": int(item.device_limit or 0),
+                "gb_left": int(item.gb_left or 0),
+                "current_period_start": _to_iso(item.current_period_start),
+                "current_period_end": _to_iso(item.current_period_end),
+                "next_renewal_at": _to_iso(item.next_renewal_at),
+                "subscription_token": item.subscription_token,
+                "created_at": _to_iso(item.created_at),
+            }
+            for item, row_plan_name, row_plan_price in subscriptions
+        ],
         "keys": [],
         "devices": [],
         "transactions": [

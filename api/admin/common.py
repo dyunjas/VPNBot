@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import re
 import uuid
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Literal
 
 from aiogram.types.input_file import BufferedInputFile
@@ -259,10 +261,12 @@ class PartnerLinkUpdatePayload(BaseModel):
 
 __all__ = [
     "asyncio",
+    "re",
     "uuid",
     "datetime",
     "timedelta",
     "timezone",
+    "Path",
     "Literal",
     "BufferedInputFile",
     "APIRouter",

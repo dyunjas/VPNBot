@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <h3>Список промокодов</h3>
             <div class="toolbar toolbar--compact">
               <button id="reload" type="button">Обновить</button>
+              <button id="export_promocodes" type="button">CSV</button>
               <button id="open_create_promocode" class="btn-primary" type="button">Создать</button>
             </div>
           </div>
@@ -148,6 +149,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(e.currentTarget, async () => {
       await loadPromocodes();
     }).catch((err) => alert(err.message));
+  });
+
+  q("export_promocodes").addEventListener("click", async (event) => {
+    await withButtonLoading(event.currentTarget, async () => {
+      await downloadAdminFile("/api/admin/export/promocodes", "promocodes.csv");
+    }).catch((error) => alert(error.message));
   });
 
   q("open_create_promocode").addEventListener("click", openPromocodeModal);

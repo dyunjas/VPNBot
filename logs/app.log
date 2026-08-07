@@ -21376,3 +21376,24 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-07-26 20:40:25] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-07-26 21:08:10] [INFO] root: Settings successfully loaded from .env
 [2026-07-26 21:08:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-07 21:19:39] [INFO] root: Settings successfully loaded from .env
+[2026-08-07 21:19:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-07 21:19:42] [INFO] root: Database tables initialized
+[2026-08-07 21:19:42] [INFO] root: Database connection successful
+[2026-08-07 21:44:09] [INFO] root: Settings successfully loaded from .env
+[2026-08-07 21:44:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-07 22:08:54] [INFO] root: Settings successfully loaded from .env
+[2026-08-07 22:25:10] [INFO] root: Settings successfully loaded from .env
+[2026-08-07 22:25:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 03:02:41] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 03:02:41] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 03:02:42] [INFO] root: Database tables initialized
+[2026-08-08 03:02:42] [INFO] root: Database connection successful
+[2026-08-08 03:02:59] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 03:02:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 03:32:11] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 03:32:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 03:32:12] [INFO] root: Database tables initialized
+[2026-08-08 03:32:12] [INFO] root: Database connection successful
+[2026-08-08 03:32:20] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 03:32:21] [DEBUG] asyncio: Using proactor: IocpProactor

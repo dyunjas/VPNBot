@@ -72,12 +72,13 @@ const TABLER_ICON_PATHS = {
   sun: '<path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 12h1" /><path d="M20 12h1" /><path d="M12 3v1" /><path d="M12 20v1" /><path d="M5.6 5.6l.7 .7" /><path d="M17.7 17.7l.7 .7" /><path d="M18.4 5.6l-.7 .7" /><path d="M6.3 17.7l-.7 .7" />',
   moon: '<path d="M12 3c.132 0 .263 .003 .393 .01a7.5 7.5 0 0 0 7.92 10.865a9 9 0 1 1 -8.313 -10.875z" />',
   user: '<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />',
+  userCog: '<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h2.5" /><path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19.001 15.5v1.5" /><path d="M19.001 21v1.5" /><path d="M22.032 17.25l-1.299 .75" /><path d="M17.27 20l-1.3 .75" /><path d="M15.97 17.25l1.3 .75" /><path d="M20.733 20l1.3 .75" />',
   users: '<path d="M9 7a4 4 0 1 0 0 8a4 4 0 0 0 0 -8" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4" /><path d="M16 11a3 3 0 1 0 0 -6" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />',
   calendarStats: '<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v11a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M8 16h2l2 -3l2 5l2 -4h2" />',
   receipt: '<path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2z" /><path d="M9 7h6" /><path d="M9 11h6" /><path d="M9 15h4" />',
   creditCard: '<path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M3 10h18" /><path d="M7 15h.01" /><path d="M11 15h2" />',
   wallet: '<path d="M17 8v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M16 12h4v4h-4a2 2 0 0 1 0 -4" />',
-  ticket: '<path d="M15 5l4 4l-2 2a2.83 2.83 0 0 0 0 4l-2 2l-4 -4l-4 4l-4 -4l2 -2a2.83 2.83 0 0 0 0 -4l2 -2l4 4z" /><path d="M13 7l-6 6" /><path d="M17 11l-6 6" />',
+  ticket: '<path d="M15 5l0 2" /><path d="M15 11l0 2" /><path d="M15 17l0 2" /><path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2" />',
   link: '<path d="M9 15l6 -6" /><path d="M11 6l.5 -.5a3.5 3.5 0 0 1 5 5l-.5 .5" /><path d="M13 18l-.5 .5a3.5 3.5 0 0 1 -5 -5l.5 -.5" />',
   speakerphone: '<path d="M18 8a3 3 0 0 1 0 6" /><path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" /><path d="M12 8l5 -3v12l-5 -3h-7a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2h7" />',
   fileText: '<path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 9h1" /><path d="M9 13h6" /><path d="M9 17h6" />',
@@ -86,8 +87,9 @@ const TABLER_ICON_PATHS = {
 };
 
 function tablerIcon(name, className = "") {
-  const paths = TABLER_ICON_PATHS[name] || TABLER_ICON_PATHS.info;
-  return `<svg class="tabler-icon ${className || ""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths}</svg>`;
+  const key = String(name || "").replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+  const paths = TABLER_ICON_PATHS[key] || TABLER_ICON_PATHS.info;
+  return `<svg class="tabler-icon ${className || ""}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 }
 
 function inferActionIcon(label, className = "") {
@@ -256,6 +258,7 @@ document.addEventListener("keydown", (e) => {
 const ADMIN_MENU = [
   { key: "dashboard", href: "/admin/dashboard", label: "Обзор", icon: "overview" },
   { key: "maintenance", href: "/admin/maintenance", label: "Техработы", icon: "settings" },
+  { key: "diagnostics", href: "/admin/diagnostics", label: "Диагностика", icon: "diagnostics" },
   { key: "admins", href: "/admin/admins", label: "Администраторы", icon: "users" },
   { key: "legal", href: "/admin/legal", label: "Документы", icon: "logs" },
   { key: "users", href: "/admin/users", label: "Пользователи", icon: "users" },
@@ -271,7 +274,7 @@ const ADMIN_MENU = [
 ];
 const SUPPORT_MENU_KEYS = new Set(["users", "subscriptions", "transactions", "referrals"]);
 const ADMIN_MENU_GROUPS = [
-  { label: "", keys: ["dashboard", "maintenance", "admins", "legal"] },
+  { label: "", keys: ["dashboard", "maintenance", "diagnostics", "admins", "legal"] },
   { label: "Управление", keys: ["users", "subscriptions", "plans", "transactions", "withdrawals"] },
   { label: "Продвижение", keys: ["referrals", "partners", "promocodes", "broadcast"] },
   { label: "Система", keys: ["logs"] },
@@ -293,6 +296,7 @@ function menuIcon(kind) {
     promo: "<path d='M7 8.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2Z'/><path d='M12 8.5v7'/><path d='M9.1 11.4h.01M14.9 12.6h.01'/>",
     mail: "<rect x='4.5' y='6.5' width='15' height='11' rx='2'/><path d='M5.5 8l6.5 4.8L18.5 8'/>",
     settings: "<circle cx='12' cy='12' r='3'/><path d='M19 12a7 7 0 0 0-.1-1l2-1.4l-2-3.4l-2.4.9a7 7 0 0 0-1.7-1l-.4-2.5h-4.8l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-.9l-2 3.4l2 1.4a7 7 0 0 0 0 2l-2 1.4l2 3.4l2.4-.9a7 7 0 0 0 1.7 1l.4 2.5h4.8l.4-2.5a7 7 0 0 0 1.7-1l2.4.9l2-3.4l-2-1.4a7 7 0 0 0 .1-1z'/>",
+    diagnostics: "<path d='M4 19h16'/><path d='M5 5v10h4v-6h4v4h6v2'/><path d='M15 5h4v4'/><path d='M19 5l-7 7'/>",
     logs: "<path d='M7 5.5h8l3 3V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V7A1.5 1.5 0 0 1 7.5 5.5Z'/><path d='M15 5.5V9h3'/><path d='M9 12h6M9 15h6'/>",
   };
   const icon = map[kind] || map.overview;
@@ -368,18 +372,6 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
 
     <div class="app tailadmin-shell">
       <aside class="sidebar tailadmin-sidebar">
-        <div class="sidebar-head">
-          <div class="sidebar-brand">
-            <div class="sidebar-brand-mark">
-              <img src="/miniapp/assets/lunet-logo.png?v=1" alt="Lunet" />
-            </div>
-            <div>
-              <div class="sidebar-kicker">Lunet</div>
-              <div class="sidebar-title">Админ-панель</div>
-            </div>
-          </div>
-        </div>
-
         <nav class="menu">${renderMenu(activeKey)}</nav>
 
         <div class="sidebar-footer">

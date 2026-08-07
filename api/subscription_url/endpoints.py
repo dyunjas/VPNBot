@@ -6,6 +6,7 @@ from html import escape
 from typing import Any, AsyncGenerator
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramForbiddenError
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel
@@ -21,7 +22,7 @@ from backend.images import MAIN_MENU_IMG
 from backend.services.activity_service import ActivityService
 from backend.services import BillingService, UserService
 from backend.core.loader import bot as runtime_bot
-from backend.services.exceptions import InsufficientBalance, PurchaseInProgress, TooEarlyToRenew
+from backend.services.exceptions import InsufficientBalance, PlanNotFound, PurchaseInProgress, TooEarlyToRenew
 
 router = APIRouter(tags=["subscription"])
 
@@ -107,6 +108,8 @@ async def _send_telegram_message(chat_id: int, text: str, *, photo=None, reply_m
 async def _safe_notify(chat_id: int, text: str, *, photo=None, reply_markup=None) -> None:
     try:
         await _send_telegram_message(chat_id, text, photo=photo, reply_markup=reply_markup)
+    except TelegramForbiddenError:
+        logger.warning("[webhook][remnawave] telegram notify skipped: bot blocked by user chat_id=%s", chat_id)
     except Exception:
         logger.exception("[webhook][remnawave] telegram notify failed chat_id=%s", chat_id)
 
@@ -413,13 +416,13 @@ async def remnawave_webhook(
                             "auto_renew_skipped": "too_early",
                             "subscription_id": subscription_id,
                         }
-                    except InsufficientBalance:
+                    except (InsufficientBalance, PlanNotFound) as e:
                         await session.rollback()
                         logger.info(
                             "[webhook][remnawave] expired auto-renew failed user_id=%s subscription_id=%s reason=%s",
                             user_id,
                             subscription_id,
-                            "InsufficientBalance",
+                            type(e).__name__,
                         )
                         user = await session.get(User, user_id)
                         subscription = await _find_latest_subscription(session, user_id=user_id)

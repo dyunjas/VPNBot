@@ -54,6 +54,174 @@ function renderSubscriptionsTableHead() {
   });
 }
 
+function formatBytesAsGb(bytes) {
+  const value = Number(bytes || 0);
+  if (!Number.isFinite(value) || value <= 0) return "0 GB";
+  return `${(value / 1024 ** 3).toFixed(2)} GB`;
+}
+
+function shortText(value, max = 18) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return text.length > max ? `${text.slice(0, max)}...` : text;
+}
+
+function renderSubInfoRow(label, value) {
+  return `<div><span>${label}</span><b>${value}</b></div>`;
+}
+
+function renderSubscriptionDetailsBody(details) {
+  const sub = details.subscription || {};
+  const user = details.user || {};
+  const plan = details.plan || {};
+  const traffic = details.traffic || {};
+  const topups = details.topups || [];
+  const activities = details.activities || [];
+  const transactions = details.transactions || [];
+
+  return `
+    <div class="subscription-card-details">
+      <div class="user-modal__summary">
+        <div class="user-summary-card">
+          <span class="user-summary-card__label">Статус</span>
+          <strong>${statusBadge(sub.status || "expired")}</strong>
+        </div>
+        <div class="user-summary-card">
+          <span class="user-summary-card__label">Тариф</span>
+          <strong>${safeText(plan.name || `#${sub.plan_id || "—"}`)}</strong>
+        </div>
+        <div class="user-summary-card">
+          <span class="user-summary-card__label">Авто</span>
+          <strong>${sub.auto_renew ? "Включено" : "Выключено"}</strong>
+        </div>
+        <div class="user-summary-card">
+          <span class="user-summary-card__label">Трафик</span>
+          <strong>${safeText(traffic.topup_gb || 0)} GB</strong>
+        </div>
+      </div>
+
+      <div class="user-modal__grid user-modal__grid--overview">
+        <div class="details-section">
+          <h4>Подписка</h4>
+          <div class="details-list">
+            ${renderSubInfoRow("ID", safeText(sub.id))}
+            ${renderSubInfoRow("Старт", formatDateTime(sub.current_period_start))}
+            ${renderSubInfoRow("Окончание", formatDateTime(sub.current_period_end))}
+            ${renderSubInfoRow("Следующее списание", formatDateTime(sub.next_renewal_at))}
+            ${renderSubInfoRow("Устройств", safeText(sub.device_limit ?? 0))}
+            ${renderSubInfoRow("GB left", safeText(sub.gb_left ?? 0))}
+            ${renderSubInfoRow("Токен", safeText(shortText(sub.subscription_token || "—", 36)))}
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h4>Пользователь</h4>
+          <div class="details-list">
+            ${renderSubInfoRow("ID", safeText(user.id))}
+            ${renderSubInfoRow("Telegram", safeText(user.tg_id || "—"))}
+            ${renderSubInfoRow("Username", safeText(user.username || "—"))}
+            ${renderSubInfoRow("Email", safeText(user.email || "—"))}
+            ${renderSubInfoRow("Баланс", `${safeText(user.balance || 0)} RUB`)}
+            <div><span>Доступ</span>${user.banned ? `<span class="badge danger">Заблокирован</span>` : `<span class="badge ok">Открыт</span>`}</div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h4>Remnawave</h4>
+          <div class="details-list">
+            ${renderSubInfoRow("User ID", safeText(user.remnawave_user_id || "—"))}
+            ${renderSubInfoRow("UUID", safeText(user.remnawave_user_uuid || "—"))}
+            ${renderSubInfoRow("URL", safeText(shortText(user.subscription_url || "—", 44)))}
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h4>Тариф и трафик</h4>
+          <div class="details-list">
+            ${renderSubInfoRow("Цена", plan.price === null || plan.price === undefined ? "—" : `${safeText(plan.price)} RUB`)}
+            ${renderSubInfoRow("Период", plan.period_days ? `${safeText(plan.period_days)} дней` : "—")}
+            ${renderSubInfoRow("Лимит тарифа", plan.gb_limit === null || plan.gb_limit === undefined ? "—" : `${safeText(plan.gb_limit)} GB`)}
+            ${renderSubInfoRow("Лимит пользователя", formatBytesAsGb(traffic.user_traffic_limit_bytes))}
+            ${renderSubInfoRow("Topups", `${safeText(traffic.topup_gb || 0)} GB`)}
+          </div>
+        </div>
+      </div>
+
+      <div class="user-modal__grid user-modal__grid--details">
+        <div class="details-section details-section--compact">
+          <div class="details-section__head"><h4>Topups</h4><span class="details-section__meta">${topups.length}</span></div>
+          <div class="table-wrap table-wrap--modal">
+            <table>
+              <thead><tr><th>ID</th><th>GB</th><th>Дата</th></tr></thead>
+              <tbody>
+                ${topups.slice(0, 10).map((item) => `<tr><td>${safeText(item.id)}</td><td>${safeText(item.gb)} GB</td><td>${formatDateTime(item.created_at)}</td></tr>`).join("") || "<tr><td colspan='3'>Нет начислений</td></tr>"}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="details-section details-section--compact">
+          <div class="details-section__head"><h4>Платежи пользователя</h4><span class="details-section__meta">${transactions.length}</span></div>
+          <div class="table-wrap table-wrap--modal">
+            <table>
+              <thead><tr><th>ID</th><th>Сумма</th><th>Система</th><th>Статус</th></tr></thead>
+              <tbody>
+                ${transactions.slice(0, 8).map((item) => `<tr><td>${safeText(item.id)}</td><td>${safeText(item.amount)} RUB</td><td>${safeText(item.payment_system)}</td><td>${statusBadge(item.paid ? "paid" : "unpaid")}</td></tr>`).join("") || "<tr><td colspan='4'>Нет платежей</td></tr>"}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section details-section--history">
+        <div class="details-section__head"><h4>История изменений</h4><span class="details-section__meta">${activities.length}</span></div>
+        <div class="table-wrap table-wrap--modal">
+          <table>
+            <thead><tr><th>Дата</th><th>Действие</th><th>Источник</th><th>Детали</th></tr></thead>
+            <tbody>
+              ${activities.slice(0, 24).map((item) => `<tr><td>${formatDateTime(item.created_at)}</td><td>${safeText(item.action)}</td><td>${safeText(item.source || item.category || "system")}</td><td>${safeText(item.note || item.amount || item.traffic_gb || "—")}</td></tr>`).join("") || "<tr><td colspan='4'>История пуста</td></tr>"}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function openSubscriptionCard(row, subscription) {
+  const details = await api(`/api/admin/subscriptions/${subscription.id}/details`);
+  showRowContextMenu(row, [], {
+    title: `Подписка #${subscription.id}`,
+    icon: "calendarStats",
+    className: "row-context-menu--subscription-card",
+    render: (body) => {
+      body.innerHTML = renderSubscriptionDetailsBody(details);
+      const actions = document.createElement("div");
+      actions.className = "subscription-card-actions";
+      actions.append(
+        createRowContextButton("Изменить", "", (event, button) => {
+          renderSubscriptionInlineEdit(subscription, button);
+        }, true),
+        createRowContextButton("+ трафик", "row-action-menu__item--success", () => {
+          q("traffic_sub_id").value = subscription.id;
+          q("traffic_gb").value = "";
+          openSubscriptionModal("traffic");
+          q("traffic_gb").focus();
+        }),
+        createRowContextButton("Удалить", "row-action-menu__item--danger", async (event, button) => {
+          if (!confirm(`Удалить подписку #${subscription.id}? Действие необратимо.`)) return;
+          await withButtonLoading(button, async () => {
+            await api(`/api/admin/subscriptions/${subscription.id}`, { method: "DELETE" });
+            await loadRows();
+            showToast("Подписка удалена", "success");
+          }).catch((error) => alert(error.message));
+        }),
+      );
+      body.prepend(actions);
+    },
+  });
+}
+
 function renderSubscriptionInlineEdit(subscription, button) {
   const body = button.closest(".row-context-menu")?.querySelector(".row-context-menu__body");
   if (!body) return;
@@ -133,51 +301,9 @@ async function loadRows() {
       `;
 
       tr.classList.add("is-clickable-row");
-      tr.addEventListener("click", (event) => {
+      tr.addEventListener("click", async (event) => {
         event.stopPropagation();
-        showRowContextMenu(tr, [
-          {
-            label: "Изменить",
-            keepOpen: true,
-            onClick: (event, button) => {
-              renderSubscriptionInlineEdit(subscription, button);
-            },
-          },
-          {
-            label: "+ трафик",
-            className: "row-action-menu__item--success",
-            onClick: () => {
-              q("traffic_sub_id").value = subscription.id;
-              q("traffic_gb").value = "";
-              openSubscriptionModal("traffic");
-              q("traffic_gb").focus();
-            },
-          },
-          {
-            label: "Удалить",
-            className: "row-action-menu__item--danger",
-            onClick: async (event, button) => {
-              if (!confirm(`Удалить подписку #${subscription.id}? Действие необратимо.`)) return;
-
-              await withButtonLoading(button, async () => {
-                await api(`/api/admin/subscriptions/${subscription.id}`, { method: "DELETE" });
-                await loadRows();
-                showToast("Подписка удалена", "success");
-              }).catch((error) => alert(error.message));
-            },
-          },
-        ], {
-          title: `Подписка #${subscription.id}`,
-          meta: [
-            { label: "Пользователь", value: subscription.user_id },
-            { label: "Telegram", value: subscription.tg_id || "—" },
-            { label: "Тариф", value: subscription.plan_name || subscription.plan_id },
-            { label: "Статус", html: statusBadge(subscription.status) },
-            { label: "Автопродление", html: subscription.auto_renew ? statusBadge("yes") : statusBadge("no") },
-            { label: "Устройств", value: subscription.device_limit ?? 0 },
-            { label: "Окончание", value: formatDateTime(subscription.current_period_end) },
-          ],
-        });
+        await openSubscriptionCard(tr, subscription).catch((error) => alert(error.message));
       });
 
       tbody.appendChild(tr);
@@ -209,6 +335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               <option value="canceled">Отменена</option>
             </select>
             <button id="apply" class="btn-primary">Фильтр</button>
+            <button id="export_subscriptions" type="button">CSV</button>
             <button id="open_bulk_extend" type="button">Продлить</button>
             <button id="open_create_sub" class="btn-primary" type="button">Создать</button>
           </div>
@@ -303,6 +430,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(event.currentTarget, async () => {
       subState.page = 1;
       await loadRows();
+    }).catch((error) => alert(error.message));
+  });
+
+  q("export_subscriptions").addEventListener("click", async (event) => {
+    const params = new URLSearchParams({
+      search: q("search").value || "",
+      status: q("status").value,
+    });
+    await withButtonLoading(event.currentTarget, async () => {
+      await downloadAdminFile(`/api/admin/export/subscriptions?${params.toString()}`, "subscriptions.csv");
     }).catch((error) => alert(error.message));
   });
 

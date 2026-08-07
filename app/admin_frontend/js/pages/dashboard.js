@@ -1,5 +1,5 @@
 const SCRIPT_PARTS = [
-  "/admin/js/pages/dashboard/dashboard-01.js?v=18",
+  "/admin/js/pages/dashboard/dashboard-01.js?v=20",
   "/admin/js/pages/dashboard/dashboard-02.js?v=17",
 ];
 

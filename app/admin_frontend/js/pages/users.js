@@ -51,6 +51,12 @@ function formatActivityValue(item) {
   return chunks.join(" • ") || "Без деталей";
 }
 
+function userBanBadge(isBanned) {
+  return isBanned
+    ? `<span class="badge danger">Заблокирован</span>`
+    : `<span class="badge ok">Доступ открыт</span>`;
+}
+
 function activityLabel(item) {
   const labels = {
     user_created: "Регистрация",
@@ -90,6 +96,7 @@ function renderUsersLayout() {
             <option value="only">Только заблокированные</option>
           </select>
           <button id="apply" class="btn-primary">Применить</button>
+          <button id="export_users" type="button">CSV</button>
         </div>
       </div>
 
@@ -197,7 +204,10 @@ async function loadUserDetails(userId) {
   const data = await api(`/api/admin/users/${userId}`);
 
   const user = data.user || {};
+  const summary = data.summary || {};
+  const referral = data.referral || {};
   const subscription = data.subscription || {};
+  const subscriptions = data.subscriptions || [];
   const transactions = data.transactions || [];
   const topups = data.topups || [];
   const activities = data.activities || [];
@@ -221,6 +231,14 @@ async function loadUserDetails(userId) {
         <span class="user-summary-card__label">Трафик</span>
         <strong>${safeText(subscription.topup_gb || 0)} GB</strong>
       </div>
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Оплачено</span>
+        <strong>${safeText(summary.paid_total || 0)} RUB</strong>
+      </div>
+      <div class="user-summary-card">
+        <span class="user-summary-card__label">Рефералы</span>
+        <strong>${safeText(summary.invited_count || 0)}</strong>
+      </div>
     </div>
 
     <div class="user-modal__grid user-modal__grid--overview">
@@ -233,7 +251,9 @@ async function loadUserDetails(userId) {
           ${renderInfoRow("Email", safeText(user.email || "—"))}
           ${renderInfoRow("Баланс", `${safeText(user.balance)} RUB`)}
           ${renderInfoRow("Лимит трафика", safeText(formatTraffic(user.traffic_limit_bytes)))}
-          <div><span>Статус</span>${user.banned ? statusBadge("ban") : statusBadge("ok")}</div>
+          ${renderInfoRow("Создан", formatDateTime(user.created_at))}
+          ${renderInfoRow("Обновлен", formatDateTime(user.updated_at))}
+          <div><span>Статус</span>${userBanBadge(user.banned)}</div>
         </div>
       </div>
 
@@ -245,6 +265,26 @@ async function loadUserDetails(userId) {
           ${renderInfoRow("Активна до", formatDateTime(subscription.current_period_end))}
           <div><span>Автопродление</span>${subscription.auto_renew ? statusBadge("yes") : statusBadge("no")}</div>
           ${renderInfoRow("Добавлено трафика", `${safeText(subscription.topup_gb || 0)} GB`)}
+          ${renderInfoRow("Токен", safeText(shortId(subscription.subscription_token || user.subscription_token || "—")))}
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h4>Remnawave</h4>
+        <div class="details-list">
+          ${renderInfoRow("User ID", safeText(user.remnawave_user_id || "—"))}
+          ${renderInfoRow("UUID", safeText(user.remnawave_user_uuid || "—"))}
+          ${renderInfoRow("Subscription URL", safeText(shortText(user.subscription_url || "—", 44)))}
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h4>Реферальная система</h4>
+        <div class="details-list">
+          ${renderInfoRow("Аккаунт", safeText(referral.account_id || "—"))}
+          ${renderInfoRow("Приглашено", safeText(referral.invited_count || summary.invited_count || 0))}
+          ${renderInfoRow("Баланс", `${safeText(referral.referral_balance || 0)} RUB`)}
+          ${renderInfoRow("Процент", `${safeText(referral.referral_percent || 0)}%`)}
         </div>
       </div>
     </div>
@@ -252,8 +292,29 @@ async function loadUserDetails(userId) {
     <div class="user-modal__grid user-modal__grid--details">
       <div class="details-section details-section--compact">
         <div class="details-section__head">
+          <h4>Все подписки</h4>
+          <span class="details-section__meta">${subscriptions.length}</span>
+        </div>
+        <div class="table-wrap table-wrap--modal">
+          <table>
+            <thead><tr><th>ID</th><th>Тариф</th><th>Статус</th><th>Авто</th><th>Окончание</th></tr></thead>
+            <tbody>
+              ${subscriptions
+                .slice(0, 10)
+                .map(
+                  (item) =>
+                    `<tr><td>${safeText(item.id)}</td><td>${safeText(item.plan_name || `#${item.plan_id}`)}</td><td>${statusBadge(item.status || "expired")}</td><td>${item.auto_renew ? statusBadge("yes") : statusBadge("no")}</td><td>${formatDateTime(item.current_period_end)}</td></tr>`,
+                )
+                .join("") || "<tr><td colspan='5'>Нет подписок</td></tr>"}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="details-section details-section--compact">
+        <div class="details-section__head">
           <h4>Последние транзакции</h4>
-          <span class="details-section__meta">${transactions.length}</span>
+          <span class="details-section__meta">${summary.transactions_total || transactions.length}</span>
         </div>
         <div class="table-wrap table-wrap--modal">
           <table>
@@ -352,7 +413,7 @@ async function loadUsers() {
         <td>${safeText(user.username || "—")}</td>
         <td><span class="money-cell">${safeText(user.balance)} RUB</span></td>
         <td>${user.subscription_active ? statusBadge("active") : statusBadge("expired")}</td>
-        <td>${user.banned ? statusBadge("ban") : statusBadge("ok")}</td>
+        <td>${userBanBadge(user.banned)}</td>
       `;
 
       if (usersState.selectedUserId === user.id) {
@@ -425,6 +486,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     await withButtonLoading(event.currentTarget, async () => {
       usersState.page = 1;
       await loadUsers();
+    }).catch((error) => alert(error.message));
+  });
+
+  q("export_users").addEventListener("click", async (event) => {
+    const params = new URLSearchParams({
+      search: q("search").value || "",
+      banned: q("banned").value,
+    });
+    await withButtonLoading(event.currentTarget, async () => {
+      await downloadAdminFile(`/api/admin/export/users?${params.toString()}`, "users.csv");
     }).catch((error) => alert(error.message));
   });
 

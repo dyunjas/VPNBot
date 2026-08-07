@@ -32,6 +32,13 @@ function setFieldState(field, isInvalid) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const theme = window.localStorage.getItem("adminTheme") || "light";
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark", isDark);
+    document.documentElement.dataset.adminTheme = isDark ? "dark" : "light";
+  } catch {}
+
   if (await hasAdminSession()) {
     window.location.replace("/admin/dashboard");
     return;

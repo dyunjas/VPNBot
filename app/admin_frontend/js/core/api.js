@@ -202,6 +202,33 @@ function toErrorMessage(err, fallback = "Произошла ошибка") {
   return extractApiErrorMessage(err) || fallback;
 }
 
+async function downloadAdminFile(path, filename = "export.csv") {
+  const res = await fetch(`${API_BASE}${path}`, { credentials: "include" });
+  if (res.status === 401) {
+    window.location.replace("/admin/login");
+    return;
+  }
+  if (!res.ok) {
+    let detail = "";
+    try {
+      detail = await res.json();
+    } catch {
+      detail = await res.text();
+    }
+    throw new Error(friendlyAdminErrorMessage(detail, { path }) || `HTTP ${res.status}`);
+  }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 window.addEventListener("error", (event) => {
   const message = toErrorMessage(event.error || event.message, "Неожиданная ошибка на странице");
   showToast(message, "error");

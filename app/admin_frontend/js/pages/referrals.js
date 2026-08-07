@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="toolbar">
         <input id="search" type="text" placeholder="Поиск: ID пользователя / Telegram ID / username" />
         <button id="apply" class="btn-primary">Фильтр</button>
+        <button id="export_referrals" type="button">CSV</button>
       </div>
       <div class="card">
         <div class="table-wrap">
@@ -110,6 +111,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       refState.page = 1;
       await loadRows();
     }).catch((err) => alert(err.message));
+  });
+
+  q("export_referrals").addEventListener("click", async (event) => {
+    const params = new URLSearchParams({ search: q("search").value || "" });
+    await withButtonLoading(event.currentTarget, async () => {
+      await downloadAdminFile(`/api/admin/export/referrals?${params.toString()}`, "referrals.csv");
+    }).catch((error) => alert(error.message));
   });
 
   q("prev").addEventListener("click", async (e) => {

@@ -12,6 +12,8 @@ from .promocodes import router as promocodes_router
 from .partners import router as partners_router
 from .system import router as system_router
 from .legal import router as legal_router
+from .diagnostics import router as diagnostics_router
+from .exports import router as exports_router
 
 __all__ = [
     "auth_router",
@@ -28,4 +30,6 @@ __all__ = [
     "partners_router",
     "system_router",
     "legal_router",
+    "diagnostics_router",
+    "exports_router",
 ]

@@ -142,6 +142,139 @@ async def admin_subscription_create(payload: SubscriptionCreatePayload):
             raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/subscriptions/{subscription_id}/details", dependencies=[Depends(require_support_auth)])
+async def admin_subscription_details(subscription_id: int):
+    async with async_session() as session:
+        row = (
+            await session.execute(
+                select(Subscription, User, SubscriptionPlan)
+                .join(User, User.id == Subscription.user_id)
+                .outerjoin(SubscriptionPlan, SubscriptionPlan.id == Subscription.plan_id)
+                .where(Subscription.id == subscription_id)
+            )
+        ).first()
+        if not row:
+            raise HTTPException(status_code=404, detail="subscription not found")
+
+        sub, user, plan = row
+        topups = (
+            await session.execute(
+                select(SubscriptionTopup)
+                .where(SubscriptionTopup.subscription_id == subscription_id)
+                .order_by(SubscriptionTopup.created_at.desc(), SubscriptionTopup.id.desc())
+                .limit(50)
+            )
+        ).scalars().all()
+        activities = (
+            await session.execute(
+                select(UserActivity)
+                .where(
+                    UserActivity.user_id == user.id,
+                    or_(
+                        UserActivity.subscription_id == subscription_id,
+                        UserActivity.action.ilike("%subscription%"),
+                        UserActivity.action.ilike("%auto_renew%"),
+                    ),
+                )
+                .order_by(UserActivity.created_at.desc(), UserActivity.id.desc())
+                .limit(80)
+            )
+        ).scalars().all()
+        transactions = (
+            await session.execute(
+                select(Transaction)
+                .where(Transaction.user_id == user.id)
+                .order_by(Transaction.created_at.desc(), Transaction.id.desc())
+                .limit(20)
+            )
+        ).scalars().all()
+
+    total_topup_gb = sum(float(item.gb or 0) for item in topups)
+    now = datetime.now(timezone.utc)
+    end = _as_aware_utc(sub.current_period_end)
+
+    return {
+        "ok": True,
+        "subscription": {
+            "id": sub.id,
+            "user_id": sub.user_id,
+            "plan_id": sub.plan_id,
+            "status": sub.status.value if sub.status else None,
+            "auto_renew": bool(sub.auto_renew),
+            "subscription_token": sub.subscription_token,
+            "current_period_start": _to_iso(sub.current_period_start),
+            "current_period_end": _to_iso(sub.current_period_end),
+            "next_renewal_at": _to_iso(sub.next_renewal_at),
+            "gb_left": int(sub.gb_left or 0),
+            "device_limit": int(sub.device_limit or 0),
+            "created_at": _to_iso(sub.created_at),
+            "active_now": bool(sub.status == SubStatus.active and end and end > now),
+        },
+        "user": {
+            "id": user.id,
+            "tg_id": user.tg_id,
+            "username": user.username,
+            "email": user.email,
+            "balance": int(user.balance or 0),
+            "banned": bool(user.banned),
+            "traffic_limit_bytes": int(user.traffic_limit_bytes or 0),
+            "subscription_url": user.subscription_url,
+            "remnawave_user_id": user.remnawave_user_id,
+            "remnawave_user_uuid": user.remnawave_user_uuid,
+        },
+        "plan": {
+            "id": plan.id if plan else None,
+            "name": plan.name if plan else None,
+            "price": int(plan.price or 0) if plan else None,
+            "period_days": int(plan.period_days or 0) if plan else None,
+            "gb_limit": int(plan.gb_limit or 0) if plan else None,
+            "device_limit": int(plan.device_limit or 0) if plan else None,
+            "is_hidden": bool(plan.is_hidden) if plan else None,
+            "is_trial": bool(plan.is_trial) if plan else None,
+        },
+        "traffic": {
+            "gb_left": int(sub.gb_left or 0),
+            "topup_gb": total_topup_gb,
+            "user_traffic_limit_bytes": int(user.traffic_limit_bytes or 0),
+        },
+        "topups": [
+            {
+                "id": item.id,
+                "gb": float(item.gb or 0),
+                "created_at": _to_iso(item.created_at),
+            }
+            for item in topups
+        ],
+        "transactions": [
+            {
+                "id": tx.id,
+                "transaction_id": tx.transaction_id,
+                "amount": int(tx.amount or 0),
+                "payment_system": tx.payment_system,
+                "paid": bool(tx.paid),
+                "created_at": _to_iso(tx.created_at),
+                "paid_at": _to_iso(tx.paid_at),
+            }
+            for tx in transactions
+        ],
+        "activities": [
+            {
+                "id": item.id,
+                "category": item.category,
+                "action": item.action,
+                "source": item.source,
+                "amount": int(item.amount or 0) if item.amount is not None else None,
+                "traffic_gb": float(item.traffic_gb or 0) if item.traffic_gb is not None else None,
+                "subscription_id": item.subscription_id,
+                "transaction_id_ref": item.transaction_id_ref,
+                "note": item.note,
+                "created_at": _to_iso(item.created_at),
+            }
+            for item in activities
+        ],
+    }
+
+
 @router.patch("/subscriptions/{subscription_id}", dependencies=[Depends(require_support_auth)])
 async def admin_subscription_update(subscription_id: int, payload: SubscriptionUpdatePayload):
     async with async_session() as session:

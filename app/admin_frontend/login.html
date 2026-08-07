@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Вход в админку | Lunet</title>
   <link rel="icon" type="image/x-icon" href="/miniapp/assets/lunet-favicon.ico?v=7" />
-  <link rel="stylesheet" href="/admin/styles.css?v=101" />
+  <link rel="stylesheet" href="/admin/styles.css?v=113" />
 </head>
 <body class="admin-login-page">
   <main class="login-shell">
     <section class="login-card login-card--admin" aria-label="Авторизация">
+      <div class="login-card__head">
+        <div>
+          <h2>Авторизация</h2>
+          <p>Введите учетные данные администратора.</p>
+        </div>
+      </div>
+
       <label class="login-field" for="login">
         <span>Логин</span>
         <input id="login" type="text" placeholder="Введите логин" autocomplete="username" spellcheck="false" />
@@ -36,7 +43,7 @@
     </section>
   </main>
 
-  <script src="/admin/js/core/api.js?v=32"></script>
-  <script src="/admin/js/pages/login.js?v=33"></script>
+  <script src="/admin/js/core/api.js?v=33"></script>
+  <script src="/admin/js/pages/login.js?v=34"></script>
 </body>
 </html>

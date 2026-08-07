@@ -818,6 +818,7 @@ class BillingService:
             plan_id=plan_id,
             auto_renew=auto_renew,
         )
+        subscription_id = sub.id
         # Make renewal bonus/topups visible to subsequent aggregate queries in this transaction.
         await self.session.flush()
 
@@ -828,14 +829,15 @@ class BillingService:
                 logger.warning(
                     "[biz][billing] remnawave_sync_empty_subscription_url user_id=%s subscription_id=%s plan_id=%s",
                     user_id,
-                    sub.id,
+                    subscription_id,
                     plan_id,
                 )
         except Exception as e:
+            await self.session.rollback()
             logger.exception(
                 "[biz][billing] remnawave_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
                 user_id,
-                sub.id,
+                subscription_id,
                 plan_id,
                 e,
             )
@@ -847,13 +849,19 @@ class BillingService:
                 status="ACTIVE",
             )
         except Exception as e:
+            await self.session.rollback()
             logger.exception(
                 "[biz][billing] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s plan_id=%s: %s",
                 user_id,
-                sub.id,
+                subscription_id,
                 plan_id,
                 e,
             )
+
+        refreshed_sub = await self.sub_service.sub_repo.get_by_user_id(user_id)
+        if refreshed_sub is not None:
+            sub = refreshed_sub
+            subscription_id = sub.id
 
         await self.session.commit()
         await self.activity_service.log_user_event(
@@ -862,14 +870,14 @@ class BillingService:
             action="subscription_purchased",
             source="user",
             amount=int(plan.price or 0),
-            subscription_id=sub.id,
+            subscription_id=subscription_id,
             note=f"Покупка/продление подписки plan_id={plan_id}",
         )
         await self.session.commit()
         logger.info(
             "[biz][billing] buy_subscription_completed user_id=%s subscription_id=%s plan_id=%s charged=%s",
             user_id,
-            sub.id,
+            subscription_id,
             plan_id,
             plan.price,
         )

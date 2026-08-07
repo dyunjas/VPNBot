@@ -40,16 +40,16 @@ async function loadLegalDocument() {
   const editor = q("legal_editor");
   const title = q("legal_doc_title");
   if (editor) {
-    editor.disabled = true;
-    editor.value = "Загрузка...";
+    editor.setAttribute("contenteditable", "false");
+    editor.textContent = "Загрузка...";
   }
 
   const data = await api(`/api/admin/legal/${legalState.activeKey}`);
   legalState.current = data;
   if (title) title.textContent = data.title || "Документ";
   if (editor) {
-    editor.value = data.content || data.html || "";
-    editor.disabled = false;
+    editor.innerHTML = data.content || data.html || "";
+    editor.setAttribute("contenteditable", "true");
     updateLegalStats();
   }
 }
@@ -58,14 +58,14 @@ function updateLegalStats() {
   const editor = q("legal_editor");
   const chars = q("legal_chars");
   const lines = q("legal_lines");
-  const value = editor?.value || "";
+  const value = editor?.innerText || "";
   if (chars) chars.textContent = `${value.length.toLocaleString("ru-RU")} символов`;
   if (lines) lines.textContent = `${value.split(/\r?\n/).length.toLocaleString("ru-RU")} строк`;
 }
 
 async function saveLegalDocument(button) {
   const editor = q("legal_editor");
-  const html = editor?.value || "";
+  const html = editor?.innerHTML || "";
   await withButtonLoading(button, async () => {
     await api(`/api/admin/legal/${legalState.activeKey}`, {
       method: "PUT",
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
           </div>
           <div id="legal_tabs" class="legal-tabs"></div>
-          <textarea id="legal_editor" class="legal-editor" spellcheck="false"></textarea>
+          <div id="legal_editor" class="legal-editor" contenteditable="true" spellcheck="true"></div>
           <div class="legal-editor-meta">
             <span id="legal_chars">0 символов</span>
             <span id="legal_lines">0 строк</span>
