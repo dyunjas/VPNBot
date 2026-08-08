@@ -13,6 +13,13 @@ from backend.states import DeviceSlotsPurchaseStates
 router = Router()
 
 
+def _format_rub(value: Decimal | int | float) -> str:
+    text = format(Decimal(str(value)), "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return text
+
+
 def _confirm_kb():
     builder = InlineKeyboardBuilder()
     builder.button(text="Подтвердить", callback_data="buy_device_slots_confirm", icon_custom_emoji_id="5776375003280838798", style="success")
@@ -42,7 +49,7 @@ async def buy_device_slots_start(callback: CallbackQuery, state: FSMContext, bot
         await callback.answer("Непредвиденная ошибка. Попробуйте позже.", show_alert=True)
         return
 
-    price = get_business_decimal("DEVICE_SLOT_PRICE_RUB")
+    price = _format_rub(get_business_decimal("DEVICE_SLOT_PRICE_RUB"))
     text = (
         "Введите количество дополнительных устройств, которое хотите купить.\n\n"
         f"<blockquote><tg-emoji emoji-id='5967390100357648692'>💵</tg-emoji> Стоимость: <b>{price} RUB за 1 устройство</b>\n"
