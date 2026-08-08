@@ -222,6 +222,20 @@ class BotApiClient:
             json={"gb": gb},
         )
 
+    async def buy_device_slots(self, *, tg_id: int, slots: int) -> dict[str, Any]:
+        return await self._request_json(
+            "POST",
+            f"/api/users/by-tg/{tg_id}/subscription/devices",
+            json={"slots": slots},
+        )
+
+    async def gift_subscription(self, *, tg_id: int, plan_id: int, recipient: str) -> dict[str, Any]:
+        return await self._request_json(
+            "POST",
+            f"/api/users/by-tg/{tg_id}/subscription/gift",
+            json={"plan_id": plan_id, "recipient": recipient},
+        )
+
     async def set_auto_renew(self, *, tg_id: int, auto_renew: bool) -> dict[str, Any]:
         return await self._request_json(
             "POST",

@@ -1417,3 +1417,13 @@ aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socke
 [2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_requested user_id=100 gb=5
 [2026-07-26 00:08:03] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=397284474880
 [2026-07-26 00:08:03] [INFO] root: [biz][subscription] add_traffic_completed user_id=100 subscription_id=83 gb=5
+[2026-08-08 12:01:33] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=4 auto_renew=False
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] renewed user_id=100 subscription_id=83 plan_id=4 period_end=2027-07-08 05:43:00.882641+00:00 gb_limit=30.00 rollover_gb=360.00
+[2026-08-08 12:01:34] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=434865438720
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=4 auto_renew=False
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] renewed user_id=100 subscription_id=83 plan_id=4 period_end=2027-07-11 10:43:00.882641+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-08 12:08:29] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=467077693440
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83

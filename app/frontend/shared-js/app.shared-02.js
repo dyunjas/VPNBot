@@ -1,11 +1,11 @@
 async function api(path, body = {}) {
-  const useCabinet = IS_CABINET_PATH && !HAS_AUTH_INITDATA;
+  const cabinetToken = getCabinetToken();
+  const useCabinet = Boolean(cabinetToken);
   const targetPath = useCabinet
     ? path.replace(/^\/api\/mini/, "/api").replace(/^\/api\/cabinet/, "/api").replace(/^\/mini/, "/api")
     : path.replace(/^\/mini/, "/api");
   const headers = { "Content-Type": "application/json" };
   const payload = useCabinet ? body : { initData: state.initData, ...body };
-  const cabinetToken = getCabinetToken();
   if (useCabinet && cabinetToken) headers.Authorization = `Bearer ${cabinetToken}`;
   let res = await fetch(`${BACKEND_URL}${targetPath}`, {
     method: "POST",
@@ -30,6 +30,19 @@ async function api(path, body = {}) {
           headers,
           credentials: "include",
           body: JSON.stringify(payload),
+        });
+      }
+    }
+
+    if (!res.ok && IS_MINIAPP_PATH && state.initData) {
+      const telegramToken = await authorizeCabinetWithTelegram();
+      if (telegramToken) {
+        headers.Authorization = `Bearer ${telegramToken}`;
+        res = await fetch(`${BACKEND_URL}${targetPath}`, {
+          method: "POST",
+          headers,
+          credentials: "include",
+          body: JSON.stringify(body),
         });
       }
     }
@@ -64,6 +77,29 @@ async function api(path, body = {}) {
   return data;
 }
 
+async function authorizeCabinetWithTelegram() {
+  if (!state.initData) return "";
+  const res = await fetch(`${BACKEND_URL}/api/auth/telegram`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ initData: state.initData }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const rawDetail = normalizeErrorDetail(data.detail || data.error || `HTTP ${res.status}`);
+    if (res.status === 403 && String(rawDetail || "").toLowerCase().includes("banned")) {
+      const err = new Error("BANNED");
+      err.code = "BANNED";
+      throw err;
+    }
+    throw new Error(friendlyErrorMessage(rawDetail));
+  }
+  const token = String(data.access_token || "");
+  setCabinetToken(token);
+  return token;
+}
+
 function switchView(view) {
   const current = document.querySelector(".view.view--active");
   const next = $(`view-${view}`);
@@ -77,7 +113,10 @@ function switchView(view) {
 
   if (view === "plans") loadPlans();
   if (view === "devices") loadDevices();
-  if (view === "profile" && !IS_MINIAPP_PATH) loadTransactions();
+  if (view === "profile") {
+    loadGiftPlans();
+    if (!IS_MINIAPP_PATH && !IS_CABINET_PATH) loadTransactions();
+  }
   if (view === "referral") {
     loadReferral();
     if (!IS_MINIAPP_PATH) loadWithdrawals();

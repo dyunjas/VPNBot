@@ -4,13 +4,16 @@ import hashlib
 import hmac
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_UP
+from html import escape
 
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.core.business_config import get_business_decimal, get_business_int
+from backend.core.telegram_notify import send_telegram_message_safe
 from backend.repositories.user_repository import UserRepository
 from backend.repositories.transaction_repository import TransactionRepository
 
@@ -943,3 +946,123 @@ class BillingService:
             int(price),
         )
         return sub, int(price)
+
+    async def add_device_slots_to_subscription(self, user_id: int, slots: int):
+        logger.info("[biz][billing] buy_device_slots_requested user_id=%s slots=%s", user_id, slots)
+        if slots <= 0:
+            raise ValueError("Slots must be > 0")
+
+        price_per_slot = get_business_decimal("DEVICE_SLOT_PRICE_RUB")
+        price = (Decimal(slots) * price_per_slot).to_integral_value(rounding=ROUND_UP)
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+        if bool(getattr(user, "banned", False)):
+            raise BannedUser("User is banned")
+
+        await self.charge_balance(user_id=user_id, amount=price)
+        sub = await self.sub_service.add_device_slots(user_id=user_id, slots=slots)
+
+        try:
+            await self.remnawave_service.sync_user_state(user=user, subscription=sub, status="ACTIVE")
+        except Exception as e:
+            logger.exception(
+                "[biz][billing] remnawave_device_slots_sync_failed_non_blocking user_id=%s subscription_id=%s slots=%s: %s",
+                user_id,
+                sub.id,
+                slots,
+                e,
+            )
+
+        await self.session.commit()
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="device_slots_purchased",
+            source="user",
+            amount=int(price),
+            subscription_id=sub.id,
+            note=f"Докуплено устройств: {slots}",
+        )
+        await self.session.commit()
+        return sub, int(price)
+
+    async def gift_subscription(self, *, buyer_user_id: int, recipient_user_id: int, plan_id: int):
+        logger.info(
+            "[biz][billing] gift_subscription_requested buyer_user_id=%s recipient_user_id=%s plan_id=%s",
+            buyer_user_id,
+            recipient_user_id,
+            plan_id,
+        )
+        buyer = await self.user_repo.get_by_id(buyer_user_id)
+        recipient = await self.user_repo.get_by_id(recipient_user_id)
+        if not buyer:
+            raise UserNotFound(f"User with id:{buyer_user_id} not found")
+        if not recipient:
+            raise UserNotFound(f"User with id:{recipient_user_id} not found")
+        if bool(getattr(buyer, "banned", False)) or bool(getattr(recipient, "banned", False)):
+            raise BannedUser("User is banned")
+
+        plan = await self.sub_service.get_public_plan(plan_id)
+        await self.charge_balance(user_id=buyer_user_id, amount=plan.price)
+        sub = await self.sub_service.activate_subscription(
+            user_id=recipient_user_id,
+            plan_id=plan_id,
+            auto_renew=False,
+            enforce_renewal_window=False,
+        )
+
+        try:
+            await self.remnawave_service.sync_user_state(user=recipient, subscription=sub, status="ACTIVE")
+        except Exception as e:
+            logger.exception(
+                "[biz][billing] remnawave_gift_sync_failed_non_blocking buyer_user_id=%s recipient_user_id=%s subscription_id=%s: %s",
+                buyer_user_id,
+                recipient_user_id,
+                sub.id,
+                e,
+            )
+
+        await self.session.commit()
+        await self.activity_service.log_user_event(
+            user_id=buyer_user_id,
+            category="subscription",
+            action="subscription_gift_sent",
+            source="user",
+            amount=int(plan.price or 0),
+            subscription_id=sub.id,
+            note=f"Подарок пользователю tg_id={recipient.tg_id}, plan_id={plan_id}",
+        )
+        await self.activity_service.log_user_event(
+            user_id=recipient_user_id,
+            category="subscription",
+            action="subscription_gift_received",
+            source="user",
+            subscription_id=sub.id,
+            note=f"Подарочная подписка от tg_id={buyer.tg_id}, plan_id={plan_id}",
+        )
+        await self.session.commit()
+
+        buyer_name = f"@{buyer.username}" if getattr(buyer, "username", None) else f"ID {buyer.tg_id}"
+        end_text = sub.current_period_end.strftime("%d.%m.%Y") if sub.current_period_end else "—"
+        builder = InlineKeyboardBuilder()
+        builder.button(
+            text="Моя подписка",
+            callback_data="vpn_subscription",
+            icon_custom_emoji_id="6005570495603282482",
+            style="primary",
+        )
+        builder.adjust(1)
+        await send_telegram_message_safe(
+            chat_id=int(recipient.tg_id),
+            text=(
+                "<b><tg-emoji emoji-id='5956148757899776734'>🎁</tg-emoji> Вам подарили подписку</b>\n\n"
+                f"<blockquote><tg-emoji emoji-id='5967456680940671207'>🗃</tg-emoji> Тариф: <b>{escape(str(plan.name))}</b>\n"
+                f"<tg-emoji emoji-id='5843799474362652262'>🔄</tg-emoji> Действует до: <b>{end_text}</b>\n"
+                f"<tg-emoji emoji-id='5879785854284599288'>ℹ️</tg-emoji> Отправитель: <b>{escape(str(buyer_name))}</b></blockquote>\n\n"
+                "Откройте раздел «Моя подписка», чтобы получить ссылку и подключить VPN."
+            ),
+            reply_markup=builder.as_markup(),
+            log_prefix="[biz][billing][gift]",
+        )
+        return sub, int(plan.price or 0), recipient

@@ -135,6 +135,7 @@ class SubscriptionService:
         user_id: int,
         plan_id: int,
         auto_renew: bool,
+        enforce_renewal_window: bool = True,
     ):
         logger.info(
             "[biz][subscription] activate_requested user_id=%s plan_id=%s auto_renew=%s",
@@ -162,7 +163,7 @@ class SubscriptionService:
             if end and end.tzinfo is None:
                 end = end.replace(tzinfo=timezone.utc)
 
-            if end and end > now:
+            if enforce_renewal_window and end and end > now:
                 time_left = end - now
 
                 renewal_window_days = get_business_int("SUBSCRIPTION_RENEWAL_WINDOW_DAYS")
@@ -262,6 +263,28 @@ class SubscriptionService:
             "[biz][subscription] activate_completed user_id=%s subscription_id=%s",
             user_id,
             sub.id,
+        )
+        return sub
+
+    async def add_device_slots(self, *, user_id: int, slots: int):
+        if slots <= 0:
+            raise ValueError("Slots must be > 0")
+
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise UserNotFound(f"User with id:{user_id} not found")
+        self._ensure_user_not_banned(user)
+
+        sub = await self.get_active_subscription(user_id)
+        sub.device_limit = max(0, int(sub.device_limit or 0)) + int(slots)
+        await self.session.flush()
+        await self.activity_service.log_user_event(
+            user_id=user_id,
+            category="subscription",
+            action="device_slots_added",
+            source="user",
+            subscription_id=sub.id,
+            note=f"Докуплено устройств: {slots}. Новый лимит: {sub.device_limit}",
         )
         return sub
     

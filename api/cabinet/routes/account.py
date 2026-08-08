@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
 
 from api.cabinet.common import (
     BillingService,
+    BuyDeviceSlotsPayload,
     BuySubscriptionPayload,
     BuyTrafficPayload,
     DeleteDevicePayload,
+    GiftSubscriptionPayload,
     InitPayload,
     PromoService,
     ReferralService,
@@ -24,8 +27,27 @@ from api.cabinet.common import (
     settings,
 )
 from backend.services.exceptions import InsufficientBalance
+from backend.database.models import User
 
 router = APIRouter()
+
+
+async def _find_gift_recipient(session, raw: str) -> User:
+    value = (raw or "").strip().lstrip("@")
+    if not value:
+        raise HTTPException(status_code=400, detail="Укажите получателя")
+
+    if value.lstrip("-").isdigit():
+        res = await session.execute(select(User).where(User.tg_id == int(value)))
+    else:
+        res = await session.execute(select(User).where(User.username.ilike(value)))
+
+    user = res.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="Получатель не найден")
+    if bool(getattr(user, "banned", False)):
+        raise HTTPException(status_code=403, detail="Получатель заблокирован")
+    return user
 
 
 @router.post("/profile")
@@ -158,6 +180,60 @@ async def cabinet_subscription_traffic_buy(payload: BuyTrafficPayload, user_id: 
         finally:
             await billing.close_clients()
         return {"ok": True, "subscription_id": sub.id, "gb_added": int(payload.gb), "charged": int(charged)}
+
+
+@router.post("/subscription/devices/buy")
+async def cabinet_subscription_devices_buy(payload: BuyDeviceSlotsPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
+    user_id = _resolve_request_user_id(payload.initData, user_id)
+    async with async_session() as session:
+        user = await _get_user(session, user_id)
+        billing = BillingService(session)
+        try:
+            sub, charged = await billing.add_device_slots_to_subscription(user_id=user.id, slots=int(payload.slots))
+        except Exception as e:
+            raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
+        return {
+            "ok": True,
+            "subscription_id": sub.id,
+            "slots_added": int(payload.slots),
+            "device_limit": int(sub.device_limit or 0),
+            "charged": int(charged),
+        }
+
+
+@router.post("/subscription/gift")
+async def cabinet_subscription_gift(payload: GiftSubscriptionPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
+    buyer_user_id = _resolve_request_user_id(payload.initData, user_id)
+    async with async_session() as session:
+        buyer = await _get_user(session, buyer_user_id)
+        recipient = await _find_gift_recipient(session, payload.recipient)
+        if int(recipient.id) == int(buyer.id):
+            raise HTTPException(status_code=400, detail="Для себя используйте обычную покупку подписки")
+        billing = BillingService(session)
+        try:
+            sub, charged, recipient = await billing.gift_subscription(
+                buyer_user_id=buyer.id,
+                recipient_user_id=recipient.id,
+                plan_id=payload.plan_id,
+            )
+        except Exception as e:
+            raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
+        return {
+            "ok": True,
+            "subscription_id": sub.id,
+            "plan_id": sub.plan_id,
+            "charged": int(charged),
+            "recipient": {
+                "id": recipient.id,
+                "tg_id": recipient.tg_id,
+                "username": recipient.username,
+            },
+            "current_period_end": sub.current_period_end.isoformat() if sub.current_period_end else None,
+        }
 
 
 @router.post("/devices")

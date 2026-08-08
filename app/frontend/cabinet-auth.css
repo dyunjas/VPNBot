@@ -162,7 +162,7 @@ body {
 
 .auth-switch {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   position: relative;
   z-index: 1;
@@ -598,6 +598,10 @@ body {
 }
 
 @media (max-width: 560px) {
+  .auth-switch {
+    grid-template-columns: 1fr;
+  }
+
   .auth-page {
     padding: 14px !important;
     place-items: start center;

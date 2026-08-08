@@ -7,8 +7,10 @@ function q(id) {
 const statusEl = q("status");
 const tabEmail = q("tab_email");
 const tabTelegram = q("tab_telegram");
+const tabDeeplink = q("tab_deeplink");
 const formEmail = q("form_email");
 const formTelegram = q("form_telegram");
+const formDeeplink = q("form_deeplink");
 const emailRequestBlock = q("email_request_block");
 const emailVerifyBlock = q("email_verify_block");
 const tgRequestBlock = q("tg_request_block");
@@ -72,12 +74,17 @@ function resetSteps() {
 
 function setMode(mode) {
   const emailMode = mode === "email";
+  const telegramMode = mode === "telegram";
+  const deeplinkMode = mode === "deeplink";
   tabEmail?.classList.toggle("is-active", emailMode);
-  tabTelegram?.classList.toggle("is-active", !emailMode);
+  tabTelegram?.classList.toggle("is-active", telegramMode);
+  tabDeeplink?.classList.toggle("is-active", deeplinkMode);
   tabEmail?.setAttribute("aria-selected", emailMode ? "true" : "false");
-  tabTelegram?.setAttribute("aria-selected", emailMode ? "false" : "true");
+  tabTelegram?.setAttribute("aria-selected", telegramMode ? "true" : "false");
+  tabDeeplink?.setAttribute("aria-selected", deeplinkMode ? "true" : "false");
   formEmail?.classList.toggle("is-hidden", !emailMode);
-  formTelegram?.classList.toggle("is-hidden", emailMode);
+  formTelegram?.classList.toggle("is-hidden", !telegramMode);
+  formDeeplink?.classList.toggle("is-hidden", !deeplinkMode);
   setStatus("");
 }
 
@@ -122,6 +129,14 @@ async function verifyTelegram() {
   window.location.replace("/cabinet");
 }
 
+async function sendDeeplink() {
+  const tgRaw = (q("deeplink_tg_id")?.value || "").trim();
+  const tgId = Number(tgRaw);
+  if (!Number.isFinite(tgId)) throw new Error("Введите корректный Telegram ID.");
+  await post("/api/auth/deeplink/send", { tg_id: tgId });
+  setStatus("Ссылка для входа отправлена в Telegram. Откройте ее в течение 10 минут.", "success");
+}
+
 function setButtonLoading(button, isLoading) {
   if (!button) return;
   if (!button.dataset.label) button.dataset.label = button.textContent || "";
@@ -144,10 +159,12 @@ async function runAction(button, action) {
 
 tabEmail?.addEventListener("click", () => setMode("email"));
 tabTelegram?.addEventListener("click", () => setMode("telegram"));
+tabDeeplink?.addEventListener("click", () => setMode("deeplink"));
 q("send_email_code")?.addEventListener("click", (event) => runAction(event.currentTarget, sendEmailCode));
 q("verify_email")?.addEventListener("click", (event) => runAction(event.currentTarget, verifyEmail));
 q("send_tg_code")?.addEventListener("click", (event) => runAction(event.currentTarget, sendTelegramCode));
 q("verify_tg")?.addEventListener("click", (event) => runAction(event.currentTarget, verifyTelegram));
+q("send_deeplink")?.addEventListener("click", (event) => runAction(event.currentTarget, sendDeeplink));
 
 resetSteps();
 setMode("email");

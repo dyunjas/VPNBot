@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Any
 
 from fastapi import Depends, Header, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.config import settings
@@ -88,6 +88,15 @@ class PlanBuyPayload(BaseModel):
 
 class TrafficBuyPayload(BaseModel):
     gb: int
+
+
+class DeviceSlotsBuyPayload(BaseModel):
+    slots: int = Field(ge=1, le=20)
+
+
+class GiftSubscriptionPayload(BaseModel):
+    plan_id: int
+    recipient: str = Field(min_length=1, max_length=64)
 
 
 class AutoRenewPayload(BaseModel):

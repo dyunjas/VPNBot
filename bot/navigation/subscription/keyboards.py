@@ -55,6 +55,7 @@ def subscription_plans_kb(plans, page: int = 0):
 def purchase_subscription_plan(plan_id: int, page: int):
     builder = InlineKeyboardBuilder()
     builder.button(text="Оплатить", callback_data=f"purchase_plan:{plan_id}", icon_custom_emoji_id="5769403330761593044", style="success")
+    builder.button(text="Подарить", callback_data=f"gift_plan:{plan_id}:{page}", icon_custom_emoji_id="5956148757899776734", style="primary")
     builder.button(text="К тарифам", callback_data=f"plans_page:{page}", icon_custom_emoji_id="5877536313623711363", style="primary")
     builder.adjust(1)
     return builder.as_markup()

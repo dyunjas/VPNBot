@@ -243,6 +243,39 @@
           </div>
 
           <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Докупить устройства</h2>
+                <p class="mini-note">Добавьте слоты устройств к активной подписке. Лимит обновится в Remnawave автоматически.</p>
+              </div>
+            </div>
+            <div class="row row--traffic">
+              <input id="device-slots-input" class="input" inputmode="numeric" placeholder="Слотов" />
+              <button id="btn-buy-device-slots" class="btn" type="button">Купить слоты</button>
+            </div>
+            <p id="device-slots-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
+            <div class="card-head">
+              <div>
+                <h2>Подарить подписку</h2>
+                <p class="mini-note">Выберите тариф и укажите Telegram ID или username получателя. Оплата спишется с вашего баланса.</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="gift-plan-picker" id="gift-plan-picker">
+                <select id="gift-plan-select" class="input" aria-hidden="true" tabindex="-1"></select>
+                <button class="gift-plan-picker__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">Выберите тариф</button>
+                <div class="gift-plan-picker__menu" role="listbox"></div>
+              </div>
+              <input id="gift-recipient-input" class="input" placeholder="Telegram ID или username" />
+              <button id="btn-send-gift" class="btn" type="button">Подарить</button>
+            </div>
+            <p id="gift-hint" class="muted"></p>
+          </div>
+
+          <div class="card glass">
             <h2>Промокод</h2>
             <div class="row">
               <input id="promo-input" class="input" placeholder="Введите промокод" />

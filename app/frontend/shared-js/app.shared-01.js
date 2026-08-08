@@ -5,12 +5,23 @@ const IN_TELEGRAM = Boolean(
   tg?.initData || tg?.initDataUnsafe?.user || (navigator.userAgent || "").includes("Telegram"),
 );
 const APP_MODE = window.__SURFACE || "cabinet";
+const UI_MODE = window.__UI_MODE || APP_MODE;
 const IS_CABINET_PATH = APP_MODE === "cabinet";
 const IS_MINIAPP_PATH = APP_MODE === "miniapp";
+const IS_MINIAPP_UI = UI_MODE === "miniapp";
 const CABINET_TOKEN_KEY = "cabinet_access_token";
 
 function getCabinetToken() {
   return localStorage.getItem(CABINET_TOKEN_KEY) || "";
+}
+
+function setCabinetToken(token) {
+  const value = String(token || "").trim();
+  if (value) {
+    localStorage.setItem(CABINET_TOKEN_KEY, value);
+  } else {
+    localStorage.removeItem(CABINET_TOKEN_KEY);
+  }
 }
 
 const HAS_AUTH_INITDATA = Boolean(tg?.initData || queryInitData);
@@ -27,7 +38,7 @@ const bodyEl = document.body;
 
 if (bodyEl) {
   bodyEl.classList.toggle("is-cabinet", IS_CABINET_PATH);
-  bodyEl.classList.toggle("is-miniapp", IS_MINIAPP_PATH);
+  bodyEl.classList.toggle("is-miniapp", IS_MINIAPP_UI);
   bodyEl.classList.add("app-booting");
   if (IS_CABINET_PATH) {
     requestAnimationFrame(() => bodyEl.classList.add("menu-ready"));

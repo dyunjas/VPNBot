@@ -38,6 +38,14 @@ BUSINESS_SETTINGS: tuple[BusinessSetting, ...] = (
         description="Минимальное количество GB при докупке трафика.",
     ),
     BusinessSetting(
+        key="DEVICE_SLOT_PRICE_RUB",
+        label="Цена 1 слота устройства",
+        type="decimal",
+        default="50",
+        min_value=0,
+        description="Стоимость докупки одного дополнительного устройства в RUB.",
+    ),
+    BusinessSetting(
         key="MIN_WITHDRAW_AMOUNT_RUB",
         label="Минимальная сумма вывода",
         type="int",

@@ -147,6 +147,7 @@ def render_shell(
     footer_nav = _read_text(FRONTEND_DIR / "shell" / "footer-nav.html")
 
     styles = "".join(f'<link rel="stylesheet" href="{url}" />' for url in stylesheet_urls)
+    entry_script = f'<script defer src="{app_entry_url}"></script>' if app_entry_url else ""
     rendered = (
         html.replace(
             "__APP_SHELL__",
@@ -157,7 +158,7 @@ def render_shell(
         )
         .replace("__SURFACE_STYLES__", styles)
         .replace("__HEAD_SCRIPTS__", "".join(head_scripts or []))
-        .replace("__APP_BOOTSTRAP__", "".join(bootstrap_scripts))
+        .replace("__APP_BOOTSTRAP__", "".join(bootstrap_scripts) + entry_script)
         .replace("__APP_ENTRY__", app_entry_url)
     )
     return no_cache_html(rendered)

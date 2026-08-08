@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
 
 from api.bot.common import (
     AutoRenewPayload,
+    DeviceSlotsBuyPayload,
+    GiftSubscriptionPayload,
     PlanBuyPayload,
     PromocodePayload,
     SubscriptionNotFound,
@@ -13,9 +16,26 @@ from api.bot.common import (
     get_user_service,
     require_bot_auth,
 )
+from backend.database.models import User
 from backend.services import BillingService, PromoService, RemnaWaveService, SubscriptionService
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
+
+
+async def _find_gift_recipient(session, raw: str) -> User:
+    value = (raw or "").strip().lstrip("@")
+    if not value:
+        raise HTTPException(status_code=400, detail="recipient is required")
+    if value.lstrip("-").isdigit():
+        res = await session.execute(select(User).where(User.tg_id == int(value)))
+    else:
+        res = await session.execute(select(User).where(User.username.ilike(value)))
+    user = res.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="user not found")
+    if bool(getattr(user, "banned", False)):
+        raise HTTPException(status_code=403, detail="banned")
+    return user
 
 
 @router.get("/users/by-tg/{tg_id}/plans")
@@ -77,6 +97,48 @@ async def subscription_traffic(tg_id: int, payload: TrafficBuyPayload, user_serv
     except Exception as e:
         raise _map_service_error(e)
     return {"ok": True, "subscription_id": sub.id, "gb_added": payload.gb, "charged": charged}
+
+
+@router.post("/users/by-tg/{tg_id}/subscription/devices")
+async def subscription_devices_buy(tg_id: int, payload: DeviceSlotsBuyPayload, user_service=Depends(get_user_service)):
+    user = await _get_user_or_404(user_service, tg_id)
+    billing = BillingService(user_service.session)
+    try:
+        sub, charged = await billing.add_device_slots_to_subscription(user_id=user.id, slots=payload.slots)
+    except Exception as e:
+        raise _map_service_error(e)
+    return {
+        "ok": True,
+        "subscription_id": sub.id,
+        "slots_added": int(payload.slots),
+        "device_limit": int(sub.device_limit or 0),
+        "charged": charged,
+    }
+
+
+@router.post("/users/by-tg/{tg_id}/subscription/gift")
+async def subscription_gift(tg_id: int, payload: GiftSubscriptionPayload, user_service=Depends(get_user_service)):
+    buyer = await _get_user_or_404(user_service, tg_id)
+    recipient = await _find_gift_recipient(user_service.session, payload.recipient)
+    if int(recipient.id) == int(buyer.id):
+        raise HTTPException(status_code=400, detail="cannot gift subscription to yourself")
+    billing = BillingService(user_service.session)
+    try:
+        sub, charged, recipient = await billing.gift_subscription(
+            buyer_user_id=buyer.id,
+            recipient_user_id=recipient.id,
+            plan_id=payload.plan_id,
+        )
+    except Exception as e:
+        raise _map_service_error(e)
+    return {
+        "ok": True,
+        "subscription_id": sub.id,
+        "plan_id": sub.plan_id,
+        "charged": charged,
+        "recipient": {"id": recipient.id, "tg_id": recipient.tg_id, "username": recipient.username},
+        "current_period_end": sub.current_period_end.isoformat() if sub.current_period_end else None,
+    }
 
 
 @router.post("/users/by-tg/{tg_id}/subscription/auto-renew")

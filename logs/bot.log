@@ -32441,3 +32441,240 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-08-08 03:32:12] [INFO] root: Database connection successful
 [2026-08-08 03:32:20] [INFO] root: Settings successfully loaded from .env
 [2026-08-08 03:32:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:18:26] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:18:27] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:18:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:18:28] [INFO] root: Database tables initialized
+[2026-08-08 11:18:28] [INFO] root: Database connection successful
+[2026-08-08 11:18:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:18:29] [INFO] root: Database tables initialized
+[2026-08-08 11:18:29] [INFO] root: Database connection successful
+[2026-08-08 11:18:33] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:18:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:18:34] [INFO] root: Database tables initialized
+[2026-08-08 11:18:34] [INFO] root: Database connection successful
+[2026-08-08 11:58:40] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:58:41] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:58:41] [INFO] root: Database tables initialized
+[2026-08-08 11:58:41] [INFO] root: Database connection successful
+[2026-08-08 11:58:59] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:58:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:58:59] [INFO] root: Database tables initialized
+[2026-08-08 11:58:59] [INFO] root: Database connection successful
+[2026-08-08 11:59:06] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:59:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:59:07] [INFO] root: Database tables initialized
+[2026-08-08 11:59:07] [INFO] root: Database connection successful
+[2026-08-08 11:59:18] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:59:19] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-08 11:59:19] [INFO] root: Bot started
+[2026-08-08 11:59:19] [INFO] aiogram.dispatcher: Start polling
+[2026-08-08 11:59:21] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-08 11:59:32] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 11:59:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 11:59:54] [INFO] aiogram.event: Update id=891138071 is handled. Duration 1283 ms by bot id=7557954606
+[2026-08-08 12:00:01] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:05] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:05] [WARNING] root: [remnawave] get by-id failed user_id=98 remote_id=2160 err=remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:07] [INFO] aiogram.event: Update id=891138072 is handled. Duration 10136 ms by bot id=7557954606
+[2026-08-08 12:00:18] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:22] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:22] [ERROR] root: [app][http] unhandled exception method=GET path=/api/users/by-tg/7269510366/devices query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\bot\routes\subscription.py", line 170, in devices
+    devices = await RemnaWaveService(user_service.session).get_user_hwid_devices(user=user)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 844, in get_user_hwid_devices
+    remote_id, remote_uuid = await self._resolve_remote_ref(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 433, in _resolve_remote_ref
+    remote = await self._fetch_remote_user_by_id(remote_id=remote_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 577, in _fetch_remote_user_by_id
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:22] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-08 12:00:22] [INFO] aiogram.event: Update id=891138073 is handled. Duration 8656 ms by bot id=7557954606
+[2026-08-08 12:00:30] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:34] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160 attempt=2/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:34] [ERROR] root: [app][http] unhandled exception method=GET path=/api/users/by-tg/7269510366/devices query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\bot\routes\subscription.py", line 170, in devices
+    devices = await RemnaWaveService(user_service.session).get_user_hwid_devices(user=user)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 844, in get_user_hwid_devices
+    remote_id, remote_uuid = await self._resolve_remote_ref(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 433, in _resolve_remote_ref
+    remote = await self._fetch_remote_user_by_id(remote_id=remote_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 577, in _fetch_remote_user_by_id
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/api/users/by-id/2160: Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/2160
+[2026-08-08 12:00:34] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-08 12:00:34] [INFO] aiogram.event: Update id=891138074 is handled. Duration 8532 ms by bot id=7557954606
+[2026-08-08 12:01:33] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=98 recipient_user_id=100 plan_id=4
+[2026-08-08 12:01:33] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=80
+[2026-08-08 12:01:33] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=80
+[2026-08-08 12:01:33] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=4 auto_renew=False
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] renewed user_id=100 subscription_id=83 plan_id=4 period_end=2027-07-08 05:43:00.882641+00:00 gb_limit=30.00 rollover_gb=360.00
+[2026-08-08 12:01:34] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=434865438720
+[2026-08-08 12:01:34] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-08-08 12:03:04] [INFO] aiogram.event: Update id=891138075 is handled. Duration 1161 ms by bot id=7557954606
+[2026-08-08 12:03:08] [INFO] aiogram.event: Update id=891138076 is handled. Duration 635 ms by bot id=7557954606
+[2026-08-08 12:03:26] [INFO] aiogram.event: Update id=891138077 is handled. Duration 170 ms by bot id=7557954606
+[2026-08-08 12:03:31] [INFO] root: [biz][billing] buy_device_slots_requested user_id=98 slots=5
+[2026-08-08 12:03:31] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=2.5E+2
+[2026-08-08 12:03:31] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=2.5E+2
+[2026-08-08 12:03:32] [INFO] aiogram.event: Update id=891138078 is handled. Duration 932 ms by bot id=7557954606
+[2026-08-08 12:05:37] [INFO] aiogram.event: Update id=891138079 is handled. Duration 1099 ms by bot id=7557954606
+[2026-08-08 12:05:39] [INFO] aiogram.event: Update id=891138080 is handled. Duration 794 ms by bot id=7557954606
+[2026-08-08 12:05:49] [INFO] aiogram.event: Update id=891138081 is handled. Duration 300 ms by bot id=7557954606
+[2026-08-08 12:05:51] [INFO] aiogram.event: Update id=891138082 is handled. Duration 500 ms by bot id=7557954606
+[2026-08-08 12:05:52] [INFO] aiogram.event: Update id=891138083 is handled. Duration 300 ms by bot id=7557954606
+[2026-08-08 12:05:55] [INFO] aiogram.event: Update id=891138084 is handled. Duration 251 ms by bot id=7557954606
+[2026-08-08 12:06:05] [INFO] aiogram.event: Update id=891138085 is handled. Duration 133 ms by bot id=7557954606
+[2026-08-08 12:06:13] [INFO] aiogram.event: Update id=891138086 is handled. Duration 320 ms by bot id=7557954606
+[2026-08-08 12:07:03] [INFO] root: [biz][billing] buy_device_slots_requested user_id=98 slots=5
+[2026-08-08 12:07:03] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=2.5E+2
+[2026-08-08 12:07:03] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=2.5E+2
+[2026-08-08 12:07:46] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 12:07:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 12:07:47] [INFO] root: Database tables initialized
+[2026-08-08 12:07:47] [INFO] root: Database connection successful
+[2026-08-08 12:07:54] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-08 12:07:54] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-08 12:07:54] [INFO] root: Bot polling cancelled
+[2026-08-08 12:07:54] [INFO] root: Bot stopped
+[2026-08-08 12:08:00] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 12:08:00] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-08 12:08:01] [INFO] root: Bot started
+[2026-08-08 12:08:01] [INFO] aiogram.dispatcher: Start polling
+[2026-08-08 12:08:02] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-08 12:08:08] [INFO] aiogram.event: Update id=891138087 is handled. Duration 1507 ms by bot id=7557954606
+[2026-08-08 12:08:12] [INFO] aiogram.event: Update id=891138088 is handled. Duration 253 ms by bot id=7557954606
+[2026-08-08 12:08:15] [INFO] aiogram.event: Update id=891138089 is handled. Duration 136 ms by bot id=7557954606
+[2026-08-08 12:08:19] [INFO] aiogram.event: Update id=891138090 is handled. Duration 257 ms by bot id=7557954606
+[2026-08-08 12:08:23] [INFO] aiogram.event: Update id=891138091 is handled. Duration 306 ms by bot id=7557954606
+[2026-08-08 12:08:24] [INFO] aiogram.event: Update id=891138092 is handled. Duration 348 ms by bot id=7557954606
+[2026-08-08 12:08:26] [INFO] aiogram.event: Update id=891138093 is handled. Duration 287 ms by bot id=7557954606
+[2026-08-08 12:08:28] [INFO] aiogram.event: Update id=891138094 is handled. Duration 129 ms by bot id=7557954606
+[2026-08-08 12:08:29] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=98 recipient_user_id=100 plan_id=4
+[2026-08-08 12:08:29] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=80
+[2026-08-08 12:08:29] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=80
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] activate_requested user_id=100 plan_id=4 auto_renew=False
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] renewed user_id=100 subscription_id=83 plan_id=4 period_end=2027-07-11 10:43:00.882641+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-08 12:08:29] [INFO] root: [subscription] reset_user_traffic skipped user_id=100 (remnawave-only mode)
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=467077693440
+[2026-08-08 12:08:29] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-08-08 12:08:32] [INFO] aiogram.event: Update id=891138095 is handled. Duration 2939 ms by bot id=7557954606
+[2026-08-08 12:09:02] [INFO] aiogram.event: Update id=891138096 is handled. Duration 724 ms by bot id=7557954606
+[2026-08-08 12:13:01] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 12:13:01] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 12:13:01] [INFO] root: Database tables initialized
+[2026-08-08 12:13:01] [INFO] root: Database connection successful
+[2026-08-08 12:15:46] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 12:15:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 12:15:47] [INFO] root: Database tables initialized
+[2026-08-08 12:15:47] [INFO] root: Database connection successful
+[2026-08-08 12:33:28] [INFO] root: Settings successfully loaded from .env
+[2026-08-08 12:33:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-08 12:33:28] [INFO] root: Database tables initialized
+[2026-08-08 12:33:28] [INFO] root: Database connection successful

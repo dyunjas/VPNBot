@@ -132,6 +132,65 @@ async function buyTraffic() {
   }
 }
 
+async function buyDeviceSlots() {
+  const input = $("device-slots-input");
+  const hint = $("device-slots-hint");
+  const btn = $("btn-buy-device-slots");
+  const slots = Number((input?.value || "").trim());
+
+  if (!Number.isFinite(slots) || slots <= 0) {
+    if (hint) hint.textContent = "";
+    return toast("Введите количество устройств больше 0");
+  }
+
+  setButtonBusy(btn, true, "Покупка...");
+  haptic();
+  try {
+    const data = await api("/api/subscription/devices/buy", { slots: Math.floor(slots) });
+    if (input) input.value = "";
+    if (hint) hint.textContent = "";
+    toastSuccess(`Добавлено устройств: ${data.slots_added}. Новый лимит: ${data.device_limit}`);
+    haptic("success");
+    await Promise.all([loadStatus(), loadProfile(), loadDevices()]);
+  } catch (e) {
+    if (hint) hint.textContent = "";
+    toast(e.message);
+    haptic("error");
+  } finally {
+    setButtonBusy(btn, false);
+  }
+}
+
+async function sendGiftSubscription() {
+  const select = $("gift-plan-select");
+  const recipientInput = $("gift-recipient-input");
+  const hint = $("gift-hint");
+  const btn = $("btn-send-gift");
+  const planId = Number(select?.value || "0");
+  const recipient = (recipientInput?.value || "").trim();
+
+  if (!planId) return toast("Выберите тариф для подарка");
+  if (!recipient) return toast("Укажите Telegram ID или username получателя");
+
+  setButtonBusy(btn, true, "Отправка...");
+  haptic();
+  try {
+    const data = await api("/api/subscription/gift", { plan_id: planId, recipient });
+    if (recipientInput) recipientInput.value = "";
+    if (hint) hint.textContent = "";
+    const target = data.recipient?.username ? `@${data.recipient.username}` : `ID ${data.recipient?.tg_id || recipient}`;
+    toastSuccess(`Подарочная подписка отправлена: ${target}`);
+    haptic("success");
+    await loadProfile();
+  } catch (e) {
+    if (hint) hint.textContent = "";
+    toast(e.message);
+    haptic("error");
+  } finally {
+    setButtonBusy(btn, false);
+  }
+}
+
 function closeAppPopups(except = null) {
   document.querySelectorAll(".app-popup.is-open").forEach((popup) => {
     if (popup === except) return;
@@ -260,6 +319,8 @@ function initEvents() {
     openSubscriptionUrl();
   });
   $("btn-buy-traffic")?.addEventListener("click", buyTraffic);
+  $("btn-buy-device-slots")?.addEventListener("click", buyDeviceSlots);
+  $("btn-send-gift")?.addEventListener("click", sendGiftSubscription);
   $("topup-pay")?.addEventListener("click", createTopup);
   $("btn-refresh-tx")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
@@ -332,7 +393,7 @@ function initEvents() {
     try {
       await fetch(`${BACKEND_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
     } catch {}
-    localStorage.removeItem(CABINET_TOKEN_KEY);
+    setCabinetToken("");
     window.location.replace("/cabinet/login");
   });
 

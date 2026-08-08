@@ -29,6 +29,16 @@ class TrafficPurchaseStates(StatesGroup):
     waiting_for_confirmation = State()
 
 
+class DeviceSlotsPurchaseStates(StatesGroup):
+    waiting_for_slots = State()
+    waiting_for_confirmation = State()
+
+
+class GiftSubscriptionStates(StatesGroup):
+    waiting_for_recipient = State()
+    waiting_for_confirmation = State()
+
+
 class EmailBindStates(StatesGroup):
     waiting_for_email = State()
     waiting_for_code = State()

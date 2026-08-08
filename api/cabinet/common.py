@@ -36,6 +36,7 @@ from backend.services import (
 )
 from backend.services.exceptions import (
     BannedUser,
+    InsufficientBalance,
     NotEnoughReferralBalance,
     PaymentNotConfirmed,
     PlanNotFound,
@@ -99,6 +100,15 @@ class BuySubscriptionPayload(InitPayload):
 
 class BuyTrafficPayload(InitPayload):
     gb: int
+
+
+class BuyDeviceSlotsPayload(InitPayload):
+    slots: int = Field(ge=1, le=20)
+
+
+class GiftSubscriptionPayload(InitPayload):
+    plan_id: int
+    recipient: str = Field(min_length=1, max_length=64)
 
 
 class TopupPayload(InitPayload):
@@ -334,6 +344,8 @@ def _map_service_error(e: Exception) -> HTTPException:
         return HTTPException(status_code=409, detail="Продление доступно за 3 дня до окончания подписки")
     if isinstance(e, BannedUser):
         return HTTPException(status_code=403, detail="banned")
+    if isinstance(e, InsufficientBalance):
+        return HTTPException(status_code=402, detail="Недостаточно средств на балансе")
     if isinstance(e, NotEnoughReferralBalance):
         return HTTPException(status_code=402, detail="Недостаточно реферального баланса")
     if isinstance(e, PurchaseInProgress):

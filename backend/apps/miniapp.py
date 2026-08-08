@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from backend.apps.common import create_fastapi_app, mount_frontend_assets, proxy_api_request, register_legal_routes, render_shell
 from backend.core.config import settings
 
-MINIAPP_BUILD = "20260726-0011"
+MINIAPP_BUILD = "20260808-gifts-devices-deeplink"
 
 
 def create_app():
@@ -18,7 +18,7 @@ def create_app():
         return render_shell(
             stylesheet_urls=[
                 "/miniapp/shared-tokens.css?v=1",
-                "/miniapp/shared-ui.css?v=9",
+                "/miniapp/shared-ui.css?v=11",
                 "/miniapp/miniapp.css?v=16",
             ],
             head_scripts=[
@@ -28,6 +28,7 @@ def create_app():
                 (
                     "<script>"
                     f"window.__API_BASE_URL=window.location.origin;window.__ASSET_VERSION__='{MINIAPP_BUILD}';"
+                    "window.__SURFACE='miniapp';window.__UI_MODE='miniapp';"
                     "(function(){"
                     f"const build='{MINIAPP_BUILD}';"
                     "const url=new URL(window.location.href);"
@@ -41,12 +42,6 @@ def create_app():
                     "})();"
                     "</script>"
                 ),
-                f'<script defer src="/miniapp/miniapp-app.js?v={MINIAPP_BUILD}"></script>',
-                f'<script defer src="/miniapp/shared-js/app.shared-01.js?v={MINIAPP_BUILD}"></script>',
-                f'<script defer src="/miniapp/shared-js/app.shared-02.js?v={MINIAPP_BUILD}"></script>',
-                f'<script defer src="/miniapp/shared-js/app.shared-03.js?v={MINIAPP_BUILD}"></script>',
-                f'<script defer src="/miniapp/shared-js/app.shared-04.js?v={MINIAPP_BUILD}"></script>',
-                f'<script defer src="/miniapp/shared-js/app.shared-05.js?v={MINIAPP_BUILD}"></script>',
             ],
             app_entry_url=f"/miniapp/app.shared.js?v={MINIAPP_BUILD}",
         )

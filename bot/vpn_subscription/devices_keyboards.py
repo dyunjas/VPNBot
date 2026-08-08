@@ -73,6 +73,15 @@ def devices_list_kb(devices: list, page: int = 0):
 
     builder.row(
         InlineKeyboardButton(
+            text="Докупить устройства",
+            callback_data="buy_device_slots",
+            icon_custom_emoji_id=OTHER_DEVICE_EMOJI_ID,
+            style="success",
+        )
+    )
+
+    builder.row(
+        InlineKeyboardButton(
             text="К подписке",
             callback_data="vpn_subscription",
             icon_custom_emoji_id="5877536313623711363",

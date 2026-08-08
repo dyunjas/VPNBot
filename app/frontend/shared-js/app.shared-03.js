@@ -1,5 +1,62 @@
+function syncGiftPlanPicker() {
+  const picker = $("gift-plan-picker");
+  const select = $("gift-plan-select");
+  if (!picker || !select) return;
+
+  const trigger = picker.querySelector(".gift-plan-picker__trigger");
+  const menu = picker.querySelector(".gift-plan-picker__menu");
+  if (!trigger || !menu) return;
+
+  const selected = select.options[select.selectedIndex];
+  trigger.textContent = selected?.textContent || "Выберите тариф";
+  menu.innerHTML = "";
+
+  Array.from(select.options).forEach((option) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "gift-plan-picker__option";
+    item.setAttribute("role", "option");
+    item.disabled = !option.value;
+    item.setAttribute("aria-selected", option === selected ? "true" : "false");
+    item.textContent = option.textContent;
+    item.addEventListener("click", () => {
+      if (!option.value) return;
+      select.value = option.value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      picker.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      syncGiftPlanPicker();
+    });
+    menu.appendChild(item);
+  });
+
+  if (!trigger.dataset.bound) {
+    trigger.dataset.bound = "1";
+    trigger.addEventListener("click", () => {
+      const open = picker.classList.toggle("is-open");
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+}
+
+document.addEventListener("click", (event) => {
+  document.querySelectorAll(".gift-plan-picker.is-open").forEach((picker) => {
+    if (!picker.contains(event.target)) {
+      picker.classList.remove("is-open");
+      picker.querySelector(".gift-plan-picker__trigger")?.setAttribute("aria-expanded", "false");
+    }
+  });
+});
+
 function renderPlans(plans) {
   const host = $("plans-list");
+  const giftSelect = $("gift-plan-select");
+  if (giftSelect) {
+    giftSelect.innerHTML = plans.length
+      ? plans.map((plan) => `<option value="${plan.id}">${escapeHtml(plan.name)} - ${plan.price} ₽</option>`).join("")
+      : '<option value="">Тарифов нет</option>';
+  }
+  syncGiftPlanPicker();
   if (!plans.length) {
     host.textContent = "Тарифов пока нет";
     return;
@@ -74,6 +131,22 @@ async function loadPlans() {
   } catch (e) {
     $("plans-list").textContent = e.message;
   }
+}
+
+async function loadGiftPlans() {
+  const giftSelect = $("gift-plan-select");
+  if (!giftSelect || giftSelect.options.length) return;
+  giftSelect.innerHTML = '<option value="">Загрузка тарифов...</option>';
+  try {
+    const data = await api("/api/plans");
+    const plans = data.plans || [];
+    giftSelect.innerHTML = plans.length
+      ? plans.map((plan) => `<option value="${plan.id}">${escapeHtml(plan.name)} - ${plan.price} ₽</option>`).join("")
+      : '<option value="">Тарифов нет</option>';
+  } catch {
+    giftSelect.innerHTML = '<option value="">Не удалось загрузить тарифы</option>';
+  }
+  syncGiftPlanPicker();
 }
 
 function deviceIconSvg(osText = "") {

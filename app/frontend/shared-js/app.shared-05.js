@@ -6,6 +6,10 @@ async function bootstrap() {
     const allowedViews = new Set(["home", "plans", "devices", "profile", "referral", "settings"]);
     const targetView = allowedViews.has(initialView) ? initialView : "home";
 
+    if (IS_MINIAPP_PATH && state.initData) {
+      await authorizeCabinetWithTelegram();
+    }
+
     await Promise.all([
       loadProfile(),
       loadStatus(),

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import secrets
+import time
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 
 from api.cabinet.common import (
     Bot,
+    InitPayload,
     JSONResponse,
     REFRESH_COOKIE,
     RegisterPayload,
@@ -33,6 +36,46 @@ from api.cabinet.common import (
 from backend.core.telegram import create_telegram_session
 
 router = APIRouter()
+_DEEPLINK_STORE: dict[str, dict] = {}
+DEEPLINK_TTL_SEC = 10 * 60
+
+
+def _set_refresh_cookie(response: JSONResponse, user_id: int) -> None:
+    response.set_cookie(
+        key=REFRESH_COOKIE,
+        value=_create_refresh_token(user_id),
+        httponly=True,
+        secure=str(settings.PUBLIC_BASE_URL or "").strip().startswith("https://"),
+        samesite="lax",
+        max_age=30 * 24 * 3600,
+        path="/",
+    )
+
+
+def _public_cabinet_base() -> str:
+    raw = str(settings.PUBLIC_BASE_URL or "").strip().rstrip("/")
+    if not raw:
+        return ""
+    if raw.startswith(("http://", "https://")):
+        return raw
+    return f"https://{raw}"
+
+
+def _put_deeplink(user_id: int) -> str:
+    now = int(time.time())
+    stale = [key for key, value in _DEEPLINK_STORE.items() if int(value.get("expires_at", 0)) < now]
+    for key in stale:
+        _DEEPLINK_STORE.pop(key, None)
+    token = secrets.token_urlsafe(32)
+    _DEEPLINK_STORE[token] = {"user_id": int(user_id), "expires_at": now + DEEPLINK_TTL_SEC}
+    return token
+
+
+def _pop_deeplink(token: str) -> int | None:
+    rec = _DEEPLINK_STORE.pop(str(token or "").strip(), None)
+    if not rec or int(rec.get("expires_at", 0)) < int(time.time()):
+        return None
+    return int(rec.get("user_id"))
 
 
 @router.post("/auth/register")
@@ -130,6 +173,79 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
     return {"ok": True}
 
 
+@router.post("/auth/deeplink/send")
+async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
+    async with async_session() as session:
+        res = await session.execute(select(User).where(User.tg_id == payload.tg_id))
+        user = res.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="user with this tg_id not found")
+        if bool(getattr(user, "banned", False)):
+            raise HTTPException(status_code=403, detail="banned")
+
+    if not _otp_send_allowed(
+        "deeplink",
+        str(payload.tg_id),
+        cooldown_sec=45,
+        window_sec=600,
+        max_sends=3,
+    ):
+        retry_after = _otp_send_retry_after(
+            "deeplink",
+            str(payload.tg_id),
+            cooldown_sec=45,
+            window_sec=600,
+            max_sends=3,
+        )
+        raise HTTPException(status_code=429, detail=f"deeplink already sent recently, try again in {retry_after} seconds")
+
+    token = _put_deeplink(user.id)
+    base = _public_cabinet_base()
+    if not base:
+        raise HTTPException(status_code=503, detail="PUBLIC_BASE_URL is not configured")
+    link = f"{base}/cabinet/auth/deeplink/{quote(token)}"
+    text = f"Вход в кабинет Lunet:\n\n{link}\n\nСсылка действует 10 минут."
+
+    if bot is not None:
+        await bot.send_message(chat_id=payload.tg_id, text=text)
+        _put_otp("deeplink", str(payload.tg_id), user.id, token)
+        return {"ok": True}
+
+    bot_token = (settings.BOT_TOKEN or "").strip()
+    if not bot_token:
+        raise HTTPException(status_code=503, detail="BOT_TOKEN is not configured")
+
+    session = create_telegram_session()
+    temp_bot = Bot(token=bot_token, session=session)
+    try:
+        await temp_bot.send_message(chat_id=payload.tg_id, text=text)
+    finally:
+        await temp_bot.session.close()
+    _put_otp("deeplink", str(payload.tg_id), user.id, token)
+    return {"ok": True}
+
+
+@router.post("/auth/deeplink/consume")
+async def cabinet_consume_deeplink(payload: InitPayload):
+    token = str(payload.initData or "").strip()
+    user_id = _pop_deeplink(token)
+    if not user_id:
+        raise HTTPException(status_code=400, detail="invalid or expired deeplink")
+
+    async with async_session() as session:
+        user = await _get_user(session, user_id)
+
+    response = JSONResponse(
+        {
+            "ok": True,
+            "access_token": _create_access_token(user.id),
+            "token_type": "bearer",
+        }
+    )
+    _set_refresh_cookie(response, user.id)
+    return response
+
+
 @router.post("/auth/verify-code")
 async def cabinet_verify_code(payload: VerifyCodePayload):
     if payload.channel == "email":
@@ -146,16 +262,43 @@ async def cabinet_verify_code(payload: VerifyCodePayload):
         raise HTTPException(status_code=400, detail="invalid or expired code")
 
     response = JSONResponse({"ok": True, "access_token": _create_access_token(user_id), "token_type": "bearer"})
-    response.set_cookie(
-        key=REFRESH_COOKIE,
-        value=_create_refresh_token(user_id),
-        httponly=True,
-        secure=str(settings.PUBLIC_BASE_URL or "").strip().startswith("https://"),
-        samesite="lax",
-        max_age=30 * 24 * 3600,
-        path="/",
-    )
+    _set_refresh_cookie(response, user_id)
     return response
+
+
+@router.post("/auth/telegram")
+async def cabinet_telegram_auth(payload: InitPayload):
+    tg_user = _get_tg_user(payload.initData)
+    tg_id = int(tg_user["id"])
+
+    async with async_session() as session:
+        res = await session.execute(select(User).where(User.tg_id == tg_id))
+        user = res.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="user not found, сначала зайдите в бота")
+        if bool(getattr(user, "banned", False)):
+            raise HTTPException(status_code=403, detail="banned")
+
+        username = (tg_user.get("username") or "").strip() or None
+        if username and username != getattr(user, "username", None):
+            user.username = username
+            await session.commit()
+
+        response = JSONResponse(
+            {
+                "ok": True,
+                "access_token": _create_access_token(user.id),
+                "token_type": "bearer",
+                "user": {
+                    "id": user.id,
+                    "tg_id": user.tg_id,
+                    "email": user.email,
+                    "username": user.username,
+                },
+            }
+        )
+        _set_refresh_cookie(response, user.id)
+        return response
 
 
 @router.post("/auth/refresh")

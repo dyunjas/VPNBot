@@ -22,6 +22,7 @@
         <div class="auth-switch" role="tablist" aria-label="Способ входа">
           <button id="tab_email" class="tab is-active" type="button" role="tab" aria-selected="true">Код на email</button>
           <button id="tab_telegram" class="tab" type="button" role="tab" aria-selected="false">Код в Telegram</button>
+          <button id="tab_deeplink" class="tab" type="button" role="tab" aria-selected="false">Ссылка в Telegram</button>
         </div>
 
         <form id="form_email" class="auth-form" autocomplete="on">
@@ -68,6 +69,18 @@
           </div>
         </form>
 
+        <form id="form_deeplink" class="auth-form is-hidden" autocomplete="off">
+          <div class="auth-step auth-step--request">
+            <label class="field">
+              <span>Telegram ID</span>
+              <input id="deeplink_tg_id" type="text" inputmode="numeric" placeholder="Например: 123456789" required />
+            </label>
+            <div class="actions">
+              <button id="send_deeplink" class="btn" type="button">Отправить ссылку для входа</button>
+            </div>
+          </div>
+        </form>
+
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </section>
     </section>
@@ -83,6 +96,6 @@
   </main>
 
   __API_BOOTSTRAP__
-  <script defer src="/miniapp/cabinet-login.js?v=6"></script>
+  <script defer src="/miniapp/cabinet-login.js?v=7"></script>
 </body>
 </html>
