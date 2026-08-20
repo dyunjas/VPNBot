@@ -372,15 +372,6 @@ function renderShell({ activeKey, title, subtitle = "", contentHtml = "" }) {
 
     <div class="app tailadmin-shell">
       <aside class="sidebar tailadmin-sidebar">
-        <div class="sidebar-head">
-          <a class="sidebar-brand" href="/admin/dashboard" aria-label="Lunet Admin">
-            <span class="sidebar-brand-mark"><img src="/admin/assets/moon.svg" alt="" /></span>
-            <span class="sidebar-brand-copy">
-              <span class="sidebar-kicker">Lunet</span>
-              <span class="sidebar-title">Admin Panel</span>
-            </span>
-          </a>
-        </div>
         <nav class="menu">${renderMenu(activeKey)}</nav>
 
         <div class="sidebar-footer">

@@ -12110,3 +12110,5 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-08-13 22:25:58] [INFO] root: Database tables initialized
 [2026-08-13 22:25:58] [INFO] root: Database connection successful
 [2026-08-13 22:26:03] [INFO] root: Settings successfully loaded from .env
+[2026-08-20 12:09:27] [INFO] root: Settings successfully loaded from .env
+[2026-08-20 12:09:28] [INFO] root: Settings successfully loaded from .env
