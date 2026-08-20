@@ -31,7 +31,12 @@ class TransactionRepository:
 
     async def get_by_provider_id(self, provider_transaction_id: str) -> Optional[Transaction]:
         res = await self.session.execute(
-            select(Transaction).where(Transaction.transaction_id == provider_transaction_id)
+            select(Transaction)
+            .where(Transaction.transaction_id == provider_transaction_id)
+            # Older data may contain duplicate provider IDs. Prefer the
+            # already-paid row, otherwise use the newest transaction.
+            .order_by(Transaction.paid.desc(), Transaction.created_at.desc(), Transaction.id.desc())
+            .limit(1)
         )
         return res.scalar_one_or_none()
 
@@ -39,6 +44,8 @@ class TransactionRepository:
         res = await self.session.execute(
             select(Transaction)
             .where(Transaction.transaction_id == provider_transaction_id)
+            .order_by(Transaction.paid.desc(), Transaction.created_at.desc(), Transaction.id.desc())
+            .limit(1)
             .with_for_update()
         )
         return res.scalar_one_or_none()

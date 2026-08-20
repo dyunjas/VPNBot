@@ -104,7 +104,7 @@ async def cabinet_balance_topup(
                     or payment.get("url")
                     or payment.get("link")
                     or payment.get("redirect"),
-                    "provider_id": str(payment.get("id") or ""),
+                    "provider_id": str(payment.get("id") or payment.get("bill_id") or ""),
                     "status": payment.get("status"),
                 }
 

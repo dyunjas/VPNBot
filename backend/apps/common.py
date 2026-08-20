@@ -197,8 +197,9 @@ async def proxy_api_request(request: Request, path: str, *, source_name: str) ->
     headers = {
         key: value
         for key, value in request.headers.items()
-        if key.lower() not in HOP_BY_HOP_HEADERS
+        if key.lower() not in HOP_BY_HOP_HEADERS and key.lower() != "accept-encoding"
     }
+    headers["Accept-Encoding"] = "identity"
 
     timeout = aiohttp.ClientTimeout(total=settings.FRONTEND_PROXY_TIMEOUT_SEC)
     try:
@@ -216,7 +217,13 @@ async def proxy_api_request(request: Request, path: str, *, source_name: str) ->
                     if key.lower() not in HOP_BY_HOP_HEADERS:
                         response.headers.append(key, value)
                 return response
-    except (aiohttp.ClientError, asyncio.TimeoutError):
+    except (aiohttp.ClientError, asyncio.TimeoutError) as exc:
+        logger.exception(
+            "[%s] API proxy failed target=%s error=%s",
+            source_name,
+            target_url,
+            exc,
+        )
         return JSONResponse(
             status_code=503,
             content={"detail": MAINTENANCE_MESSAGE, "maintenance": True},

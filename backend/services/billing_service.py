@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import uuid
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_UP
 from html import escape
@@ -58,14 +59,14 @@ class BillingService:
 
     @staticmethod
     def _extract_pally_id(payload: dict) -> str | None:
-        for key in ("id", "bill_id", "billId", "invoice_id", "order_id"):
+        for key in ("id", "bill_id", "billId", "invoice_id"):
             value = payload.get(key)
             if value:
                 return str(value)
 
         data = payload.get("data")
         if isinstance(data, dict):
-            for key in ("id", "bill_id", "billId", "invoice_id", "order_id"):
+            for key in ("id", "bill_id", "billId", "invoice_id"):
                 value = data.get(key)
                 if value:
                     return str(value)
@@ -514,7 +515,9 @@ class BillingService:
             logger.warning("[biz][billing] pally_create_user_not_found user_id=%s", user_id)
             raise UserNotFound(f"User with id:{user_id} not found")
 
-        payload = f"PALLY-{user.id}-{int(datetime.now().timestamp())}"
+        # The payment provider echoes this value in InvId.  A seconds-only
+        # timestamp can collide when a user opens two invoices quickly.
+        payload = f"PALLY-{user.id}-{uuid.uuid4().hex[:16]}"
 
         pally = self._get_pally()
         payment = await pally.create_invoice(
@@ -562,12 +565,16 @@ class BillingService:
         payment_url = self._extract_pally_url(payment)
         if payment_url and "payment_url" not in payment:
             payment["payment_url"] = payment_url
-        payment["id"] = payload
+        # Keep the payment-system bill ID as the public/provider transaction
+        # ID, just like the Platega and CryptoBot integrations do.  The
+        # merchant order ID is only used to correlate legacy Pally postbacks.
+        payment["id"] = provider_bill_id
+        payment["order_id"] = payload
         payment["bill_id"] = provider_bill_id
 
         await self.tx_repo.create(
             user_id=user_id,
-            provider_transaction_id=payload,
+            provider_transaction_id=provider_bill_id,
             payment_system="PALLY",
             amount=Decimal(amount),
             created_at=datetime.now(timezone.utc),
@@ -609,7 +616,10 @@ class BillingService:
             normalized_status,
             out_sum,
         )
-        tx = await self.tx_repo.get_by_provider_id_for_update(str(inv_id))
+        # Pally's transaction ID is sent as TrsId. InvId is only the merchant
+        # order ID and must never be used as our transaction ID.
+        provider_id = str(trs_id or "").strip()
+        tx = await self.tx_repo.get_by_provider_id_for_update(provider_id) if provider_id else None
         if not tx:
             logger.warning("[biz][billing] pally_postback_tx_not_found inv_id=%s trs_id=%s", inv_id, trs_id)
             raise TransactionNotFound("Transaction not found")
@@ -645,7 +655,7 @@ class BillingService:
 
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
         await self.tx_repo.mark_paid(
-            provider_transaction_id=str(inv_id),
+            provider_transaction_id=provider_id,
             paid_at=datetime.now(timezone.utc),
         )
         await self.activity_service.log_user_event(
