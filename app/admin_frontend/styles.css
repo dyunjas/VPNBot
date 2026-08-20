@@ -713,3 +713,56 @@ body.dark .badge.danger {
     flex: 1 1 130px !important;
   }
 }
+
+/* Keep table column names fixed while only the table rows scroll. */
+.table-wrap,
+.plans-table-wrap,
+.table-wrap--modal,
+.table-wrap--history,
+.users-table-card .table-wrap {
+  position: relative !important;
+  overflow: auto !important;
+  max-height: min(68dvh, 720px) !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.table-wrap table,
+.plans-table-wrap table,
+.table-wrap--modal table,
+.table-wrap--history table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.table-wrap thead,
+.table-wrap thead tr,
+.plans-table-wrap thead,
+.plans-table-wrap thead tr,
+.table-wrap--modal thead,
+.table-wrap--modal thead tr,
+.table-wrap--history thead,
+.table-wrap--history thead tr {
+  position: static !important;
+}
+
+.table-wrap thead th,
+.plans-table-wrap thead th,
+.table-wrap--modal thead th,
+.table-wrap--history thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background: var(--surface-soft, #f8f8fb) !important;
+  box-shadow: 0 1px 0 var(--line, #e7e7ee) !important;
+}
+
+@media (max-width: 760px) {
+  .table-wrap,
+  .plans-table-wrap,
+  .table-wrap--modal,
+  .table-wrap--history,
+  .users-table-card .table-wrap {
+    max-height: 62dvh !important;
+  }
+}
