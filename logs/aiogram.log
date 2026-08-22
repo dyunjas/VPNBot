@@ -6377,3 +6377,18 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-08-08 12:08:28] [INFO] aiogram.event: Update id=891138094 is handled. Duration 129 ms by bot id=7557954606
 [2026-08-08 12:08:32] [INFO] aiogram.event: Update id=891138095 is handled. Duration 2939 ms by bot id=7557954606
 [2026-08-08 12:09:02] [INFO] aiogram.event: Update id=891138096 is handled. Duration 724 ms by bot id=7557954606
+[2026-08-21 11:07:25] [INFO] aiogram.dispatcher: Start polling
+[2026-08-21 11:07:46] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-21 11:11:23] [INFO] aiogram.dispatcher: Start polling
+[2026-08-21 11:11:44] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-21 11:12:02] [INFO] aiogram.dispatcher: Start polling
+[2026-08-21 11:12:23] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-21 11:12:49] [INFO] aiogram.dispatcher: Start polling
+[2026-08-21 11:13:34] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-21 11:13:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-08-21 11:13:35] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-21 11:13:37] [INFO] aiogram.event: Update id=891138107 is handled. Duration 2518 ms by bot id=7557954606
+[2026-08-21 11:13:42] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-08-21 11:13:44] [INFO] aiogram.event: Update id=891138108 is handled. Duration 2186 ms by bot id=7557954606
+[2026-08-21 11:14:09] [INFO] aiogram.event: Update id=891138109 is handled. Duration 169 ms by bot id=7557954606
+[2026-08-21 11:14:26] [INFO] aiogram.event: Update id=891138110 is handled. Duration 15110 ms by bot id=7557954606

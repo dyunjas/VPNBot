@@ -1313,3 +1313,6 @@ NameError: name 'Bot' is not defined
 [2026-08-08 12:08:29] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=98 recipient_user_id=100 plan_id=4
 [2026-08-08 12:08:29] [INFO] root: [biz][billing] charge_balance_requested user_id=98 amount=80
 [2026-08-08 12:08:29] [INFO] root: [biz][billing] charge_balance_completed user_id=98 amount=80
+[2026-08-21 00:26:06] [INFO] root: [biz][billing] buy_subscription_requested user_id=3924 plan_id=1 auto_renew=True
+[2026-08-21 00:26:06] [INFO] root: [biz][billing] charge_balance_requested user_id=3924 amount=180
+[2026-08-21 00:26:06] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=3924 balance=0 required=180

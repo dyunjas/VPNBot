@@ -99,22 +99,13 @@ class RemnaWaveService:
                 out.append(item.strip())
         return out
 
-    @staticmethod
-    def _sanitize_username(raw: str) -> str:
-        allowed = []
-        for ch in raw:
-            if ch.isalnum() or ch in ("_", "-"):
-                allowed.append(ch)
-            else:
-                allowed.append("_")
-        username = "".join(allowed).strip("_-")
-        if len(username) < 3:
-            username = f"user_{username}" if username else "user_default"
-        return username[:36]
-
     def _build_username(self, user) -> str:
-        base = getattr(user, "username", None) or f"user_{getattr(user, 'tg_id', None) or getattr(user, 'id', 0)}"
-        return self._sanitize_username(str(base))
+        # RemnaWave username is an internal stable identifier.  Do not use
+        # Telegram's username here: it can be changed or be absent entirely.
+        tg_id = getattr(user, "tg_id", None)
+        if tg_id is None:
+            tg_id = getattr(user, "id", 0)
+        return f"user_{int(tg_id)}"
 
     def _extract_first_link(self, data: Any) -> str | None:
         candidates = (

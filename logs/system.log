@@ -12116,3 +12116,1289 @@ RuntimeError: remnawave request failed method=GET url=https://panel.lunetpn.ru/a
 [2026-08-20 12:42:29] [INFO] root: Settings successfully loaded from .env
 [2026-08-20 12:42:29] [INFO] root: Database tables initialized
 [2026-08-20 12:42:29] [INFO] root: Database connection successful
+[2026-08-21 00:02:15] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:02:18] [INFO] root: Database tables initialized
+[2026-08-21 00:02:18] [INFO] root: Database connection successful
+[2026-08-21 00:02:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:02:30] [INFO] root: Database tables initialized
+[2026-08-21 00:02:30] [INFO] root: Database connection successful
+[2026-08-21 00:07:19] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:07:22] [INFO] root: Database tables initialized
+[2026-08-21 00:07:22] [INFO] root: Database connection successful
+[2026-08-21 00:08:23] [WARNING] root: [remnawave] request retry method=POST url=https://recovery_panel.lunetpn.ru/api/users attempt=1/2 err=Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+[2026-08-21 00:08:23] [WARNING] root: [remnawave] request retry method=POST url=https://recovery_panel.lunetpn.ru/api/users attempt=2/2 err=Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+[2026-08-21 00:08:23] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery_panel.lunetpn.ru/api/users: Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:08:53] [WARNING] root: [remnawave] request retry method=POST url=https://recovery_panel.lunetpn.ru/api/users attempt=1/2 err=Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+[2026-08-21 00:08:54] [WARNING] root: [remnawave] request retry method=POST url=https://recovery_panel.lunetpn.ru/api/users attempt=2/2 err=Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+[2026-08-21 00:08:54] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery_panel.lunetpn.ru/api/users: Cannot connect to host recovery_panel.lunetpn.ru:443 ssl:True [SSLCertVerificationError: (1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'recovery_panel.lunetpn.ru'. (_ssl.c:1032)")]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:17:02] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:17:03] [INFO] root: Database tables initialized
+[2026-08-21 00:17:03] [INFO] root: Database connection successful
+[2026-08-21 00:17:21] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:17:22] [INFO] root: Database tables initialized
+[2026-08-21 00:17:22] [INFO] root: Database connection successful
+[2026-08-21 00:18:26] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: [Errno 1] [SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC] decryption failed or bad record mac (_ssl.c:2660)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:19:04] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: Timeout on reading data from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:19:20] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:19:21] [INFO] root: Database tables initialized
+[2026-08-21 00:19:21] [INFO] root: Database connection successful
+[2026-08-21 00:20:22] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: Server disconnected
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:20:56] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 490, in _sync_remote_user
+    status, data = await self._request_json(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 398, in _request_json
+    raise RuntimeError(f"remnawave request failed method={method} url={url}: {last_exc}")
+RuntimeError: remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: [Errno 1] [SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC] decryption failed or bad record mac (_ssl.c:2660)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 00:22:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:22:30] [INFO] root: Database tables initialized
+[2026-08-21 00:22:30] [INFO] root: Database connection successful
+[2026-08-21 00:25:24] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 00:25:31] [INFO] root: Database tables initialized
+[2026-08-21 00:25:31] [INFO] root: Database connection successful
+[2026-08-21 00:25:37] [ERROR] root: remnawave expired status sync failed user_id=3234: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:36.861Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:41] [ERROR] root: remnawave expired status sync failed user_id=3839: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:41.060Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:44] [ERROR] root: remnawave expired status sync failed user_id=3359: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:44.112Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:47] [ERROR] root: remnawave expired status sync failed user_id=3370: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:47.095Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:51] [ERROR] root: remnawave expired status sync failed user_id=3708: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:51.616Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:55] [ERROR] root: remnawave expired status sync failed user_id=3726: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:54.929Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:25:57] [ERROR] root: remnawave expired status sync failed user_id=192: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:25:57.760Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:26:00] [ERROR] root: remnawave expired status sync failed user_id=3848: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:26:00.698Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:26:05] [ERROR] root: remnawave expired status sync failed user_id=4242: remnawave patch user state failed status=404 body={'timestamp': '2026-08-20T19:26:05.740Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-21 00:38:11] [ERROR] root: [scheduler][remnawave_sync] execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 950, in sync_all_local_users
+    await self.sync_local_user(user=user, subscription=subscription)
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 929, in sync_local_user
+    remote_id, _sub_url, remote_uuid = await self._sync_remote_user(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 551, in _sync_remote_user
+    raise RuntimeError(f"remnawave create user failed status={status} body={data}")
+RuntimeError: remnawave create user failed status=400 body={'statusCode': 400, 'message': 'Validation failed', 'errors': [{'code': 'invalid_type', 'expected': 'string', 'received': 'undefined', 'path': ['expireAt'], 'message': 'Expiration date is required'}]}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 74, in remnawave_sync_loop
+    await run_remnawave_sync_once()
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\remnawave_sync.py", line 53, in run_remnawave_sync_once
+    result = await service.sync_all_local_users()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\backend\services\remnawave_service.py", line 958, in sync_all_local_users
+    getattr(user, "id", None),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1363, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1301, in _checkout
+    result = pool._dialect._do_ping_w_event(
+        fairy.dbapi_connection
+    )
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 728, in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 1160, in do_ping
+    dbapi_connection.ping()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 818, in ping
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 799, in _handle_exception
+    raise error
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 816, in ping
+    _ = self.await_(self._async_ping())
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+[2026-08-21 11:07:23] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:07:24] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:07:25] [INFO] root: Bot started
+[2026-08-21 11:07:26] [INFO] root: Database tables initialized
+[2026-08-21 11:07:26] [INFO] root: Database connection successful
+[2026-08-21 11:07:47] [ERROR] root: Bot crashed: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 97, in _connect
+    stream = await connect_tcp(
+             ^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_connect.py", line 16, in connect_tcp
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1171, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1146, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        exceptions, addrinfo, laddr_infos)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1045, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 647, in sock_connect
+    return await fut
+           ^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 687, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+TimeoutError: [Errno 10060] Connect call failed ('82.22.40.226', 1080)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 72, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 135, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 104, in _connect
+    raise ProxyConnectionError(
+    ...<3 lines>...
+    ) from e
+python_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1550, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 79, in _wrap_create_connection
+    raise ProxyConnectionError(str(e)) from e
+aiohttp_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+[2026-08-21 11:07:47] [INFO] root: Bot stopped
+[2026-08-21 11:11:23] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:11:23] [INFO] root: Bot started
+[2026-08-21 11:11:45] [ERROR] root: Bot crashed: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 97, in _connect
+    stream = await connect_tcp(
+             ^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_connect.py", line 16, in connect_tcp
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1171, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1146, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        exceptions, addrinfo, laddr_infos)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1045, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 647, in sock_connect
+    return await fut
+           ^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 687, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+TimeoutError: [Errno 10060] Connect call failed ('82.22.40.226', 1080)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 72, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 135, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 104, in _connect
+    raise ProxyConnectionError(
+    ...<3 lines>...
+    ) from e
+python_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1550, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 79, in _wrap_create_connection
+    raise ProxyConnectionError(str(e)) from e
+aiohttp_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+[2026-08-21 11:11:45] [INFO] root: Bot stopped
+[2026-08-21 11:12:02] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:12:02] [INFO] root: Bot started
+[2026-08-21 11:12:24] [ERROR] root: Bot crashed: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 97, in _connect
+    stream = await connect_tcp(
+             ^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_connect.py", line 16, in connect_tcp
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1171, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1146, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        exceptions, addrinfo, laddr_infos)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1045, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 647, in sock_connect
+    return await fut
+           ^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\selector_events.py", line 687, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+TimeoutError: [Errno 10060] Connect call failed ('82.22.40.226', 1080)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 72, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 135, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 104, in _connect
+    raise ProxyConnectionError(
+    ...<3 lines>...
+    ) from e
+python_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\bot.py", line 21, in run_bot
+    await dp.start_polling(bot)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 621, in start_polling
+    await asyncio.gather(*done)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 377, in _polling
+    user: User = await bot.me()
+                 ^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 361, in me
+    self._me = await self.get_me()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 1797, in get_me
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 1488, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 770, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\client.py", line 725, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 642, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1209, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp\connector.py", line 1550, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 79, in _wrap_create_connection
+    raise ProxyConnectionError(str(e)) from e
+aiohttp_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+[2026-08-21 11:12:24] [INFO] root: Bot stopped
+[2026-08-21 11:12:48] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:12:49] [INFO] root: Bot started
+[2026-08-21 11:13:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-08-21 11:13:42] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-08-21 11:14:07] [INFO] root: Settings successfully loaded from .env
+[2026-08-21 11:14:08] [INFO] root: Database tables initialized
+[2026-08-21 11:14:08] [INFO] root: Database connection successful
+[2026-08-21 11:14:15] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/5 attempt=1/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/5
+[2026-08-21 11:14:19] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/5 attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/5
+[2026-08-21 11:14:19] [WARNING] root: [remnawave] get by-id failed user_id=100 remote_id=5 err=remnawave request failed method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/5: Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/5
+[2026-08-21 11:14:23] [WARNING] root: [remnawave] request retry method=POST url=https://recovery-panel.lunetpn.ru/api/users attempt=1/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users
+[2026-08-21 11:14:28] [WARNING] root: [remnawave] request retry method=POST url=https://recovery-panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users
+[2026-08-21 11:14:28] [WARNING] root: [remnawave] sync failed user_id=100 err=remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: Connection timeout to host https://recovery-panel.lunetpn.ru/api/users

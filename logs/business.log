@@ -1431,3 +1431,15 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-08-08 12:08:29] [INFO] root: [biz][subscription] renewed user_id=100 subscription_id=83 plan_id=4 period_end=2027-07-11 10:43:00.882641+00:00 gb_limit=30.00 rollover_gb=30.00
 [2026-08-08 12:08:29] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=100 subscription_id=83 traffic_limit_bytes=467077693440
 [2026-08-08 12:08:29] [INFO] root: [biz][subscription] activate_completed user_id=100 subscription_id=83
+[2026-08-21 00:25:33] [INFO] root: [biz][subscription] marked_expired subscription_id=1375
+[2026-08-21 00:25:38] [INFO] root: [biz][subscription] marked_expired subscription_id=1974
+[2026-08-21 00:25:41] [INFO] root: [biz][subscription] marked_expired subscription_id=1500
+[2026-08-21 00:25:44] [INFO] root: [biz][subscription] marked_expired subscription_id=1511
+[2026-08-21 00:25:47] [INFO] root: [biz][subscription] marked_expired subscription_id=1849
+[2026-08-21 00:25:52] [INFO] root: [biz][subscription] marked_expired subscription_id=1867
+[2026-08-21 00:25:55] [INFO] root: [biz][subscription] marked_expired subscription_id=1957
+[2026-08-21 00:25:58] [INFO] root: [biz][subscription] marked_expired subscription_id=1983
+[2026-08-21 00:26:01] [INFO] root: [biz][subscription] marked_expired subscription_id=2378
+[2026-08-21 00:26:06] [INFO] root: [biz][billing] buy_subscription_requested user_id=3924 plan_id=1 auto_renew=True
+[2026-08-21 00:26:06] [INFO] root: [biz][billing] charge_balance_requested user_id=3924 amount=180
+[2026-08-21 00:26:06] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=3924 balance=0 required=180
