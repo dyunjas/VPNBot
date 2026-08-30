@@ -1,5 +1,6 @@
 from aiogram import Bot
 from decimal import Decimal
+from html import escape
 from fastapi import APIRouter
 from ..common import *
 from backend.core.loader import bot as runtime_bot
@@ -24,7 +25,7 @@ def _activity_public(item) -> dict:
     }
 
 
-async def _send_user_status_change_notification(*, tg_id: int, action: str) -> None:
+async def _send_user_status_change_notification(*, tg_id: int, action: str, reason: str | None = None) -> None:
     bot_instance = runtime_bot
     temp_bot: Bot | None = None
     if bot_instance is None:
@@ -41,8 +42,12 @@ async def _send_user_status_change_notification(*, tg_id: int, action: str) -> N
         if action == "ban"
         else "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Ваш аккаунт разблокирован администратором.</b>\n\n Дополнительных действий с вашей стороны не требуется. Если у вас возникнут вопросы, свяжитесь со службой поддержки @LunetVPNSupport."
     )
+    if action == "ban":
+        text = f"<b>🚫 Ваш аккаунт заблокирован администратором.</b>\n\n<b>Причина:</b> {escape(reason or 'Не указана')}\n\nДля дополнительной информации свяжитесь с поддержкой @LunetVPNSupport."
+    else:
+        text = "<b>✅ Ваш аккаунт разблокирован администратором.</b>\n\nДополнительных действий не требуется. Если возникнут вопросы, свяжитесь с поддержкой @LunetVPNSupport."
     try:
-        await bot_instance.send_message(chat_id=tg_id, text=text)
+        await bot_instance.send_message(chat_id=tg_id, text=text, parse_mode="HTML")
     except Exception:
         logger.exception("[admin][users] status notify failed tg_id=%s action=%s", tg_id, action)
     finally:
@@ -312,6 +317,8 @@ async def admin_user_details(user_id: int):
 
 @router.post("/users/{user_id}/action", dependencies=[Depends(require_support_auth)])
 async def admin_user_action(user_id: int, payload: UserActionPayload):
+    if payload.action == "ban" and not (payload.reason and payload.reason.strip()):
+        raise HTTPException(status_code=400, detail="Причина блокировки обязательна")
     async with async_session() as session:
         user = _http_404_if_none(await session.get(User, user_id), "user not found")
         user_service = UserService(session)
@@ -329,11 +336,18 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
                     source="admin_panel",
                     note="Пользователь заблокирован из админки",
                 )
+                await activity_service.log_user_event(
+                    user_id=user_id,
+                    category="admin",
+                    action="ban_reason",
+                    source="admin_panel",
+                    note=f"Причина блокировки: {payload.reason.strip()}",
+                )
                 if remnawave_service.enabled:
                     await remnawave_service.disable_user_access(user=user)
                 await session.commit()
                 if user.tg_id:
-                    await _send_user_status_change_notification(tg_id=int(user.tg_id), action="ban")
+                    await _send_user_status_change_notification(tg_id=int(user.tg_id), action="ban", reason=payload.reason)
                 return {"ok": True, "action": payload.action}
 
             if payload.action == "unban":

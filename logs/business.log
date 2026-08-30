@@ -1497,3 +1497,9 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-08-30 16:36:01] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=4 seconds_left=27230819
 [2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=500 asset=USDT
 [2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=61962011 amount_rub=500 amount_crypto=6.33
+[2026-08-30 21:49:48] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=110 after=210
+[2026-08-30 21:54:07] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3200 after=3300
+[2026-08-30 21:54:08] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3300 after=3400
+[2026-08-30 21:54:10] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3400 after=3500
+[2026-08-30 21:54:11] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3500 after=3600
+[2026-08-30 21:54:13] [INFO] root: [biz][user] balance_subtracted user_id=98 amount=100 before=3600 after=3500

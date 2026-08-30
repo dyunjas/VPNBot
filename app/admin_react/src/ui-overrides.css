@@ -4,6 +4,10 @@
 @media(max-width:900px){.sidebar{height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px}.sidebar nav{min-height:0;overflow:visible}.sidebar-user{flex-shrink:0}}
 
 .admin-audit-dialog{max-width:860px;width:min(860px,calc(100vw - 32px));max-height:min(90vh,920px);overflow:auto}
+.sidebar{overflow:hidden}
+.sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px}
+.sidebar-user{flex:0 0 auto}
+@media(max-width:640px){.user-menu{position:absolute;top:42px;right:0;bottom:auto;left:auto;width:190px;max-height:calc(100vh - 60px);overflow:auto}.sidebar{overflow:hidden}.sidebar nav{overflow-y:auto}}
 .admin-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .audit-section{margin-top:20px;border-top:1px solid var(--border,#e5e7eb);padding-top:16px}
 .audit-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
@@ -136,3 +140,20 @@ html.dark .dialog-actions,html.dark .dialog-head{background:#18181b}
   .broadcast-dialog .dialog-actions{display:grid;grid-template-columns:1fr 1fr}
   .broadcast-dialog .dialog-actions .ui-button{width:100%}
 }
+
+/* Keep the account menu below its trigger on narrow screens. */
+@media(max-width:640px){.user-menu{position:absolute;top:42px;right:0;bottom:auto;left:auto;width:190px;max-height:calc(100vh - 60px);overflow:auto}}
+.sidebar{overflow:hidden}.sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px}.sidebar-user{flex:0 0 auto}
+.resource-table{min-width:0;overflow:hidden}.resource-table .table-scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x}.resource-table table{min-width:760px}body{overflow-x:hidden}
+.button-spinner{display:inline-block;vertical-align:-3px;margin-right:7px;animation:admin-spin .8s linear infinite}
+@keyframes admin-spin{to{transform:rotate(360deg)}}
+
+/* Scroll Area styling from shadcn: a slim rounded thumb with a quiet track. */
+.dialog,.audit-list,.user-menu{scrollbar-width:thin;scrollbar-color:#a1a1aa transparent;scrollbar-gutter:stable}
+.dialog::-webkit-scrollbar,.audit-list::-webkit-scrollbar,.user-menu::-webkit-scrollbar{width:10px;height:10px}
+.dialog::-webkit-scrollbar-track,.audit-list::-webkit-scrollbar-track,.user-menu::-webkit-scrollbar-track{background:transparent}
+.dialog::-webkit-scrollbar-thumb,.audit-list::-webkit-scrollbar-thumb,.user-menu::-webkit-scrollbar-thumb{background:#a1a1aa;border:3px solid transparent;border-radius:999px;background-clip:content-box}
+.dialog::-webkit-scrollbar-thumb:hover,.audit-list::-webkit-scrollbar-thumb:hover,.user-menu::-webkit-scrollbar-thumb:hover{background:#71717a;border-width:2px;background-clip:content-box}
+html.dark .dialog,html.dark .audit-list,html.dark .user-menu{scrollbar-color:#52525b transparent}
+html.dark .dialog::-webkit-scrollbar-thumb,html.dark .audit-list::-webkit-scrollbar-thumb,html.dark .user-menu::-webkit-scrollbar-thumb{background:#52525b;border-color:transparent;background-clip:content-box}
+html.dark .dialog::-webkit-scrollbar-thumb:hover,html.dark .audit-list::-webkit-scrollbar-thumb:hover,html.dark .user-menu::-webkit-scrollbar-thumb:hover{background:#71717a;background-clip:content-box}

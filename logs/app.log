@@ -25678,3 +25678,19 @@ RuntimeError: File at path C:\Users\dyunj\VPNBot\app\frontend\assets\lunet-favic
 [2026-08-30 19:18:17] [INFO] root: Database connection successful
 [2026-08-30 19:18:23] [INFO] root: Settings successfully loaded from .env
 [2026-08-30 19:18:23] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 21:08:11] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:08:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 21:08:12] [INFO] root: Database tables initialized
+[2026-08-30 21:08:12] [INFO] root: Database connection successful
+[2026-08-30 21:08:15] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:08:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 21:43:21] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:43:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 21:43:22] [INFO] root: Database tables initialized
+[2026-08-30 21:43:22] [INFO] root: Database connection successful
+[2026-08-30 21:49:48] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=110 after=210
+[2026-08-30 21:54:07] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3200 after=3300
+[2026-08-30 21:54:08] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3300 after=3400
+[2026-08-30 21:54:10] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3400 after=3500
+[2026-08-30 21:54:11] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3500 after=3600
+[2026-08-30 21:54:13] [INFO] root: [biz][user] balance_subtracted user_id=98 amount=100 before=3600 after=3500

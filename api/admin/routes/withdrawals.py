@@ -1,8 +1,41 @@
+from aiogram import Bot
 from fastapi import APIRouter
 from ..common import *
 from backend.core import loader as bot_loader
+from backend.core.telegram import create_telegram_session
 
 router = APIRouter()
+
+
+async def _notify_withdrawal(*, tg_id: int, withdrawal_id: int, amount: int, approved: bool) -> None:
+    bot_instance = bot_loader.bot
+    temporary_bot = None
+    if bot_instance is None:
+        token = (settings.BOT_TOKEN or "").strip()
+        if not token:
+            return
+        temporary_bot = Bot(token=token, session=create_telegram_session())
+        bot_instance = temporary_bot
+    try:
+        if approved:
+            text = (
+                "✅ <b>Ваш вывод подтверждён</b>\n\n"
+                f"ID заявки: <code>{withdrawal_id}</code>\n"
+                f"Сумма: <b>{amount} RUB</b>"
+            )
+        else:
+            text = (
+                "❗️ <b>Ваш вывод отклонён</b>\n\n"
+                f"ID заявки: <code>{withdrawal_id}</code>\n"
+                f"Сумма: <b>{amount} RUB</b>\n\n"
+                "Средства возвращены на ваш реферальный баланс."
+            )
+        await bot_instance.send_message(chat_id=tg_id, text=text, parse_mode="HTML")
+    except Exception:
+        return
+    finally:
+        if temporary_bot is not None:
+            await temporary_bot.session.close()
 
 @router.get("/withdrawals", dependencies=[Depends(require_superadmin_auth)])
 async def admin_withdrawals(
@@ -77,21 +110,7 @@ async def admin_withdrawal_action(withdrawal_id: int, action: Literal["approve",
             user = await session.get(User, account.user_id)
             await session.commit()
             if user and getattr(user, "tg_id", None):
-                runtime_bot = bot_loader.bot
-                if runtime_bot is None:
-                    return {"ok": True, "status": w.status.value}
-                try:
-                    await runtime_bot.send_message(
-                        chat_id=user.tg_id,
-                        text=(
-                            "<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> <b>Ваш вывод подтверждён</b>\n\n"
-                            f"ID заявки: <code>{withdrawal_id}</code>\n"
-                            f"Сумма: <b>{w.amount} RUB</b>"
-                        ),
-                        parse_mode="HTML",
-                    )
-                except Exception:
-                    pass
+                await _notify_withdrawal(tg_id=int(user.tg_id), withdrawal_id=withdrawal_id, amount=int(w.amount or 0), approved=True)
             return {"ok": True, "status": w.status.value}
 
         w.status = WithdrawalStatus.rejected
@@ -100,22 +119,7 @@ async def admin_withdrawal_action(withdrawal_id: int, action: Literal["approve",
         user = await session.get(User, account.user_id)
         await session.commit()
         if user and getattr(user, "tg_id", None):
-            runtime_bot = bot_loader.bot
-            if runtime_bot is None:
-                return {"ok": True, "status": w.status.value}
-            try:
-                await runtime_bot.send_message(
-                    chat_id=user.tg_id,
-                    text=(
-                        "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> <b>Ваш вывод отклонён</b>\n\n"
-                        f"ID заявки: <code>{withdrawal_id}</code>\n"
-                        f"Сумма: <b>{w.amount} RUB</b>\n\n"
-                        "Средства возвращены на ваш реферальный баланс."
-                    ),
-                    parse_mode="HTML",
-                )
-            except Exception:
-                pass
+            await _notify_withdrawal(tg_id=int(user.tg_id), withdrawal_id=withdrawal_id, amount=int(w.amount or 0), approved=False)
         return {"ok": True, "status": w.status.value}
 
 

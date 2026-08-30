@@ -14188,3 +14188,10 @@ RuntimeError: File at path C:\Users\dyunj\VPNBot\app\frontend\assets\lunet-favic
 [2026-08-30 19:18:17] [INFO] root: Database tables initialized
 [2026-08-30 19:18:17] [INFO] root: Database connection successful
 [2026-08-30 19:18:23] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:08:11] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:08:12] [INFO] root: Database tables initialized
+[2026-08-30 21:08:12] [INFO] root: Database connection successful
+[2026-08-30 21:08:15] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:43:21] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 21:43:22] [INFO] root: Database tables initialized
+[2026-08-30 21:43:22] [INFO] root: Database connection successful

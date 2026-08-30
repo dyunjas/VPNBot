@@ -15,6 +15,7 @@ import {
   GripVertical,
   Headphones,
   LayoutDashboard,
+  LoaderCircle,
   LogOut,
   Menu,
   Moon,
@@ -126,6 +127,11 @@ function Button({
     </button>
   );
 }
+
+function Spinner() {
+  return <LoaderCircle className="button-spinner" size={15} role="status" aria-label="Загрузка" />;
+}
+
 function Card({ children, className = "" }) {
   return <section className={`ui-card ${className}`}>{children}</section>;
 }
@@ -595,7 +601,7 @@ const FIELD_LABELS = {
 function friendlyValue(key, value) {
   if (value === null || value === undefined || value === "") return "—";
   if (typeof value === "boolean") return value ? "Да" : "Нет";
-  if (key === "status") return ({ active: "Активна", expired: "Истекла", canceled: "Отменена", past_due: "Просрочена" }[String(value)] || String(value));
+  if (key === "status") return ({ active: "Активна", expired: "Истекла", canceled: "Отменена", past_due: "Просрочена", pending: "На рассмотрении", approved: "Одобрено", rejected: "Отклонено" }[String(value)] || String(value));
   if (["current_period_start", "current_period_end", "next_renewal_at", "created_at", "updated_at"].includes(key)) { const d = new Date(value); if (!Number.isNaN(d.getTime())) return d.toLocaleString("ru-RU", { dateStyle: "medium", timeStyle: "short" }); }
   if (key === "gb_left") return `${Number(value).toLocaleString("ru-RU")} ГБ`;
   if (key === "traffic_limit_bytes")
@@ -622,10 +628,16 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
   const [amount, setAmount] = useState("100"),
     [gb, setGb] = useState("1"),
     [days, setDays] = useState("30"),
+    [reason, setReason] = useState(""),
     [busy, setBusy] = useState(false),
+    [busyAction, setBusyAction] = useState(""),
     [error, setError] = useState("");
   if (!row) return null;
   const run = async (action) => {
+    if (action === "ban" && !reason.trim()) {
+      setError("Укажите причину блокировки");
+      return;
+    }
     const risky = [
       "ban",
       "sub_balance",
@@ -650,14 +662,16 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
     )
       return;
     setBusy(true);
+    setBusyAction(action);
     setError("");
     try {
-      if (isUser) await onAction(action, { amount: Number(amount), gb: Number(gb), duration_hours: Number(days) * 24 });
+      if (isUser) await onAction(action, { amount: Number(amount), gb: Number(gb), duration_hours: Number(days) * 24, ...(action === "ban" ? { reason: reason.trim() } : {}) });
       else await onResourceAction(action);
     } catch (e) {
       setError(e.message);
     } finally {
       setBusy(false);
+      setBusyAction("");
     }
   };
   return (
@@ -705,14 +719,14 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
                   onChange={(e) => setAmount(e.target.value)}
                 />
                 <Button disabled={busy} onClick={() => run("add_balance")}>
-                  <Wallet size={14} /> Начислить
+                  {busyAction === "add_balance" && <Spinner />}<Wallet size={14} /> Начислить
                 </Button>
                 <Button
                   variant="outline"
                   disabled={busy}
                   onClick={() => run("sub_balance")}
                 >
-                  Списать
+                  {busyAction === "sub_balance" && <Spinner />}Списать
                 </Button>
               </div>
             </div>
@@ -746,29 +760,29 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
                   disabled={busy}
                   onClick={() => run("extend_subscription")}
                 >
-                  Продлить
+                  {busyAction === "extend_subscription" && <Spinner />}Продлить
                 </Button>
                 <Button
                   variant="outline"
                   disabled={busy}
                   onClick={() => run("reduce_subscription")}
                 >
-                  Уменьшить срок
+                  {busyAction === "reduce_subscription" && <Spinner />}Уменьшить срок
                 </Button>
                 <Button disabled={busy} onClick={() => run("add_traffic")}>
-                  Начислить GB
+                  {busyAction === "add_traffic" && <Spinner />}Начислить GB
                 </Button>
                 <Button
                   variant="outline"
                   disabled={busy}
                   onClick={() => run("sub_traffic")}
                 >
-                  Списать GB
+                  {busyAction === "sub_traffic" && <Spinner />}Списать GB
                 </Button>
               </div>
             </div>
             <div className="action-section action-section-danger">
-              <h3>Доступ</h3>
+              {!row.banned && <label className="ui-field ban-reason-field"><span>Причина блокировки *</span><textarea rows="3" required value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Например: нарушение правил сервиса" /></label>}
               <p className="muted">
                 Блокировка отключает VPN-доступ и отправляет уведомление в
                 Telegram.
@@ -786,8 +800,8 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
             {error && <div className="inline-error">{error}</div>}
           </div>
         )}
-        {!isUser && page === "transactions" && <div className="user-actions"><div className="action-section"><h3>Оплата</h3><p className="muted">Подтвердить оплату и начислить сумму на баланс пользователя.</p><Button disabled={busy || row.paid} onClick={() => run("confirm")}>{row.paid ? "Уже подтверждено" : "Подтвердить транзакцию"}</Button></div></div>}
-        {!isUser && page === "withdrawals" && <div className="user-actions"><div className="action-section"><h3>Решение по заявке</h3><p className="muted">После подтверждения деньги будут перечислены пользователю.</p><div className="action-row"><Button disabled={busy || row.status !== "pending"} onClick={() => run("approve")}>Подтвердить вывод</Button><Button variant="danger" disabled={busy || row.status !== "pending"} onClick={() => run("reject")}>Отклонить вывод</Button></div></div></div>}
+        {!isUser && page === "transactions" && <div className="user-actions"><div className="action-section"><h3>Оплата</h3><p className="muted">Подтвердить оплату и начислить сумму на баланс пользователя.</p><Button disabled={busy || row.paid} onClick={() => run("confirm")}>{busyAction === "confirm" && <Spinner />}{row.paid ? "Уже подтверждено" : "Подтвердить транзакцию"}</Button></div></div>}
+        {!isUser && page === "withdrawals" && <div className="user-actions"><div className="action-section"><h3>Решение по заявке</h3><p className="muted">После подтверждения деньги будут перечислены пользователю.</p><div className="action-row"><Button disabled={busy || row.status !== "pending"} onClick={() => run("approve")}>{busyAction === "approve" && <Spinner />}Подтвердить вывод</Button><Button variant="danger" disabled={busy || row.status !== "pending"} onClick={() => run("reject")}>{busyAction === "reject" && <Spinner />}Отклонить вывод</Button></div></div></div>}
         {!isUser && page === "promocodes" && <div className="user-actions"><div className="action-section action-section-danger"><h3>Управление промокодом</h3><p className="muted">Удаление промокода нельзя отменить.</p><Button variant="danger" disabled={busy} onClick={() => run("delete")}>Удалить промокод</Button></div></div>}
         {!isUser && page === "partners" && row.details && <div className="user-actions"><div className="action-section"><h3>Активность партнёрской ссылки</h3><div className="partner-summary"><span>Регистрации: <b>{row.details.summary?.attributed_users ?? 0}</b></span><span>Пользователи с оплатой: <b>{row.details.summary?.paid_users ?? 0}</b></span><span>Оплаченные пополнения: <b>{row.details.summary?.paid_topups ?? 0}</b></span><span>Сумма: <b>{row.details.summary?.paid_amount ?? 0} RUB</b></span></div><div className="partner-activity-list">{(row.details.users || []).slice(0, 8).map((user) => <div key={user.user_id}><span>{user.username || `Пользователь #${user.user_id}`}</span><span>{user.paid_amount ? `${user.paid_amount} RUB` : "Без оплат"}</span></div>)}</div></div></div>}
         {!isUser && page === "logs" && <div className="user-actions"><div className="action-section"><h3>Файл журнала</h3><Button onClick={() => run("download")}>Скачать лог</Button></div></div>}
@@ -1368,7 +1382,7 @@ function ResourcePage({ page }) {
                         {c.toLowerCase().includes("status") ? (
                           <Badge
                             tone={
-                              String(row[c]).toLowerCase().includes("active")
+                              ["active", "approved"].some((status) => String(row[c]).toLowerCase().includes(status))
                                 ? "success"
                                 : "muted"
                             }

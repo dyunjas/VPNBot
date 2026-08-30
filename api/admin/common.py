@@ -200,6 +200,7 @@ class UserActionPayload(BaseModel):
     amount: int | None = None
     gb: float | None = Field(default=None, gt=0)
     duration_hours: int | None = Field(default=None, gt=0)
+    reason: str | None = Field(default=None, max_length=512)
 
 
 class SubscriptionCreatePayload(BaseModel):

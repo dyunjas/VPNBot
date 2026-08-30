@@ -168,6 +168,47 @@ def _windows_filetime_to_int(filetime) -> int:
 def _windows_cpu_percent(interval: float = 0.15) -> float | None:
     if platform.system().lower() != "windows":
         return None
+
+
+def _linux_cpu_percent(interval: float = 0.15) -> float | None:
+    if platform.system().lower() != "linux":
+        return None
+    try:
+        def read_cpu():
+            with open("/proc/stat", "r", encoding="utf-8") as file:
+                values = file.readline().split()[1:]
+            numbers = [int(value) for value in values]
+            idle = numbers[3] + (numbers[4] if len(numbers) > 4 else 0)
+            return sum(numbers), idle
+
+        total_one, idle_one = read_cpu()
+        time.sleep(interval)
+        total_two, idle_two = read_cpu()
+        total_delta = total_two - total_one
+        if total_delta <= 0:
+            return None
+        return round(max(0.0, min(100.0, (1 - (idle_two - idle_one) / total_delta) * 100)), 1)
+    except (OSError, IndexError, ValueError):
+        return None
+
+
+def _linux_memory() -> dict | None:
+    if platform.system().lower() != "linux":
+        return None
+    try:
+        values = {}
+        with open("/proc/meminfo", "r", encoding="utf-8") as file:
+            for line in file:
+                key, raw = line.split(":", 1)
+                values[key] = int(raw.strip().split()[0]) * 1024
+        total = values.get("MemTotal")
+        available = values.get("MemAvailable", values.get("MemFree"))
+        if not total or available is None:
+            return None
+        used = max(0, total - available)
+        return {"percent": used / total * 100, "used": used, "total": total, "available": available}
+    except (OSError, IndexError, ValueError):
+        return None
     try:
         import ctypes
         from ctypes import wintypes
@@ -272,8 +313,8 @@ def _fallback_process_memory() -> dict:
 
 def _collect_server_load_fallback() -> dict:
     checked_at = datetime.now(timezone.utc)
-    cpu_percent = _windows_cpu_percent()
-    memory = _windows_memory()
+    cpu_percent = _windows_cpu_percent() or _linux_cpu_percent()
+    memory = _windows_memory() or _linux_memory()
     disk = shutil.disk_usage(os.getcwd())
     disk_percent = 0.0 if disk.total <= 0 else round((disk.used / disk.total) * 100, 1)
     process_memory = _fallback_process_memory()
