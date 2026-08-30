@@ -82,6 +82,7 @@ async def init_db():
                 "ADD COLUMN IF NOT EXISTS login VARCHAR(64)"
             )
         )
+        await conn.execute(text("UPDATE vpn_admins SET role = 'support' WHERE role = 'manager'"))
         await conn.execute(
             text(
                 "ALTER TABLE vpn_admins "

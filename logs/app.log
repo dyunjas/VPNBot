@@ -25668,3 +25668,13 @@ RuntimeError: File at path C:\Users\dyunj\VPNBot\app\frontend\assets\lunet-favic
 [2026-08-30 19:01:46] [INFO] root: Database connection successful
 [2026-08-30 19:01:50] [INFO] root: Settings successfully loaded from .env
 [2026-08-30 19:01:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 19:14:46] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 19:14:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 19:14:47] [INFO] root: Database tables initialized
+[2026-08-30 19:14:47] [INFO] root: Database connection successful
+[2026-08-30 19:18:17] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 19:18:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 19:18:17] [INFO] root: Database tables initialized
+[2026-08-30 19:18:17] [INFO] root: Database connection successful
+[2026-08-30 19:18:23] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 19:18:23] [DEBUG] asyncio: Using proactor: IocpProactor

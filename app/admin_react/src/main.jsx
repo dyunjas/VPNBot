@@ -248,7 +248,7 @@ function Shell({ page, children }) {
     api("/auth/me")
       .then((me) => {
         setAdmin(me);
-        if (me.role === "support" && page === "dashboard")
+        if (me.role === "support" && !new Set(["users", "subscriptions", "transactions", "referrals"]).has(page))
           location.replace("/admin/users");
       })
       .catch(() => {});
@@ -268,9 +268,12 @@ function Shell({ page, children }) {
       });
   }, [admin]);
   const isSupport = admin?.role === "support";
-  const visibleKeys = isSupport
-    ? new Set(["users", "subscriptions", "transactions", "referrals"])
-    : null;
+  const supportMenuKeys = new Set(["users", "subscriptions", "transactions", "referrals"]);
+  const visibleKeys = !admin
+    ? supportMenuKeys
+    : isSupport
+      ? supportMenuKeys
+      : null;
   const visibleNav = nav
     .map((group) => ({
       ...group,
@@ -1182,7 +1185,7 @@ function AdminAuditDialog({ admin, onClose, onSaved }) {
           <Field label="Имя пользователя" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} required />
           <Field label="Электронная почта" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
           <Field label="Новый пароль" type="password" placeholder="Оставьте пустым, чтобы не менять" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          <label className="ui-field"><span>Роль</span><Dropdown value={form.role} onChange={(role) => setForm({ ...form, role })} options={[{ value: "support", label: "Поддержка" }, { value: "manager", label: "Менеджер" }, { value: "superadmin", label: "Суперадминистратор" }]} ariaLabel="Роль администратора" /></label>
+          <label className="ui-field"><span>Роль</span><Dropdown value={form.role} onChange={(role) => setForm({ ...form, role })} options={[{ value: "support", label: "Поддержка" }, { value: "superadmin", label: "Суперадминистратор" }]} ariaLabel="Роль администратора" /></label>
         </div>
         {error && <div className="inline-error">{error}</div>}
         <div className="dialog-actions"><Button type="button" variant="outline" onClick={onClose}>Отмена</Button><Button type="submit" disabled={busy}>{busy ? "Сохраняем…" : "Сохранить изменения"}</Button></div>

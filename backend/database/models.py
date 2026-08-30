@@ -40,7 +40,6 @@ class WithdrawalStatus(str, enum.Enum):
 
 class AdminRole(str, enum.Enum):
     superadmin = "superadmin"
-    manager = "manager"
     support = "support"
 
 class SupportMessageDirection(str, enum.Enum):
