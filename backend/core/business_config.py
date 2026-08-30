@@ -93,9 +93,31 @@ BUSINESS_SETTINGS: tuple[BusinessSetting, ...] = (
         min_value=60,
         description="Время жизни платежа Pally.",
     ),
+    BusinessSetting(
+        key="PAYMENT_CRYPTOBOT_ENABLED",
+        label="CryptoBot включён",
+        type="bool",
+        default="true",
+        description="Разрешить пользователям создавать платежи через CryptoBot.",
+    ),
+    BusinessSetting(
+        key="PAYMENT_PALLY_ENABLED",
+        label="Pally включён",
+        type="bool",
+        default="true",
+        description="Разрешить пользователям создавать платежи через Pally.",
+    ),
+    BusinessSetting(
+        key="PAYMENT_PLATEGA_ENABLED",
+        label="Platega включён",
+        type="bool",
+        default="true",
+        description="Разрешить пользователям создавать платежи через Platega.",
+    ),
 )
 
 BUSINESS_SETTINGS_BY_KEY = {setting.key: setting for setting in BUSINESS_SETTINGS}
+PAYMENT_SETTING_ALIASES = {"cryptobot": "PAYMENT_CRYPTO_ENABLED"}
 
 
 def _read_env_lines() -> list[str]:
@@ -134,6 +156,12 @@ def _coerce_value(setting: BusinessSetting, value: object) -> str:
             raise ValueError(f"{setting.key} must be >= {setting.min_value}")
         return str(parsed.normalize())
 
+    if setting.type == "bool":
+        normalized = raw.lower()
+        if normalized not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
+            raise ValueError(f"{setting.key} must be boolean")
+        return "true" if normalized in {"true", "1", "yes", "on"} else "false"
+
     return raw
 
 
@@ -150,6 +178,19 @@ def get_business_int(key: str) -> int:
 def get_business_decimal(key: str) -> Decimal:
     setting = BUSINESS_SETTINGS_BY_KEY[key]
     return Decimal(_coerce_value(setting, get_business_value(key)))
+
+
+def get_business_bool(key: str) -> bool:
+    return _coerce_value(BUSINESS_SETTINGS_BY_KEY[key], get_business_value(key)) == "true"
+
+
+def is_payment_method_enabled(method: str) -> bool:
+    key = f"PAYMENT_{method.upper()}_ENABLED"
+    alias = PAYMENT_SETTING_ALIASES.get(method.lower())
+    raw_values = _parse_env()
+    if alias and alias in raw_values and key not in raw_values:
+        return raw_values[alias].strip().lower() in {"true", "1", "yes", "on"}
+    return get_business_bool(key)
 
 
 def list_business_settings() -> list[dict[str, object]]:

@@ -1436,3 +1436,46 @@ aiohttp.client_exceptions.SocketTimeoutError: Timeout on reading data from socke
 [2026-08-21 00:25:55] [INFO] root: [biz][subscription] marked_expired subscription_id=1957
 [2026-08-21 00:25:58] [INFO] root: [biz][subscription] marked_expired subscription_id=1983
 [2026-08-21 00:26:01] [INFO] root: [biz][subscription] marked_expired subscription_id=2378
+[2026-08-25 11:34:22] [INFO] root: [biz][subscription] marked_expired subscription_id=85
+[2026-08-25 11:34:32] [INFO] root: [biz][subscription] marked_expired subscription_id=89
+[2026-08-29 22:30:55] [INFO] root: [biz][subscription] marked_expired subscription_id=1391
+[2026-08-29 22:30:57] [INFO] root: [biz][subscription] marked_expired subscription_id=2542
+[2026-08-29 22:30:58] [INFO] root: [biz][subscription] marked_expired subscription_id=2544
+[2026-08-29 22:30:59] [INFO] root: [biz][subscription] marked_expired subscription_id=2545
+[2026-08-29 22:32:14] [INFO] root: [biz][subscription] marked_expired subscription_id=2549
+[2026-08-29 22:32:16] [INFO] root: [biz][subscription] marked_expired subscription_id=2563
+[2026-08-29 23:17:16] [ERROR] root: Expire checker execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\expire_checker.py", line 220, in expire_checker_loop
+    await expire_checker(bot)
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\expire_checker.py", line 101, in expire_checker
+    billing_service = BillingService(session)
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 52, in __init__
+    self.crypto = CryptoPayAPI()
+                  ~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\backend\payments\cryptobot.py", line 17, in __init__
+    self.api_token = settings.CRYPTOBOT_SECRET
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=1 auto_renew=False
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=1 period_end=2026-12-17 06:08:18.296791+00:00 gb_limit=30.00 rollover_gb=90.00
+[2026-08-30 15:58:43] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=193273528320
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=4 auto_renew=False
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=4 period_end=2026-12-20 11:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:13:21] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=225485783040
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=1 auto_renew=False
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=1 period_end=2027-01-19 16:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:19:22] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=257698037760
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=4 auto_renew=False
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=4 period_end=2027-01-22 21:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:27:17] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=289910292480
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67

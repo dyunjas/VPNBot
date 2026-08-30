@@ -41,10 +41,6 @@ HOP_BY_HOP_HEADERS = {
 TG_ID_PATH_RE = re.compile(r"/users/by-tg/(-?\d+)(?:/|$)")
 
 
-def _read_text(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
-
-
 def no_cache_html(content: str) -> HTMLResponse:
     return HTMLResponse(content=content, headers=NO_CACHE_HEADERS.copy())
 
@@ -131,37 +127,6 @@ def create_fastapi_app(*, title: str, with_db: bool = False) -> FastAPI:
     )
     apply_common_hardening(app)
     return app
-
-
-def render_shell(
-    *,
-    stylesheet_urls: list[str],
-    bootstrap_scripts: list[str],
-    app_entry_url: str,
-    head_scripts: list[str] | None = None,
-) -> HTMLResponse:
-    html = _read_text(FRONTEND_DIR / "shell.html")
-    app_shell = _read_text(FRONTEND_DIR / "shell" / "app-shell.html")
-    sidebar = _read_text(FRONTEND_DIR / "shell" / "sidebar.html")
-    main = _read_text(FRONTEND_DIR / "shell" / "main.html")
-    footer_nav = _read_text(FRONTEND_DIR / "shell" / "footer-nav.html")
-
-    styles = "".join(f'<link rel="stylesheet" href="{url}" />' for url in stylesheet_urls)
-    entry_script = f'<script defer src="{app_entry_url}"></script>' if app_entry_url else ""
-    rendered = (
-        html.replace(
-            "__APP_SHELL__",
-            app_shell
-            .replace("__SHELL_SIDEBAR__", sidebar)
-            .replace("__SHELL_MAIN__", main)
-            .replace("__SHELL_FOOTER_NAV__", footer_nav),
-        )
-        .replace("__SURFACE_STYLES__", styles)
-        .replace("__HEAD_SCRIPTS__", "".join(head_scripts or []))
-        .replace("__APP_BOOTSTRAP__", "".join(bootstrap_scripts) + entry_script)
-        .replace("__APP_ENTRY__", app_entry_url)
-    )
-    return no_cache_html(rendered)
 
 
 def register_legal_routes(app: FastAPI) -> None:

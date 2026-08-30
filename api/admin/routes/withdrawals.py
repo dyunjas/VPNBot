@@ -9,6 +9,7 @@ async def admin_withdrawals(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=200),
     status: Literal["all", "pending", "approved", "rejected"] = Query(default="all"),
+    search: str | None = Query(default=None),
 ):
     offset = (page - 1) * page_size
     async with async_session() as session:
@@ -23,6 +24,19 @@ async def admin_withdrawals(
             st = WithdrawalStatus(status)
             stmt = stmt.where(ReferralWithdrawal.status == st)
             count_stmt = count_stmt.where(ReferralWithdrawal.status == st)
+
+        raw_search = (search or "").strip()
+        if raw_search:
+            pattern = f"%{raw_search}%"
+            search_clause = or_(
+                cast(ReferralWithdrawal.id, String).ilike(pattern),
+                cast(ReferralAccount.user_id, String).ilike(pattern),
+                cast(User.tg_id, String).ilike(pattern),
+                func.coalesce(User.username, "").ilike(pattern),
+                func.coalesce(ReferralWithdrawal.method, "").ilike(pattern),
+            )
+            stmt = stmt.where(search_clause)
+            count_stmt = count_stmt.join(ReferralAccount, ReferralAccount.id == ReferralWithdrawal.referral_account_id).join(User, User.id == ReferralAccount.user_id).where(search_clause)
 
         total = int(await session.scalar(count_stmt) or 0)
         rows = (

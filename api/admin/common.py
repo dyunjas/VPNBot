@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import String, cast, delete, desc, func, literal, or_, select, update
 
 from backend.core.config import settings
+from backend.core.business_config import get_business_bool, get_business_value
 from backend.database.models import (
     BroadcastHistory,
     BroadcastJobStatus,
@@ -177,7 +178,7 @@ async def require_support_auth(auth=Depends(require_admin_auth)) -> dict:
 
 
 class LoginPayload(BaseModel):
-    login: str
+    email: str
     password: str
 
 
@@ -188,9 +189,13 @@ class UserActionPayload(BaseModel):
         "add_balance",
         "sub_balance",
         "add_traffic",
+        "sub_traffic",
+        "extend_subscription",
+        "reduce_subscription",
     ]
     amount: int | None = None
     gb: float | None = Field(default=None, gt=0)
+    duration_hours: int | None = Field(default=None, gt=0)
 
 
 class SubscriptionCreatePayload(BaseModel):
@@ -205,6 +210,7 @@ class SubscriptionUpdatePayload(BaseModel):
     auto_renew: bool | None = None
     device_limit: int | None = Field(default=None, ge=0)
     extend_days: int | None = None
+    reduce_days: int | None = Field(default=None, gt=0)
     current_period_end: datetime | None = None
 
 

@@ -13,8 +13,8 @@ class CryptoPayAPI:
     BASE_URL_MAINNET = "https://pay.crypt.bot/api"
     BASE_URL_TESTNET = "https://testnet-pay.crypt.bot/api"
 
-    def __init__(self, *, testnet: bool = False, timeout: int = 20):
-        self.api_token = settings.CRYPTOBOT_SECRET
+    def __init__(self, *, api_token: str | None = None, testnet: bool = False, timeout: int = 20):
+        self.api_token = api_token or settings.CRYPTOBOT_SECRET
         self.base_url = self.BASE_URL_TESTNET if testnet else self.BASE_URL_MAINNET
         self._timeout = aiohttp.ClientTimeout(total=timeout)
         self._session: Optional[aiohttp.ClientSession] = None

@@ -313,7 +313,7 @@ def _smtp_send_code(email: str, code: str, purpose: str = "login") -> None:
 
     html_body, plain_body = render_code_email(code, purpose=purpose)
     msg = EmailMessage()
-    msg["Subject"] = "Код подтверждения Lunet" if purpose == "bind" else "Код входа Lunet"
+    msg["Subject"] = "Подтверждение email Lunet" if purpose == "bind" else ("Код администратора Lunet" if purpose == "admin_login" else "Код входа Lunet")
     msg["From"] = f"Lunet <{from_email}>"
     msg["To"] = email
     msg.set_content(plain_body)

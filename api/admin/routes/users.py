@@ -37,9 +37,9 @@ async def _send_user_status_change_notification(*, tg_id: int, action: str) -> N
         bot_instance = temp_bot
 
     text = (
-        "⛔️ Ваш аккаунт заблокирован администратором. Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupport."
+        "<b><tg-emoji emoji-id='5872829476143894491'>🚫</tg-emoji> Ваш аккаунт заблокирован администратором.</b>\n\n Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupport."
         if action == "ban"
-        else "✅ Ваш аккаунт разблокирован."
+        else "<b><tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji> Ваш аккаунт разблокирован администратором.</b>\n\n Дополнительных действий с вашей стороны не требуется. Если у вас возникнут вопросы, свяжитесь со службой поддержки @LunetVPNSupport."
     )
     try:
         await bot_instance.send_message(chat_id=tg_id, text=text)
@@ -425,6 +425,48 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
                     "topup_gb": float(topup_gb or 0),
                     "traffic_limit_bytes": int(user.traffic_limit_bytes or 0),
                 }
+
+            if payload.action == "sub_traffic":
+                gb = Decimal(str(payload.gb or 0))
+                if gb <= 0:
+                    raise HTTPException(status_code=400, detail="gb must be > 0")
+                subscription = await subscription_service.get_active_subscription(user_id)
+                if not subscription:
+                    raise SubscriptionNotFound("Subscription not found")
+                current_topup = await subscription_service.get_topup_gb(subscription.id)
+                if gb > current_topup:
+                    raise HTTPException(status_code=400, detail="cannot subtract more traffic than added")
+                await subscription_service.topup_repo.add_topup(subscription_id=subscription.id, gb=-gb)
+                await subscription_service._refresh_user_traffic_limit_snapshot(user_id=user_id, subscription=subscription)
+                await activity_service.log_user_event(
+                    user_id=user_id, category="traffic", action="traffic_subtracted", source="admin_panel",
+                    traffic_gb=-gb, subscription_id=subscription.id, note="Списание дополнительного трафика из админки",
+                )
+                await session.refresh(user)
+                await session.commit()
+                return {"ok": True, "action": payload.action, "gb": float(gb), "topup_gb": float(await subscription_service.get_topup_gb(subscription.id)), "traffic_limit_bytes": int(user.traffic_limit_bytes or 0)}
+
+            if payload.action in {"extend_subscription", "reduce_subscription"}:
+                duration_hours = int(payload.duration_hours or 0)
+                if duration_hours <= 0:
+                    raise HTTPException(status_code=400, detail="duration_hours must be > 0")
+                subscription = await subscription_service.get_active_subscription(user_id)
+                if not subscription:
+                    raise SubscriptionNotFound("Subscription not found")
+                now = datetime.now(timezone.utc)
+                end = _as_aware_utc(subscription.current_period_end) or now
+                delta = timedelta(hours=duration_hours)
+                new_end = end + delta if payload.action == "extend_subscription" else max(now, end - delta)
+                subscription.current_period_end = new_end
+                subscription.next_renewal_at = new_end
+                if new_end <= now:
+                    subscription.status = SubStatus.expired
+                await activity_service.log_user_event(
+                    user_id=user_id, category="subscription", action=payload.action, source="admin_panel",
+                    subscription_id=subscription.id, note=f"Изменение срока на {duration_hours} ч.",
+                )
+                await session.commit()
+                return {"ok": True, "action": payload.action, "duration_hours": duration_hours, "current_period_end": _to_iso(new_end), "status": subscription.status.value}
 
             raise HTTPException(status_code=400, detail="unsupported action")
         except HTTPException:

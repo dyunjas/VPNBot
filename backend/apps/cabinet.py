@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from fastapi import Request
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
-from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes, render_shell
-from backend.core.config import settings
+from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
 
 CABINET_BUILD = "20260808-cabinet-responsive-fix"
+CABINET_REACT_DIST = FRONTEND_DIR / "cabinet_dist"
 
 
 def create_app():
@@ -15,32 +16,12 @@ def create_app():
     @app.get("/cabinet")
     @app.get("/cabinet/")
     async def cabinet():
-        return render_shell(
-            stylesheet_urls=[
-                "/miniapp/shared-tokens.css?v=1",
-                "/miniapp/shared-ui.css?v=11",
-                "/miniapp/miniapp.css?v=16",
-            ],
-            bootstrap_scripts=[
-                (
-                    "<script>"
-                    f"window.__API_BASE_URL=window.location.origin;window.__ASSET_VERSION__='{CABINET_BUILD}';"
-                    "window.__SURFACE='cabinet';window.__UI_MODE='cabinet';"
-                    "</script>"
-                ),
-            ],
-            app_entry_url=f"/miniapp/app.shared.js?v={CABINET_BUILD}",
-        )
+        return no_cache_html((CABINET_REACT_DIST / "index.html").read_text(encoding="utf-8"))
 
     @app.get("/cabinet/login")
     @app.get("/cabinet/login/")
     async def cabinet_login():
-        html = (FRONTEND_DIR / "cabinet-login.html").read_text(encoding="utf-8")
-        rendered = html.replace(
-            "__API_BOOTSTRAP__",
-            "<script>window.__API_BASE_URL=window.location.origin;</script>",
-        )
-        return no_cache_html(rendered)
+        return no_cache_html((CABINET_REACT_DIST / "index.html").read_text(encoding="utf-8"))
 
     @app.get("/cabinet/auth/deeplink/{token}")
     async def cabinet_deeplink(token: str):
@@ -50,7 +31,7 @@ def create_app():
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Вход в кабинет | Lunet</title>
-  <link rel="stylesheet" href="/miniapp/cabinet-auth.css?v=22" />
+  <style>body{{margin:0;background:#fafafa;color:#18181b;font-family:Inter,Arial,sans-serif}}.auth-page{{min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box}}.auth-card{{width:min(420px,100%);padding:28px;border:1px solid #e4e4e7;border-radius:12px;background:#fff;box-shadow:0 12px 36px #0000000d}}.auth-card__logo{{width:42px;height:42px;object-fit:contain}}.auth-card__head h2{{margin:22px 0 8px;font-size:24px}}.status{{color:#71717a;font-size:14px;line-height:1.5}}.status.error{{color:#dc2626}}</style>
 </head>
 <body>
   <main class="auth-page">
@@ -94,15 +75,13 @@ def create_app():
 
     @app.get("/favicon.ico")
     async def favicon():
-        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.ico")
-
-    @app.get("/__APP_ENTRY__")
-    async def legacy_app_entry():
-        return RedirectResponse(url=f"/miniapp/app.shared.js?v={CABINET_BUILD}", status_code=307)
+        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
 
     @app.get("/health")
     async def health():
         return {"status": "ok", "service": "cabinet"}
 
+    if CABINET_REACT_DIST.is_dir():
+        app.mount("/cabinet/assets", StaticFiles(directory=CABINET_REACT_DIST / "assets"), name="cabinet_react_assets")
     mount_frontend_assets(app)
     return app

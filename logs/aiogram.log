@@ -6392,3 +6392,67 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-08-21 11:13:44] [INFO] aiogram.event: Update id=891138108 is handled. Duration 2186 ms by bot id=7557954606
 [2026-08-21 11:14:09] [INFO] aiogram.event: Update id=891138109 is handled. Duration 169 ms by bot id=7557954606
 [2026-08-21 11:14:26] [INFO] aiogram.event: Update id=891138110 is handled. Duration 15110 ms by bot id=7557954606
+[2026-08-29 23:26:36] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:26:36] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:27:09] [INFO] aiogram.event: Update id=891138113 is handled. Duration 593 ms by bot id=7557954606
+[2026-08-29 23:27:11] [INFO] aiogram.event: Update id=891138114 is handled. Duration 199 ms by bot id=7557954606
+[2026-08-29 23:27:14] [INFO] aiogram.event: Update id=891138115 is handled. Duration 217 ms by bot id=7557954606
+[2026-08-29 23:27:15] [INFO] aiogram.event: Update id=891138116 is handled. Duration 204 ms by bot id=7557954606
+[2026-08-29 23:27:21] [INFO] aiogram.event: Update id=891138117 is handled. Duration 188 ms by bot id=7557954606
+[2026-08-29 23:27:22] [INFO] aiogram.event: Update id=891138118 is handled. Duration 188 ms by bot id=7557954606
+[2026-08-29 23:27:23] [INFO] aiogram.event: Update id=891138119 is handled. Duration 257 ms by bot id=7557954606
+[2026-08-29 23:27:25] [INFO] aiogram.event: Update id=891138120 is handled. Duration 159 ms by bot id=7557954606
+[2026-08-29 23:28:10] [INFO] aiogram.event: Update id=891138121 is handled. Duration 103 ms by bot id=7557954606
+[2026-08-29 23:28:13] [INFO] aiogram.event: Update id=891138122 is handled. Duration 105 ms by bot id=7557954606
+[2026-08-29 23:28:15] [INFO] aiogram.event: Update id=891138123 is handled. Duration 197 ms by bot id=7557954606
+[2026-08-29 23:33:17] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:33:17] [INFO] root: Bot polling cancelled
+[2026-08-29 23:33:18] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:33:25] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:33:27] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:45:34] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:45:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-08-29 23:45:34] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-29 23:45:34] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:45:34] [INFO] root: Bot polling cancelled
+[2026-08-29 23:45:41] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:45:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:46:32] [INFO] aiogram.event: Update id=891138124 is handled. Duration 1721 ms by bot id=7557954606
+[2026-08-29 23:46:33] [INFO] aiogram.event: Update id=891138125 is handled. Duration 438 ms by bot id=7557954606
+[2026-08-29 23:46:35] [INFO] aiogram.event: Update id=891138126 is handled. Duration 346 ms by bot id=7557954606
+[2026-08-29 23:51:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:51:50] [INFO] root: Bot polling cancelled
+[2026-08-29 23:51:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:51:57] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:51:59] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:52:19] [INFO] aiogram.event: Update id=891138127 is handled. Duration 1904 ms by bot id=7557954606
+[2026-08-29 23:52:20] [INFO] aiogram.event: Update id=891138128 is handled. Duration 352 ms by bot id=7557954606
+[2026-08-29 23:52:21] [INFO] aiogram.event: Update id=891138129 is handled. Duration 333 ms by bot id=7557954606
+[2026-08-29 23:52:23] [INFO] aiogram.event: Update id=891138130 is handled. Duration 254 ms by bot id=7557954606
+[2026-08-29 23:52:26] [INFO] aiogram.event: Update id=891138131 is handled. Duration 1220 ms by bot id=7557954606
+[2026-08-30 00:46:14] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-08-30 00:46:14] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-30 00:46:26] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-08-30 17:55:26] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 17:55:28] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:55:32] [INFO] aiogram.event: Update id=891138132 is handled. Duration 3930 ms by bot id=7557954606
+[2026-08-30 17:55:32] [INFO] aiogram.event: Update id=891138133 is handled. Duration 2740 ms by bot id=7557954606
+[2026-08-30 17:57:35] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-30 17:57:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-08-30 17:57:35] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-30 17:57:35] [INFO] root: Bot polling cancelled
+[2026-08-30 17:57:35] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:57:43] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 17:57:45] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:58:07] [INFO] aiogram.event: Update id=891138134 is handled. Duration 4417 ms by bot id=7557954606
+[2026-08-30 17:58:25] [INFO] aiogram.event: Update id=891138135 is handled. Duration 191 ms by bot id=7557954606
+[2026-08-30 17:59:04] [INFO] aiogram.event: Update id=891138136 is handled. Duration 372 ms by bot id=7557954606
+[2026-08-30 17:59:06] [INFO] aiogram.event: Update id=891138137 is handled. Duration 335 ms by bot id=7557954606
+[2026-08-30 18:00:17] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-30 18:00:17] [INFO] root: Bot polling cancelled
+[2026-08-30 18:00:17] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 18:00:28] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 18:00:29] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 18:00:37] [INFO] aiogram.event: Update id=891138138 is handled. Duration 4656 ms by bot id=7557954606
+[2026-08-30 18:04:30] [INFO] aiogram.event: Update id=891138139 is handled. Duration 213 ms by bot id=7557954606
+[2026-08-30 18:13:05] [INFO] aiogram.event: Update id=891138140 is handled. Duration 198 ms by bot id=7557954606

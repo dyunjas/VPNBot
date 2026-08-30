@@ -14,6 +14,7 @@ from api.bot.common import (
     require_bot_auth,
 )
 from backend.core.business_config import get_business_int
+from backend.services.payment_method_service import get_payment_method_config, is_payment_method_enabled
 from backend.services import BillingService, TransactionService
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
@@ -21,10 +22,19 @@ router = APIRouter(dependencies=[Depends(require_bot_auth)])
 
 @router.post("/users/by-tg/{tg_id}/payments/platega")
 async def create_platega_payment(tg_id: int, payload: PaymentPayload, user_service=Depends(get_user_service)):
+    if not await is_payment_method_enabled(user_service.session, "platega"):
+        raise HTTPException(status_code=503, detail="Platega временно отключён")
     user = await _get_user_or_404(user_service, tg_id)
     billing = BillingService(user_service.session)
     try:
-        payment = await billing.create_platega_payment(user_id=user.id, amount=payload.amount, payment_method=int(payload.payment_method or 2), description=payload.description, return_url=payload.return_url, failed_url=payload.failed_url)
+        config = await get_payment_method_config(user_service.session, "platega")
+        requested_method = int(payload.payment_method or 2)
+        card_method = int(config.get("method_card", 11))
+        sbp_method = int(config.get("method_sbp", 2))
+        # Older bot clients send 11/2; map those values to the current
+        # admin-managed provider method IDs.
+        payment_method = card_method if requested_method in (11, card_method) else sbp_method
+        payment = await billing.create_platega_payment(user_id=user.id, amount=payload.amount, payment_method=payment_method, description=payload.description, return_url=payload.return_url, failed_url=payload.failed_url)
     except Exception as e:
         raise _map_service_error(e)
     finally:
@@ -61,6 +71,8 @@ async def confirm_platega_payment(tg_id: int, payload: ConfirmPaymentPayload, us
 
 @router.post("/users/by-tg/{tg_id}/payments/crypto")
 async def create_crypto_invoice(tg_id: int, payload: PaymentPayload, user_service=Depends(get_user_service)):
+    if not await is_payment_method_enabled(user_service.session, "cryptobot"):
+        raise HTTPException(status_code=503, detail="CryptoBot временно отключён")
     user = await _get_user_or_404(user_service, tg_id)
     billing = BillingService(user_service.session)
     try:
@@ -101,6 +113,8 @@ async def confirm_crypto_invoice(tg_id: int, payload: ConfirmPaymentPayload, use
 
 @router.post("/users/by-tg/{tg_id}/payments/pally")
 async def create_pally_payment(tg_id: int, payload: PaymentPayload, user_service=Depends(get_user_service)):
+    if not await is_payment_method_enabled(user_service.session, "pally"):
+        raise HTTPException(status_code=503, detail="Pally временно отключён")
     user = await _get_user_or_404(user_service, tg_id)
     billing = BillingService(user_service.session)
     try:

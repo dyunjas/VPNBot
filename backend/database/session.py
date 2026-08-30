@@ -88,6 +88,18 @@ async def init_db():
                 "ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)"
             )
         )
+        await conn.execute(text("ALTER TABLE vpn_admins ADD COLUMN IF NOT EXISTS username VARCHAR(64)"))
+        await conn.execute(text("ALTER TABLE vpn_admins ADD COLUMN IF NOT EXISTS email VARCHAR(320)"))
+        await conn.execute(text("ALTER TABLE vpn_admins ADD COLUMN IF NOT EXISTS user_id INTEGER"))
+        await conn.execute(text("UPDATE vpn_admins a SET username = COALESCE(NULLIF(a.username, ''), NULLIF(a.login, ''), 'admin-' || a.id::text) WHERE a.username IS NULL OR a.username = ''"))
+        await conn.execute(text("UPDATE vpn_admins a SET email = COALESCE(NULLIF(a.email, ''), u.email, 'admin-' || a.id::text || '@invalid.local') FROM vpn_users u WHERE a.user_id = u.id AND (a.email IS NULL OR a.email = '')"))
+        await conn.execute(text("UPDATE vpn_admins SET email = 'admin-' || id::text || '@invalid.local' WHERE email IS NULL OR email = ''"))
+        await conn.execute(text("ALTER TABLE vpn_admins ALTER COLUMN username SET NOT NULL"))
+        await conn.execute(text("ALTER TABLE vpn_admins ALTER COLUMN email SET NOT NULL"))
+        await conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_vpn_admins_email ON vpn_admins(email)"))
+        await conn.execute(text("DROP INDEX IF EXISTS ix_vpn_admins_username"))
+        await conn.execute(text("DO $$ DECLARE c RECORD; BEGIN FOR c IN SELECT constraint_name FROM information_schema.constraint_column_usage WHERE table_name='vpn_admins' AND column_name='user_id' LOOP EXECUTE 'ALTER TABLE vpn_admins DROP CONSTRAINT IF EXISTS ' || quote_ident(c.constraint_name); END LOOP; END $$"))
+        await conn.execute(text("ALTER TABLE vpn_admins DROP COLUMN IF EXISTS user_id"))
         await conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_vpn_admins_login ON vpn_admins(login)"))
         await conn.execute(
             text(

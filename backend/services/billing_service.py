@@ -23,6 +23,7 @@ from backend.payments.cryptobot import CryptoPayAPI, CurrencyType
 from backend.payments.pally import PallyPaymentAPI
 
 from backend.services.subscription_service import SubscriptionService
+from backend.services.payment_method_service import get_payment_method_config
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.activity_service import ActivityService
 from backend.services.exceptions import (
@@ -48,9 +49,35 @@ class BillingService:
         self.remnawave_service = RemnaWaveService(session)
         self.activity_service = ActivityService(session)
 
-        self.platega = PlategaPaymentAPI()
-        self.crypto = CryptoPayAPI()
+        self.platega: PlategaPaymentAPI | None = None
+        self.crypto: CryptoPayAPI | None = None
         self.pally: PallyPaymentAPI | None = None
+        self._payment_config_signature: tuple | None = None
+
+    async def _ensure_payment_clients(self) -> None:
+        """Apply admin-managed provider settings before making a provider request."""
+        crypto = await get_payment_method_config(self.session, "cryptobot")
+        pally = await get_payment_method_config(self.session, "pally")
+        platega = await get_payment_method_config(self.session, "platega")
+        signature = tuple(
+            (method, key, value)
+            for method, config in (("cryptobot", crypto), ("pally", pally), ("platega", platega))
+            for key, value in sorted(config.items())
+        )
+        if signature == self._payment_config_signature:
+            return
+        self.platega = (
+            PlategaPaymentAPI(merchant_id=platega["merchant_id"], secret=platega["secret"])
+            if platega.get("merchant_id") and platega.get("secret") else None
+        )
+        self.crypto = CryptoPayAPI(api_token=crypto["api_token"]) if crypto.get("api_token") else None
+        self.pally = (
+            PallyPaymentAPI(
+                api_token=pally["api_token"], shop_id=pally["shop_id"],
+                success_url=pally.get("success_url"), fail_url=pally.get("fail_url")
+            ) if pally.get("api_token") and pally.get("shop_id") else None
+        )
+        self._payment_config_signature = signature
 
     def _get_pally(self) -> PallyPaymentAPI:
         if self.pally is None:
@@ -108,6 +135,9 @@ class BillingService:
         return_url: str | None = None,
         failed_url: str | None = None,
     ) -> dict:
+        await self._ensure_payment_clients()
+        if self.platega is None:
+            raise ValueError("Platega is not configured in the admin panel")
         logger.info(
             "[biz][billing] platega_create_requested user_id=%s amount=%s payment_method=%s",
             user_id,
@@ -151,6 +181,9 @@ class BillingService:
         return payment
 
     async def confirm_platega_payment(self, provider_transaction_id: str):
+        await self._ensure_payment_clients()
+        if self.platega is None:
+            raise ValueError("Platega is not configured in the admin panel")
         logger.info(
             "[biz][billing] platega_confirm_requested provider_id=%s",
             provider_transaction_id,
@@ -330,6 +363,9 @@ class BillingService:
         description: str | None = None,
         expires_in: int | None = None,
     ) -> dict:
+        await self._ensure_payment_clients()
+        if self.crypto is None:
+            raise ValueError("CryptoBot is not configured in the admin panel")
         logger.info(
             "[biz][billing] crypto_create_requested user_id=%s amount_rub=%s asset=%s",
             user_id,
@@ -377,6 +413,9 @@ class BillingService:
         return invoice
 
     async def confirm_crypto_payment(self, invoice_id: int):
+        await self._ensure_payment_clients()
+        if self.crypto is None:
+            raise ValueError("CryptoBot is not configured in the admin panel")
         logger.info("[biz][billing] crypto_confirm_requested invoice_id=%s", invoice_id)
         tx = await self.tx_repo.get_by_provider_id_for_update(str(invoice_id))
         if not tx:
@@ -504,6 +543,9 @@ class BillingService:
         failed_url: str | None = None,
         ttl: int | None = None,
     ) -> dict:
+        await self._ensure_payment_clients()
+        if self.pally is None:
+            raise ValueError("Pally is not configured in the admin panel")
         logger.info(
             "[biz][billing] pally_create_requested user_id=%s amount=%s ttl=%s",
             user_id,
@@ -524,8 +566,10 @@ class BillingService:
             amount=amount,
             order_id=payload,
             description=description or f"Top up {amount} RUB",
-            success_url=return_url,
-            fail_url=failed_url,
+            # Redirect URLs are controlled by the Pally settings in the
+            # admin panel; request-specific defaults must not override them.
+            success_url=None,
+            fail_url=None,
             ttl=ttl or get_business_int("PALLY_INVOICE_TTL_SEC"),
         )
 
@@ -678,6 +722,9 @@ class BillingService:
         return tx, True
 
     async def confirm_pally_payment(self, provider_transaction_id: str):
+        await self._ensure_payment_clients()
+        if self.pally is None:
+            raise ValueError("Pally is not configured in the admin panel")
         logger.info(
             "[biz][billing] pally_confirm_requested provider_id=%s",
             provider_transaction_id,

@@ -72,6 +72,15 @@ class BuyTrafficPayload(InitPayload):
     gb: int
 
 
+class BuyDeviceSlotsPayload(InitPayload):
+    slots: int
+
+
+class GiftSubscriptionPayload(InitPayload):
+    plan_id: int
+    recipient: str
+
+
 class TopupPayload(InitPayload):
     amount: int
     method: str = "platega"

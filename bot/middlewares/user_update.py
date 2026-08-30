@@ -47,7 +47,7 @@ class UserUpdateMiddleware(BaseMiddleware):
 
     async def _notify_banned(self, event: TelegramObject, tg_id: int) -> None:
         text = (
-            "<b>Ваш аккаунт заблокирован.</b>\n\n"
+            "<b><tg-emoji emoji-id='5872829476143894491'>🚫</tg-emoji> Ваш аккаунт был заблокирован администратором.</b>\n\n"
             "Для дополнительной информации свяжитесь со службой поддержки @LunetVPNSupport."
         )
         try:

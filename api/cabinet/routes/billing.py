@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.core.business_config import get_business_int
+from backend.services.payment_method_service import get_payment_method_config
 from api.cabinet.common import (
     BalanceCheckPayload,
     BillingService,
@@ -72,7 +73,10 @@ async def cabinet_balance_topup(
                 payment = await billing.create_platega_payment(
                     user_id=user.id,
                     amount=float(payload.amount),
-                    payment_method=11 if pl_type == "card" else 2,
+                    payment_method=int((await get_payment_method_config(session, "platega")).get(
+                        "method_card" if pl_type == "card" else "method_sbp",
+                        11 if pl_type == "card" else 2,
+                    )),
                     description=f"Пополнение баланса на {payload.amount} RUB",
                     return_url="https://t.me/LunetVPNBot",
                     failed_url="https://t.me/LunetVPNBot",

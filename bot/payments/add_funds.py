@@ -42,6 +42,6 @@ async def choose_payment_system_clb(message: Message, state: FSMContext):
     await message.answer_photo(
         photo=PROFILE_IMG,
         caption=payment_messages.PAYMENT_METHOD_PROMPT,
-        reply_markup=payment_choice_kb(),
+        reply_markup=await payment_choice_kb(),
     )
     await state.set_state(PaymentStates.waiting_for_payment_system)

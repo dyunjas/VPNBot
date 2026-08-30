@@ -24513,3 +24513,1152 @@ aiohttp_socks._errors.ProxyConnectionError: [Errno 10060] Couldn't connect to pr
 [2026-08-21 11:14:28] [WARNING] root: [remnawave] request retry method=POST url=https://recovery-panel.lunetpn.ru/api/users attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users
 [2026-08-21 11:14:28] [WARNING] root: [remnawave] sync failed user_id=100 err=remnawave request failed method=POST url=https://recovery-panel.lunetpn.ru/api/users: Connection timeout to host https://recovery-panel.lunetpn.ru/api/users
 [2026-08-21 11:14:28] [WARNING] root: [remnawave] using cached subscription_url user_id=100
+[2026-08-25 11:34:19] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 11:34:19] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 11:34:20] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 11:34:21] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 11:34:21] [INFO] root: Database tables initialized
+[2026-08-25 11:34:21] [INFO] root: Database connection successful
+[2026-08-25 11:34:22] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-25 11:34:22] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-25 11:34:22] [INFO] root: [biz][subscription] marked_expired subscription_id=85
+[2026-08-25 11:34:26] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/4 attempt=1/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/4
+[2026-08-25 11:34:30] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/4 attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/4
+[2026-08-25 11:34:30] [ERROR] root: remnawave expired status sync failed user_id=96: remnawave request failed method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/4: Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/4
+[2026-08-25 11:34:30] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-25 11:34:32] [INFO] root: [biz][subscription] marked_expired subscription_id=89
+[2026-08-25 11:34:33] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/6 attempt=1/2 err=Cannot connect to host recovery-panel.lunetpn.ru:443 ssl:default [getaddrinfo failed]
+[2026-08-25 11:34:37] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/6 attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/6
+[2026-08-25 11:34:37] [ERROR] root: remnawave expired status sync failed user_id=102: remnawave request failed method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/6: Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/6
+[2026-08-25 11:34:37] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-25 11:45:38] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 11:45:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/login "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/login "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/dashboard "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/dashboard "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/styles/tabler-admin.css "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/styles/tabler-admin.css "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.css "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.css "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/apexcharts.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:06:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:06:29] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/apexcharts.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:06:48] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:06:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:00] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:16:10] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/login "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/dashboard "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/maintenance "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/diagnostics "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/admins "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/legal "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/users "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/subscriptions "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/plans "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/transactions "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/withdrawals "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/referrals "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/broadcast "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/logs "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/promocodes "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:10] [INFO] httpx: HTTP Request: GET http://testserver/admin/partners "HTTP/1.1 200 OK"
+[2026-08-25 12:16:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:11] [INFO] httpx: HTTP Request: GET http://testserver/admin/styles/tabler-admin.css "HTTP/1.1 200 OK"
+[2026-08-25 12:16:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:11] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.css "HTTP/1.1 200 OK"
+[2026-08-25 12:16:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:11] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/tabler.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:16:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:16:11] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/apexcharts.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:22:01] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:22:02] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:28:45] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:28:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/login "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/dashboard "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/users "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/subscriptions "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/plans "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/transactions "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/withdrawals "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/referrals "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/partners "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/promocodes "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/broadcast "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/maintenance "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/admins "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/legal "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:37] [INFO] httpx: HTTP Request: GET http://testserver/admin/logs "HTTP/1.1 200 OK"
+[2026-08-25 12:53:37] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:38] [INFO] httpx: HTTP Request: GET http://testserver/admin/styles/tabler-admin.css "HTTP/1.1 200 OK"
+[2026-08-25 12:53:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:38] [INFO] httpx: HTTP Request: GET http://testserver/admin/js/core/layout.js "HTTP/1.1 200 OK"
+[2026-08-25 12:53:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-25 12:53:38] [INFO] httpx: HTTP Request: GET http://testserver/admin/vendor/tabler/apexcharts.min.js "HTTP/1.1 200 OK"
+[2026-08-25 12:57:53] [INFO] root: Settings successfully loaded from .env
+[2026-08-25 12:57:54] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-27 22:52:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-27 22:52:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-27 22:52:39] [INFO] root: Settings successfully loaded from .env
+[2026-08-27 22:52:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-27 22:52:41] [INFO] root: Database tables initialized
+[2026-08-27 22:52:41] [INFO] root: Database connection successful
+[2026-08-27 22:52:41] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-27 22:52:41] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-27 23:03:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-27 23:03:31] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-27 23:39:15] [INFO] root: Settings successfully loaded from .env
+[2026-08-27 23:39:15] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-28 00:22:11] [INFO] root: Settings successfully loaded from .env
+[2026-08-28 00:22:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:10:55] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:10:56] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:10:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:10:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:10:58] [INFO] root: Database tables initialized
+[2026-08-29 20:10:58] [INFO] root: Database connection successful
+[2026-08-29 20:10:58] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 20:10:58] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 20:29:59] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:30:01] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:31:10] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:31:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:31:53] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:31:53] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:32:26] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:32:26] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:33:17] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:33:17] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:33:18] [INFO] root: Database tables initialized
+[2026-08-29 20:33:18] [INFO] root: Database connection successful
+[2026-08-29 20:33:18] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 20:33:18] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 20:35:59] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:35:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:40:37] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:40:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:45:32] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:45:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:46:07] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/1085 attempt=1/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/1085
+[2026-08-29 20:46:11] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/1085 attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/1085
+[2026-08-29 20:50:28] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 20:50:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 20:59:43] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/5 attempt=1/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/5
+[2026-08-29 20:59:48] [WARNING] root: [remnawave] request retry method=GET url=https://recovery-panel.lunetpn.ru/api/users/by-id/5 attempt=2/2 err=Connection timeout to host https://recovery-panel.lunetpn.ru/api/users/by-id/5
+[2026-08-29 21:00:38] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:00:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:38:44] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:38:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:38:45] [INFO] root: Database tables initialized
+[2026-08-29 21:38:45] [INFO] root: Database connection successful
+[2026-08-29 21:38:45] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 21:38:45] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 21:39:38] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:39:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:48:07] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:48:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:48:08] [INFO] root: Database tables initialized
+[2026-08-29 21:48:08] [INFO] root: Database connection successful
+[2026-08-29 21:48:08] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 21:48:08] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 21:48:12] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:48:12] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:53:06] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:53:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:53:07] [INFO] root: Database tables initialized
+[2026-08-29 21:53:07] [INFO] root: Database connection successful
+[2026-08-29 21:53:07] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 21:53:07] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 21:57:46] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:57:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 21:57:47] [INFO] root: Database tables initialized
+[2026-08-29 21:57:47] [INFO] root: Database connection successful
+[2026-08-29 21:57:47] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 21:57:47] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 21:57:58] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 21:57:58] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:06:38] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:06:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:06:45] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:06:45] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:06:56] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:06:57] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:08:32] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:08:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:08:32] [INFO] root: Database tables initialized
+[2026-08-29 22:08:32] [INFO] root: Database connection successful
+[2026-08-29 22:08:33] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 22:08:33] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 22:10:21] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:10:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:10:22] [INFO] root: Database tables initialized
+[2026-08-29 22:10:22] [INFO] root: Database connection successful
+[2026-08-29 22:10:23] [WARNING] root: [scheduler][remnawave_sync] tzdata missing, fallback to UTC+03:00
+[2026-08-29 22:10:23] [INFO] root: [scheduler][remnawave_sync] enabled times=22:27
+[2026-08-29 22:10:37] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:10:38] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:10:38] [INFO] root: Database tables initialized
+[2026-08-29 22:10:38] [INFO] root: Database connection successful
+[2026-08-29 22:27:11] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:27:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:27:12] [INFO] root: Database tables initialized
+[2026-08-29 22:27:12] [INFO] root: Database connection successful
+[2026-08-29 22:29:53] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:29:54] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:29:54] [INFO] root: Database tables initialized
+[2026-08-29 22:29:54] [INFO] root: Database connection successful
+[2026-08-29 22:30:23] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:30:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:30:49] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:30:49] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:30:54] [INFO] root: Database tables initialized
+[2026-08-29 22:30:54] [INFO] root: Database connection successful
+[2026-08-29 22:30:55] [INFO] root: [biz][subscription] marked_expired subscription_id=1391
+[2026-08-29 22:30:57] [ERROR] root: notify expired failed tg_id=8631955849: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:30:57] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:30:57] [INFO] root: [biz][subscription] marked_expired subscription_id=2542
+[2026-08-29 22:30:58] [ERROR] root: notify expired failed tg_id=8306611242: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:30:58] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:30:58] [INFO] root: [biz][subscription] marked_expired subscription_id=2544
+[2026-08-29 22:30:59] [ERROR] root: remnawave expired status sync failed user_id=4405: remnawave patch user state failed status=404 body={'timestamp': '2026-08-29T17:30:55.287Z', 'path': '/api/users', 'message': 'User not found', 'errorCode': 'A025'}
+[2026-08-29 22:30:59] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:30:59] [ERROR] root: notify expired failed tg_id=8972280078: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:30:59] [INFO] root: [biz][subscription] marked_expired subscription_id=2545
+[2026-08-29 22:32:09] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:32:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:32:13] [INFO] root: Database tables initialized
+[2026-08-29 22:32:13] [INFO] root: Database connection successful
+[2026-08-29 22:32:14] [INFO] root: [biz][subscription] marked_expired subscription_id=2549
+[2026-08-29 22:32:16] [ERROR] root: notify expired failed tg_id=8784122766: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:32:16] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:32:16] [INFO] root: [biz][subscription] marked_expired subscription_id=2563
+[2026-08-29 22:32:17] [ERROR] root: notify expired failed tg_id=745019751: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:32:17] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:32:17] [ERROR] root: notify soon failed tg_id=6133715426: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:32:18] [ERROR] root: notify soon failed tg_id=7989789506: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:32:18] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:32:18] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:39:58] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:39:59] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:40:18] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 22:40:19] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 22:40:24] [INFO] root: Database tables initialized
+[2026-08-29 22:40:24] [INFO] root: Database connection successful
+[2026-08-29 22:40:25] [ERROR] root: notify soon failed tg_id=6133715426: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:40:25] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 22:40:26] [ERROR] root: notify soon failed tg_id=7989789506: Telegram server says - Bad Request: chat not found
+[2026-08-29 22:40:27] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:00:06] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:00:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:00:11] [INFO] root: Database tables initialized
+[2026-08-29 23:00:12] [INFO] root: Database connection successful
+[2026-08-29 23:00:14] [ERROR] root: notify soon failed tg_id=6133715426: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:00:14] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:00:14] [ERROR] root: notify soon failed tg_id=7989789506: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:00:14] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:12:49] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:12:50] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:13:18] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:13:18] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:13:23] [INFO] root: Database tables initialized
+[2026-08-29 23:13:23] [INFO] root: Database connection successful
+[2026-08-29 23:13:25] [ERROR] root: notify soon failed tg_id=6133715426: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:13:25] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:13:25] [ERROR] root: notify soon failed tg_id=7989789506: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:13:25] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:13:42] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:13:42] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:15:19] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:15:19] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:15:23] [INFO] root: Database tables initialized
+[2026-08-29 23:15:24] [INFO] root: Database connection successful
+[2026-08-29 23:15:24] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:15:24] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:15:25] [ERROR] root: notify soon failed tg_id=6133715426: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:15:25] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:15:26] [ERROR] root: notify soon failed tg_id=7989789506: Telegram server says - Bad Request: chat not found
+[2026-08-29 23:15:26] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:16:14] [ERROR] root: Error loading settings from .env
+[2026-08-29 23:16:14] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:16:14] [ERROR] root: Error loading settings from .env
+[2026-08-29 23:16:14] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:16:14] [ERROR] root: Error loading settings from .env
+[2026-08-29 23:16:14] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:16:14] [ERROR] root: Error loading settings from .env
+[2026-08-29 23:16:14] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:17:10] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:17:11] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:17:16] [INFO] root: Database tables initialized
+[2026-08-29 23:17:16] [INFO] root: Database connection successful
+[2026-08-29 23:17:16] [ERROR] root: Expire checker execution error
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\expire_checker.py", line 220, in expire_checker_loop
+    await expire_checker(bot)
+  File "C:\Users\dyunj\VPNBot\backend\schedulers\expire_checker.py", line 101, in expire_checker
+    billing_service = BillingService(session)
+  File "C:\Users\dyunj\VPNBot\backend\services\billing_service.py", line 52, in __init__
+    self.crypto = CryptoPayAPI()
+                  ~~~~~~~~~~~~^^
+  File "C:\Users\dyunj\VPNBot\backend\payments\cryptobot.py", line 17, in __init__
+    self.api_token = settings.CRYPTOBOT_SECRET
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:16] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:20] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:20] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:21] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:21] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:28] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:28] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:29] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:29] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:30] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:30] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:30] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:30] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:30] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:17:30] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:31] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:17:32] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:19:11] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(settings.CRYPTOBOT_SECRET), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:19:11] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:21:46] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(getattr(settings, "CRYPTOBOT_SECRET", None) or os.getenv("CRYPTOBOT_SECRET")), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:21:46] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:21:47] [ERROR] root: [app][http] unhandled exception method=GET path=/api/admin/system/payment-methods query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 385, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 284, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\api\admin\routes\system.py", line 518, in admin_payment_methods
+    ("cryptobot", "CryptoBot", bool(getattr(settings, "CRYPTOBOT_SECRET", None) or os.getenv("CRYPTOBOT_SECRET")), "PAYMENT_CRYPTOBOT_ENABLED"),
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\pydantic\main.py", line 991, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
+[2026-08-29 23:21:48] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:24:39] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:24:40] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:24:40] [INFO] root: Database tables initialized
+[2026-08-29 23:24:40] [INFO] root: Database connection successful
+[2026-08-29 23:26:35] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:26:35] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:26:36] [INFO] root: Bot started
+[2026-08-29 23:26:36] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:26:36] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:27:09] [INFO] aiogram.event: Update id=891138113 is handled. Duration 593 ms by bot id=7557954606
+[2026-08-29 23:27:11] [INFO] aiogram.event: Update id=891138114 is handled. Duration 199 ms by bot id=7557954606
+[2026-08-29 23:27:14] [INFO] aiogram.event: Update id=891138115 is handled. Duration 217 ms by bot id=7557954606
+[2026-08-29 23:27:15] [INFO] aiogram.event: Update id=891138116 is handled. Duration 204 ms by bot id=7557954606
+[2026-08-29 23:27:21] [INFO] aiogram.event: Update id=891138117 is handled. Duration 188 ms by bot id=7557954606
+[2026-08-29 23:27:22] [INFO] aiogram.event: Update id=891138118 is handled. Duration 188 ms by bot id=7557954606
+[2026-08-29 23:27:23] [INFO] aiogram.event: Update id=891138119 is handled. Duration 257 ms by bot id=7557954606
+[2026-08-29 23:27:25] [INFO] aiogram.event: Update id=891138120 is handled. Duration 159 ms by bot id=7557954606
+[2026-08-29 23:28:10] [INFO] root: [CRYPTO] Create invoice tg_id=1237947229 amount=50 RUB
+[2026-08-29 23:28:10] [WARNING] root: Bot request blocked by maintenance mode
+[2026-08-29 23:28:10] [INFO] aiogram.event: Update id=891138121 is handled. Duration 103 ms by bot id=7557954606
+[2026-08-29 23:28:13] [INFO] root: [CRYPTO] Create invoice tg_id=1237947229 amount=50 RUB
+[2026-08-29 23:28:13] [WARNING] root: Bot request blocked by maintenance mode
+[2026-08-29 23:28:13] [INFO] aiogram.event: Update id=891138122 is handled. Duration 105 ms by bot id=7557954606
+[2026-08-29 23:28:15] [INFO] aiogram.event: Update id=891138123 is handled. Duration 197 ms by bot id=7557954606
+[2026-08-29 23:33:17] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:33:17] [INFO] root: Bot polling cancelled
+[2026-08-29 23:33:18] [INFO] root: Bot stopped
+[2026-08-29 23:33:18] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:33:24] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:33:25] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:33:25] [INFO] root: Bot started
+[2026-08-29 23:33:25] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:33:27] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:33:28] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:33:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:33:29] [INFO] root: Database tables initialized
+[2026-08-29 23:33:29] [INFO] root: Database connection successful
+[2026-08-29 23:45:27] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:45:28] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:45:28] [INFO] root: Database tables initialized
+[2026-08-29 23:45:28] [INFO] root: Database connection successful
+[2026-08-29 23:45:34] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:45:34] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-08-29 23:45:34] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-29 23:45:34] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:45:34] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:45:34] [INFO] root: Bot polling cancelled
+[2026-08-29 23:45:34] [INFO] root: Bot stopped
+[2026-08-29 23:45:40] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:45:41] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:45:41] [INFO] root: Bot started
+[2026-08-29 23:45:41] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:45:43] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:46:32] [INFO] aiogram.event: Update id=891138124 is handled. Duration 1721 ms by bot id=7557954606
+[2026-08-29 23:46:33] [INFO] aiogram.event: Update id=891138125 is handled. Duration 438 ms by bot id=7557954606
+[2026-08-29 23:46:35] [INFO] aiogram.event: Update id=891138126 is handled. Duration 346 ms by bot id=7557954606
+[2026-08-29 23:51:43] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:51:43] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:51:44] [INFO] root: Database tables initialized
+[2026-08-29 23:51:44] [INFO] root: Database connection successful
+[2026-08-29 23:51:48] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:51:48] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:51:50] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-29 23:51:50] [INFO] root: Bot polling cancelled
+[2026-08-29 23:51:50] [INFO] root: Bot stopped
+[2026-08-29 23:51:50] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:51:57] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:51:57] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-29 23:51:57] [INFO] root: Bot started
+[2026-08-29 23:51:57] [INFO] aiogram.dispatcher: Start polling
+[2026-08-29 23:51:59] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-29 23:52:19] [INFO] aiogram.event: Update id=891138127 is handled. Duration 1904 ms by bot id=7557954606
+[2026-08-29 23:52:20] [INFO] aiogram.event: Update id=891138128 is handled. Duration 352 ms by bot id=7557954606
+[2026-08-29 23:52:21] [INFO] aiogram.event: Update id=891138129 is handled. Duration 333 ms by bot id=7557954606
+[2026-08-29 23:52:23] [INFO] aiogram.event: Update id=891138130 is handled. Duration 254 ms by bot id=7557954606
+[2026-08-29 23:52:25] [INFO] root: [PLATEGA] Create payment tg_id=1237947229 amount=5 method=СБП 2
+[2026-08-29 23:52:25] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=5.0 payment_method=2
+[2026-08-29 23:52:26] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=4a87c217-9298-4745-99d1-b86cf2dd2323 amount=5.0
+[2026-08-29 23:52:26] [INFO] aiogram.event: Update id=891138131 is handled. Duration 1220 ms by bot id=7557954606
+[2026-08-29 23:59:33] [INFO] root: Settings successfully loaded from .env
+[2026-08-29 23:59:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-29 23:59:34] [INFO] root: Database tables initialized
+[2026-08-29 23:59:34] [INFO] root: Database connection successful
+[2026-08-30 00:28:33] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 00:28:33] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 00:28:33] [INFO] root: Database tables initialized
+[2026-08-30 00:28:33] [INFO] root: Database connection successful
+[2026-08-30 00:31:29] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 00:31:29] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 00:31:29] [INFO] root: Database tables initialized
+[2026-08-30 00:31:29] [INFO] root: Database connection successful
+[2026-08-30 00:45:03] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 00:45:04] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 00:45:04] [INFO] root: Database tables initialized
+[2026-08-30 00:45:04] [INFO] root: Database connection successful
+[2026-08-30 00:46:14] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-08-30 00:46:14] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-30 00:46:14] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 00:46:26] [INFO] aiogram.dispatcher: Connection established (tryings = 1, bot id = 7557954606)
+[2026-08-30 12:40:44] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 12:40:45] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 12:40:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 12:40:47] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 12:40:47] [INFO] root: Database tables initialized
+[2026-08-30 12:40:47] [INFO] root: Database connection successful
+[2026-08-30 12:40:52] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 12:40:52] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 12:40:52] [INFO] root: Database tables initialized
+[2026-08-30 12:40:52] [INFO] root: Database connection successful
+[2026-08-30 12:49:12] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-08-30 12:49:12] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=27244428
+[2026-08-30 12:53:00] [INFO] root: [biz][billing] platega_create_requested user_id=100 amount=500.0 payment_method=2
+[2026-08-30 12:53:01] [INFO] root: [biz][billing] platega_created user_id=100 provider_id=755cc78d-2e15-43ad-a423-5b345cb104ca amount=500.0
+[2026-08-30 14:32:32] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 14:32:34] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 14:32:35] [INFO] root: Database tables initialized
+[2026-08-30 14:32:35] [INFO] root: Database connection successful
+[2026-08-30 14:32:53] [ERROR] root: [app][http] unhandled exception method=GET path=/favicon.ico query=
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\responses.py", line 349, in __call__
+    stat_result = await anyio.to_thread.run_sync(os.stat, self.path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\anyio\to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+FileNotFoundError: [WinError 2] Не удается найти указанный файл: 'C:\\Users\\dyunj\\VPNBot\\app\\frontend\\assets\\lunet-favicon.ico'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dyunj\VPNBot\backend\apps\common.py", line 98, in add_security_headers
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\fastapi\routing.py", line 106, in app
+    await response(scope, receive, send)
+  File "C:\Users\dyunj\VPNBot\.venv\Lib\site-packages\starlette\responses.py", line 352, in __call__
+    raise RuntimeError(f"File at path {self.path} does not exist.")
+RuntimeError: File at path C:\Users\dyunj\VPNBot\app\frontend\assets\lunet-favicon.ico does not exist.
+[2026-08-30 14:32:53] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 14:35:08] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 14:35:09] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 14:35:10] [INFO] root: Database tables initialized
+[2026-08-30 14:35:10] [INFO] root: Database connection successful
+[2026-08-30 14:35:10] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 14:35:10] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 15:37:35] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 15:37:35] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 15:37:36] [INFO] root: Database tables initialized
+[2026-08-30 15:37:36] [INFO] root: Database connection successful
+[2026-08-30 15:48:59] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/hwid/devices/ddee43a2-b28c-4a8f-a42c-bec39ee8d0d1 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/hwid/devices/ddee43a2-b28c-4a8f-a42c-bec39ee8d0d1
+[2026-08-30 15:52:58] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-08-30 15:58:43] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=84 plan_id=1
+[2026-08-30 15:58:43] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-08-30 15:58:43] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=1 auto_renew=False
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=1 period_end=2026-12-17 06:08:18.296791+00:00 gb_limit=30.00 rollover_gb=90.00
+[2026-08-30 15:58:43] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=193273528320
+[2026-08-30 15:58:43] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:13:21] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=84 plan_id=4
+[2026-08-30 16:13:21] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=80
+[2026-08-30 16:13:21] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=80
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=4 auto_renew=False
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=4 period_end=2026-12-20 11:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:13:21] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=225485783040
+[2026-08-30 16:13:21] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:15:02] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=500 asset=USDT
+[2026-08-30 16:15:09] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=61958667 amount_rub=500 amount_crypto=6.33
+[2026-08-30 16:19:22] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=84 plan_id=1
+[2026-08-30 16:19:22] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-08-30 16:19:22] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=1 auto_renew=False
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=1 period_end=2027-01-19 16:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:19:22] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=257698037760
+[2026-08-30 16:19:22] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:27:17] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=84 plan_id=4
+[2026-08-30 16:27:17] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=80
+[2026-08-30 16:27:17] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=80
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] activate_requested user_id=84 plan_id=4 auto_renew=False
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] renewed user_id=84 subscription_id=67 plan_id=4 period_end=2027-01-22 21:08:18.296791+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-08-30 16:27:17] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=289910292480
+[2026-08-30 16:27:17] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-08-30 16:35:57] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-08-30 16:35:57] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=27230823
+[2026-08-30 16:35:59] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-08-30 16:35:59] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=27230821
+[2026-08-30 16:36:00] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=4 auto_renew=True
+[2026-08-30 16:36:00] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=4 seconds_left=27230820
+[2026-08-30 16:36:01] [INFO] root: [biz][billing] buy_subscription_requested user_id=100 plan_id=4 auto_renew=True
+[2026-08-30 16:36:01] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=4 seconds_left=27230819
+[2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=500 asset=USDT
+[2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=61962011 amount_rub=500 amount_crypto=6.33
+[2026-08-30 16:59:19] [WARNING] root: [remnawave] request retry method=GET url=https://panel.lunetpn.ru/api/users/by-id/18 attempt=1/2 err=Connection timeout to host https://panel.lunetpn.ru/api/users/by-id/18
+[2026-08-30 17:24:06] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 17:24:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 17:24:07] [INFO] root: Database tables initialized
+[2026-08-30 17:24:07] [INFO] root: Database connection successful
+[2026-08-30 17:31:30] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 17:31:32] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 17:31:32] [INFO] root: Database tables initialized
+[2026-08-30 17:31:32] [INFO] root: Database connection successful
+[2026-08-30 17:55:25] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 17:55:26] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 17:55:26] [INFO] root: Bot started
+[2026-08-30 17:55:26] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 17:55:28] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:55:32] [INFO] aiogram.event: Update id=891138132 is handled. Duration 3930 ms by bot id=7557954606
+[2026-08-30 17:55:32] [INFO] aiogram.event: Update id=891138133 is handled. Duration 2740 ms by bot id=7557954606
+[2026-08-30 17:57:35] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-30 17:57:35] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+[2026-08-30 17:57:35] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-08-30 17:57:35] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 17:57:35] [INFO] root: Bot polling cancelled
+[2026-08-30 17:57:35] [INFO] root: Bot stopped
+[2026-08-30 17:57:35] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:57:43] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 17:57:43] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 17:57:43] [INFO] root: Bot started
+[2026-08-30 17:57:43] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 17:57:45] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 17:58:07] [INFO] aiogram.event: Update id=891138134 is handled. Duration 4417 ms by bot id=7557954606
+[2026-08-30 17:58:25] [INFO] aiogram.event: Update id=891138135 is handled. Duration 191 ms by bot id=7557954606
+[2026-08-30 17:59:04] [INFO] aiogram.event: Update id=891138136 is handled. Duration 372 ms by bot id=7557954606
+[2026-08-30 17:59:06] [INFO] aiogram.event: Update id=891138137 is handled. Duration 335 ms by bot id=7557954606
+[2026-08-30 18:00:17] [INFO] aiogram.dispatcher: Polling stopped
+[2026-08-30 18:00:17] [INFO] root: Bot polling cancelled
+[2026-08-30 18:00:17] [INFO] root: Bot stopped
+[2026-08-30 18:00:17] [INFO] aiogram.dispatcher: Polling stopped for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 18:00:27] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 18:00:27] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-08-30 18:00:28] [INFO] root: Bot started
+[2026-08-30 18:00:28] [INFO] aiogram.dispatcher: Start polling
+[2026-08-30 18:00:29] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-08-30 18:00:37] [INFO] aiogram.event: Update id=891138138 is handled. Duration 4656 ms by bot id=7557954606
+[2026-08-30 18:04:30] [INFO] aiogram.event: Update id=891138139 is handled. Duration 213 ms by bot id=7557954606
+[2026-08-30 18:05:39] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 18:05:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 18:05:40] [INFO] root: Database tables initialized
+[2026-08-30 18:05:40] [INFO] root: Database connection successful
+[2026-08-30 18:11:21] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 18:11:22] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 18:11:22] [INFO] root: Database tables initialized
+[2026-08-30 18:11:22] [INFO] root: Database connection successful
+[2026-08-30 18:13:05] [INFO] aiogram.event: Update id=891138140 is handled. Duration 198 ms by bot id=7557954606

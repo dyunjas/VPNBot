@@ -5,6 +5,7 @@ import secrets
 from fastapi import APIRouter, Request, Response
 from ..common import *
 from backend.database.models import Admin
+from api.cabinet.common import _smtp_send_code
 
 router = APIRouter()
 _LOGIN_ATTEMPTS: dict[str, list[float]] = {}
@@ -13,6 +14,9 @@ _LOGIN_MAX_ATTEMPTS = 5
 _ADMIN_COOKIE_NAME = "admin_access_token"
 _PASSWORD_HASH_ALG = "pbkdf2_sha256"
 _PASSWORD_HASH_ITERATIONS = 260000
+_ADMIN_OTP_TTL_SEC = 600
+_ADMIN_OTP_CHALLENGES: dict[str, dict] = {}
+_ADMIN_OTP_MAX_ATTEMPTS = 5
 
 
 def _login_rate_key(request: Request, login: str) -> str:
@@ -59,6 +63,23 @@ def verify_admin_password(password: str, password_hash: str | None) -> bool:
         return hmac.compare_digest(digest, expected)
     except (TypeError, ValueError):
         return False
+
+
+def _issue_admin_otp(login: str, role: str, admin_id: int | None, email: str) -> str:
+    challenge_id = secrets.token_urlsafe(32)
+    code = f"{secrets.randbelow(1000000):06d}"
+    _ADMIN_OTP_CHALLENGES[challenge_id] = {"login": login, "role": role, "admin_id": admin_id, "email": email, "code": code, "expires_at": time.time() + _ADMIN_OTP_TTL_SEC, "attempts": 0}
+    try:
+        _smtp_send_code(email, code, purpose="admin_login")
+    except Exception:
+        _ADMIN_OTP_CHALLENGES.pop(challenge_id, None)
+        raise
+    return challenge_id
+
+
+class AdminLoginVerifyPayload(BaseModel):
+    challenge_id: str
+    code: str
 
 
 def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
@@ -126,46 +147,59 @@ def _fill_amount_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_m
 
 @router.post("/auth/login")
 async def admin_auth_login(payload: LoginPayload, request: Request, response: Response):
-    expected_login = (settings.ADMIN_WEB_LOGIN or "").strip()
+    expected_login = (settings.ADMIN_WEB_EMAIL or settings.ADMIN_WEB_LOGIN or "").strip().lower()
     expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
-    key = _login_rate_key(request, payload.login)
+    key = _login_rate_key(request, payload.email)
     if not _login_allowed(key):
         raise HTTPException(status_code=429, detail="Too many login attempts")
 
-    login = payload.login.strip()
+    login = payload.email.strip().lower()
     is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
     if is_master_login and hmac.compare_digest(payload.password, expected_password):
         _LOGIN_ATTEMPTS.pop(key, None)
-        access_token = _create_admin_access_token(login, role="superadmin", admin_id=None)
-        max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
-        response.set_cookie(
-            key=_ADMIN_COOKIE_NAME,
-            value=access_token,
-            max_age=max_age,
-            httponly=True,
-            secure=request.url.scheme == "https",
-            samesite="lax",
-            path="/",
-        )
-        return {"ok": True, "login": login, "role": "superadmin"}
+        email = (settings.ADMIN_WEB_EMAIL or "").strip().lower()
+        if not email:
+            raise HTTPException(status_code=503, detail="ADMIN_WEB_EMAIL is not configured")
+        return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(login, "superadmin", None, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
 
     admin = None
     async with async_session() as session:
         admin = (
             await session.execute(
                 select(Admin).where(
-                    func.lower(Admin.login) == login.lower(),
+                    func.lower(Admin.email) == login.lower(),
                     Admin.is_active.is_(True),
                 )
             )
         ).scalar_one_or_none()
 
     role = admin.role.value if admin and hasattr(admin.role, "value") else str(admin.role) if admin else ""
-    if role != "support" or not verify_admin_password(payload.password, admin.password_hash):
+    if not admin or not verify_admin_password(payload.password, admin.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+    email = admin.email or ""
+    if not email:
+        raise HTTPException(status_code=400, detail="Admin email is not configured")
+
     _LOGIN_ATTEMPTS.pop(key, None)
-    access_token = _create_admin_access_token(login, role=role, admin_id=admin.id)
+    return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(admin.username, role, admin.id, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
+
+
+@router.post("/auth/verify-2fa")
+async def admin_auth_verify_2fa(payload: AdminLoginVerifyPayload, request: Request, response: Response):
+    challenge = _ADMIN_OTP_CHALLENGES.get(payload.challenge_id)
+    if not challenge or float(challenge["expires_at"]) < time.time():
+        raise HTTPException(status_code=401, detail="Invalid or expired verification code")
+    challenge["attempts"] = int(challenge.get("attempts", 0)) + 1
+    if challenge["attempts"] > _ADMIN_OTP_MAX_ATTEMPTS:
+        _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+        raise HTTPException(status_code=429, detail="Too many verification attempts")
+    if not hmac.compare_digest(str(challenge["code"]), payload.code.strip()):
+        if challenge["attempts"] >= _ADMIN_OTP_MAX_ATTEMPTS:
+            _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+        raise HTTPException(status_code=401, detail="Invalid or expired verification code")
+    _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+    access_token = _create_admin_access_token(challenge["login"], role=challenge["role"], admin_id=challenge["admin_id"])
     max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
     response.set_cookie(
         key=_ADMIN_COOKIE_NAME,
@@ -176,12 +210,19 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
         samesite="lax",
         path="/",
     )
-    return {"ok": True, "login": login, "role": role}
+    return {"ok": True, "login": challenge["login"], "role": challenge["role"]}
 
 
 @router.get("/auth/me")
 async def admin_auth_me(auth=Depends(require_admin_auth)):
-    return {"ok": True, "login": auth.get("sub"), "scope": auth.get("scope"), "role": auth.get("role")}
+    username = auth.get("sub")
+    email = None
+    if auth.get("admin_id"):
+        async with async_session() as session:
+            admin = await session.scalar(select(Admin).where(Admin.id == auth.get("admin_id")))
+            if admin:
+                username, email = admin.username, admin.email
+    return {"ok": True, "login": auth.get("sub"), "username": username, "email": email, "scope": auth.get("scope"), "role": auth.get("role")}
 
 
 @router.post("/auth/logout")
@@ -196,10 +237,22 @@ async def admin_health():
 
 
 @router.get("/stats", dependencies=[Depends(require_superadmin_auth)])
-async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default="14d")):
+async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default="14d"), chart_from: str | None = Query(default=None), chart_to: str | None = Query(default=None)):
     now = datetime.now(timezone.utc)
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    if chart_period == "30d":
+    if chart_from or chart_to:
+        try:
+            chart_start = datetime.fromisoformat((chart_from or chart_to).strip()).replace(tzinfo=timezone.utc)
+            chart_end = datetime.fromisoformat((chart_to or chart_from).strip()).replace(tzinfo=timezone.utc) + timedelta(days=1)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="invalid chart date range")
+        if chart_end <= chart_start or chart_end - chart_start > timedelta(days=366):
+            raise HTTPException(status_code=400, detail="chart range must be between 1 and 366 days")
+        chart_mode = "month" if (chart_end - chart_start).days > 62 else "day"
+        bucket_count = 12 if chart_mode == "month" else (chart_end - chart_start).days
+        if chart_mode == "month":
+            chart_start = chart_start.replace(day=1)
+    elif chart_period == "30d":
         chart_start = (now - timedelta(days=29)).replace(hour=0, minute=0, second=0, microsecond=0)
         chart_mode = "day"
         bucket_count = 30
@@ -211,6 +264,7 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
         chart_start = (now - timedelta(days=13)).replace(hour=0, minute=0, second=0, microsecond=0)
         chart_mode = "day"
         bucket_count = 14
+    chart_end = locals().get("chart_end", now + timedelta(seconds=1))
     async with async_session() as session:
         total_users = int(await session.scalar(select(func.count(User.id))) or 0)
         banned_users = int(await session.scalar(select(func.count(User.id)).where(User.banned.is_(True))) or 0)
@@ -246,9 +300,9 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
             )
             or 0
         )
-        user_rows = (await session.execute(select(User.created_at).where(User.created_at >= chart_start))).scalars().all()
+        user_rows = (await session.execute(select(User.created_at).where(User.created_at >= chart_start, User.created_at < chart_end))).scalars().all()
         subscription_rows = (
-            await session.execute(select(Subscription.created_at).where(Subscription.created_at >= chart_start))
+            await session.execute(select(Subscription.created_at).where(Subscription.created_at >= chart_start, Subscription.created_at < chart_end))
         ).scalars().all()
         activation_subscription_rows = (
             await session.execute(
@@ -257,6 +311,7 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
                 .where(
                     Subscription.created_at >= chart_start,
                     SubscriptionPlan.is_trial.is_(False),
+                    Subscription.created_at < chart_end,
                 )
             )
         ).scalars().all()
@@ -266,6 +321,7 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
                     Transaction.paid.is_(True),
                     Transaction.paid_at.is_not(None),
                     Transaction.paid_at >= chart_start,
+                    Transaction.paid_at < chart_end,
                 )
             )
         ).all()

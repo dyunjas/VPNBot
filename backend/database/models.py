@@ -96,13 +96,6 @@ class User(Base):
         uselist=False,
         cascade="all, delete-orphan"
     )
-    admin: Mapped["Admin"] = relationship(
-        "Admin",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan"
-    )
-
 class ReferralAccount(Base):
     __tablename__ = "vpn_referral_accounts"
 
@@ -392,12 +385,8 @@ class Admin(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("vpn_users.id", ondelete="CASCADE"),
-        unique=True,
-        index=True,
-        nullable=False
-    )
+    username: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(320), unique=True, index=True, nullable=False)
 
     role: Mapped[AdminRole] = mapped_column(
         Enum(AdminRole),
@@ -428,8 +417,4 @@ class Admin(Base):
         default=lambda: datetime.now(timezone.utc)
     )
 
-    user: Mapped["User"] = relationship(
-        "User",
-        back_populates="admin",
-        uselist=False
-    )
+

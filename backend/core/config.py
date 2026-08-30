@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     XRAY_AUTH: str | None = None
     PLATEGA_SECRET: str
     PLATEGA_MERCHANT_ID: str
+    PLATEGA_METHOD_CARD: int = 11
+    PLATEGA_METHOD_SBP: int = 2
     CRYPTOBOT_SECRET: str
     PALLY_API_TOKEN: str | None = None
     PALLY_SHOP_ID: str | None = None
@@ -37,6 +39,7 @@ class Settings(BaseSettings):
     ADMIN_API_BASE_URL: str | None = None
     ADMIN_WEB_LOGIN: str | None = None
     ADMIN_WEB_PASSWORD: str | None = None
+    ADMIN_WEB_EMAIL: str | None = None
     ADMIN_WEB_JWT_EXPIRE_HOURS: int = 12
     DB_POOL_SIZE: int = 2
     DB_MAX_OVERFLOW: int = 0

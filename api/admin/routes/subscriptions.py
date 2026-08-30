@@ -323,6 +323,16 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
             requires_remote_sync = True
             changes.append(f"extend_days={payload.extend_days}")
 
+        if payload.reduce_days is not None:
+            base_end = _as_aware_utc(sub.current_period_end) or now
+            sub.current_period_end = base_end - timedelta(days=payload.reduce_days)
+            sub.next_renewal_at = sub.current_period_end
+            if sub.current_period_end <= now:
+                sub.status = SubStatus.expired
+            period_end_changed = True
+            requires_remote_sync = True
+            changes.append(f"reduce_days={payload.reduce_days}")
+
         if payload.current_period_end is not None:
             sub.current_period_end = _as_aware_utc(payload.current_period_end)
             sub.next_renewal_at = sub.current_period_end
@@ -354,6 +364,25 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
                     pass
         await session.refresh(sub)
         return {"ok": True}
+
+
+@router.post("/subscriptions/{subscription_id}/sync", dependencies=[Depends(require_support_auth)])
+async def admin_subscription_sync(subscription_id: int):
+    async with async_session() as session:
+        sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
+        user = _http_404_if_none(await session.get(User, sub.user_id), "user not found")
+        service = RemnaWaveService(session)
+        if not service.enabled:
+            raise HTTPException(status_code=503, detail="Remnawave integration is not configured")
+        now = datetime.now(timezone.utc)
+        end = _as_aware_utc(sub.current_period_end)
+        status = "ACTIVE" if sub.status == SubStatus.active and end and end > now else "DISABLED"
+        try:
+            await service.sync_user_state(user=user, subscription=sub, status=status)
+        except Exception as exc:
+            logger.exception("[admin][subscriptions] sync failed subscription_id=%s", subscription_id)
+            raise HTTPException(status_code=502, detail=f"Не удалось синхронизировать с панелью: {str(exc)[:240]}") from exc
+        return {"ok": True, "status": status, "message": "Подписка синхронизирована с панелью"}
 
 
 @router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_support_auth)])

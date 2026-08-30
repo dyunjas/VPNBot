@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from sqlalchemy import select
+from backend.database.models import User
 
 from ..common import *
 
@@ -96,3 +98,44 @@ async def mini_subscription_traffic_buy(payload: BuyTrafficPayload):
             "gb_added": int(payload.gb),
             "charged": int(charged),
         }
+
+
+@router.post("/subscription/devices/buy")
+async def mini_subscription_devices_buy(payload: BuyDeviceSlotsPayload):
+    tg_user = _get_tg_user(payload.initData)
+    if payload.slots <= 0:
+        raise HTTPException(400, "Количество устройств должно быть больше нуля")
+    async with async_session() as session:
+        user = await _get_user_or_404(session, tg_user["id"])
+        billing = BillingService(session)
+        try:
+            sub, charged = await billing.add_device_slots_to_subscription(user_id=user.id, slots=int(payload.slots))
+        except Exception as e:
+            raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
+        return {"ok": True, "subscription_id": sub.id, "slots_added": int(payload.slots), "device_limit": int(sub.device_limit or 0), "charged": int(charged)}
+
+
+@router.post("/subscription/gift")
+async def mini_subscription_gift(payload: GiftSubscriptionPayload):
+    tg_user = _get_tg_user(payload.initData)
+    recipient_value = (payload.recipient or "").strip().lstrip("@")
+    if not recipient_value:
+        raise HTTPException(400, "Укажите получателя подарка")
+    async with async_session() as session:
+        buyer = await _get_user_or_404(session, tg_user["id"])
+        query = select(User).where(User.tg_id == int(recipient_value)) if recipient_value.lstrip("-").isdigit() else select(User).where(User.username.ilike(recipient_value))
+        recipient = (await session.execute(query)).scalar_one_or_none()
+        if not recipient:
+            raise HTTPException(404, "Получатель не найден")
+        if recipient.id == buyer.id:
+            raise HTTPException(400, "Нельзя подарить подписку самому себе")
+        billing = BillingService(session)
+        try:
+            sub, charged, recipient = await billing.gift_subscription(buyer_user_id=buyer.id, recipient_user_id=recipient.id, plan_id=payload.plan_id)
+        except Exception as e:
+            raise _map_service_error(e)
+        finally:
+            await billing.close_clients()
+        return {"ok": True, "subscription_id": sub.id, "charged": int(charged), "recipient": {"tg_id": recipient.tg_id, "username": recipient.username}}

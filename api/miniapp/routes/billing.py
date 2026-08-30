@@ -2,6 +2,7 @@
 
 from ..common import *
 from backend.core.business_config import get_business_int
+from backend.services.payment_method_service import get_payment_method_config
 
 router = APIRouter()
 
@@ -86,7 +87,11 @@ async def mini_balance_topup(payload: TopupPayload):
                 if pl_type not in ("card", "sbp"):
                     raise HTTPException(400, "Выберите карту или СБП")
 
-                payment_method = PLATEGA_METHOD_CARD if pl_type == "card" else PLATEGA_METHOD_SBP
+                payment_config = await get_payment_method_config(session, "platega")
+                payment_method = int(payment_config.get(
+                    "method_card" if pl_type == "card" else "method_sbp",
+                    PLATEGA_METHOD_CARD if pl_type == "card" else PLATEGA_METHOD_SBP,
+                ))
 
                 payment = await billing.create_platega_payment(
                     user_id=user.id,
