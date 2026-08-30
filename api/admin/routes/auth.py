@@ -6,6 +6,7 @@ from fastapi import APIRouter, Request, Response
 from ..common import *
 from backend.database.models import Admin
 from api.cabinet.common import _smtp_send_code
+from api.admin.audit import record_login_event
 
 router = APIRouter()
 _LOGIN_ATTEMPTS: dict[str, list[float]] = {}
@@ -151,6 +152,7 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
     expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
     key = _login_rate_key(request, payload.email)
     if not _login_allowed(key):
+        await record_login_event(request, admin_id=None, username=login, email=login, success=False, reason="rate_limited")
         raise HTTPException(status_code=429, detail="Too many login attempts")
 
     login = payload.email.strip().lower()
@@ -159,7 +161,9 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
         _LOGIN_ATTEMPTS.pop(key, None)
         email = (settings.ADMIN_WEB_EMAIL or "").strip().lower()
         if not email:
+            await record_login_event(request, admin_id=None, username=login, email=login, success=False, reason="email_not_configured")
             raise HTTPException(status_code=503, detail="ADMIN_WEB_EMAIL is not configured")
+        await record_login_event(request, admin_id=None, username=login, email=email, success=False, reason="password_accepted_2fa_pending")
         return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(login, "superadmin", None, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
 
     admin = None
@@ -175,13 +179,16 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
 
     role = admin.role.value if admin and hasattr(admin.role, "value") else str(admin.role) if admin else ""
     if not admin or not verify_admin_password(payload.password, admin.password_hash):
+        await record_login_event(request, admin_id=admin.id if admin else None, username=admin.username if admin else login, email=admin.email if admin else login, success=False, reason="invalid_credentials")
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     email = admin.email or ""
     if not email:
+        await record_login_event(request, admin_id=admin.id, username=admin.username, email=None, success=False, reason="email_not_configured")
         raise HTTPException(status_code=400, detail="Admin email is not configured")
 
     _LOGIN_ATTEMPTS.pop(key, None)
+    await record_login_event(request, admin_id=admin.id, username=admin.username, email=email, success=False, reason="password_accepted_2fa_pending")
     return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(admin.username, role, admin.id, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
 
 
@@ -189,16 +196,20 @@ async def admin_auth_login(payload: LoginPayload, request: Request, response: Re
 async def admin_auth_verify_2fa(payload: AdminLoginVerifyPayload, request: Request, response: Response):
     challenge = _ADMIN_OTP_CHALLENGES.get(payload.challenge_id)
     if not challenge or float(challenge["expires_at"]) < time.time():
+        await record_login_event(request, admin_id=None, username=None, email=None, success=False, reason="invalid_or_expired_2fa")
         raise HTTPException(status_code=401, detail="Invalid or expired verification code")
     challenge["attempts"] = int(challenge.get("attempts", 0)) + 1
     if challenge["attempts"] > _ADMIN_OTP_MAX_ATTEMPTS:
         _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+        await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=False, reason="2fa_rate_limited")
         raise HTTPException(status_code=429, detail="Too many verification attempts")
     if not hmac.compare_digest(str(challenge["code"]), payload.code.strip()):
         if challenge["attempts"] >= _ADMIN_OTP_MAX_ATTEMPTS:
             _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+        await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=False, reason="invalid_2fa")
         raise HTTPException(status_code=401, detail="Invalid or expired verification code")
     _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
+    await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=True, reason="authenticated")
     access_token = _create_admin_access_token(challenge["login"], role=challenge["role"], admin_id=challenge["admin_id"])
     max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
     response.set_cookie(

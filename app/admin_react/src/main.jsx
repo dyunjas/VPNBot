@@ -1148,6 +1148,55 @@ function PaymentMethodsSettingsPage() {
   const toggle = async (method) => { setBusy(`${method.key}:toggle`); setError(""); try { const data = await api("/system/payment-methods", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ methods: { [method.key]: !method.enabled } }) }); setMethods(data.items || []); } catch (e) { setError(e.message); } finally { setBusy(""); } };
   return <div className="stack"><div className="page-heading"><div className="eyebrow">Оплата</div><h1>Платёжные методы</h1><p className="muted">Включайте способы оплаты и изменяйте их параметры. Пустое поле оставляет сохранённое значение без изменений.</p></div>{error && <div className="inline-error">{error}</div>}{success && <div className="inline-success">{success}</div>}{loading ? <Empty text="Загрузка платёжных методов…" /> : <div className="payment-method-grid">{methods.map((method) => <Card key={method.key} className="payment-method-card"><div className="payment-method-top"><div><div className="eyebrow">Способ оплаты</div><h2>{method.name}</h2></div><Badge tone={method.enabled && method.configured ? "success" : method.enabled ? "warn" : "muted"}>{!method.configured ? "Не настроен" : method.enabled ? "Включён" : "Отключён"}</Badge></div><div className="payment-fields">{(fields[method.key] || []).map((field) => <label className="ui-field" key={field.key}><span>{field.label}</span><input type={field.secret ? "password" : field.type || "text"} value={form[`${method.key}.${field.key}`] || ""} placeholder={method.settings?.[field.key] ? (field.secret ? method.settings[field.key] : String(method.settings[field.key])) : "Не задано"} onChange={(e) => updateField(method.key, field.key, e.target.value)} /></label>)}</div><div className="payment-method-actions"><Button disabled={busy === method.key} onClick={() => save(method)}>{busy === method.key ? "Сохраняем…" : "Сохранить настройки"}</Button><Button disabled={busy === `${method.key}:toggle` || !method.configured} variant="outline" onClick={() => toggle(method)}>{method.enabled ? "Отключить" : "Включить"}</Button></div></Card>)}</div>}</div>;
 }
+function AdminLoginJournalDialog({ onClose }) {
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
+  useEffect(() => { api("/admins/login-events?limit=10").then((data) => setItems(data.items || [])).catch((e) => setError(e.message)); }, []);
+  const date = (value) => value ? new Date(value).toLocaleString("ru-RU") : "—";
+  return <div className="dialog-backdrop" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && onClose()}><section className="dialog admin-audit-dialog" role="dialog" aria-modal="true"><div className="dialog-head"><div><div className="eyebrow">Безопасность</div><h2>Журнал входов</h2><p className="muted">Кто и когда входил в панель администратора.</p></div><Button variant="ghost" size="icon" onClick={onClose}><X size={17}/></Button></div>{error && <div className="inline-error">{error}</div>}{!items.length && !error ? <p className="muted">Записей пока нет.</p> : <div className="audit-list">{items.map((item) => <div className="audit-row" key={item.id}><span>{date(item.created_at)}</span><b>{item.username || item.email || "Неизвестный администратор"}</b><span className={item.success ? "audit-success" : "audit-failure"}>{item.success ? "Успешный вход" : "Неуспешная попытка"}</span></div>)}</div>}<div className="dialog-actions"><Button variant="outline" onClick={onClose}>Закрыть</Button></div></section></div>;
+}
+
+function AdminAuditDialog({ admin, onClose, onSaved }) {
+  const [form, setForm] = useState({ username: admin.username || "", email: admin.email || "", password: "", role: admin.role || "support" });
+  const [audit, setAudit] = useState({ login_events: [], action_events: [] });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    api(`/admins/${admin.id}/audit`).then(setAudit).catch((e) => setError(e.message));
+  }, [admin.id]);
+  const save = async (event) => {
+    event.preventDefault(); setBusy(true); setError("");
+    try {
+      const payload = { username: form.username.trim(), email: form.email.trim(), role: form.role };
+      if (form.password.trim()) payload.password = form.password.trim();
+      await api(`/admins/${admin.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      await onSaved(); onClose();
+    } catch (e) { setError(e.message); } finally { setBusy(false); }
+  };
+  const date = (value) => value ? new Date(value).toLocaleString("ru-RU") : "—";
+  return <div className="dialog-backdrop" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <section className="dialog admin-audit-dialog" role="dialog" aria-modal="true">
+      <div className="dialog-head"><div><div className="eyebrow">Администратор</div><h2>{admin.username}</h2><p className="muted">Изменение данных и история работы в панели.</p></div><Button variant="ghost" size="icon" onClick={onClose}><X size={17}/></Button></div>
+      <form className="create-form" onSubmit={save}>
+        <div className="admin-edit-grid">
+          <Field label="Имя пользователя" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} required />
+          <Field label="Электронная почта" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+          <Field label="Новый пароль" type="password" placeholder="Оставьте пустым, чтобы не менять" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <label className="ui-field"><span>Роль</span><Dropdown value={form.role} onChange={(role) => setForm({ ...form, role })} options={[{ value: "support", label: "Поддержка" }, { value: "manager", label: "Менеджер" }, { value: "superadmin", label: "Суперадминистратор" }]} ariaLabel="Роль администратора" /></label>
+        </div>
+        {error && <div className="inline-error">{error}</div>}
+        <div className="dialog-actions"><Button type="button" variant="outline" onClick={onClose}>Отмена</Button><Button type="submit" disabled={busy}>{busy ? "Сохраняем…" : "Сохранить изменения"}</Button></div>
+      </form>
+      <div className="audit-section"><div className="audit-section-head"><h3>Журнал входов</h3><Button variant="outline" size="sm" onClick={() => window.open(`${API_BASE}/api/admin/admins/${admin.id}/audit/download`, "_blank", "noopener,noreferrer")}>Скачать CSV</Button></div>
+        {!audit.login_events.length ? <p className="muted">Входов пока нет.</p> : <div className="audit-list">{audit.login_events.map((item) => <div className="audit-row" key={`login-${item.id}`}><span>{date(item.created_at)}</span><span>{item.success ? "Успешный вход" : "Неуспешная попытка"}</span><span>{item.ip_address || "IP неизвестен"}</span></div>)}</div>}
+      </div>
+      <div className="audit-section"><div className="audit-section-head"><h3>Последние 10 действий в панели</h3></div>
+        {!audit.action_events.length ? <p className="muted">Действий пока нет.</p> : <div className="audit-list">{audit.action_events.map((item) => <div className="audit-row" key={`action-${item.id}`}><span>{date(item.created_at)}</span><b>{item.action}</b><span>{item.path}</span></div>)}</div>}
+      </div>
+    </section>
+  </div>;
+}
+
 function ResourcePage({ page }) {
   const [data, setData] = useState(null),
     [query, setQuery] = useState(""),
@@ -1156,7 +1205,8 @@ function ResourcePage({ page }) {
     [selected, setSelected] = useState(null),
     [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
-    [createOpen, setCreateOpen] = useState(false);
+    [createOpen, setCreateOpen] = useState(false),
+    [loginJournalOpen, setLoginJournalOpen] = useState(false);
   const config = resourceConfig[page];
   const serverPaged = ["users", "subscriptions", "transactions", "withdrawals", "referrals"].includes(page);
   const load = () => {
@@ -1234,7 +1284,9 @@ function ResourcePage({ page }) {
     : [];
   const openRow = async (row) => {
     setSelected(row);
-    if ((page === "users" || page === "subscriptions" || page === "partners" || page === "legal") && (row.id || row.key)) {
+    if (page === "admins" && row.id) {
+      try { const details = await api(`/admins/${row.id}/audit`); setSelected({ ...row, audit: details }); } catch (e) { setError(e.message); }
+    } else if ((page === "users" || page === "subscriptions" || page === "partners" || page === "legal") && (row.id || row.key)) {
       try {
         const details = page === "users" ? await api(`/users/${row.id}`) : page === "subscriptions" ? await api(`/subscriptions/${row.id}/details`) : page === "partners" ? await api(`/partners/${row.id}/details`) : await api(`/legal/${row.key}`);
         setSelected({ ...row, ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), details });
@@ -1278,6 +1330,7 @@ function ResourcePage({ page }) {
         </Button>
         {["subscriptions", "promocodes", "partners", "admins", "broadcast"].includes(page) && <Button onClick={() => setCreateOpen(true)}>Добавить</Button>}
       </Card>
+      {page === "admins" && <Button variant="outline" onClick={() => setLoginJournalOpen(true)}>Журнал входов</Button>}
       <Card className={`table-card resource-table resource-${page}`}>
         {loading ? (
           <Empty text="Загрузка данных…" />
@@ -1350,13 +1403,15 @@ function ResourcePage({ page }) {
             ? `Пользователь #${selected?.id ?? ""}`
             : meta[page]?.label || "Запись"
         }
-        row={page === "subscriptions" || page === "legal" ? null : selected?.details?.user || selected}
+        row={page === "admins" || page === "subscriptions" || page === "legal" ? null : selected?.details?.user || selected}
         isUser={page === "users"}
         page={page}
         onAction={onAction}
         onResourceAction={onResourceAction}
         onClose={() => setSelected(null)}
       />
+      {page === "admins" && selected && <AdminAuditDialog admin={selected} onClose={() => setSelected(null)} onSaved={load} />}
+      {page === "admins" && loginJournalOpen && <AdminLoginJournalDialog onClose={() => setLoginJournalOpen(false)} />}
       {page === "subscriptions" && <SubscriptionDialog row={selected?.details?.subscription || selected} onClose={() => setSelected(null)} onUpdated={async () => { await load(); const details = await api(`/subscriptions/${selected.id}/details`); setSelected({ ...selected, ...(details.subscription || {}), details }); }} />}
       {page === "legal" && <LegalDialog row={selected} onClose={() => setSelected(null)} onUpdated={load} />}
       {createOpen && (

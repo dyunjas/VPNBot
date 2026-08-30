@@ -418,3 +418,41 @@ class Admin(Base):
     )
 
 
+class AdminLoginEvent(Base):
+    __tablename__ = "vpn_admin_login_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    admin_id: Mapped[int | None] = mapped_column(
+        ForeignKey("vpn_admins.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    username: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    email: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    success: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
+    reason: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True
+    )
+
+
+class AdminActionLog(Base):
+    __tablename__ = "vpn_admin_action_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    admin_id: Mapped[int | None] = mapped_column(
+        ForeignKey("vpn_admins.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    username: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    action: Mapped[str] = mapped_column(String(128), nullable=False)
+    method: Mapped[str] = mapped_column(String(16), nullable=False)
+    path: Mapped[str] = mapped_column(String(255), nullable=False)
+    status_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    target_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    details: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True
+    )
+
+

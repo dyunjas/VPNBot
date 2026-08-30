@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Literal
 
 from aiogram.types.input_file import BufferedInputFile
-from fastapi import APIRouter, Cookie, Depends, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Cookie, Depends, File, Form, Header, HTTPException, Query, UploadFile, Request
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
 from sqlalchemy import String, cast, delete, desc, func, literal, or_, select, update
@@ -32,6 +32,7 @@ from backend.database.models import (
     UserActivity,
     User,
     WithdrawalStatus,
+    Admin,
 )
 from backend.database.session import async_session
 from backend.services.exceptions import (
@@ -149,6 +150,7 @@ def _decode_admin_access_token(token: str) -> dict:
 
 
 async def require_admin_auth(
+    request: Request,
     authorization: str | None = Header(default=None, alias="Authorization"),
     x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
     admin_access_token: str | None = Cookie(default=None, alias="admin_access_token"),
@@ -160,6 +162,8 @@ async def require_admin_auth(
     payload = _decode_admin_access_token(token)
     if payload.get("scope") != "admin:web":
         raise HTTPException(status_code=401, detail="Unauthorized")
+    from .audit import record_admin_action
+    await record_admin_action(request, payload)
     return payload
 
 

@@ -2,6 +2,16 @@
 .brand-mark.logo-mark{background:transparent;color:inherit;padding:0;overflow:hidden}
 .brand-mark.logo-mark img{display:block;width:32px;height:32px;object-fit:contain}
 @media(max-width:900px){.sidebar{height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px}.sidebar nav{min-height:0;overflow:visible}.sidebar-user{flex-shrink:0}}
+
+.admin-audit-dialog{max-width:860px;width:min(860px,calc(100vw - 32px));max-height:min(90vh,920px);overflow:auto}
+.admin-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.audit-section{margin-top:20px;border-top:1px solid var(--border,#e5e7eb);padding-top:16px}
+.audit-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.audit-section h3{margin:0;font-size:15px}
+.audit-list{display:grid;gap:7px;max-height:220px;overflow:auto}
+.audit-row{display:grid;grid-template-columns:170px minmax(150px,1fr) minmax(120px,1fr);gap:12px;padding:10px 12px;border:1px solid var(--border,#e5e7eb);border-radius:10px;font-size:12px;align-items:center}
+.audit-row span,.audit-row b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:640px){.admin-edit-grid{grid-template-columns:1fr}.audit-row{grid-template-columns:1fr;gap:4px}.audit-section-head{align-items:flex-start;flex-direction:column}}
 .ui-badge{font-weight:500;line-height:1.2;white-space:nowrap}
 .ui-badge-muted{background:#f4f4f5;color:#52525b;border-color:#e4e4e7}
 .ui-badge-warn{background:#fffbeb;color:#a16207;border-color:#fde68a}

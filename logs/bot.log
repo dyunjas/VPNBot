@@ -36706,3 +36706,9 @@ RuntimeError: File at path C:\Users\dyunj\VPNBot\app\frontend\assets\lunet-favic
 [2026-08-30 18:11:22] [INFO] root: Database tables initialized
 [2026-08-30 18:11:22] [INFO] root: Database connection successful
 [2026-08-30 18:13:05] [INFO] aiogram.event: Update id=891138140 is handled. Duration 198 ms by bot id=7557954606
+[2026-08-30 19:01:45] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 19:01:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-08-30 19:01:46] [INFO] root: Database tables initialized
+[2026-08-30 19:01:46] [INFO] root: Database connection successful
+[2026-08-30 19:01:50] [INFO] root: Settings successfully loaded from .env
+[2026-08-30 19:01:50] [DEBUG] asyncio: Using proactor: IocpProactor
