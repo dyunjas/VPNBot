@@ -1194,7 +1194,7 @@ function AdminAuditDialog({ admin, onClose, onSaved }) {
         {!audit.login_events.length ? <p className="muted">Входов пока нет.</p> : <div className="audit-list">{audit.login_events.map((item) => <div className="audit-row" key={`login-${item.id}`}><span>{date(item.created_at)}</span><span>{item.success ? "Успешный вход" : "Неуспешная попытка"}</span><span>{item.ip_address || "IP неизвестен"}</span></div>)}</div>}
       </div>
       <div className="audit-section"><div className="audit-section-head"><h3>Последние 10 действий в панели</h3></div>
-        {!audit.action_events.length ? <p className="muted">Действий пока нет.</p> : <div className="audit-list">{audit.action_events.map((item) => <div className="audit-row" key={`action-${item.id}`}><span>{date(item.created_at)}</span><b>{item.action}</b><span>{item.path}</span></div>)}</div>}
+        {!audit.action_events.length ? <p className="muted">Действий пока нет.</p> : <div className="audit-list">{audit.action_events.map((item) => <div className="audit-row" key={`action-${item.id}`}><span>{date(item.created_at)}</span><b>{item.action}</b><span title={item.path}>{item.details || item.path}</span></div>)}</div>}
       </div>
     </section>
   </div>;
@@ -1206,10 +1206,12 @@ function ResourcePage({ page }) {
     [tablePage, setTablePage] = useState(1),
     [pageSize, setPageSize] = useState(25),
     [selected, setSelected] = useState(null),
+    [selectedUserId, setSelectedUserId] = useState(null),
     [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
     [createOpen, setCreateOpen] = useState(false),
     [loginJournalOpen, setLoginJournalOpen] = useState(false);
+  const selectionRequest = useRef(0);
   const config = resourceConfig[page];
   const serverPaged = ["users", "subscriptions", "transactions", "withdrawals", "referrals"].includes(page);
   const load = () => {
@@ -1286,15 +1288,17 @@ function ResourcePage({ page }) {
         .slice(0, 7)
     : [];
   const openRow = async (row) => {
+    const requestId = ++selectionRequest.current;
     setSelected(row);
+    if (page === "users") setSelectedUserId(Number(row.id));
     if (page === "admins" && row.id) {
-      try { const details = await api(`/admins/${row.id}/audit`); setSelected({ ...row, audit: details }); } catch (e) { setError(e.message); }
+      try { const details = await api(`/admins/${row.id}/audit`); if (requestId === selectionRequest.current) setSelected({ ...row, audit: details }); } catch (e) { if (requestId === selectionRequest.current) setError(e.message); }
     } else if ((page === "users" || page === "subscriptions" || page === "partners" || page === "legal") && (row.id || row.key)) {
       try {
         const details = page === "users" ? await api(`/users/${row.id}`) : page === "subscriptions" ? await api(`/subscriptions/${row.id}/details`) : page === "partners" ? await api(`/partners/${row.id}/details`) : await api(`/legal/${row.key}`);
-        setSelected({ ...row, ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), details });
+        if (requestId === selectionRequest.current) setSelected({ ...row, ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), details });
       } catch (e) {
-        setError(e.message);
+        if (requestId === selectionRequest.current) setError(e.message);
       }
     }
   };
@@ -1307,14 +1311,15 @@ function ResourcePage({ page }) {
     await load();
   };
   const onAction = async (action, payload) => {
-    if (!selected?.id) return;
-    await api(`/users/${selected.id}/action`, {
+    const userId = selectedUserId || selected?.id;
+    if (!userId) return;
+    await api(`/users/${userId}/action`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action, ...payload }),
     });
     await load();
-    const details = await api(`/users/${selected.id}`);
+    const details = await api(`/users/${userId}`);
     setSelected({ ...selected, ...(details.user || {}), details });
   };
   return (
