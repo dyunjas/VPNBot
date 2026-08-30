@@ -1296,7 +1296,7 @@ function ResourcePage({ page }) {
     } else if ((page === "users" || page === "subscriptions" || page === "partners" || page === "legal") && (row.id || row.key)) {
       try {
         const details = page === "users" ? await api(`/users/${row.id}`) : page === "subscriptions" ? await api(`/subscriptions/${row.id}/details`) : page === "partners" ? await api(`/partners/${row.id}/details`) : await api(`/legal/${row.key}`);
-        if (requestId === selectionRequest.current) setSelected({ ...row, ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), details });
+        if (requestId === selectionRequest.current) setSelected({ ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), ...row, details });
       } catch (e) {
         if (requestId === selectionRequest.current) setError(e.message);
       }
