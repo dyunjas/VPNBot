@@ -97,7 +97,9 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
             return {"ok": True, "has_subscription": False, "statusText": "Нет активной подписки.", "active_keys": 0, "subscription_url": None}
         status = str(remote.get("status") or "")
         expire_at = remote.get("expireAt")
-        sub_url = remote.get("subscriptionUrl") or remote.get("subscription_url")
+        sub_url = remnawave_service._normalize_subscription_url(
+            remote.get("subscriptionUrl") or remote.get("subscription_url")
+        )
         devices = await remnawave_service.get_user_hwid_devices(user=user)
         try:
             devices_limit = max(0, int(remote.get("hwidDeviceLimit"))) if remote.get("hwidDeviceLimit") is not None else 0

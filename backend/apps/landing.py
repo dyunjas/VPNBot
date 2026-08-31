@@ -19,12 +19,12 @@ def create_app():
     @app.get("/cabinet")
     @app.get("/cabinet/")
     async def cabinet_redirect():
-        return RedirectResponse(url="https://app.lunetpn.ru/cabinet", status_code=307)
+        return RedirectResponse(url="https://app.lunet.pro/cabinet", status_code=307)
 
     @app.get("/cabinet/login")
     @app.get("/cabinet/login/")
     async def cabinet_login_redirect():
-        return RedirectResponse(url="https://app.lunetpn.ru/cabinet/login", status_code=307)
+        return RedirectResponse(url="https://app.lunet.pro/cabinet/login", status_code=307)
 
     register_legal_routes(app)
 

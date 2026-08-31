@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from datetime import timedelta
 from decimal import Decimal
 import json
+import re
 from typing import Any
 from urllib.parse import urlparse
 
@@ -107,6 +108,13 @@ class RemnaWaveService:
             tg_id = getattr(user, "id", 0)
         return f"user_{int(tg_id)}"
 
+    @staticmethod
+    def _normalize_subscription_url(url: str | None) -> str | None:
+        """Keep legacy Remnawave links working after the public domain change."""
+        if not isinstance(url, str) or not url.strip():
+            return None
+        return re.sub(r"lunetpn\.ru", "lunet.pro", url.strip(), flags=re.IGNORECASE)
+
     def _extract_first_link(self, data: Any) -> str | None:
         candidates = (
             "subscription_url",
@@ -122,7 +130,7 @@ class RemnaWaveService:
             for key in candidates:
                 value = data.get(key)
                 if isinstance(value, str) and value.strip():
-                    return value.strip()
+                    return self._normalize_subscription_url(value)
             for value in data.values():
                 found = self._extract_first_link(value)
                 if found:
@@ -641,7 +649,7 @@ class RemnaWaveService:
                 "[remnawave] using cached subscription_url user_id=%s",
                 getattr(user, "id", None),
             )
-            return cached_sub_url
+            return self._normalize_subscription_url(cached_sub_url)
 
         logger.warning("[remnawave] subscription_url missing in API response user_id=%s", getattr(user, "id", None))
         return None

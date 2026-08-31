@@ -2,7 +2,7 @@ import os
 from aiogram.types import WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-MINIAPP_URL = os.getenv("MINIAPP_URL", "https://miniapp.lunetpn.ru/miniapp/")
+MINIAPP_URL = os.getenv("MINIAPP_URL", "https://miniapp.lunet.pro/miniapp/")
 
 
 
@@ -23,4 +23,3 @@ def main_menu_kb():
 
     builder.adjust(1, 1, 1, 1, 2, 1)
     return builder.as_markup()
-

@@ -59,7 +59,9 @@ async def mini_status(payload: InitPayload):
 
         status = str(remote.get("status") or "")
         expire_at = remote.get("expireAt")
-        sub_url = remote.get("subscriptionUrl") or remote.get("subscription_url")
+        sub_url = remnawave_service._normalize_subscription_url(
+            remote.get("subscriptionUrl") or remote.get("subscription_url")
+        )
         has_subscription = status in {"ACTIVE", "LIMITED"}
 
         status_text = (
