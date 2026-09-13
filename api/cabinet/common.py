@@ -83,7 +83,14 @@ class VerifyCodePayload(BaseModel):
 
 class RegisterPayload(BaseModel):
     email: str
-    initData: str | None = None
+    offer_accepted: bool = False
+    terms_accepted: bool = False
+    privacy_accepted: bool = False
+
+
+class CompleteRegistrationPayload(BaseModel):
+    email: str
+    code: str = Field(min_length=6, max_length=6)
 
 
 class InitPayload(BaseModel):
@@ -106,9 +113,13 @@ class BuyDeviceSlotsPayload(InitPayload):
     slots: int = Field(ge=1, le=20)
 
 
+class SetAutoRenewPayload(InitPayload):
+    auto_renew: bool
+
+
 class GiftSubscriptionPayload(InitPayload):
     plan_id: int
-    recipient: str = Field(min_length=1, max_length=64)
+    recipient: str = Field(min_length=1, max_length=320)
 
 
 class TopupPayload(InitPayload):
@@ -224,7 +235,7 @@ def _cleanup_otp() -> None:
         _OTP_STORE.pop(key, None)
 
 
-def _put_otp(channel: str, identity: str, user_id: int, code: str) -> None:
+def _put_otp(channel: str, identity: str, user_id: int | None, code: str) -> None:
     _cleanup_otp()
     key = _otp_key(channel, identity)
     now_ts = time.time()
@@ -291,13 +302,30 @@ def _otp_send_retry_after(
 
 
 def _pop_otp(channel: str, identity: str, code: str) -> int | None:
+    matched, user_id = _consume_otp(channel, identity, code)
+    return user_id if matched else None
+
+
+def _consume_otp(
+    channel: str,
+    identity: str,
+    code: str,
+    *,
+    max_attempts: int = 5,
+) -> tuple[bool, int | None]:
     _cleanup_otp()
     key = _otp_key(channel, identity)
     rec = _OTP_STORE.get(key)
-    if not rec or str(rec.get("code")) != str(code).strip():
-        return None
+    if not rec:
+        return False, None
+    if not secrets.compare_digest(str(rec.get("code") or ""), str(code).strip()):
+        rec["attempts"] = int(rec.get("attempts", 0) or 0) + 1
+        if rec["attempts"] >= max(1, int(max_attempts)):
+            _OTP_STORE.pop(key, None)
+        return False, None
     _OTP_STORE.pop(key, None)
-    return int(rec.get("user_id"))
+    raw_user_id = rec.get("user_id")
+    return True, int(raw_user_id) if raw_user_id is not None else None
 
 
 def _smtp_send_code(email: str, code: str, purpose: str = "login") -> None:

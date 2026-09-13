@@ -10,16 +10,10 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "/miniapp/assets/lunet-logo.png",
-      "sizes": "192x192",
+      "src": "/miniapp/assets/lunet-pwa-icon.png?v=1",
+      "sizes": "1254x1254",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "/miniapp/assets/lunet-logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
     }
   ]
 }

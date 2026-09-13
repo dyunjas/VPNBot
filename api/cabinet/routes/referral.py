@@ -31,7 +31,11 @@ async def cabinet_referral_info(payload: InitPayload, user_id: int | None = Depe
         service = ReferralService(session)
         account = await service.get_account(user.id) or await service.create_account(user.id)
         await session.commit()
-        referral_url = f"https://t.me/{getattr(settings, 'BOT_USERNAME', 'LunetVPNBot')}?start=ref_{user.tg_id}"
+        referral_url = (
+            f"https://t.me/{getattr(settings, 'BOT_USERNAME', 'LunetVPNBot')}?start=ref_{user.tg_id}"
+            if user.tg_id
+            else None
+        )
         return {
             "ok": True,
             "referral_url": referral_url,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import Request
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
@@ -12,6 +12,10 @@ CABINET_REACT_DIST = FRONTEND_DIR / "cabinet_dist"
 
 def create_app():
     app = create_fastapi_app(title="Lunet Cabinet Frontend", with_db=True)
+
+    @app.get("/", include_in_schema=False)
+    async def root_redirect():
+        return RedirectResponse(url="/cabinet/", status_code=307)
 
     @app.get("/cabinet")
     @app.get("/cabinet/")

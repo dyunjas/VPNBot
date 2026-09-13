@@ -14,6 +14,7 @@ from backend.core.logger_config import logger
 from backend.core.telegram import create_telegram_session
 from backend.database.session import async_session
 from backend.services import BillingService, UserService
+from backend.services.email_notification_service import EmailNotificationService
 from backend.services.exceptions import PaymentNotConfirmed, TransactionNotFound, UserNotFound
 
 router = APIRouter(tags=["payments"])
@@ -25,14 +26,15 @@ def _first(values: dict[str, list[str]], key: str) -> str:
 
 
 async def _notify_payment(tx, *, referral_bonus: int = 0, referrer_tg_id: int | None = None) -> None:
-    if not settings.BOT_TOKEN:
-        return
     async with async_session() as session:
         user_service = UserService(session)
         try:
             user = await user_service.get_by_id(int(tx.user_id))
         except UserNotFound:
             return
+        await EmailNotificationService(session).payment_confirmed(user=user, transaction=tx)
+    if not settings.BOT_TOKEN or not getattr(user, "tg_id", None):
+        return
 
     session = create_telegram_session()
     bot = Bot(token=settings.BOT_TOKEN, session=session)

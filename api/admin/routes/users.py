@@ -6,6 +6,7 @@ from ..common import *
 from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
 from backend.core.telegram import create_telegram_session
+from backend.services.email_notification_service import EmailNotificationService
 
 router = APIRouter()
 
@@ -374,7 +375,7 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
                 if amount <= 0:
                     raise HTTPException(status_code=400, detail="amount must be > 0")
                 await user_service.add_balance(user_id, amount)
-                await activity_service.log_user_event(
+                balance_activity = await activity_service.log_user_event(
                     user_id=user_id,
                     category="admin",
                     action="add_balance",
@@ -384,6 +385,11 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
                 )
                 await session.refresh(user)
                 await session.commit()
+                await EmailNotificationService(session).balance_credited(
+                    user=user,
+                    amount=amount,
+                    reference=f"admin:{balance_activity.id}",
+                )
                 return {"ok": True, "action": payload.action, "balance": int(user.balance or 0)}
 
             if payload.action == "sub_balance":

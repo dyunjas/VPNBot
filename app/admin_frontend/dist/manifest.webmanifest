@@ -1,0 +1,19 @@
+{
+  "name": "Lunet Admin",
+  "short_name": "Lunet Admin",
+  "description": "Панель администратора Lunet",
+  "lang": "ru",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
+  "icons": [
+    {
+      "src": "/miniapp/assets/lunet-pwa-icon.png?v=1",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -47,6 +47,12 @@ import {
 import "./styles.css";
 import "./ui-overrides.css";
 
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/admin/sw.js", { scope: "/admin/" }).catch(() => {});
+  });
+}
+
 const API_BASE = window.__ADMIN_API_BASE_URL || "";
 const api = async (path, options = {}) => {
   const r = await fetch(`${API_BASE}/api/admin${path}`, {
@@ -575,7 +581,7 @@ const FIELD_LABELS = {
   id: "ID",
   tg_id: "Telegram ID",
   username: "Имя пользователя",
-  email: "Email",
+  email: "Почта",
   balance: "Баланс",
   banned: "Заблокирован",
   traffic_limit_bytes: "Лимит трафика",
@@ -907,7 +913,7 @@ function CreateDialog({ page, onClose, onCreated }) {
   };
   const input = (key, label, type = "text", required = true) => (
     <label className="ui-field" key={page === "admins" && key === "user_id" ? "username" : page === "admins" && key === "login" ? "email" : key}>
-      <span>{page === "admins" && key === "user_id" ? "Username" : page === "admins" && key === "login" ? "Email" : label}</span>
+      <span>{page === "admins" && key === "user_id" ? "Username" : page === "admins" && key === "login" ? "Почта" : label}</span>
       <input
         required={required}
         type={page === "admins" && key === "user_id" ? "text" : page === "admins" && key === "login" ? "email" : type}
@@ -1318,9 +1324,11 @@ function ResourcePage({ page }) {
     if (tablePage > totalPages) setTablePage(totalPages);
   }, [tablePage, totalPages]);
   const columns = rows[0]
-    ? Object.keys(rows[0])
-        .filter((k) => typeof rows[0][k] !== "object")
-        .slice(0, 7)
+    ? page === "users"
+      ? ["id", "tg_id", "username", "email", "balance", "banned", "subscription_end"].filter((key) => key in rows[0])
+      : Object.keys(rows[0])
+          .filter((k) => typeof rows[0][k] !== "object")
+          .slice(0, 7)
     : [];
   const openRow = async (row) => {
     const requestId = ++selectionRequest.current;
@@ -1740,7 +1748,7 @@ function AdminLogin() {
             Управление сервисом
             <br />в одном пространстве
           </h1>
-          <p>Доступ к панели подтверждается одноразовым кодом на email.</p>
+          <p>Доступ к панели подтверждается одноразовым кодом, отправленным на почту.</p>
         </div>
       </div>
       <form className="login-form" onSubmit={submit}>
@@ -1748,13 +1756,13 @@ function AdminLogin() {
         <h2>{challenge ? "Подтвердите вход" : "Добро пожаловать"}</h2>
         <p className="muted">
           {challenge
-            ? `Код отправлен на ${challenge.email_hint || "ваш email"}.`
+            ? `Код отправлен на ${challenge.email_hint || "вашу почту"}.`
             : "Введите логин и пароль администратора."}
         </p>
         {!challenge ? (
           <>
             <Field
-              label="Email"
+              label="Почта"
               value={login}
               onChange={(e) => setLogin(e.target.value)}
               autoFocus

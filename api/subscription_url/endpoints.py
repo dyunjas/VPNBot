@@ -20,6 +20,7 @@ from backend.database.models import User, Subscription, SubStatus
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
 from backend.services.activity_service import ActivityService
+from backend.services.email_notification_service import EmailNotificationService
 from backend.services import BillingService, UserService
 from backend.core.loader import bot as runtime_bot
 from backend.services.exceptions import InsufficientBalance, PlanNotFound, PurchaseInProgress, TooEarlyToRenew
@@ -331,6 +332,7 @@ async def remnawave_webhook(
 
                 if user.tg_id:
                     await _notify_expiration_warning(tg_id=int(user.tg_id), hours=hours)
+                subscription = await _find_latest_subscription(session, user_id=user.id)
                 await activity_service.log_user_event(
                     user_id=user.id,
                     category="webhook",
@@ -339,6 +341,12 @@ async def remnawave_webhook(
                     note=f"Получен webhook {event} за {hours} ч.",
                 )
                 await session.commit()
+                if subscription:
+                    await EmailNotificationService(session).subscription_ending(
+                        user=user,
+                        subscription=subscription,
+                        hours=hours,
+                    )
                 logger.info(
                     "[webhook][remnawave] expiration processed user_id=%s event=%s hours=%s",
                     user.id,
@@ -459,6 +467,11 @@ async def remnawave_webhook(
                     note="Получен webhook user.expired, локальная подписка переведена в expired",
                 )
                 await session.commit()
+                if user and subscription:
+                    await EmailNotificationService(session).subscription_expired(
+                        user=user,
+                        subscription=subscription,
+                    )
                 logger.info(
                     "[webhook][remnawave] expired processed user_id=%s subscription_id=%s",
                     user_id,

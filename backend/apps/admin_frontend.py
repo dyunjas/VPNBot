@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from backend.apps.common import ADMIN_FRONTEND_DIR, FRONTEND_DIR, create_fastapi_app, no_cache_html
 from backend.core.config import settings
@@ -44,10 +44,22 @@ def _render_admin_page(name: str):
 def create_app():
     app = create_fastapi_app(title="Lunet Admin Frontend")
 
+    @app.get("/", include_in_schema=False)
+    async def root_redirect():
+        return RedirectResponse(url="/admin/", status_code=307)
+
     @app.get("/admin")
     @app.get("/admin/")
     async def admin_root():
         return _react_index_response()
+
+    @app.get("/admin/manifest.webmanifest", include_in_schema=False)
+    async def admin_manifest():
+        return FileResponse(ADMIN_REACT_DIST / "manifest.webmanifest", media_type="application/manifest+json")
+
+    @app.get("/admin/sw.js", include_in_schema=False)
+    async def admin_service_worker():
+        return FileResponse(ADMIN_REACT_DIST / "sw.js", media_type="application/javascript")
 
     for page in ADMIN_PAGES:
         async def page_handler(page_name: str = page):

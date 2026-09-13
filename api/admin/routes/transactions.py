@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter
 
 from ..common import *
+from backend.services.email_notification_service import EmailNotificationService
 
 router = APIRouter()
 
@@ -102,6 +103,7 @@ async def admin_transaction_confirm(transaction_id: int):
         )
         await session.commit()
         await session.refresh(user)
+        await EmailNotificationService(session).payment_confirmed(user=user, transaction=tx)
         return {
             "ok": True,
             "transaction_id": tx.id,

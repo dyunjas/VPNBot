@@ -20,6 +20,7 @@ from backend.services.exceptions import (
     TooEarlyToRenew,
     UserNotFound
 )
+from backend.services.email_notification_service import EmailNotificationService
 
 
 async def _notify_subscription_expired(bot, tg_id: int):
@@ -131,10 +132,15 @@ async def expire_checker(bot):
                     except Exception as e:
                         logger.error("remnawave expired status sync failed user_id=%s: %s", sub.user_id, e)
 
-                    try:
-                        await _notify_subscription_expired(bot, user.tg_id)
-                    except Exception as e:
-                        logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
+                    if user.tg_id:
+                        try:
+                            await _notify_subscription_expired(bot, user.tg_id)
+                        except Exception as e:
+                            logger.error("notify expired failed tg_id=%s: %s", user.tg_id, e)
+                    await EmailNotificationService(session).subscription_expired(
+                        user=user,
+                        subscription=sub,
+                    )
 
             try:
                 soon_subs = await sub_service.list_active_ending_between(
@@ -168,7 +174,7 @@ async def expire_checker(bot):
                         if end and end.tzinfo is None:
                             end = end.replace(tzinfo=timezone.utc)
 
-                        if end:
+                        if end and user.tg_id:
                             await _notify_subscription_renewed(bot, user.tg_id, end)
 
                         continue
@@ -206,10 +212,16 @@ async def expire_checker(bot):
                     remain = period_end - now
                     hours = max(1, int(remain.total_seconds() // 3600))
 
-                    await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+                    if user.tg_id:
+                        await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+                    await EmailNotificationService(session).subscription_ending(
+                        user=user,
+                        subscription=sub,
+                        hours=hours,
+                    )
 
                 except Exception as e:
-                    logger.error("notify soon failed tg_id=%s: %s", user.tg_id, e)
+                    logger.error("notify soon failed user_id=%s tg_id=%s: %s", user.id, user.tg_id, e)
         finally:
             await billing_service.close_clients()
 

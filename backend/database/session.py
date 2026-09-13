@@ -40,6 +40,10 @@ async def init_db():
                 "ADD COLUMN IF NOT EXISTS traffic_limit_bytes BIGINT NOT NULL DEFAULT 0"
             )
         )
+        await conn.execute(text("ALTER TABLE vpn_users ALTER COLUMN tg_id DROP NOT NULL"))
+        await conn.execute(text("ALTER TABLE vpn_users ADD COLUMN IF NOT EXISTS offer_accepted_at TIMESTAMPTZ"))
+        await conn.execute(text("ALTER TABLE vpn_users ADD COLUMN IF NOT EXISTS terms_accepted_at TIMESTAMPTZ"))
+        await conn.execute(text("ALTER TABLE vpn_users ADD COLUMN IF NOT EXISTS privacy_accepted_at TIMESTAMPTZ"))
         await conn.execute(
             text(
                 "ALTER TABLE vpn_subscription_plans "

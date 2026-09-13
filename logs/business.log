@@ -1504,3 +1504,43 @@ NameError: name 'user' is not defined. Did you mean: 'super'?
 [2026-08-30 21:54:11] [INFO] root: [biz][user] balance_added user_id=98 amount=100 before=3500 after=3600
 [2026-08-30 21:54:13] [INFO] root: [biz][user] balance_subtracted user_id=98 amount=100 before=3600 after=3500
 [2026-09-13 15:49:57] [INFO] root: [biz][user] balance_added user_id=102 amount=100 before=210 after=310
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=5 auto_renew=False
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] created user_id=103 subscription_id=90 plan_id=5 period_end=2027-09-08 15:42:42.341859+00:00 gb_added=360.00
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=386547056640
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 20:42:44] [INFO] root: [biz][referral] account_created user_id=103 account_id=77
+[2026-09-13 20:43:01] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:03] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:03] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:04] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:05] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:09] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:10] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:11] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:47:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-09-13 20:47:20] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-09-13 20:47:22] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-09-13 20:47:35] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 20:47:35] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 20:47:35] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=100 balance=5 required=95
+[2026-09-13 20:48:46] [INFO] root: [biz][user] balance_added user_id=100 amount=100 before=5 after=105
+[2026-09-13 20:48:46] [INFO] root: [biz][user] balance_added user_id=100 amount=100 before=105 after=205
+[2026-09-13 20:48:51] [INFO] root: [biz][user] balance_added user_id=103 amount=100 before=0 after=100
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=1 auto_renew=False
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] renewed user_id=103 subscription_id=90 plan_id=1 period_end=2027-10-08 20:42:42.341859+00:00 gb_limit=30.00 rollover_gb=360.00
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=418759311360
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 21:11:49] [INFO] root: [biz][user] balance_added user_id=100 amount=100 before=110 after=210
+[2026-09-13 21:11:50] [INFO] root: [biz][user] balance_added user_id=100 amount=100 before=210 after=310
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=1 auto_renew=False
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] renewed user_id=103 subscription_id=90 plan_id=1 period_end=2027-11-08 01:42:42.341859+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=450971566080
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 21:21:24] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 21:21:28] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False

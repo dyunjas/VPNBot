@@ -16,6 +16,7 @@ from api.bot.common import (
 from backend.core.business_config import get_business_int
 from backend.services.payment_method_service import get_payment_method_config, is_payment_method_enabled
 from backend.services import BillingService, TransactionService
+from backend.services.email_notification_service import EmailNotificationService
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
 
@@ -66,6 +67,8 @@ async def confirm_platega_payment(tg_id: int, payload: ConfirmPaymentPayload, us
         fresh_user = await user_service.get_by_id(tx.user_id)
     except UserNotFound:
         fresh_user = None
+    if fresh_user:
+        await EmailNotificationService(user_service.session).payment_confirmed(user=fresh_user, transaction=tx)
     return {"ok": True, "confirmed": True, "transaction": {"id": tx.id, "provider_id": tx.transaction_id, "amount": int(tx.amount or 0)}, "balance": int(fresh_user.balance or 0) if fresh_user else 0, "referral_bonus": int(reward["bonus"] or 0), "referrer_tg_id": reward["referrer_tg_id"]}
 
 
@@ -108,6 +111,8 @@ async def confirm_crypto_invoice(tg_id: int, payload: ConfirmPaymentPayload, use
         fresh_user = await user_service.get_by_id(tx.user_id)
     except UserNotFound:
         fresh_user = None
+    if fresh_user:
+        await EmailNotificationService(user_service.session).payment_confirmed(user=fresh_user, transaction=tx)
     return {"ok": True, "confirmed": True, "transaction": {"id": tx.id, "provider_id": tx.transaction_id, "amount": int(tx.amount or 0)}, "balance": int(fresh_user.balance or 0) if fresh_user else 0, "referral_bonus": int(reward["bonus"] or 0), "referrer_tg_id": reward["referrer_tg_id"]}
 
 
@@ -150,4 +155,6 @@ async def confirm_pally_payment(tg_id: int, payload: ConfirmPaymentPayload, user
         fresh_user = await user_service.get_by_id(tx.user_id)
     except UserNotFound:
         fresh_user = None
+    if fresh_user:
+        await EmailNotificationService(user_service.session).payment_confirmed(user=fresh_user, transaction=tx)
     return {"ok": True, "confirmed": True, "transaction": {"id": tx.id, "provider_id": tx.transaction_id, "amount": int(tx.amount or 0)}, "balance": int(fresh_user.balance or 0) if fresh_user else 0, "referral_bonus": int(reward["bonus"] or 0), "referrer_tg_id": reward["referrer_tg_id"]}

@@ -3,6 +3,7 @@
 from ..common import *
 from backend.core.business_config import get_business_int
 from backend.services.payment_method_service import get_payment_method_config
+from backend.services.email_notification_service import EmailNotificationService
 
 router = APIRouter()
 
@@ -232,6 +233,10 @@ async def mini_balance_check(payload: BalanceCheckPayload):
 
                 tx = await tx_service.get_by_provider_id(provider_id)
                 fresh_user = await user_service.get_by_id(user.id)
+                await EmailNotificationService(session).payment_confirmed(
+                    user=fresh_user,
+                    transaction=tx,
+                )
 
                 return {
                     "ok": True,

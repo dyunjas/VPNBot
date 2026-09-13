@@ -14,6 +14,7 @@ from api.cabinet.common import (
     PromoService,
     ReferralService,
     RemnaWaveService,
+    SetAutoRenewPayload,
     SubscriptionNotFound,
     SubscriptionService,
     TransactionService,
@@ -37,7 +38,9 @@ async def _find_gift_recipient(session, raw: str) -> User:
     if not value:
         raise HTTPException(status_code=400, detail="Укажите получателя")
 
-    if value.lstrip("-").isdigit():
+    if "@" in value:
+        res = await session.execute(select(User).where(User.email.ilike(value.lower())))
+    elif value.lstrip("-").isdigit():
         res = await session.execute(select(User).where(User.tg_id == int(value)))
     else:
         res = await session.execute(select(User).where(User.username.ilike(value)))
@@ -117,6 +120,7 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
                 "current_period_start": None,
                 "current_period_end": expire_at,
                 "status": status or None,
+                "auto_renew": bool(active_sub.auto_renew),
                 "token": getattr(active_sub, "subscription_token", None),
                 "gb_left": None,
                 "devices_limit": devices_limit,
@@ -132,6 +136,31 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
                 "usedTrafficBytes": user_traffic.get("usedTrafficBytes"),
                 "lifetimeUsedTrafficBytes": user_traffic.get("lifetimeUsedTrafficBytes"),
                 "hwidDeviceLimit": remote.get("hwidDeviceLimit"),
+            },
+        }
+
+
+@router.post("/subscription/auto-renew")
+async def cabinet_subscription_auto_renew(
+    payload: SetAutoRenewPayload,
+    user_id: int | None = Depends(require_optional_cabinet_auth),
+):
+    user_id = _resolve_request_user_id(payload.initData, user_id)
+    async with async_session() as session:
+        user = await _get_user(session, user_id)
+        try:
+            sub = await SubscriptionService(session).set_auto_renew(
+                user_id=user.id,
+                auto_renew=payload.auto_renew,
+            )
+        except Exception as exc:
+            raise _map_service_error(exc)
+        return {
+            "ok": True,
+            "subscription": {
+                "id": sub.id,
+                "auto_renew": bool(sub.auto_renew),
+                "current_period_end": sub.current_period_end.isoformat() if sub.current_period_end else None,
             },
         }
 
@@ -233,6 +262,7 @@ async def cabinet_subscription_gift(payload: GiftSubscriptionPayload, user_id: i
                 "id": recipient.id,
                 "tg_id": recipient.tg_id,
                 "username": recipient.username,
+                "email": recipient.email,
             },
             "current_period_end": sub.current_period_end.isoformat() if sub.current_period_end else None,
         }

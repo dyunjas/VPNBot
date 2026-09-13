@@ -1866,3 +1866,12 @@ AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
 [2026-08-30 16:36:01] [WARNING] root: [biz][billing] buy_subscription_too_early user_id=100 plan_id=4 seconds_left=27230819
 [2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_create_requested user_id=100 amount_rub=500 asset=USDT
 [2026-08-30 16:47:55] [INFO] root: [biz][billing] crypto_created user_id=100 invoice_id=61962011 amount_rub=500 amount_crypto=6.33
+[2026-09-13 20:47:35] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 20:47:35] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 20:47:35] [WARNING] root: [biz][billing] charge_balance_insufficient user_id=100 balance=5 required=95
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 20:49:26] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
+[2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95

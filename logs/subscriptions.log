@@ -1479,3 +1479,31 @@ AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
 [2026-08-30 16:27:17] [INFO] root: [subscription] reset_user_traffic skipped user_id=84 (remnawave-only mode)
 [2026-08-30 16:27:17] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=84 subscription_id=67 traffic_limit_bytes=289910292480
 [2026-08-30 16:27:17] [INFO] root: [biz][subscription] activate_completed user_id=84 subscription_id=67
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=5 auto_renew=False
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] created user_id=103 subscription_id=90 plan_id=5 period_end=2027-09-08 15:42:42.341859+00:00 gb_added=360.00
+[2026-09-13 20:42:42] [INFO] root: [subscription] reset_user_traffic skipped user_id=103 (remnawave-only mode)
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=386547056640
+[2026-09-13 20:42:42] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 20:43:01] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:03] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:03] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:04] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:05] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:09] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:43:10] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 20:43:11] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-09-13 20:47:18] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-09-13 20:47:20] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-09-13 20:47:22] [INFO] root: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=1 auto_renew=False
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] renewed user_id=103 subscription_id=90 plan_id=1 period_end=2027-10-08 20:42:42.341859+00:00 gb_limit=30.00 rollover_gb=360.00
+[2026-09-13 20:49:26] [INFO] root: [subscription] reset_user_traffic skipped user_id=103 (remnawave-only mode)
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=418759311360
+[2026-09-13 20:49:26] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] activate_requested user_id=103 plan_id=1 auto_renew=False
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] renewed user_id=103 subscription_id=90 plan_id=1 period_end=2027-11-08 01:42:42.341859+00:00 gb_limit=30.00 rollover_gb=30.00
+[2026-09-13 21:12:27] [INFO] root: [subscription] reset_user_traffic skipped user_id=103 (remnawave-only mode)
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] traffic_limit_snapshot_updated user_id=103 subscription_id=90 traffic_limit_bytes=450971566080
+[2026-09-13 21:12:27] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
+[2026-09-13 21:21:24] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
+[2026-09-13 21:21:28] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False

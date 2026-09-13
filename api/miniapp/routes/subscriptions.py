@@ -125,7 +125,12 @@ async def mini_subscription_gift(payload: GiftSubscriptionPayload):
         raise HTTPException(400, "Укажите получателя подарка")
     async with async_session() as session:
         buyer = await _get_user_or_404(session, tg_user["id"])
-        query = select(User).where(User.tg_id == int(recipient_value)) if recipient_value.lstrip("-").isdigit() else select(User).where(User.username.ilike(recipient_value))
+        if "@" in recipient_value:
+            query = select(User).where(User.email.ilike(recipient_value.lower()))
+        elif recipient_value.lstrip("-").isdigit():
+            query = select(User).where(User.tg_id == int(recipient_value))
+        else:
+            query = select(User).where(User.username.ilike(recipient_value))
         recipient = (await session.execute(query)).scalar_one_or_none()
         if not recipient:
             raise HTTPException(404, "Получатель не найден")
@@ -138,4 +143,4 @@ async def mini_subscription_gift(payload: GiftSubscriptionPayload):
             raise _map_service_error(e)
         finally:
             await billing.close_clients()
-        return {"ok": True, "subscription_id": sub.id, "charged": int(charged), "recipient": {"tg_id": recipient.tg_id, "username": recipient.username}}
+        return {"ok": True, "subscription_id": sub.id, "charged": int(charged), "recipient": {"tg_id": recipient.tg_id, "username": recipient.username, "email": recipient.email}}

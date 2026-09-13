@@ -2,13 +2,17 @@ from __future__ import annotations
 
 import secrets
 import time
+import re
+from datetime import datetime, timezone
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from api.cabinet.common import (
     Bot,
+    CompleteRegistrationPayload,
     InitPayload,
     JSONResponse,
     REFRESH_COOKIE,
@@ -20,6 +24,7 @@ from api.cabinet.common import (
     VerifyCodePayload,
     _create_access_token,
     _create_refresh_token,
+    _consume_otp,
     _decode_token,
     _get_tg_user,
     _get_user,
@@ -34,10 +39,14 @@ from api.cabinet.common import (
     settings,
 )
 from backend.core.telegram import create_telegram_session
+from backend.core.logger_config import logger
+from backend.services.remnawave_service import RemnaWaveService
+from backend.services.subscription_service import SubscriptionService
 
 router = APIRouter()
 _DEEPLINK_STORE: dict[str, dict] = {}
 DEEPLINK_TTL_SEC = 10 * 60
+EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
 def _set_refresh_cookie(response: JSONResponse, user_id: int) -> None:
@@ -81,30 +90,118 @@ def _pop_deeplink(token: str) -> int | None:
 @router.post("/auth/register")
 async def cabinet_register(payload: RegisterPayload):
     email = payload.email.strip().lower()
-    if not email:
-        raise HTTPException(status_code=400, detail="email is required")
-    tg_user = _get_tg_user(payload.initData)
-    tg_id = int(tg_user["id"])
+    if not email or len(email) > 320 or not EMAIL_RE.fullmatch(email):
+        raise HTTPException(status_code=400, detail="Укажите email")
+    if not (payload.offer_accepted and payload.terms_accepted and payload.privacy_accepted):
+        raise HTTPException(status_code=400, detail="Необходимо принять все документы")
 
     async with async_session() as session:
         existing_email = await session.execute(select(User).where(User.email == email))
         if existing_email.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="email already registered")
+            raise HTTPException(status_code=409, detail="Пользователь с таким email уже зарегистрирован")
 
-        existing_tg = await session.execute(select(User).where(User.tg_id == tg_id))
-        user = existing_tg.scalar_one_or_none()
-        if user:
-            user.email = email
-        else:
-            user = User(tg_id=tg_id, email=email, username=None, balance=0, banned=False)
-            session.add(user)
-        await session.commit()
-        await session.refresh(user)
+    if not _otp_send_allowed("registration", email, cooldown_sec=60, window_sec=3600, max_sends=5):
+        retry_after = _otp_send_retry_after(
+            "registration",
+            email,
+            cooldown_sec=60,
+            window_sec=3600,
+            max_sends=5,
+        )
+        raise HTTPException(status_code=429, detail=f"Повторите попытку через {retry_after} сек.")
 
     code = f"{secrets.randbelow(1000000):06d}"
-    _put_otp("email", email, user.id, code)
+    _put_otp("registration", email, None, code)
     _smtp_send_code(email, code, purpose="bind")
-    return {"ok": True, "message": "verification code sent"}
+    return {"ok": True, "message": "Код подтверждения отправлен"}
+
+
+@router.post("/auth/register/verify")
+async def cabinet_register_verify(payload: CompleteRegistrationPayload):
+    email = payload.email.strip().lower()
+    if not email or len(email) > 320 or not EMAIL_RE.fullmatch(email):
+        raise HTTPException(status_code=400, detail="Укажите корректный email")
+    matched, _ = _consume_otp("registration", email, payload.code, max_attempts=5)
+    if not matched:
+        raise HTTPException(status_code=400, detail="Неверный или просроченный код")
+
+    now = datetime.now(timezone.utc)
+    async with async_session() as session:
+        existing_email = await session.execute(select(User).where(User.email == email))
+        if existing_email.scalar_one_or_none():
+            raise HTTPException(status_code=409, detail="Пользователь с таким email уже зарегистрирован")
+
+        user = User(
+            tg_id=None,
+            email=email,
+            username=None,
+            balance=0,
+            banned=False,
+            offer_accepted_at=now,
+            terms_accepted_at=now,
+            privacy_accepted_at=now,
+        )
+        session.add(user)
+        try:
+            await session.commit()
+            await session.refresh(user)
+        except IntegrityError as exc:
+            await session.rollback()
+            raise HTTPException(status_code=409, detail="Пользователь с таким email уже зарегистрирован") from exc
+
+        trial_granted = False
+        trial_subscription = None
+        remnawave_provisioned = False
+        remnawave = RemnaWaveService(session)
+        try:
+            trial_plan = await SubscriptionService(session).get_trial_plan()
+            if trial_plan:
+                trial_subscription = await SubscriptionService(session).activate_subscription(
+                    user_id=user.id,
+                    plan_id=trial_plan.id,
+                    auto_renew=False,
+                )
+                trial_granted = True
+                try:
+                    await remnawave.get_subscription_url(user=user, subscription=trial_subscription)
+                    remnawave_provisioned = True
+                except Exception as exc:
+                    logger.exception(
+                        "[cabinet][register] trial remnawave sync failed user_id=%s subscription_id=%s: %s",
+                        user.id,
+                        trial_subscription.id,
+                        exc,
+                    )
+            else:
+                remnawave_provisioned = await remnawave.provision_web_user(user=user)
+        except Exception as exc:
+            logger.exception("[cabinet][register] trial provisioning failed user_id=%s: %s", user.id, exc)
+            await session.rollback()
+            try:
+                remnawave_provisioned = await remnawave.provision_web_user(user=user)
+            except Exception as provision_exc:
+                logger.exception("[cabinet][register] remnawave provisioning failed user_id=%s: %s", user.id, provision_exc)
+
+    response = JSONResponse(
+        {
+            "ok": True,
+            "access_token": _create_access_token(user.id),
+            "token_type": "bearer",
+            "remnawave_provisioned": remnawave_provisioned,
+            "trial_granted": trial_granted,
+            "trial_subscription": {
+                "id": trial_subscription.id,
+                "plan_id": trial_subscription.plan_id,
+                "current_period_end": trial_subscription.current_period_end.isoformat()
+                if trial_subscription and trial_subscription.current_period_end
+                else None,
+            }
+            if trial_subscription
+            else None,
+        }
+    )
+    _set_refresh_cookie(response, user.id)
+    return response
 
 
 @router.post("/auth/send-email-code")

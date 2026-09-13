@@ -26,6 +26,7 @@ from backend.services.subscription_service import SubscriptionService
 from backend.services.payment_method_service import get_payment_method_config
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.activity_service import ActivityService
+from backend.services.email_notification_service import EmailNotificationService
 from backend.services.exceptions import (
     BannedUser,
     UserNotFound,
@@ -1100,8 +1101,18 @@ class BillingService:
         )
         await self.session.commit()
 
-        buyer_name = f"@{buyer.username}" if getattr(buyer, "username", None) else f"ID {buyer.tg_id}"
+        buyer_name = f"@{buyer.username}" if getattr(buyer, "username", None) else (buyer.email or f"ID {buyer.tg_id}")
         end_text = sub.current_period_end.strftime("%d.%m.%Y") if sub.current_period_end else "—"
+        await EmailNotificationService(self.session).gift_received(
+            user=recipient,
+            subscription=sub,
+            plan_name=str(plan.name),
+            sender=str(buyer_name),
+        )
+
+        if not recipient.tg_id:
+            return sub, int(plan.price or 0), recipient
+
         builder = InlineKeyboardBuilder()
         builder.button(
             text="Моя подписка",

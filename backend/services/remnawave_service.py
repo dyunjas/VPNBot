@@ -104,9 +104,9 @@ class RemnaWaveService:
         # RemnaWave username is an internal stable identifier.  Do not use
         # Telegram's username here: it can be changed or be absent entirely.
         tg_id = getattr(user, "tg_id", None)
-        if tg_id is None:
-            tg_id = getattr(user, "id", 0)
-        return f"user_{int(tg_id)}"
+        if tg_id is not None and int(tg_id) > 0:
+            return f"user_{int(tg_id)}"
+        return f"web_user_{int(getattr(user, 'id', 0))}"
 
     @staticmethod
     def _normalize_subscription_url(url: str | None) -> str | None:
@@ -549,6 +549,54 @@ class RemnaWaveService:
 
             raise RuntimeError(f"remnawave create user failed status={status} body={data}")
 
+    async def provision_web_user(self, *, user) -> bool:
+        """Create or bind a disabled Remnawave account for an email-only cabinet user."""
+        if not self.enabled:
+            raise RuntimeError("remnawave is not configured")
+        if getattr(user, "tg_id", None) is not None:
+            return False
+
+        remote_id = self._coerce_int(getattr(user, "remnawave_user_id", None))
+        remote_uuid = (getattr(user, "remnawave_user_uuid", None) or "").strip() or None
+        if remote_id is not None or remote_uuid:
+            return True
+
+        timeout = aiohttp.ClientTimeout(total=10, connect=4, sock_connect=4, sock_read=6)
+        async with aiohttp.ClientSession(timeout=timeout, cookies=self.cookies) as http:
+            existing = await self._find_remote_user(http, user)
+            if isinstance(existing, dict):
+                await self._persist_binding(
+                    user_id=user.id,
+                    remote_id=self._extract_remote_user_id(existing),
+                    remote_uuid=self._extract_remote_user_uuid(existing),
+                    sub_url=self._extract_first_link(existing),
+                )
+                return True
+
+            payload = self._compact_payload(await self._build_payload(user, None))
+            status, data = await self._request_json(
+                http,
+                "POST",
+                f"{self.base_url}/api/users",
+                json=payload,
+            )
+            if status >= 400:
+                raise RuntimeError(f"remnawave web user create failed status={status} body={data}")
+
+        remote = self._unwrap_response(data)
+        await self._persist_binding(
+            user_id=user.id,
+            remote_id=self._extract_remote_user_id(remote),
+            remote_uuid=self._extract_remote_user_uuid(remote),
+            sub_url=self._extract_first_link(remote),
+        )
+        logger.info(
+            "[remnawave] web_user_provisioned user_id=%s username=%s",
+            user.id,
+            self._build_username(user),
+        )
+        return True
+
     async def _persist_binding(self, *, user_id: int, remote_id: str | int | None, remote_uuid: str | None, sub_url: str | None) -> None:
         try:
             await self.user_repo.set_remnawave_binding(
@@ -946,7 +994,14 @@ class RemnaWaveService:
         for user in users:
             try:
                 subscription = await self.sub_repo.get_active_with_plan(user.id, now=now)
-                await self.sync_local_user(user=user, subscription=subscription)
+                if (
+                    getattr(user, "tg_id", None) is None
+                    and getattr(user, "remnawave_user_id", None) is None
+                    and not getattr(user, "remnawave_user_uuid", None)
+                ):
+                    await self.provision_web_user(user=user)
+                else:
+                    await self.sync_local_user(user=user, subscription=subscription)
                 await self.session.commit()
                 synced += 1
             except Exception as e:

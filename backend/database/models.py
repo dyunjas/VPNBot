@@ -58,7 +58,7 @@ class User(Base):
     __tablename__ = "vpn_users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    tg_id: Mapped[int] = mapped_column(BigInteger, unique=True)
+    tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True, nullable=True)
     username: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     referrer_id: Mapped[int | None] = mapped_column(
@@ -70,6 +70,9 @@ class User(Base):
     balance: Mapped[int] = mapped_column(default=0)
     traffic_limit_bytes: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
     email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
+    offer_accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    terms_accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    privacy_accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     subscription_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     remnawave_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
     remnawave_user_uuid: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
