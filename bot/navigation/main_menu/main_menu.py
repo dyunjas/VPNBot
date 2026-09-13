@@ -34,7 +34,7 @@ def build_profile_text(user: dict) -> str:
         f"<b>——<tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Почта:</b> {html_escape(email)}</blockquote>\n\n"
         "<tg-emoji emoji-id='5771695636411847302'>📢</tg-emoji> Канал: @LunetVpn\n"
         "<tg-emoji emoji-id='5906995262378741881'>🙋</tg-emoji> Поддержка: @LunetVpnSupport\n\n"
-        "<blockquote><i><tg-emoji emoji-id='5874960879434338403'>🔎</tg-emoji> Нажмите кнопку 'Купить подписку', чтобы приобрести подписку.</i></blockquote>"
+        "<blockquote><i><tg-emoji emoji-id='5874960879434338403'>🔎</tg-emoji> Личный кабинет: https://lunet.pro/cabinet</i></blockquote>"
     )
 
 
