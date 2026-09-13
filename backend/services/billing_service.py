@@ -12,7 +12,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.config import settings
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
 from backend.core.business_config import get_business_decimal, get_business_int
 from backend.core.telegram_notify import send_telegram_message_safe
 from backend.repositories.user_repository import UserRepository
@@ -39,6 +39,10 @@ from backend.services.exceptions import (
 )
 
 USDT_RATE = Decimal("79")
+
+logger = get_logger("payments")
+subscription_logger = get_logger("subscriptions")
+device_logger = get_logger("devices")
 
 
 class BillingService:
@@ -945,7 +949,7 @@ class BillingService:
         return sub
 
     async def add_gb_to_subscription(self, user_id: int, gb: int):
-        logger.info(
+        subscription_logger.info(
             "[biz][billing] buy_traffic_requested user_id=%s gb=%s",
             user_id,
             gb,
@@ -960,7 +964,7 @@ class BillingService:
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
         if bool(getattr(user, "banned", False)):
-            logger.warning("[biz][billing] buy_traffic_banned user_id=%s gb=%s", user_id, gb)
+            subscription_logger.warning("[subscription] buy_traffic_banned user_id=%s gb=%s", user_id, gb)
             raise BannedUser("User is banned")
 
         await self.charge_balance(user_id=user_id, amount=price)
@@ -976,12 +980,11 @@ class BillingService:
                 status="ACTIVE",
             )
         except Exception as e:
-            logger.exception(
-                "[biz][billing] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s gb=%s: %s",
+            subscription_logger.exception(
+                "[subscription] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s gb=%s",
                 user_id,
                 sub.id,
                 gb,
-                e,
             )
 
         await self.session.commit()
@@ -996,8 +999,8 @@ class BillingService:
             note="Покупка дополнительного трафика",
         )
         await self.session.commit()
-        logger.info(
-            "[biz][billing] buy_traffic_completed user_id=%s subscription_id=%s gb=%s charged=%s",
+        subscription_logger.info(
+            "[subscription] traffic_purchased user_id=%s subscription_id=%s gb=%s charged=%s",
             user_id,
             sub.id,
             gb,
@@ -1006,7 +1009,7 @@ class BillingService:
         return sub, int(price)
 
     async def add_device_slots_to_subscription(self, user_id: int, slots: int):
-        logger.info("[biz][billing] buy_device_slots_requested user_id=%s slots=%s", user_id, slots)
+        device_logger.info("[device] slots_purchase_requested user_id=%s slots=%s", user_id, slots)
         if slots <= 0:
             raise ValueError("Slots must be > 0")
 
@@ -1024,15 +1027,21 @@ class BillingService:
         try:
             await self.remnawave_service.sync_user_state(user=user, subscription=sub, status="ACTIVE")
         except Exception as e:
-            logger.exception(
-                "[biz][billing] remnawave_device_slots_sync_failed_non_blocking user_id=%s subscription_id=%s slots=%s: %s",
+            device_logger.exception(
+                "[device] slots_sync_failed_non_blocking user_id=%s subscription_id=%s slots=%s",
                 user_id,
                 sub.id,
                 slots,
-                e,
             )
 
         await self.session.commit()
+        device_logger.info(
+            "[device] slots_purchased user_id=%s subscription_id=%s slots=%s charged=%s",
+            user_id,
+            sub.id,
+            slots,
+            int(price),
+        )
         await self.activity_service.log_user_event(
             user_id=user_id,
             category="subscription",

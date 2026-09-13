@@ -10,7 +10,9 @@ from fastapi.responses import JSONResponse, Response
 
 from api.bot.common import _apply_referral_reward
 from backend.core.config import settings
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
+
+logger = get_logger("payments")
 from backend.core.telegram import create_telegram_session
 from backend.database.session import async_session
 from backend.services import BillingService, UserService

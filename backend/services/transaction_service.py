@@ -1,11 +1,13 @@
 from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
 from backend.repositories.transaction_repository import TransactionRepository
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import TransactionNotFound, UserNotFound
 from backend.database.models import Transaction
+
+logger = get_logger("transactions")
 
 
 class TransactionService:

@@ -2,7 +2,9 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
+
+logger = get_logger("payments")
 from backend.images import PROFILE_IMG
 from backend.services.exceptions import UserNotFound
 from backend.states import PaymentStates

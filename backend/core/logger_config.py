@@ -1,10 +1,12 @@
 import logging
 import os
+from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 from backend.core.error_reporter import TelegramErrorReportHandler
 
-LOG_DIR = "logs"
+PROJECT_DIR = Path(__file__).resolve().parents[2]
+LOG_DIR = str(PROJECT_DIR / "logs")
 MAX_BYTES = 10_000_000
 BACKUP_COUNT = 5
 
@@ -32,6 +34,19 @@ class MessageOrNameFilter(logging.Filter):
 
         message = record.getMessage().lower()
         return bool(self._message_tokens and any(token in message for token in self._message_tokens))
+
+
+class LoggerDomainFilter(logging.Filter):
+    """Route records by logger domain instead of matching message text."""
+
+    def __init__(self, *domains: str):
+        super().__init__()
+        self.domains = {f"vpn.{domain}" for domain in domains}
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.name in self.domains or any(
+            record.name.startswith(f"{domain}.") for domain in self.domains
+        )
 
 
 class BenignNetworkNoiseFilter(logging.Filter):
@@ -66,60 +81,40 @@ def _file_handler(filename: str, level: int = logging.DEBUG) -> RotatingFileHand
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
+
+def get_logger(domain: str) -> logging.Logger:
+    return logging.getLogger(f"vpn.{domain}")
+
 if logger.hasHandlers():
     logger.handlers.clear()
 
-# Full application log (all categories)
 all_handler = _file_handler("app.log")
 logger.addHandler(all_handler)
 
-# Legacy full log filename kept for backward compatibility.
-legacy_handler = _file_handler("bot.log")
-logger.addHandler(legacy_handler)
-
-# Payments
 payments_handler = _file_handler("payments.log")
-payments_handler.addFilter(
-    MessageOrNameFilter(
-        message_tokens=(
-            "[biz][billing]",
-            "[platega]",
-            "[pally]",
-            "[crypto]",
-            "payment",
-            "invoice",
-        )
-    )
-)
+payments_handler.addFilter(LoggerDomainFilter("payments"))
 logger.addHandler(payments_handler)
 
-# Subscriptions
 subscriptions_handler = _file_handler("subscriptions.log")
-subscriptions_handler.addFilter(
-    MessageOrNameFilter(
-        message_tokens=(
-            "[biz][subscription]",
-            "[subscription]",
-            "expire checker",
-        )
-    )
-)
+subscriptions_handler.addFilter(LoggerDomainFilter("subscriptions"))
 logger.addHandler(subscriptions_handler)
 
-# Devices
 devices_handler = _file_handler("devices.log")
-devices_handler.addFilter(
-    MessageOrNameFilter(
-        message_tokens=(
-            "[biz][device]",
-            "device limit",
-            "register device",
-        )
-    )
-)
+devices_handler.addFilter(LoggerDomainFilter("devices"))
 logger.addHandler(devices_handler)
 
-# Aiogram framework and bot update loop
+users_handler = _file_handler("users.log")
+users_handler.addFilter(LoggerDomainFilter("users"))
+logger.addHandler(users_handler)
+
+transactions_handler = _file_handler("transactions.log")
+transactions_handler.addFilter(LoggerDomainFilter("transactions"))
+logger.addHandler(transactions_handler)
+
+expiration_handler = _file_handler("expiration.log")
+expiration_handler.addFilter(LoggerDomainFilter("expiration"))
+logger.addHandler(expiration_handler)
+
 aiogram_handler = _file_handler("aiogram.log")
 aiogram_handler.addFilter(
     MessageOrNameFilter(
@@ -133,12 +128,6 @@ aiogram_handler.addFilter(
 )
 logger.addHandler(aiogram_handler)
 
-# Business-wide stream
-business_handler = _file_handler("business.log")
-business_handler.addFilter(MessageOrNameFilter(message_tokens=("[biz]",)))
-logger.addHandler(business_handler)
-
-# Other uncategorized/system logs
 system_handler = _file_handler("system.log")
 system_handler.addFilter(
     MessageOrNameFilter(
@@ -149,9 +138,6 @@ system_handler.addFilter(
             "bot started",
             "bot stopped",
             "bot crashed",
-            "connection",
-            "error",
-            "exception",
         ),
     )
 )
@@ -170,5 +156,4 @@ benign_network_noise_filter = BenignNetworkNoiseFilter()
 for handler in logger.handlers:
     handler.addFilter(benign_network_noise_filter)
 
-# Ensure aiogram operational logs are emitted to handlers.
 logging.getLogger("aiogram").setLevel(logging.INFO)

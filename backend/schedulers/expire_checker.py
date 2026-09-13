@@ -4,7 +4,9 @@ from datetime import datetime, timedelta, timezone
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from backend.core.config import settings
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
+
+logger = get_logger("expiration")
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
 from backend.services import (
@@ -113,8 +115,13 @@ async def expire_checker(bot):
                 for sub in expired_subs:
                     try:
                         await sub_service.mark_expired(subscription_id=sub.id)
+                        logger.info(
+                            "[subscription_expiration] expired user_id=%s subscription_id=%s",
+                            sub.user_id,
+                            sub.id,
+                        )
                     except Exception as e:
-                        logger.error("mark_expired failed sub_id=%s: %s", sub.id, e)
+                        logger.exception("[subscription_expiration] mark_expired_failed sub_id=%s", sub.id)
                         continue
 
                     try:
@@ -177,6 +184,13 @@ async def expire_checker(bot):
                         if end and user.tg_id:
                             await _notify_subscription_renewed(bot, user.tg_id, end)
 
+                        logger.info(
+                            "[subscription_expiration] auto_renewed user_id=%s subscription_id=%s plan_id=%s",
+                            sub.user_id,
+                            sub.id,
+                            sub.plan_id,
+                        )
+
                         continue
 
                     except (InsufficientBalance, PlanNotFound, PurchaseInProgress, TooEarlyToRenew) as e:
@@ -187,7 +201,6 @@ async def expire_checker(bot):
                             sub.plan_id,
                             type(e).__name__,
                         )
-                        pass
                     except Exception as e:
                         logger.error(
                             "auto-renew failed user_id=%s sub_id=%s: %s",
@@ -214,6 +227,12 @@ async def expire_checker(bot):
 
                     if user.tg_id:
                         await _notify_subscription_ending_soon(bot, user.tg_id, hours)
+                    logger.info(
+                        "[subscription_expiration] ending_soon user_id=%s subscription_id=%s hours=%s",
+                        user.id,
+                        sub.id,
+                        hours,
+                    )
                     await EmailNotificationService(session).subscription_ending(
                         user=user,
                         subscription=sub,

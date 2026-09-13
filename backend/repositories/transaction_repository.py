@@ -9,6 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from backend.database.models import Transaction
+from backend.core.logger_config import get_logger
+
+logger = get_logger("transactions")
 
 
 class TransactionRepository:
@@ -94,6 +97,14 @@ class TransactionRepository:
             paid_at=paid_at
         )
         self.session.add(tx)
+        logger.info(
+            "[transaction] created user_id=%s provider_id=%s payment_system=%s amount=%s paid=%s",
+            user_id,
+            provider_transaction_id,
+            payment_system,
+            amount,
+            paid,
+        )
         return tx
 
     async def mark_paid(
@@ -110,4 +121,11 @@ class TransactionRepository:
                 paid_at=paid_at,
             )
         )
-        return int(res.rowcount or 0)
+        updated = int(res.rowcount or 0)
+        logger.info(
+            "[transaction] payment_status_updated provider_id=%s paid=%s rows=%s",
+            provider_transaction_id,
+            updated > 0,
+            updated,
+        )
+        return updated

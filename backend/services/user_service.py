@@ -2,11 +2,13 @@ from datetime import datetime, timezone, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
 from backend.database.models import User
 from backend.repositories.user_repository import UserRepository
 from backend.services.exceptions import UserNotFound, InsufficientBalance
 from backend.services.activity_service import ActivityService
+
+logger = get_logger("users")
 
 
 class UserService:

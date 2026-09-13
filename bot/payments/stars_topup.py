@@ -1,7 +1,9 @@
 from aiogram import F, Router
 from aiogram.types import Message, PreCheckoutQuery
 
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
+
+logger = get_logger("payments")
 
 router = Router()
 

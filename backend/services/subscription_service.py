@@ -4,7 +4,7 @@ from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.business_config import get_business_int
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
 from backend.database.models import SubStatus, Subscription
 from backend.repositories.subscription_repository import SubscriptionRepository
 from backend.repositories.subscription_topup_repository import SubscriptionTopupRepository
@@ -16,6 +16,8 @@ from backend.services.exceptions import (
     PlanNotFound, TooEarlyToRenew
 )
 from backend.services.activity_service import ActivityService
+
+logger = get_logger("subscriptions")
 
 
 class SubscriptionService:

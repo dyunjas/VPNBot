@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.logger_config import logger
 from backend.database.models import Subscription
 
 from datetime import datetime
+
 
 
 class DeviceService:
@@ -42,11 +42,6 @@ class DeviceService:
         user_agent: str | None = None,
         seen_at: datetime | None = None,
     ) -> tuple[bool, Subscription | None]:
-        logger.info(
-            "[biz][device] register_device_if_new skipped user_id=%s hwid=%s (api-only devices mode)",
-            user_id,
-            hwid.strip(),
-        )
         return False, None
 
     async def delete_device_by_hwid(
@@ -56,11 +51,6 @@ class DeviceService:
         hwid: str,
         refund_slot: bool = True,
     ) -> Subscription | None:
-        logger.info(
-            "[biz][device] delete_device_by_hwid skipped user_id=%s hwid=%s (api-only devices mode)",
-            user_id,
-            hwid.strip(),
-        )
         return None
 
     async def delete_device_by_id(
@@ -70,11 +60,6 @@ class DeviceService:
         device_id: int,
         refund_slot: bool = True,
     ) -> Subscription | None:
-        logger.info(
-            "[biz][device] delete_device_by_id skipped user_id=%s device_id=%s (api-only devices mode)",
-            user_id,
-            device_id,
-        )
         return None
 
     async def remove_device_for_user(self, *, user_id: int, device_id: int) -> None:

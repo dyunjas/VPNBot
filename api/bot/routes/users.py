@@ -17,8 +17,10 @@ from api.bot.common import (
     get_user_service,
     require_bot_auth,
 )
-from backend.core.logger_config import logger
+from backend.core.logger_config import get_logger
 from backend.services import SubscriptionService
+
+logger = get_logger("subscriptions")
 
 router = APIRouter(dependencies=[Depends(require_bot_auth)])
 
