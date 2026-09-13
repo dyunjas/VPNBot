@@ -61,6 +61,26 @@ const api = async (path, options = {}) => {
   if (!r.ok) throw new Error(data.detail || `HTTP ${r.status}`);
   return data;
 };
+const downloadAdminFile = async (path, filename) => {
+  const response = await fetch(`${API_BASE}/api/admin${path}`, { credentials: "include" });
+  if (response.status === 401) {
+    location.href = "/admin/login";
+    throw new Error("Необходима авторизация");
+  }
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.detail || `HTTP ${response.status}`);
+  }
+  const blob = await response.blob();
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(href);
+};
 const nav = [
   {
     group: "Обзор",
@@ -566,8 +586,6 @@ const FIELD_LABELS = {
   updated_at: "Обновлён",
   subscription_active: "Подписка активна",
   subscription_end: "Подписка до",
-  active_keys_count: "Активные ключи",
-  devices_count: "Устройства",
   user_id: "Пользователь",
   plan_id: "Тариф",
   status: "Статус",
@@ -793,7 +811,7 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
                   disabled={busy}
                   onClick={() => run(row.banned ? "unban" : "ban")}
                 >
-                  {row.banned ? "Разблокировать" : "Заблокировать"}
+                  {busyAction === (row.banned ? "unban" : "ban") && <Spinner />}{row.banned ? "Разблокировать" : "Заблокировать"}
                 </Button>
               </div>
             </div>
@@ -804,7 +822,7 @@ function Dialog({ title, row, onClose, isUser, onAction, page, onResourceAction 
         {!isUser && page === "withdrawals" && <div className="user-actions"><div className="action-section"><h3>Решение по заявке</h3><p className="muted">После подтверждения деньги будут перечислены пользователю.</p><div className="action-row"><Button disabled={busy || row.status !== "pending"} onClick={() => run("approve")}>{busyAction === "approve" && <Spinner />}Подтвердить вывод</Button><Button variant="danger" disabled={busy || row.status !== "pending"} onClick={() => run("reject")}>{busyAction === "reject" && <Spinner />}Отклонить вывод</Button></div></div></div>}
         {!isUser && page === "promocodes" && <div className="user-actions"><div className="action-section action-section-danger"><h3>Управление промокодом</h3><p className="muted">Удаление промокода нельзя отменить.</p><Button variant="danger" disabled={busy} onClick={() => run("delete")}>Удалить промокод</Button></div></div>}
         {!isUser && page === "partners" && row.details && <div className="user-actions"><div className="action-section"><h3>Активность партнёрской ссылки</h3><div className="partner-summary"><span>Регистрации: <b>{row.details.summary?.attributed_users ?? 0}</b></span><span>Пользователи с оплатой: <b>{row.details.summary?.paid_users ?? 0}</b></span><span>Оплаченные пополнения: <b>{row.details.summary?.paid_topups ?? 0}</b></span><span>Сумма: <b>{row.details.summary?.paid_amount ?? 0} RUB</b></span></div><div className="partner-activity-list">{(row.details.users || []).slice(0, 8).map((user) => <div key={user.user_id}><span>{user.username || `Пользователь #${user.user_id}`}</span><span>{user.paid_amount ? `${user.paid_amount} RUB` : "Без оплат"}</span></div>)}</div></div></div>}
-        {!isUser && page === "logs" && <div className="user-actions"><div className="action-section"><h3>Файл журнала</h3><Button onClick={() => run("download")}>Скачать лог</Button></div></div>}
+        {!isUser && page === "logs" && <div className="user-actions"><div className="action-section"><h3>Файл журнала</h3><Button disabled={busy} onClick={() => run("download")}>{busyAction === "download" && <Spinner />}Скачать лог</Button></div></div>}
         <div className="dialog-actions">
           <Button variant="outline" onClick={onClose}>
             Закрыть
@@ -1049,11 +1067,13 @@ function SubscriptionDialog({ row, onClose, onUpdated }) {
   const [days, setDays] = useState("30");
   const [devices, setDevices] = useState("1");
   const [busy, setBusy] = useState(false);
+  const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   if (!row) return null;
   const run = async (action) => {
     setBusy(true);
+    setBusyAction(action);
     setError("");
     setSuccess("");
     try {
@@ -1090,6 +1110,7 @@ function SubscriptionDialog({ row, onClose, onUpdated }) {
       setError(e.message || "Операция не выполнена");
     } finally {
       setBusy(false);
+      setBusyAction("");
     }
   };
   return (
@@ -1101,9 +1122,9 @@ function SubscriptionDialog({ row, onClose, onUpdated }) {
         </div>
         <div className="dialog-grid">{Object.entries(row).filter(([, value]) => typeof value !== "object").map(([key, value]) => <div className="detail-item" key={key}><span>{friendlyLabel(key)}</span><b>{friendlyValue(key, value)}</b></div>)}</div>
         <div className="user-actions">
-          <div className="action-section"><h3>Срок действия</h3><div className="action-row"><input type="number" min="1" value={days} onChange={(e) => setDays(e.target.value)} aria-label="Количество дней"/><Button disabled={busy} onClick={() => run("extend")}>Продлить</Button><Button variant="outline" disabled={busy} onClick={() => run("reduce")}>Уменьшить срок</Button></div></div>
-          <div className="action-section"><h3>Устройства</h3><div className="action-row"><input type="number" min="1" value={devices} onChange={(e) => setDevices(e.target.value)} aria-label="Количество устройств"/><Button disabled={busy} onClick={() => run("add_devices")}>Добавить устройства</Button><Button variant="outline" disabled={busy} onClick={() => run("remove_devices")}>Уменьшить устройства</Button></div></div>
-          <div className="action-section"><h3>Синхронизация</h3><p className="muted">Отправить текущие срок, трафик, статус и лимит устройств в Remnawave.</p><Button type="button" disabled={busy} onClick={() => run("sync")}><RefreshCw size={14}/> {busy ? "Синхронизируем…" : "Синхронизировать с панелью"}</Button></div>
+          <div className="action-section"><h3>Срок действия</h3><div className="action-row"><input type="number" min="1" value={days} onChange={(e) => setDays(e.target.value)} aria-label="Количество дней"/><Button disabled={busy} onClick={() => run("extend")}>{busyAction === "extend" && <Spinner />}Продлить</Button><Button variant="outline" disabled={busy} onClick={() => run("reduce")}>{busyAction === "reduce" && <Spinner />}Уменьшить срок</Button></div></div>
+          <div className="action-section"><h3>Устройства</h3><div className="action-row"><input type="number" min="1" value={devices} onChange={(e) => setDevices(e.target.value)} aria-label="Количество устройств"/><Button disabled={busy} onClick={() => run("add_devices")}>{busyAction === "add_devices" && <Spinner />}Добавить устройства</Button><Button variant="outline" disabled={busy} onClick={() => run("remove_devices")}>{busyAction === "remove_devices" && <Spinner />}Уменьшить устройства</Button></div></div>
+          <div className="action-section"><h3>Синхронизация</h3><p className="muted">Отправить текущие срок, трафик, статус и лимит устройств в Remnawave.</p><Button type="button" disabled={busy} onClick={() => run("sync")}>{busyAction === "sync" ? <Spinner /> : <RefreshCw size={14}/>} {busy ? "Синхронизируем…" : "Синхронизировать с панелью"}</Button></div>
           {success && <div className="inline-success">{success}</div>}
           {error && <div className="inline-error">{error}</div>}
         </div>
@@ -1317,11 +1338,11 @@ function ResourcePage({ page }) {
     }
   };
   const onResourceAction = async (action) => {
-    if (!selected?.id) return;
+    if (!selected?.id && !(page === "logs" && selected?.filename)) return;
     if (page === "transactions" && action === "confirm") await api(`/transactions/${selected.id}/confirm`, { method: "POST" });
     if (page === "withdrawals" && ["approve", "reject"].includes(action)) await api(`/withdrawals/${selected.id}/${action}`, { method: "POST" });
     if (page === "promocodes" && action === "delete") { await api(`/promocodes/${selected.id}`, { method: "DELETE" }); setSelected(null); }
-    if (page === "logs" && action === "download") { window.open(`${API_BASE}/api/admin/logs/${encodeURIComponent(selected.filename)}/download`, "_blank", "noopener,noreferrer"); return; }
+    if (page === "logs" && action === "download") { await downloadAdminFile(`/logs/${encodeURIComponent(selected.filename)}/download`, selected.filename); return; }
     await load();
   };
   const onAction = async (action, payload) => {
@@ -1675,7 +1696,6 @@ function AdminLogin() {
     [challenge, setChallenge] = useState(null),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
-  useEffect(() => { const field = document.querySelector(".login-form .ui-field"); if (!field) return; const label = field.querySelector("span"); const input = field.querySelector("input"); if (label) label.textContent = "Email"; if (input) { input.type = "email"; input.autocomplete = "email"; } }, [challenge]);
   const submit = async (event) => {
     event.preventDefault();
     setBusy(true);
@@ -1734,7 +1754,7 @@ function AdminLogin() {
         {!challenge ? (
           <>
             <Field
-              label="Логин"
+              label="Email"
               value={login}
               onChange={(e) => setLogin(e.target.value)}
               autoFocus
@@ -1750,7 +1770,7 @@ function AdminLogin() {
           </>
         ) : (
           <Field
-            label="Код из email"
+            label="Код подтверждения"
             inputMode="numeric"
             pattern="[0-9]{6}"
             maxLength={6}
@@ -1785,10 +1805,17 @@ function AdminLogin() {
   );
 }
 
+function AdminNotFound() {
+  return <main className="not-found-page"><div className="not-found-card"><span className="not-found-code">404</span><h1>Страница не найдена</h1><p>Такого раздела в панели администратора нет.</p><a className="not-found-action" href="/admin/">Вернуться в админку</a></div></main>;
+}
+
 function App() {
   const path = location.pathname.split("/").filter(Boolean);
   const page = path[1] || "dashboard";
   if (page === "login") return <AdminLogin />;
+  if (page !== "dashboard" && page !== "plans" && page !== "maintenance" && !resourceConfig[page]) {
+    return <AdminNotFound />;
+  }
   return (
     <Shell page={page}>
       {page === "dashboard" ? (
@@ -1798,7 +1825,7 @@ function App() {
       ) : page === "maintenance" ? (
         <MaintenancePage />
       ) : (
-        <ResourcePage page={resourceConfig[page] ? page : "users"} />
+        resourceConfig[page] ? <ResourcePage page={page} /> : <AdminNotFound />
       )}
     </Shell>
   );

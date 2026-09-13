@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
@@ -22,6 +22,14 @@ def create_app():
     @app.get("/cabinet/login/")
     async def cabinet_login():
         return no_cache_html((CABINET_REACT_DIST / "index.html").read_text(encoding="utf-8"))
+
+    @app.get("/cabinet/manifest.webmanifest")
+    async def cabinet_manifest():
+        return FileResponse(CABINET_REACT_DIST / "manifest.webmanifest", media_type="application/manifest+json")
+
+    @app.get("/cabinet/sw.js")
+    async def cabinet_service_worker():
+        return FileResponse(CABINET_REACT_DIST / "sw.js", media_type="application/javascript")
 
     @app.get("/cabinet/auth/deeplink/{token}")
     async def cabinet_deeplink(token: str):
@@ -83,5 +91,10 @@ def create_app():
 
     if CABINET_REACT_DIST.is_dir():
         app.mount("/cabinet/assets", StaticFiles(directory=CABINET_REACT_DIST / "assets"), name="cabinet_react_assets")
+    @app.get("/cabinet/{path:path}")
+    async def cabinet_not_found(path: str):
+        html = (CABINET_REACT_DIST / "index.html").read_text(encoding="utf-8")
+        return HTMLResponse(content=html, status_code=404, headers={"Cache-Control": "no-store"})
+
     mount_frontend_assets(app)
     return app

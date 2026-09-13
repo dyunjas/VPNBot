@@ -8,9 +8,9 @@ def render_code_email(code: str, purpose: str = "login") -> tuple[str, str]:
     normalized_purpose = (purpose or "login").strip().lower()
     is_bind = normalized_purpose == "bind"
     is_admin = normalized_purpose == "admin_login"
-    title = "Код администратора" if is_admin else ("Подтверждение email" if is_bind else "Код входа")
-    heading = "Подтвердите вход в панель администратора" if is_admin else ("Подтвердите адрес электронной почты" if is_bind else "Вход в личный кабинет")
-    description = "Используйте этот код для подтверждения входа в админ-панель Lunet." if is_admin else ("Используйте этот код, чтобы привязать email к аккаунту Lunet." if is_bind else "Используйте этот код, чтобы войти в личный кабинет Lunet.")
+    title = "Код подтверждения" if is_admin else ("Подтверждение email" if is_bind else "Код входа")
+    heading = "Подтвердите вход" if is_admin else ("Подтвердите адрес электронной почты" if is_bind else "Вход в личный кабинет")
+    description = "Введите этот код в форме подтверждения." if is_admin else ("Используйте этот код, чтобы привязать email к аккаунту Lunet." if is_bind else "Используйте этот код, чтобы войти в личный кабинет Lunet.")
     expiry = "Код действует 10 минут."
     safety = "Если вы не запрашивали код, просто проигнорируйте это письмо."
     plain = f"{title}: {code}\n\n{heading}\n{description}\n\n{expiry} {safety}"

@@ -20,6 +20,7 @@ from api.cabinet.common import (
 )
 
 router = APIRouter()
+CABINET_PAYMENT_RETURN_URL = "https://app.lunet.pro/cabinet"
 
 
 def _public_payment_method(payment_system: str) -> str:
@@ -78,8 +79,8 @@ async def cabinet_balance_topup(
                         11 if pl_type == "card" else 2,
                     )),
                     description=f"Пополнение баланса на {payload.amount} RUB",
-                    return_url="https://t.me/LunetVPNBot",
-                    failed_url="https://t.me/LunetVPNBot",
+                    return_url=CABINET_PAYMENT_RETURN_URL,
+                    failed_url=CABINET_PAYMENT_RETURN_URL,
                 )
                 return {
                     "ok": True,
@@ -97,8 +98,8 @@ async def cabinet_balance_topup(
                     user_id=user.id,
                     amount=float(payload.amount),
                     description=f"Пополнение баланса на {payload.amount} RUB",
-                    return_url="https://t.me/LunetVPNBot",
-                    failed_url="https://t.me/LunetVPNBot",
+                    return_url=CABINET_PAYMENT_RETURN_URL,
+                    failed_url=CABINET_PAYMENT_RETURN_URL,
                 )
                 return {
                     "ok": True,

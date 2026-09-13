@@ -40,4 +40,8 @@ def create_app():
     if LANDING_REACT_DIST.is_dir():
         app.mount("/assets", StaticFiles(directory=LANDING_REACT_DIST / "assets"), name="landing_react_root_assets")
         app.mount("/landing/assets", StaticFiles(directory=LANDING_REACT_DIST / "assets"), name="landing_react_assets")
+    @app.get("/{path:path}")
+    async def landing_not_found(path: str):
+        return FileResponse(LANDING_REACT_DIST / "404.html", status_code=404)
+
     return app

@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CreditCard, LogOut, Menu, ShieldCheck, Smartphone, UserRound, Wallet, X, LoaderCircle } from "lucide-react";
-import { FriendlyDevices, FriendlyOverview, FriendlySubscription } from "./friendlyViews.jsx";
+import { FriendlyDevices, FriendlyOverview, FriendlySubscription } from "./friendlyViewsV2.jsx";
 import "./styles.css";
 import "./refined.css";
+import "./miniapp-theme.css";
+
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/cabinet/sw.js", { scope: "/cabinet/" }).catch(() => {});
+  });
+}
 
 const t = { overview:"Обзор", subscription:"Подписка", plans:"Тарифы", devices:"Устройства", billing:"Платежи", referral:"Реферальная программа", cabinet:"Личный кабинет", welcome:"Добро пожаловать", loginHint:"Войдите в личный кабинет по одноразовому коду.", email:"Email", telegram:"Telegram", emailPlaceholder:"you@example.com", telegramPlaceholder:"Например, 123456789", code:"Код подтверждения", codePlaceholder:"Введите код из сообщения", getCode:"Получить код", change:"Изменить", enter:"Войти", sending:"Отправка…", checking:"Проверка…", error:"Не удалось выполнить запрос", logout:"Выйти", loading:"Загрузка данных…", success:"Операция выполнена", choose:"Выбрать тариф", paid:"Подписка успешно оформлена", deleted:"Устройство удалено", promoApplied:"Промокод применён", manage:"Управляйте подпиской, балансом и устройствами." };
+// Единая подпись кнопок тарифов в кабинете.
+t.choose = "Подключить";
 const tokenKey = "cabinet_access_token";
 const nav = [["overview", t.overview, Wallet], ["subscription", t.subscription, ShieldCheck], ["plans", t.plans, CreditCard], ["devices", t.devices, Smartphone], ["billing", t.billing, CreditCard]];
 const friendlyError = value => /not found|user with this email/i.test(String(value)) ? "Пользователь с такими данными не найден" : /invalid or expired/i.test(String(value)) ? "Код неверный или срок его действия истёк" : String(value || t.error);
@@ -21,5 +30,6 @@ function CabinetAddons({onAction}){const [gb,setGb]=useState(1),[slots,setSlots]
 function EncodingFix(){useEffect(()=>{const decode=value=>String(value||"").replace(/\\u([0-9a-f]{4})/gi,(_,code)=>String.fromCharCode(parseInt(code,16)));const scan=()=>{const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{const next=decode(node.nodeValue);if(next!==node.nodeValue)node.nodeValue=next});document.querySelectorAll("input[placeholder],input[aria-label],button[aria-label],img[alt]").forEach(node=>["placeholder","aria-label","alt"].forEach(attr=>{if(node.hasAttribute(attr)){const next=decode(node.getAttribute(attr));if(next!==node.getAttribute(attr))node.setAttribute(attr,next)}}))};scan();const observer=new MutationObserver(scan);observer.observe(document.body,{subtree:true,childList:true,characterData:true});return()=>observer.disconnect()},[]);return null}
 function UnicodeTextRepair(){useEffect(()=>{const repair=()=>{const decode=value=>String(value||"").replace(/\\u([0-9a-f]{4})/gi,(_,code)=>String.fromCharCode(parseInt(code,16)));const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{const next=decode(node.nodeValue);if(next!==node.nodeValue)node.nodeValue=next})};repair();const timer=setInterval(repair,100);return()=>clearInterval(timer)},[]);return null}
 function ConnectWidget(){useEffect(()=>{const render=()=>{if(!window.__subscriptionUrl)return;let host=document.querySelector(".page-head");if(!host||host.querySelector(".connect-widget"))return;const link=document.createElement("a");link.className="button button-primary connect-widget";link.href=window.__subscriptionUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Подключить VPN";host.appendChild(link)};const timer=setInterval(render,200);render();return()=>clearInterval(timer)},[]);return null}
-function App(){return <><EncodingFix/><UnicodeTextRepair/><ConnectWidget/>{location.pathname.includes("/login")?<Login/>:<Cabinet/>}</>}
+function CabinetNotFound(){return <main className="not-found-page"><div className="not-found-card"><span className="not-found-code">404</span><h1>Страница не найдена</h1><p>Проверьте адрес или вернитесь в личный кабинет.</p><a className="not-found-action" href="/cabinet/">Вернуться в кабинет</a></div></main>}
+function App(){const pathname=location.pathname.replace(/\/$/,"")||"/";return <><EncodingFix/><UnicodeTextRepair/><ConnectWidget/>{pathname==="/cabinet/login"?<Login/>:pathname==="/cabinet"?<Cabinet/>:<CabinetNotFound/>}</>}
 createRoot(document.getElementById("root")).render(<App/>);

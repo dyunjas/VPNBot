@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from backend.apps.common import ADMIN_FRONTEND_DIR, FRONTEND_DIR, create_fastapi_app, no_cache_html
 from backend.core.config import settings
@@ -60,5 +61,10 @@ def create_app():
 
     if _react_app_available():
         app.mount("/admin/assets", StaticFiles(directory=ADMIN_REACT_DIST / "assets", html=False), name="admin_react_assets")
+    @app.get("/admin/{path:path}")
+    async def admin_not_found(path: str):
+        response = _react_index_response()
+        return HTMLResponse(content=response.body, status_code=404, headers={"Cache-Control": "no-store"})
+
     app.mount("/miniapp", StaticFiles(directory=FRONTEND_DIR, html=False), name="miniapp_static")
     return app

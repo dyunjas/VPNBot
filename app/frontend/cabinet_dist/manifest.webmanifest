@@ -1,0 +1,25 @@
+{
+  "name": "Lunet",
+  "short_name": "Lunet",
+  "description": "Личный кабинет Lunet",
+  "lang": "ru",
+  "start_url": "/cabinet/",
+  "scope": "/cabinet/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
+  "icons": [
+    {
+      "src": "/miniapp/assets/lunet-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/miniapp/assets/lunet-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

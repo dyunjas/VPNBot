@@ -77,15 +77,11 @@ async def admin_users(
             .subquery()
         )
 
-        active_keys_expr = literal("0", String)
-        devices_expr = literal("0", String)
         sub_end_expr = active_sub_sq.c.subscription_end
 
         stmt = (
             select(
                 User,
-                active_keys_expr.label("active_keys_count"),
-                devices_expr.label("devices_count"),
                 sub_end_expr.label("subscription_end"),
             )
             .outerjoin(active_sub_sq, active_sub_sq.c.user_id == User.id)
@@ -118,8 +114,6 @@ async def admin_users(
             "balance": User.balance,
             "created_at": User.created_at,
             "updated_at": User.updated_at,
-            "active_keys_count": active_keys_expr,
-            "devices_count": devices_expr,
             "subscription_end": sub_end_expr,
         }
         sort_column = sort_fields.get(sort_by, User.created_at)
@@ -137,7 +131,7 @@ async def admin_users(
         )
 
         rows = []
-        for user, _active_keys_count, _devices_count, subscription_end in users:
+        for user, subscription_end in users:
             sub_end = _as_aware_utc(subscription_end)
             rows.append(
                 {
@@ -148,8 +142,6 @@ async def admin_users(
                     "balance": int(user.balance or 0),
                     "banned": bool(user.banned),
                     "subscription_token": None,
-                    "active_keys_count": 0,
-                    "devices_count": 0,
                     "subscription_active": bool(sub_end and sub_end > now),
                     "subscription_end": _to_iso(sub_end),
                     "created_at": _to_iso(user.created_at),
@@ -288,8 +280,6 @@ async def admin_user_details(user_id: int):
             }
             for item, row_plan_name, row_plan_price in subscriptions
         ],
-        "keys": [],
-        "devices": [],
         "transactions": [
             {
                 "id": tx.id,

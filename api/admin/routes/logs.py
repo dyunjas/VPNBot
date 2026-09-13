@@ -4,10 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 
 from ..common import Query, require_superadmin_auth
+from backend.apps.common import PROJECT_ROOT
 
 router = APIRouter()
 
-BASE_LOG_DIR = Path("logs").resolve()
+BASE_LOG_DIR = (PROJECT_ROOT / "logs").resolve()
 
 
 def _safe_log_path(filename: str) -> Path:
