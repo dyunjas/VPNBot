@@ -4,10 +4,9 @@ from fastapi import Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
+from backend.apps.common import FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
 
-CABINET_BUILD = "20260808-cabinet-responsive-fix"
-CABINET_REACT_DIST = FRONTEND_DIR / "cabinet_dist"
+CABINET_REACT_DIST = FRONTEND_BUILD_DIR / "cabinet"
 
 
 def create_app():
@@ -37,6 +36,10 @@ def create_app():
 
     @app.get("/cabinet/auth/deeplink/{token}")
     async def cabinet_deeplink(token: str):
+        import re
+        from fastapi import HTTPException
+        if not re.fullmatch(r"[A-Za-z0-9_-]{32,128}", token):
+            raise HTTPException(400, "Invalid login link")
         html = f"""<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -87,7 +90,7 @@ def create_app():
 
     @app.get("/favicon.ico")
     async def favicon():
-        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
+        return FileResponse(FRONTEND_STATIC_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
 
     @app.get("/health")
     async def health():

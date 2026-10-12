@@ -11,11 +11,15 @@ from ..common import *
 router = APIRouter()
 
 
+def _csv_safe_cell(value: object) -> object:
+    return "'" + value if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@")) else value
+
+
 def _csv_response(filename: str, headers: list[str], rows: list[list[object]]) -> Response:
     buffer = StringIO()
     writer = csv.writer(buffer, delimiter=";")
     writer.writerow(headers)
-    writer.writerows(rows)
+    writer.writerows([_csv_safe_cell(value) for value in row] for row in rows)
     content = "\ufeff" + buffer.getvalue()
     return Response(
         content=content,

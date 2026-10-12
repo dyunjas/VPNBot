@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
 
 from fastapi import Request
 
 from backend.database.models import AdminActionLog, AdminLoginEvent
 from backend.database.session import async_session
+from backend.core.logger_config import logger
 
 
 def _request_meta(request: Request) -> tuple[str | None, str | None]:
@@ -85,12 +85,11 @@ async def record_login_event(
             )
             await session.commit()
     except Exception:
-        # Аудит не должен ломать авторизацию или рабочее действие администратора.
-        return
+        logger.error("Admin login audit persistence failed")
 
 
-async def record_admin_action(request: Request, auth: dict) -> None:
-    if request.method in {"GET", "HEAD", "OPTIONS"}:
+async def record_admin_action(request: Request, auth: dict, status_code: int | None = None) -> None:
+    if request.method in {"HEAD", "OPTIONS"} or (request.method == "GET" and "/export/" not in request.url.path and not request.url.path.endswith("/download")):
         return
     path = request.url.path
     if path in {"/api/admin/auth/login", "/api/admin/auth/verify-2fa", "/api/admin/auth/logout"}:
@@ -109,11 +108,12 @@ async def record_admin_action(request: Request, auth: dict) -> None:
                     target_id=_target_id(path),
                     details=details,
                     ip_address=ip_address,
+                    status_code=status_code,
                 )
             )
             await session.commit()
     except Exception:
-        return
+        logger.error("Admin action audit persistence failed method=%s path=%s", request.method, request.url.path)
 
 
 def audit_item(row) -> dict:

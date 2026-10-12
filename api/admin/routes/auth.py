@@ -1,87 +1,5 @@
-import time
-import hmac
-import hashlib
-import secrets
-from fastapi import APIRouter, Request, Response
 from ..common import *
-from backend.database.models import Admin
-from api.cabinet.common import _smtp_send_code
-from api.admin.audit import record_login_event
-
-router = APIRouter()
-_LOGIN_ATTEMPTS: dict[str, list[float]] = {}
-_LOGIN_WINDOW_SEC = 300
-_LOGIN_MAX_ATTEMPTS = 5
-_ADMIN_COOKIE_NAME = "admin_access_token"
-_PASSWORD_HASH_ALG = "pbkdf2_sha256"
-_PASSWORD_HASH_ITERATIONS = 260000
-_ADMIN_OTP_TTL_SEC = 600
-_ADMIN_OTP_CHALLENGES: dict[str, dict] = {}
-_ADMIN_OTP_MAX_ATTEMPTS = 5
-
-
-def _login_rate_key(request: Request, login: str) -> str:
-    client_host = request.client.host if request.client else "unknown"
-    return f"{client_host}:{login.strip().lower()}"
-
-
-def _login_allowed(key: str) -> bool:
-    now = time.time()
-    attempts = [ts for ts in _LOGIN_ATTEMPTS.get(key, []) if now - ts < _LOGIN_WINDOW_SEC]
-    if len(attempts) >= _LOGIN_MAX_ATTEMPTS:
-        _LOGIN_ATTEMPTS[key] = attempts
-        return False
-    attempts.append(now)
-    _LOGIN_ATTEMPTS[key] = attempts
-    return True
-
-
-def hash_admin_password(password: str) -> str:
-    salt = secrets.token_hex(16)
-    digest = hashlib.pbkdf2_hmac(
-        "sha256",
-        password.encode("utf-8"),
-        bytes.fromhex(salt),
-        _PASSWORD_HASH_ITERATIONS,
-    ).hex()
-    return f"{_PASSWORD_HASH_ALG}${_PASSWORD_HASH_ITERATIONS}${salt}${digest}"
-
-
-def verify_admin_password(password: str, password_hash: str | None) -> bool:
-    if not password_hash:
-        return False
-    try:
-        alg, iterations_raw, salt, expected = password_hash.split("$", 3)
-        if alg != _PASSWORD_HASH_ALG:
-            return False
-        iterations = int(iterations_raw)
-        digest = hashlib.pbkdf2_hmac(
-            "sha256",
-            password.encode("utf-8"),
-            bytes.fromhex(salt),
-            iterations,
-        ).hex()
-        return hmac.compare_digest(digest, expected)
-    except (TypeError, ValueError):
-        return False
-
-
-def _issue_admin_otp(login: str, role: str, admin_id: int | None, email: str) -> str:
-    challenge_id = secrets.token_urlsafe(32)
-    code = f"{secrets.randbelow(1000000):06d}"
-    _ADMIN_OTP_CHALLENGES[challenge_id] = {"login": login, "role": role, "admin_id": admin_id, "email": email, "code": code, "expires_at": time.time() + _ADMIN_OTP_TTL_SEC, "attempts": 0}
-    try:
-        _smtp_send_code(email, code, purpose="admin_login")
-    except Exception:
-        _ADMIN_OTP_CHALLENGES.pop(challenge_id, None)
-        raise
-    return challenge_id
-
-
-class AdminLoginVerifyPayload(BaseModel):
-    challenge_id: str
-    code: str
-
+from api.admin.authentication import router
 
 def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
     month_index = (dt.year * 12 + (dt.month - 1)) + months_delta
@@ -146,102 +64,6 @@ def _fill_amount_buckets(rows, buckets: dict[str, dict[str, int | str]], chart_m
         bucket["amount"] = int(bucket["amount"]) + int(amount or 0)
         bucket["count"] = int(bucket["count"]) + 1
 
-@router.post("/auth/login")
-async def admin_auth_login(payload: LoginPayload, request: Request, response: Response):
-    expected_login = (settings.ADMIN_WEB_EMAIL or settings.ADMIN_WEB_LOGIN or "").strip().lower()
-    expected_password = (settings.ADMIN_WEB_PASSWORD or "").strip()
-    key = _login_rate_key(request, payload.email)
-    if not _login_allowed(key):
-        await record_login_event(request, admin_id=None, username=login, email=login, success=False, reason="rate_limited")
-        raise HTTPException(status_code=429, detail="Too many login attempts")
-
-    login = payload.email.strip().lower()
-    is_master_login = bool(expected_login and expected_password) and hmac.compare_digest(login, expected_login)
-    if is_master_login and hmac.compare_digest(payload.password, expected_password):
-        _LOGIN_ATTEMPTS.pop(key, None)
-        email = (settings.ADMIN_WEB_EMAIL or "").strip().lower()
-        if not email:
-            await record_login_event(request, admin_id=None, username=login, email=login, success=False, reason="email_not_configured")
-            raise HTTPException(status_code=503, detail="ADMIN_WEB_EMAIL is not configured")
-        await record_login_event(request, admin_id=None, username=login, email=email, success=False, reason="password_accepted_2fa_pending")
-        return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(login, "superadmin", None, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
-
-    admin = None
-    async with async_session() as session:
-        admin = (
-            await session.execute(
-                select(Admin).where(
-                    func.lower(Admin.email) == login.lower(),
-                    Admin.is_active.is_(True),
-                )
-            )
-        ).scalar_one_or_none()
-
-    role = admin.role.value if admin and hasattr(admin.role, "value") else str(admin.role) if admin else ""
-    if not admin or not verify_admin_password(payload.password, admin.password_hash):
-        await record_login_event(request, admin_id=admin.id if admin else None, username=admin.username if admin else login, email=admin.email if admin else login, success=False, reason="invalid_credentials")
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    email = admin.email or ""
-    if not email:
-        await record_login_event(request, admin_id=admin.id, username=admin.username, email=None, success=False, reason="email_not_configured")
-        raise HTTPException(status_code=400, detail="Admin email is not configured")
-
-    _LOGIN_ATTEMPTS.pop(key, None)
-    await record_login_event(request, admin_id=admin.id, username=admin.username, email=email, success=False, reason="password_accepted_2fa_pending")
-    return {"ok": True, "requires_2fa": True, "challenge_id": _issue_admin_otp(admin.username, role, admin.id, email), "email_hint": email[:2] + "***" + email[email.find("@"):]} 
-
-
-@router.post("/auth/verify-2fa")
-async def admin_auth_verify_2fa(payload: AdminLoginVerifyPayload, request: Request, response: Response):
-    challenge = _ADMIN_OTP_CHALLENGES.get(payload.challenge_id)
-    if not challenge or float(challenge["expires_at"]) < time.time():
-        await record_login_event(request, admin_id=None, username=None, email=None, success=False, reason="invalid_or_expired_2fa")
-        raise HTTPException(status_code=401, detail="Invalid or expired verification code")
-    challenge["attempts"] = int(challenge.get("attempts", 0)) + 1
-    if challenge["attempts"] > _ADMIN_OTP_MAX_ATTEMPTS:
-        _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
-        await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=False, reason="2fa_rate_limited")
-        raise HTTPException(status_code=429, detail="Too many verification attempts")
-    if not hmac.compare_digest(str(challenge["code"]), payload.code.strip()):
-        if challenge["attempts"] >= _ADMIN_OTP_MAX_ATTEMPTS:
-            _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
-        await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=False, reason="invalid_2fa")
-        raise HTTPException(status_code=401, detail="Invalid or expired verification code")
-    _ADMIN_OTP_CHALLENGES.pop(payload.challenge_id, None)
-    await record_login_event(request, admin_id=challenge.get("admin_id"), username=challenge.get("login"), email=challenge.get("email"), success=True, reason="authenticated")
-    access_token = _create_admin_access_token(challenge["login"], role=challenge["role"], admin_id=challenge["admin_id"])
-    max_age = max(int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12), 1) * 3600
-    response.set_cookie(
-        key=_ADMIN_COOKIE_NAME,
-        value=access_token,
-        max_age=max_age,
-        httponly=True,
-        secure=request.url.scheme == "https",
-        samesite="lax",
-        path="/",
-    )
-    return {"ok": True, "login": challenge["login"], "role": challenge["role"]}
-
-
-@router.get("/auth/me")
-async def admin_auth_me(auth=Depends(require_admin_auth)):
-    username = auth.get("sub")
-    email = None
-    if auth.get("admin_id"):
-        async with async_session() as session:
-            admin = await session.scalar(select(Admin).where(Admin.id == auth.get("admin_id")))
-            if admin:
-                username, email = admin.username, admin.email
-    return {"ok": True, "login": auth.get("sub"), "username": username, "email": email, "scope": auth.get("scope"), "role": auth.get("role")}
-
-
-@router.post("/auth/logout")
-async def admin_auth_logout(response: Response):
-    response.delete_cookie(key=_ADMIN_COOKIE_NAME, path="/", samesite="lax")
-    return {"ok": True}
-
-
 @router.get("/health", dependencies=[Depends(require_superadmin_auth)])
 async def admin_health():
     return {"ok": True, "service": "admin-api"}
@@ -279,6 +101,17 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
     async with async_session() as session:
         total_users = int(await session.scalar(select(func.count(User.id))) or 0)
         banned_users = int(await session.scalar(select(func.count(User.id)).where(User.banned.is_(True))) or 0)
+        day_start = now - timedelta(days=1)
+        new_users_today = int(await session.scalar(select(func.count(User.id)).where(User.created_at >= day_start)) or 0)
+        total_balance = int(await session.scalar(select(func.coalesce(func.sum(User.balance), 0))) or 0)
+        unpaid_transactions = int(await session.scalar(select(func.count(Transaction.id)).where(Transaction.paid.is_(False))) or 0)
+        today_revenue = int(await session.scalar(select(func.coalesce(func.sum(Transaction.amount), 0)).where(
+            Transaction.paid.is_(True), Transaction.paid_at >= day_start
+        )) or 0)
+        expiring_subscriptions = int(await session.scalar(select(func.count(Subscription.id)).where(
+            Subscription.status == SubStatus.active, Subscription.current_period_end > now,
+            Subscription.current_period_end <= now + timedelta(days=7)
+        )) or 0)
         active_subscriptions = int(
             await session.scalar(
                 select(func.count(Subscription.id)).where(
@@ -289,6 +122,9 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
             or 0
         )
         active_keys = 0
+        subscribed_users = int(await session.scalar(select(func.count(func.distinct(Subscription.user_id))).where(
+            Subscription.status == SubStatus.active, Subscription.current_period_end > now
+        )) or 0)
         total_servers = 0
         total_devices = 0
         paid_tx = int(
@@ -385,7 +221,13 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
         "stats": {
             "total_users": total_users,
             "banned_users": banned_users,
+            "new_users_today": new_users_today,
+            "today_revenue": today_revenue,
+            "expiring_subscriptions": expiring_subscriptions,
+            "unpaid_transactions": unpaid_transactions,
+            "total_balance": total_balance,
             "active_subscriptions": active_subscriptions,
+            "subscribed_users": subscribed_users,
             "active_keys": active_keys,
             "total_servers": total_servers,
             "total_devices": total_devices,

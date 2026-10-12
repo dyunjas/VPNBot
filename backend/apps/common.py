@@ -17,9 +17,9 @@ from backend.core.maintenance import MAINTENANCE_MESSAGE, get_maintenance_state
 from backend.database.session import check_connection, init_db
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-FRONTEND_DIR = PROJECT_ROOT / "app" / "frontend"
-ADMIN_FRONTEND_DIR = PROJECT_ROOT / "app" / "admin_frontend"
-LEGAL_DIR = FRONTEND_DIR / "legal"
+FRONTEND_STATIC_DIR = PROJECT_ROOT / "frontend" / "static"
+FRONTEND_BUILD_DIR = PROJECT_ROOT / "frontend" / "build"
+LEGAL_DIR = FRONTEND_STATIC_DIR / "legal"
 NO_CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
@@ -90,14 +90,28 @@ def create_db_lifespan() -> Callable[[FastAPI], AsyncIterator[None]]:
 def apply_common_hardening(app: FastAPI) -> None:
     @app.middleware("http")
     async def add_security_headers(request: Request, call_next):
+        if request.method not in {"GET", "HEAD", "OPTIONS"}:
+            limit = 10 * 1024 * 1024 if request.url.path.endswith("/broadcast/upload") else 1024 * 1024
+            raw_length = request.headers.get("content-length")
+            if raw_length is not None and (not raw_length.isascii() or not raw_length.isdecimal()):
+                return JSONResponse({"detail": "Invalid request size"}, status_code=400)
+            if raw_length is not None and int(raw_length) > limit:
+                return JSONResponse({"detail": "Request is too large"}, status_code=413)
+            chunks, size = [], 0
+            async for chunk in request.stream():
+                size += len(chunk)
+                if size > limit:
+                    return JSONResponse({"detail": "Request is too large"}, status_code=413)
+                chunks.append(chunk)
+            # Preserve bounded bytes for the handler and post-action audit.
+            request._body = b"".join(chunks)
         try:
             response = await call_next(request)
         except Exception:
             logger.exception(
-                "[app][http] unhandled exception method=%s path=%s query=%s",
+                "[app][http] unhandled exception method=%s path=%s",
                 request.method,
                 request.url.path,
-                request.url.query,
                 extra={
                     "app_context": _request_context(request),
                     "telegram_user_id": _request_telegram_user_id(request),
@@ -109,6 +123,15 @@ def apply_common_hardening(app: FastAPI) -> None:
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         path = request.url.path or ""
+        if path.startswith(("/api/", "/admin", "/cabinet")):
+            response.headers["Cache-Control"] = "no-store"
+        if path.startswith(("/admin", "/api/admin")):
+            response.headers["X-Frame-Options"] = "DENY"
+            response.headers["Referrer-Policy"] = "no-referrer"
+            response.headers.setdefault("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'")
+        if path.startswith("/api/admin") and getattr(request.state, "admin_auth", None):
+            from api.admin.audit import record_admin_action
+            await record_admin_action(request, request.state.admin_auth, response.status_code)
         if path.startswith("/miniapp/") and path.lower().endswith((".js", ".css", ".html")):
             for key, value in NO_CACHE_HEADERS.items():
                 response.headers[key] = value
@@ -148,7 +171,7 @@ def register_legal_routes(app: FastAPI) -> None:
 
 async def proxy_api_request(request: Request, path: str, *, source_name: str) -> Response:
     maintenance = get_maintenance_state()
-    if maintenance.get("enabled"):
+    if maintenance.get("enabled") and not (source_name == "admin-frontend" and path.startswith("admin/")):
         return JSONResponse(
             status_code=503,
             content={"detail": maintenance.get("message") or MAINTENANCE_MESSAGE, "maintenance": True},
@@ -162,13 +185,16 @@ async def proxy_api_request(request: Request, path: str, *, source_name: str) ->
     headers = {
         key: value
         for key, value in request.headers.items()
-        if key.lower() not in HOP_BY_HOP_HEADERS and key.lower() != "accept-encoding"
+        if key.lower() not in HOP_BY_HOP_HEADERS and key.lower() not in {"accept-encoding", "x-forwarded-for", "x-forwarded-proto", "x-forwarded-host", "forwarded"}
     }
     headers["Accept-Encoding"] = "identity"
+    headers["X-Forwarded-For"] = request.client.host if request.client else "127.0.0.1"
+    headers["X-Forwarded-Proto"] = request.url.scheme
 
     timeout = aiohttp.ClientTimeout(total=settings.FRONTEND_PROXY_TIMEOUT_SEC)
     try:
-        async with aiohttp.ClientSession(timeout=timeout) as session:
+        # Preserve upstream bytes alongside Content-Encoding, including gzip responses.
+        async with aiohttp.ClientSession(timeout=timeout, auto_decompress=False) as session:
             async with session.request(
                 request.method,
                 target_url,
@@ -184,10 +210,10 @@ async def proxy_api_request(request: Request, path: str, *, source_name: str) ->
                 return response
     except (aiohttp.ClientError, asyncio.TimeoutError) as exc:
         logger.exception(
-            "[%s] API proxy failed target=%s error=%s",
+            "[%s] API proxy failed path=%s error_type=%s",
             source_name,
-            target_url,
-            exc,
+            request.url.path,
+            type(exc).__name__,
         )
         return JSONResponse(
             status_code=503,
@@ -196,4 +222,4 @@ async def proxy_api_request(request: Request, path: str, *, source_name: str) ->
 
 
 def mount_frontend_assets(app: FastAPI, *, mount_path: str = "/miniapp") -> None:
-    app.mount(mount_path, StaticFiles(directory=FRONTEND_DIR, html=False), name=f"{mount_path.strip('/')}_static")
+    app.mount(mount_path, StaticFiles(directory=FRONTEND_STATIC_DIR, html=False), name=f"{mount_path.strip('/')}_static")

@@ -10,6 +10,7 @@ from sqlalchemy import (
     UniqueConstraint,
     DateTime,
     Numeric,
+    JSON,
 )
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -17,10 +18,27 @@ from sqlalchemy.orm import (
     mapped_column,
     relationship
 )
+from sqlalchemy.dialects.postgresql import JSONB
 
 
 class Base(DeclarativeBase):
     pass
+
+
+class SecurityRecord(Base):
+    """Persistent, shared security state. Keys contain hashes, never bearer credentials."""
+    __tablename__ = "vpn_security_records"
+    key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), index=True)
+    data: Mapped[dict] = mapped_column(JSON().with_variant(JSONB(), "postgresql"), nullable=False)
+    expires_at: Mapped[int] = mapped_column(BigInteger, index=True, nullable=False)
+
+
+class SecurityRateBucket(Base):
+    __tablename__ = "vpn_security_rate_buckets"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    expires_at: Mapped[int] = mapped_column(BigInteger, index=True, nullable=False)
 
 
 class KeyStatus(str, enum.Enum):

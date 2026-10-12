@@ -201,6 +201,9 @@ class BillingService:
             )
             raise TransactionNotFound("Transaction not found")
 
+        if str(tx.payment_system).upper() != "PLATEGA":
+            raise PaymentNotConfirmed("Payment provider mismatch")
+
         if tx.paid:
             logger.info(
                 "[biz][billing] platega_confirm_already_paid provider_id=%s user_id=%s",
@@ -265,18 +268,20 @@ class BillingService:
     ) -> tuple[object, bool]:
         normalized_status = str(status or "").strip().upper()
         logger.info(
-            "[biz][billing] platega_webhook_received provider_id=%s status=%s amount=%s currency=%s payment_method=%s payload=%s",
+            "[biz][billing] platega_webhook_received provider_id=%s status=%s amount=%s currency=%s payment_method=%s",
             provider_transaction_id,
             normalized_status,
             amount,
             currency,
             payment_method,
-            payload,
         )
         tx = await self.tx_repo.get_by_provider_id_for_update(str(provider_transaction_id))
         if not tx:
             logger.warning("[biz][billing] platega_webhook_tx_not_found provider_id=%s", provider_transaction_id)
             raise TransactionNotFound("Transaction not found")
+
+        if str(tx.payment_system).upper() != "PLATEGA":
+            raise PaymentNotConfirmed("Payment provider mismatch")
 
         if tx.paid:
             logger.info(
@@ -309,7 +314,7 @@ class BillingService:
         except Exception:
             paid_amount = Decimal(0)
         expected_amount = Decimal(tx.amount or 0)
-        if paid_amount < expected_amount:
+        if not paid_amount.is_finite() or paid_amount < expected_amount:
             logger.warning(
                 "[biz][billing] platega_webhook_underpaid provider_id=%s user_id=%s paid=%s expected=%s",
                 provider_transaction_id,
@@ -427,6 +432,9 @@ class BillingService:
             logger.warning("[biz][billing] crypto_confirm_tx_not_found invoice_id=%s", invoice_id)
             raise TransactionNotFound("Transaction not found")
 
+        if str(tx.payment_system).upper() != "CRYPTOBOT":
+            raise PaymentNotConfirmed("Payment provider mismatch")
+
         if tx.paid:
             logger.info(
                 "[biz][billing] crypto_confirm_already_paid invoice_id=%s user_id=%s",
@@ -497,6 +505,9 @@ class BillingService:
         if not tx:
             logger.warning("[biz][billing] crypto_webhook_tx_not_found invoice_id=%s", invoice_id)
             raise TransactionNotFound("Transaction not found")
+
+        if str(tx.payment_system).upper() != "CRYPTOBOT":
+            raise PaymentNotConfirmed("Payment provider mismatch")
 
         if tx.paid:
             logger.info(
@@ -580,36 +591,13 @@ class BillingService:
 
         if payment.get("error"):
             http_status = payment.get("http_status")
-            provider_error = payment.get("error")
-            provider_message = payment.get("message") or payment.get("detail")
-            provider_response = payment.get("response")
-            payload_preview = str(payment)[:2000]
-
-            if int(http_status or 0) == 403:
-                logger.error(
-                    "[biz][billing] pally_create_http_403 user_id=%s status=%s error=%s message=%s response=%s payload=%s",
-                    user_id,
-                    http_status,
-                    provider_error,
-                    provider_message,
-                    provider_response,
-                    payload_preview,
-                )
-            logger.error(
-                "[biz][billing] pally_create_api_error user_id=%s status=%s error=%s message=%s response=%s payload=%s",
-                user_id,
-                http_status,
-                provider_error,
-                provider_message,
-                provider_response,
-                payload_preview,
-            )
-            raise ValueError(f"PALLY API error: {payment.get('error')}")
+            logger.error("[biz][billing] pally_create_failed user_id=%s status=%s", user_id, http_status)
+            raise ValueError("Payment provider rejected invoice creation")
 
         provider_bill_id = self._extract_pally_id(payment)
         if not provider_bill_id:
             logger.error("[biz][billing] pally_create_missing_provider_id user_id=%s", user_id)
-            raise ValueError(f"PALLY API did not return bill id: {payment}")
+            raise ValueError("Payment provider did not return an invoice ID")
 
         payment_url = self._extract_pally_url(payment)
         if payment_url and "payment_url" not in payment:
@@ -673,6 +661,9 @@ class BillingService:
             logger.warning("[biz][billing] pally_postback_tx_not_found inv_id=%s trs_id=%s", inv_id, trs_id)
             raise TransactionNotFound("Transaction not found")
 
+        if str(tx.payment_system).upper() != "PALLY":
+            raise PaymentNotConfirmed("Payment provider mismatch")
+
         paid_before = bool(tx.paid)
         if paid_before:
             logger.info("[biz][billing] pally_postback_already_paid inv_id=%s user_id=%s", inv_id, tx.user_id)
@@ -692,7 +683,7 @@ class BillingService:
         except Exception:
             paid_amount = Decimal(0)
         expected_amount = Decimal(tx.amount or 0)
-        if paid_amount < expected_amount:
+        if not paid_amount.is_finite() or paid_amount < expected_amount:
             logger.warning(
                 "[biz][billing] pally_postback_underpaid inv_id=%s user_id=%s paid=%s expected=%s",
                 inv_id,
@@ -701,6 +692,14 @@ class BillingService:
                 expected_amount,
             )
             raise PaymentNotConfirmed("Payment underpaid")
+
+        # InvId and amount are signed, but TrsId/status are not covered by
+        # the provider's legacy signature. Confirm the exact stored bill
+        # over the authenticated provider API before crediting anything.
+        await self._ensure_payment_clients()
+        provider_state = await self._get_pally().get_status(provider_id)
+        if not self._is_pally_paid(provider_state):
+            raise PaymentNotConfirmed("Payment not confirmed by provider")
 
         await self.user_repo.add_balance(user_id=tx.user_id, amount=tx.amount)
         await self.tx_repo.mark_paid(
@@ -741,6 +740,9 @@ class BillingService:
                 provider_transaction_id,
             )
             raise TransactionNotFound("Transaction not found")
+
+        if str(tx.payment_system).upper() != "PALLY":
+            raise PaymentNotConfirmed("Payment provider mismatch")
 
         if tx.paid:
             logger.info(
@@ -979,7 +981,7 @@ class BillingService:
                 subscription=sub,
                 status="ACTIVE",
             )
-        except Exception as e:
+        except Exception:
             subscription_logger.exception(
                 "[subscription] remnawave_state_sync_failed_non_blocking user_id=%s subscription_id=%s gb=%s",
                 user_id,
@@ -1026,7 +1028,7 @@ class BillingService:
 
         try:
             await self.remnawave_service.sync_user_state(user=user, subscription=sub, status="ACTIVE")
-        except Exception as e:
+        except Exception:
             device_logger.exception(
                 "[device] slots_sync_failed_non_blocking user_id=%s subscription_id=%s slots=%s",
                 user_id,

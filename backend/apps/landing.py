@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from fastapi import Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, register_legal_routes
+from backend.apps.common import FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR, create_fastapi_app, mount_frontend_assets, register_legal_routes, proxy_api_request
+from api.public.endpoints import router as public_router
 
-LANDING_REACT_DIST = FRONTEND_DIR / "landing_dist"
+LANDING_REACT_DIST = FRONTEND_BUILD_DIR / "landing"
 
 
 def create_app():
@@ -28,9 +30,15 @@ def create_app():
 
     register_legal_routes(app)
 
+    app.include_router(public_router)
+
+    @app.get("/api/auth/session")
+    async def landing_session(request: Request):
+        return await proxy_api_request(request, "auth/session", source_name="landing_session")
+
     @app.get("/favicon.ico")
     async def favicon():
-        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
+        return FileResponse(FRONTEND_STATIC_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
 
     @app.get("/health")
     async def health():

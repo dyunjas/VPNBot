@@ -1,0 +1,17 @@
+{
+  "name": "lunet-frontend",
+  "private": true,
+  "workspaces": ["admin", "cabinet", "miniapp", "landing"],
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "lucide-react": "1.37.0"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev:admin": "npm run dev --workspace lunet-admin",
+    "dev:cabinet": "npm run dev --workspace lunet-cabinet",
+    "dev:miniapp": "npm run dev --workspace lunet-miniapp",
+    "dev:landing": "npm run dev --workspace lunet-landing"
+  }
+}

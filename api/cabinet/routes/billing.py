@@ -55,7 +55,7 @@ async def cabinet_balance_topup(
     payload: TopupPayload,
     user_id: int | None = Depends(require_optional_cabinet_auth),
 ):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     if payload.amount <= 0:
         raise HTTPException(400, "Сумма должна быть больше нуля")
 
@@ -148,7 +148,7 @@ async def cabinet_balance_check(
     payload: BalanceCheckPayload,
     user_id: int | None = Depends(require_optional_cabinet_auth),
 ):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
 
     async with async_session() as session:
         user = await _get_user(session, user_id)
@@ -185,6 +185,9 @@ async def cabinet_balance_check(
         last_tx = None
         try:
             for method, provider_id in candidates:
+                owned = await tx_service.get_by_provider_id(provider_id)
+                if owned.user_id != user.id or _public_payment_method(owned.payment_system) != method:
+                    raise HTTPException(404, "Transaction not found")
                 try:
                     await _confirm_transaction_by_method(billing, method, provider_id)
                 except PaymentNotConfirmed:

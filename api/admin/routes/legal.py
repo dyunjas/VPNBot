@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import re
+from html.parser import HTMLParser
+from urllib.parse import urlsplit
 from pathlib import Path
 from typing import Literal
 
@@ -64,7 +66,32 @@ def _validate_legal_content(content: str) -> str:
         raise HTTPException(status_code=400, detail="edit only document text, not full html page")
     if _FORBIDDEN_ATTR_RE.search(html) or _FORBIDDEN_URL_RE.search(html):
         raise HTTPException(status_code=400, detail="unsafe html attributes are not allowed")
+    _LegalValidator().feed(html)
     return html
+
+
+class _LegalValidator(HTMLParser):
+    """Allow static document markup; inspect decoded attributes, including unquoted URLs."""
+    tags = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "strong", "b", "em", "i", "u", "br", "hr", "a", "span", "blockquote", "table", "thead", "tbody", "tr", "td", "th", "caption", "dl", "dt", "dd", "sup", "sub", "small", "code", "pre"}
+    attributes = {"href", "title", "class", "id", "target", "rel", "colspan", "rowspan"}
+
+    def handle_starttag(self, tag, attrs):
+        if tag not in self.tags:
+            raise HTTPException(400, "Unsupported document markup")
+        for name, value in attrs:
+            if name not in self.attributes or value is None:
+                raise HTTPException(400, "Unsupported document attribute")
+            if name == "href":
+                clean = "".join(c for c in value if ord(c) > 32).strip()
+                if urlsplit(clean).scheme.lower() not in {"", "https", "http", "mailto"}:
+                    raise HTTPException(400, "Unsafe document link")
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+
+    def handle_endtag(self, tag):
+        if tag not in self.tags:
+            raise HTTPException(400, "Unsupported document markup")
 
 
 def _replace_legal_content(page_html: str, content: str) -> str:

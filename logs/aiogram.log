@@ -6456,3 +6456,11 @@ aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: can't
 [2026-08-30 18:00:37] [INFO] aiogram.event: Update id=891138138 is handled. Duration 4656 ms by bot id=7557954606
 [2026-08-30 18:04:30] [INFO] aiogram.event: Update id=891138139 is handled. Duration 213 ms by bot id=7557954606
 [2026-08-30 18:13:05] [INFO] aiogram.event: Update id=891138140 is handled. Duration 198 ms by bot id=7557954606
+[2026-10-11 21:56:28] [INFO] aiogram.dispatcher: Start polling
+[2026-10-11 21:56:30] [INFO] aiogram.dispatcher: Run polling for bot @dyunjais_testnet_bot id=7557954606 - 'dyunjais testnet'
+[2026-10-11 21:56:57] [INFO] aiogram.event: Update id=891138141 is handled. Duration 3216 ms by bot id=7557954606
+[2026-10-11 21:59:51] [ERROR] aiogram.dispatcher: Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
+[2026-10-11 21:59:51] [WARNING] aiogram.dispatcher: Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7557954606)
+[2026-10-11 22:00:13] [ERROR] aiogram.dispatcher: Failed to fetch updates - ProxyConnectionError: [Errno 10060] Couldn't connect to proxy 82.22.40.226:1080 [Connect call failed ('82.22.40.226', 1080)]
+[2026-10-11 22:00:13] [WARNING] aiogram.dispatcher: Sleep for 1.091102 seconds and try again... (tryings = 1, bot id = 7557954606)
+[2026-10-11 22:00:26] [INFO] aiogram.dispatcher: Connection established (tryings = 2, bot id = 7557954606)

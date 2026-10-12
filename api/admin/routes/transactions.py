@@ -75,11 +75,11 @@ async def admin_transactions(
     }
 
 
-@router.post("/transactions/{transaction_id}/confirm", dependencies=[Depends(require_support_auth)])
+@router.post("/transactions/{transaction_id}/confirm", dependencies=[Depends(require_superadmin_auth)])
 async def admin_transaction_confirm(transaction_id: int):
     async with async_session() as session:
-        tx = _http_404_if_none(await session.get(Transaction, transaction_id), "transaction not found")
-        user = _http_404_if_none(await session.get(User, tx.user_id), "user not found")
+        tx = _http_404_if_none(await session.scalar(select(Transaction).where(Transaction.id == transaction_id).with_for_update()), "transaction not found")
+        user = _http_404_if_none(await session.scalar(select(User).where(User.id == tx.user_id).with_for_update()), "user not found")
         if bool(tx.paid):
             return {
                 "ok": True,

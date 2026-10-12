@@ -12,6 +12,7 @@ from api.admin.endpoints import router as admin_router
 from api.bot.endpoints import router as bot_router
 from api.cabinet.endpoints import router as cabinet_router
 from api.payments.endpoints import router as payments_router
+from api.public.endpoints import router as public_router
 from api.subscription_url.endpoints import router as subscription_router
 from backend.apps.common import apply_common_hardening
 from backend.core.config import settings
@@ -50,6 +51,8 @@ async def lifespan(_: FastAPI):
 
 
 def create_app():
+    if "*" in settings.API_CORS_ORIGINS_LIST:
+        raise ValueError("Credentialed API requires explicit CORS origins")
     app = FastAPI(
         title="Lunet API",
         docs_url=None,
@@ -60,6 +63,7 @@ def create_app():
     apply_common_hardening(app)
 
     app.include_router(cabinet_router)
+    app.include_router(public_router)
     app.include_router(subscription_router)
     app.include_router(admin_router)
     app.include_router(payments_router)
@@ -70,7 +74,7 @@ def create_app():
         allow_origins=settings.API_CORS_ORIGINS_LIST,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "X-Admin-Token", "X-Bot-Token", "X-Requested-With"],
+        allow_headers=["Authorization", "Content-Type", "X-Admin-CSRF", "X-Bot-Token", "X-Requested-With"],
     )
 
     @app.middleware("http")

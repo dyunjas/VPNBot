@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import secrets
+import hashlib
+import json
 import time
 import re
 from datetime import datetime, timezone
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, HTTPException, Response
+from sqlalchemy import select, delete
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.exc import IntegrityError
 
 from api.cabinet.common import (
@@ -26,6 +30,7 @@ from api.cabinet.common import (
     _create_refresh_token,
     _consume_otp,
     _decode_token,
+    _validate_user_session,
     _get_tg_user,
     _get_user,
     _otp_send_allowed,
@@ -42,23 +47,31 @@ from backend.core.telegram import create_telegram_session
 from backend.core.logger_config import logger
 from backend.services.remnawave_service import RemnaWaveService
 from backend.services.subscription_service import SubscriptionService
+from backend.database.models import SecurityRecord
+from backend.services.admin_security import check_origin, rate_limit
 
 router = APIRouter()
-_DEEPLINK_STORE: dict[str, dict] = {}
+DEEPLINK_COOKIE = "cabinet_login_initiator"
 DEEPLINK_TTL_SEC = 10 * 60
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
-def _set_refresh_cookie(response: JSONResponse, user_id: int) -> None:
-    response.set_cookie(
-        key=REFRESH_COOKIE,
-        value=_create_refresh_token(user_id),
-        httponly=True,
-        secure=str(settings.PUBLIC_BASE_URL or "").strip().startswith("https://"),
-        samesite="lax",
-        max_age=30 * 24 * 3600,
-        path="/",
-    )
+async def _set_refresh_cookie(response: JSONResponse, user_id: int) -> None:
+    session_id = secrets.token_urlsafe(32)
+    refresh = _create_refresh_token(user_id, session_id)
+    async with async_session() as db:
+        await _get_user(db, user_id)
+        db.add(SecurityRecord(key="cabinet-session:" + hashlib.sha256(session_id.encode()).hexdigest(), kind="cabinet_session", expires_at=int(time.time()) + 30 * 86400,
+                              data={"user_id": user_id, "refresh_hash": hashlib.sha256(refresh.encode()).hexdigest()}))
+        await db.commit()
+    body = json.loads(response.body)
+    if "access_token" in body:
+        body["access_token"] = _create_access_token(user_id, session_id)
+        response.body = response.render(body)
+        response.headers["content-length"] = str(len(response.body))
+    response.set_cookie(key=REFRESH_COOKIE, value=refresh, httponly=True,
+                        secure=str(settings.PUBLIC_BASE_URL or "").strip().startswith("https://"),
+                        samesite="strict", max_age=30 * 86400, path="/")
 
 
 def _public_cabinet_base() -> str:
@@ -70,21 +83,24 @@ def _public_cabinet_base() -> str:
     return f"https://{raw}"
 
 
-def _put_deeplink(user_id: int) -> str:
-    now = int(time.time())
-    stale = [key for key, value in _DEEPLINK_STORE.items() if int(value.get("expires_at", 0)) < now]
-    for key in stale:
-        _DEEPLINK_STORE.pop(key, None)
+async def _put_deeplink(user_id: int, initiator: str) -> str:
     token = secrets.token_urlsafe(32)
-    _DEEPLINK_STORE[token] = {"user_id": int(user_id), "expires_at": now + DEEPLINK_TTL_SEC}
+    async with async_session() as db:
+        db.add(SecurityRecord(key="deeplink:" + hashlib.sha256(token.encode()).hexdigest(), kind="deeplink", expires_at=int(time.time()) + DEEPLINK_TTL_SEC,
+                              data={"user_id": user_id, "initiator_hash": hashlib.sha256(initiator.encode()).hexdigest()}))
+        await db.commit()
     return token
 
 
-def _pop_deeplink(token: str) -> int | None:
-    rec = _DEEPLINK_STORE.pop(str(token or "").strip(), None)
-    if not rec or int(rec.get("expires_at", 0)) < int(time.time()):
-        return None
-    return int(rec.get("user_id"))
+async def _pop_deeplink(token: str, initiator: str) -> int | None:
+    key = "deeplink:" + hashlib.sha256(token.encode()).hexdigest()
+    async with async_session() as db:
+        rec = await db.scalar(select(SecurityRecord).where(SecurityRecord.key == key).with_for_update())
+        if not rec or rec.kind != "deeplink" or rec.expires_at <= int(time.time()) or not secrets.compare_digest(rec.data.get("initiator_hash", ""), hashlib.sha256(initiator.encode()).hexdigest()):
+            return None
+        removed = await db.scalar(delete(SecurityRecord).where(SecurityRecord.key == key).returning(SecurityRecord.key))
+        await db.commit()
+        return int(rec.data["user_id"]) if removed else None
 
 
 @router.post("/auth/register")
@@ -100,8 +116,8 @@ async def cabinet_register(payload: RegisterPayload):
         if existing_email.scalar_one_or_none():
             raise HTTPException(status_code=409, detail="Пользователь с таким email уже зарегистрирован")
 
-    if not _otp_send_allowed("registration", email, cooldown_sec=60, window_sec=3600, max_sends=5):
-        retry_after = _otp_send_retry_after(
+    if not await _otp_send_allowed("registration", email, cooldown_sec=60, window_sec=3600, max_sends=5):
+        retry_after = await _otp_send_retry_after(
             "registration",
             email,
             cooldown_sec=60,
@@ -111,7 +127,7 @@ async def cabinet_register(payload: RegisterPayload):
         raise HTTPException(status_code=429, detail=f"Повторите попытку через {retry_after} сек.")
 
     code = f"{secrets.randbelow(1000000):06d}"
-    _put_otp("registration", email, None, code)
+    await _put_otp("registration", email, None, code)
     _smtp_send_code(email, code, purpose="bind")
     return {"ok": True, "message": "Код подтверждения отправлен"}
 
@@ -121,7 +137,7 @@ async def cabinet_register_verify(payload: CompleteRegistrationPayload):
     email = payload.email.strip().lower()
     if not email or len(email) > 320 or not EMAIL_RE.fullmatch(email):
         raise HTTPException(status_code=400, detail="Укажите корректный email")
-    matched, _ = _consume_otp("registration", email, payload.code, max_attempts=5)
+    matched, _ = await _consume_otp("registration", email, payload.code, max_attempts=5)
     if not matched:
         raise HTTPException(status_code=400, detail="Неверный или просроченный код")
 
@@ -200,7 +216,7 @@ async def cabinet_register_verify(payload: CompleteRegistrationPayload):
             else None,
         }
     )
-    _set_refresh_cookie(response, user.id)
+    await _set_refresh_cookie(response, user.id)
     return response
 
 
@@ -212,11 +228,11 @@ async def cabinet_send_email_code(payload: SendEmailCodePayload):
         user = res.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="user with this email not found")
-    if not _otp_send_allowed("email", email):
+    if not await _otp_send_allowed("email", email):
         raise HTTPException(status_code=429, detail="code already sent recently")
 
     code = f"{secrets.randbelow(1000000):06d}"
-    _put_otp("email", email, user.id, code)
+    await _put_otp("email", email, user.id, code)
     _smtp_send_code(email, code, purpose="login")
     return {"ok": True}
 
@@ -228,14 +244,14 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
         user = res.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="user with this tg_id not found")
-    if not _otp_send_allowed(
+    if not await _otp_send_allowed(
         "telegram",
         str(payload.tg_id),
         cooldown_sec=60,
         window_sec=600,
         max_sends=3,
     ):
-        retry_after = _otp_send_retry_after(
+        retry_after = await _otp_send_retry_after(
             "telegram",
             str(payload.tg_id),
             cooldown_sec=60,
@@ -250,7 +266,7 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
         raise HTTPException(status_code=429, detail="code already sent recently")
 
     code = f"{secrets.randbelow(1000000):06d}"
-    _put_otp("telegram", str(payload.tg_id), user.id, code)
+    await _put_otp("telegram", str(payload.tg_id), user.id, code)
     text = f"<tg-emoji emoji-id='5776375003280838798'>✅</tg-emoji>Код входа в кабинет: <code>{code}</code>"
 
     if bot is not None:
@@ -271,7 +287,7 @@ async def cabinet_send_telegram_code(payload: SendTelegramCodePayload):
 
 
 @router.post("/auth/deeplink/send")
-async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
+async def cabinet_send_deeplink(payload: SendTelegramCodePayload, response: Response):
     async with async_session() as session:
         res = await session.execute(select(User).where(User.tg_id == payload.tg_id))
         user = res.scalar_one_or_none()
@@ -280,14 +296,14 @@ async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
         if bool(getattr(user, "banned", False)):
             raise HTTPException(status_code=403, detail="banned")
 
-    if not _otp_send_allowed(
+    if not await _otp_send_allowed(
         "deeplink",
         str(payload.tg_id),
         cooldown_sec=45,
         window_sec=600,
         max_sends=3,
     ):
-        retry_after = _otp_send_retry_after(
+        retry_after = await _otp_send_retry_after(
             "deeplink",
             str(payload.tg_id),
             cooldown_sec=45,
@@ -296,7 +312,9 @@ async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
         )
         raise HTTPException(status_code=429, detail=f"deeplink already sent recently, try again in {retry_after} seconds")
 
-    token = _put_deeplink(user.id)
+    initiator = secrets.token_urlsafe(32)
+    token = await _put_deeplink(user.id, initiator)
+    response.set_cookie(DEEPLINK_COOKIE, initiator, httponly=True, secure=str(settings.PUBLIC_BASE_URL).startswith("https://"), samesite="strict", max_age=DEEPLINK_TTL_SEC, path="/")
     base = _public_cabinet_base()
     if not base:
         raise HTTPException(status_code=503, detail="PUBLIC_BASE_URL is not configured")
@@ -305,7 +323,7 @@ async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
 
     if bot is not None:
         await bot.send_message(chat_id=payload.tg_id, text=text)
-        _put_otp("deeplink", str(payload.tg_id), user.id, token)
+        await _put_otp("deeplink", str(payload.tg_id), user.id, token)
         return {"ok": True}
 
     bot_token = (settings.BOT_TOKEN or "").strip()
@@ -318,14 +336,14 @@ async def cabinet_send_deeplink(payload: SendTelegramCodePayload):
         await temp_bot.send_message(chat_id=payload.tg_id, text=text)
     finally:
         await temp_bot.session.close()
-    _put_otp("deeplink", str(payload.tg_id), user.id, token)
+    await _put_otp("deeplink", str(payload.tg_id), user.id, token)
     return {"ok": True}
 
 
 @router.post("/auth/deeplink/consume")
-async def cabinet_consume_deeplink(payload: InitPayload):
+async def cabinet_consume_deeplink(payload: InitPayload, request: Request):
     token = str(payload.initData or "").strip()
-    user_id = _pop_deeplink(token)
+    user_id = await _pop_deeplink(token, request.cookies.get(DEEPLINK_COOKIE, ""))
     if not user_id:
         raise HTTPException(status_code=400, detail="invalid or expired deeplink")
 
@@ -339,7 +357,7 @@ async def cabinet_consume_deeplink(payload: InitPayload):
             "token_type": "bearer",
         }
     )
-    _set_refresh_cookie(response, user.id)
+    await _set_refresh_cookie(response, user.id)
     return response
 
 
@@ -349,17 +367,17 @@ async def cabinet_verify_code(payload: VerifyCodePayload):
         identity = (payload.email or "").strip().lower()
         if not identity:
             raise HTTPException(status_code=400, detail="email is required")
-        user_id = _pop_otp("email", identity, payload.code)
+        user_id = await _pop_otp("email", identity, payload.code)
     else:
         if payload.tg_id is None:
             raise HTTPException(status_code=400, detail="tg_id is required")
-        user_id = _pop_otp("telegram", str(payload.tg_id), payload.code)
+        user_id = await _pop_otp("telegram", str(payload.tg_id), payload.code)
 
     if not user_id:
         raise HTTPException(status_code=400, detail="invalid or expired code")
 
     response = JSONResponse({"ok": True, "access_token": _create_access_token(user_id), "token_type": "bearer"})
-    _set_refresh_cookie(response, user_id)
+    await _set_refresh_cookie(response, user_id)
     return response
 
 
@@ -367,6 +385,13 @@ async def cabinet_verify_code(payload: VerifyCodePayload):
 async def cabinet_telegram_auth(payload: InitPayload):
     tg_user = _get_tg_user(payload.initData)
     tg_id = int(tg_user["id"])
+    async with async_session() as db:
+        insert = sqlite_insert if db.bind.dialect.name == "sqlite" else pg_insert
+        consumed = await db.scalar(insert(SecurityRecord).values(key="telegram-login:" + hashlib.sha256(payload.initData.encode()).hexdigest(), kind="telegram_login", expires_at=int(time.time()) + 86400, data={})
+            .on_conflict_do_nothing(index_elements=[SecurityRecord.key]).returning(SecurityRecord.key))
+        await db.commit()
+        if not consumed:
+            raise HTTPException(401, "Telegram login proof has already been used")
 
     async with async_session() as session:
         res = await session.execute(select(User).where(User.tg_id == tg_id))
@@ -394,27 +419,48 @@ async def cabinet_telegram_auth(payload: InitPayload):
                 },
             }
         )
-        _set_refresh_cookie(response, user.id)
+        await _set_refresh_cookie(response, user.id)
         return response
 
 
 @router.post("/auth/refresh")
 async def cabinet_refresh(request: Request):
-    refresh_token = request.cookies.get(REFRESH_COOKIE)
-    if not refresh_token:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    payload = _decode_token(refresh_token)
-    if payload.get("scope") != "cabinet:refresh":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    try:
-        user_id = int(payload.get("sub"))
-    except Exception as exc:
-        raise HTTPException(status_code=401, detail="Unauthorized") from exc
-    return {"ok": True, "access_token": _create_access_token(user_id), "token_type": "bearer"}
+    check_origin(request)
+    token = request.cookies.get(REFRESH_COOKIE)
+    if not token:
+        raise HTTPException(401, "Unauthorized")
+    payload = _decode_token(token)
+    if payload.get("scope") != "cabinet:refresh" or payload.get("kind") != "refresh":
+        raise HTTPException(401, "Unauthorized")
+    await rate_limit(request, "cabinet-refresh", str(payload["sub"]), maximum=30, window=60)
+    key = "cabinet-session:" + hashlib.sha256(payload["sid"].encode()).hexdigest()
+    async with async_session() as db:
+        record = await db.scalar(select(SecurityRecord).where(SecurityRecord.key == key).with_for_update())
+        if not record or record.kind != "cabinet_session" or record.expires_at <= int(time.time()) or str(record.data.get("user_id")) != payload["sub"] or record.data.get("refresh_hash") != hashlib.sha256(token.encode()).hexdigest():
+            raise HTTPException(401, "Unauthorized")
+        user = await _get_user(db, int(payload["sub"]))
+        new_refresh = _create_refresh_token(user.id, payload["sid"])
+        record.data = {**record.data, "refresh_hash": hashlib.sha256(new_refresh.encode()).hexdigest()}
+        expires_in = record.expires_at - int(time.time())
+        await db.commit()
+    response = JSONResponse({"ok": True, "access_token": _create_access_token(user.id, payload["sid"]), "token_type": "bearer"})
+    response.set_cookie(REFRESH_COOKIE, new_refresh, httponly=True, secure=str(settings.PUBLIC_BASE_URL).startswith("https://"), samesite="strict", max_age=expires_in, path="/")
+    return response
 
 
 @router.post("/auth/logout")
-async def cabinet_logout():
+async def cabinet_logout(request: Request):
+    check_origin(request)
+    token = request.cookies.get(REFRESH_COOKIE)
+    if token:
+        try:
+            payload = _decode_token(token)
+            if payload.get("scope") == "cabinet:refresh":
+                async with async_session() as db:
+                    await db.execute(delete(SecurityRecord).where(SecurityRecord.key == "cabinet-session:" + hashlib.sha256(payload["sid"].encode()).hexdigest()))
+                    await db.commit()
+        except HTTPException:
+            pass
     response = JSONResponse({"ok": True})
     response.delete_cookie(key=REFRESH_COOKIE, path="/")
     return response
@@ -425,3 +471,37 @@ async def cabinet_auth_me(user_id: int = Depends(require_cabinet_auth)):
     async with async_session() as session:
         user = await _get_user(session, user_id)
         return {"ok": True, "user": {"id": user.id, "tg_id": user.tg_id, "email": user.email, "username": user.username}}
+
+
+@router.get("/auth/session")
+async def cabinet_session(request: Request):
+    """Read-only landing identity; never returns or refreshes authentication tokens."""
+    origin = request.headers.get("origin")
+    allowed_origins = {"https://lunet.pro", "https://www.lunet.pro"}
+    headers = {"Cache-Control": "private, no-store", "Vary": "Origin"}
+    if origin and origin not in allowed_origins and origin != str(request.base_url).rstrip("/"):
+        return JSONResponse({"authenticated": False}, status_code=403, headers=headers)
+    if origin in allowed_origins:
+        headers.update({"Access-Control-Allow-Origin": origin, "Access-Control-Allow-Credentials": "true"})
+    try:
+        authorization = request.headers.get("authorization")
+        user_id = None
+        if authorization:
+            try:
+                user_id = await require_cabinet_auth(authorization)
+            except HTTPException:
+                pass
+        if user_id is None:
+            token = request.cookies.get(REFRESH_COOKIE)
+            if not token:
+                return JSONResponse({"authenticated": False}, headers=headers)
+            payload = _decode_token(token)
+            if payload.get("scope") != "cabinet:refresh":
+                raise HTTPException(status_code=401, detail="Unauthorized")
+            await _validate_user_session(payload)
+            user_id = int(payload["sub"])
+        async with async_session() as session:
+            user = await _get_user(session, user_id)
+            return JSONResponse({"authenticated": True, "user": {"username": user.username, "email": user.email}}, headers=headers)
+    except (HTTPException, ValueError, KeyError, TypeError):
+        return JSONResponse({"authenticated": False}, headers=headers)

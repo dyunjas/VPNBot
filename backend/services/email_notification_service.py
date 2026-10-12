@@ -10,6 +10,7 @@ from html import escape
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.email_templates import render_email_frame
 from backend.core.config import settings
 from backend.core.logger_config import logger
 from backend.database.models import UserActivity
@@ -39,20 +40,11 @@ def _render_email(
     )
     plain_rows = "\n".join(f"{label}: {value}" for label, value in rows)
     plain = f"{heading}\n\n{description}\n\n{plain_rows}\n\n{note}\n\nЛичный кабинет: {CABINET_URL}"
-    html = f"""<!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"></head>
-<body style="margin:0;background:#f4f4f5;color:#18181b;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 14px;background:#f4f4f5;"><tr><td align="center">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border:1px solid #e4e4e7;border-radius:16px;box-shadow:0 12px 30px rgba(24,24,27,.06);">
-      <tr><td style="padding:22px 24px 0;font-size:18px;font-weight:750;letter-spacing:-.03em;">Lunet</td></tr>
-      <tr><td style="padding:26px 24px 8px;"><div style="color:#71717a;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">{escape(eyebrow)}</div><h1 style="margin:10px 0 0;font-size:28px;line-height:1.15;letter-spacing:-.04em;">{escape(heading)}</h1><p style="margin:13px 0 0;color:#71717a;font-size:14px;line-height:1.6;">{escape(description)}</p></td></tr>
-      <tr><td style="padding:14px 24px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">{rows_html}</table></td></tr>
-      <tr><td style="padding:20px 24px 0;"><div style="padding:14px;border:1px solid #e4e4e7;border-radius:10px;background:#fafafa;color:#52525b;font-size:13px;line-height:1.55;">{escape(note)}</div></td></tr>
-      <tr><td align="center" style="padding:22px 24px 4px;"><a href="{escape(CABINET_URL)}" style="display:inline-block;padding:13px 20px;border-radius:10px;background:#18181b;color:#fff;font-size:13px;font-weight:700;text-decoration:none;">Открыть личный кабинет</a></td></tr>
-      <tr><td style="padding:24px;"><div style="border-top:1px solid #e4e4e7;padding-top:15px;color:#a1a1aa;font-size:11px;line-height:1.5;text-align:center;">© Lunet 2026<br>Это письмо отправлено автоматически.</div></td></tr>
-    </table>
-  </td></tr></table>
-</body></html>"""
+    content = f"""<p style="margin:0 0 20px;color:#71717a;font-size:14px;line-height:1.6;">{escape(description)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">{rows_html}</table>
+<div style="margin-top:20px;padding:16px;border-left:3px solid #0184f8;border-radius:0 14px 14px 0;background:#f4f4f5;color:#71717a;font-size:13px;line-height:1.6;">{escape(note)}</div>
+<p style="margin:24px 0 0;text-align:center;"><a href="{escape(CABINET_URL, quote=True)}" style="display:inline-block;padding:14px 22px;border-radius:12px;background:#0184f8;color:#fff;font-size:13px;font-weight:700;text-decoration:none;">Открыть личный кабинет</a></p>"""
+    html = render_email_frame(heading=heading, eyebrow=eyebrow, content_html=content)
     return html, plain
 
 

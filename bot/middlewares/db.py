@@ -8,7 +8,6 @@ from backend.core.logger_config import logger
 from backend.services.exceptions import MaintenanceModeError
 from bot.utils.maintenance import (
     MAINTENANCE_HTML,
-    MAINTENANCE_TEXT,
     answer_maintenance_callback,
     send_maintenance_message,
 )

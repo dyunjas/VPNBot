@@ -14682,3 +14682,117 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-09-13 21:12:04] [INFO] root: Settings successfully loaded from .env
 [2026-09-13 21:12:05] [INFO] root: Database tables initialized
 [2026-09-13 21:12:05] [INFO] root: Database connection successful
+[2026-10-11 17:32:59] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 17:32:59] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 17:33:01] [INFO] root: Database tables initialized
+[2026-10-11 17:33:01] [INFO] root: Database connection successful
+[2026-10-11 17:33:01] [INFO] root: Database tables initialized
+[2026-10-11 17:33:01] [INFO] root: Database connection successful
+[2026-10-11 17:35:11] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 17:39:30] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 17:39:30] [INFO] root: Database tables initialized
+[2026-10-11 17:39:30] [INFO] root: Database connection successful
+[2026-10-11 18:07:01] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:08:28] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:08:29] [INFO] root: Database tables initialized
+[2026-10-11 18:08:29] [INFO] root: Database connection successful
+[2026-10-11 18:14:00] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:16:27] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:16:28] [INFO] root: Database tables initialized
+[2026-10-11 18:16:28] [INFO] root: Database connection successful
+[2026-10-11 18:16:36] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:16:38] [INFO] root: Database tables initialized
+[2026-10-11 18:16:38] [INFO] root: Database connection successful
+[2026-10-11 18:47:40] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:47:42] [INFO] root: Database tables initialized
+[2026-10-11 18:47:42] [INFO] root: Database connection successful
+[2026-10-11 18:47:45] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:54:38] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:54:39] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:54:39] [INFO] root: Database tables initialized
+[2026-10-11 18:54:39] [INFO] root: Database connection successful
+[2026-10-11 18:54:47] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 18:54:47] [INFO] root: Database tables initialized
+[2026-10-11 18:54:47] [INFO] root: Database connection successful
+[2026-10-11 19:01:13] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:03:49] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:03:50] [INFO] root: Database tables initialized
+[2026-10-11 19:03:50] [INFO] root: Database connection successful
+[2026-10-11 19:03:57] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:03:58] [INFO] root: Database tables initialized
+[2026-10-11 19:03:58] [INFO] root: Database connection successful
+[2026-10-11 19:08:17] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:08:18] [INFO] root: Database tables initialized
+[2026-10-11 19:08:18] [INFO] root: Database connection successful
+[2026-10-11 19:08:26] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:08:26] [INFO] root: Database tables initialized
+[2026-10-11 19:08:26] [INFO] root: Database connection successful
+[2026-10-11 19:39:02] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:39:06] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:44:53] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:44:54] [INFO] root: Database tables initialized
+[2026-10-11 19:44:54] [INFO] root: Database connection successful
+[2026-10-11 19:45:07] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 19:45:08] [INFO] root: Database tables initialized
+[2026-10-11 19:45:08] [INFO] root: Database connection successful
+[2026-10-11 20:17:09] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 20:44:40] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 20:49:21] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 20:51:01] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 20:51:02] [INFO] root: Database tables initialized
+[2026-10-11 20:51:02] [INFO] root: Database connection successful
+[2026-10-11 20:51:09] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 20:51:10] [INFO] root: Database tables initialized
+[2026-10-11 20:51:10] [INFO] root: Database connection successful
+[2026-10-11 21:36:22] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 21:36:40] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 21:55:37] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 21:55:37] [INFO] root: Database tables initialized
+[2026-10-11 21:55:37] [INFO] root: Database connection successful
+[2026-10-11 21:56:27] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 21:56:28] [INFO] root: Bot started
+[2026-10-11 22:05:32] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:34:34] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:35:37] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:36:13] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:36:32] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:36:43] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:38:27] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:41:06] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:49:17] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:51:45] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:55:43] [INFO] root: Settings successfully loaded from .env
+[2026-10-11 23:59:57] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 00:03:15] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 16:55:08] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 16:55:11] [INFO] root: Database tables initialized
+[2026-10-12 16:55:11] [INFO] root: Database connection successful
+[2026-10-12 16:55:11] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 16:55:56] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 16:55:57] [INFO] root: Database tables initialized
+[2026-10-12 16:55:57] [INFO] root: Database connection successful
+[2026-10-12 16:56:04] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 16:56:06] [INFO] root: Database tables initialized
+[2026-10-12 16:56:06] [INFO] root: Database connection successful
+[2026-10-12 21:27:05] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 21:27:07] [INFO] root: Database tables initialized
+[2026-10-12 21:27:07] [INFO] root: Database connection successful
+[2026-10-12 21:27:30] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 21:27:32] [INFO] root: Database tables initialized
+[2026-10-12 21:27:32] [INFO] root: Database connection successful
+[2026-10-12 21:27:55] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 21:27:55] [INFO] root: Database tables initialized
+[2026-10-12 21:27:55] [INFO] root: Database connection successful
+[2026-10-12 21:28:07] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 22:00:24] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 22:00:25] [INFO] root: Database tables initialized
+[2026-10-12 22:00:25] [INFO] root: Database connection successful
+[2026-10-12 22:00:33] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 22:00:35] [INFO] root: Database tables initialized
+[2026-10-12 22:00:35] [INFO] root: Database connection successful
+[2026-10-12 22:56:13] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 22:56:13] [INFO] root: Database tables initialized
+[2026-10-12 22:56:13] [INFO] root: Database connection successful
+[2026-10-12 22:56:21] [INFO] root: Settings successfully loaded from .env
+[2026-10-12 22:56:22] [INFO] root: Database tables initialized
+[2026-10-12 22:56:22] [INFO] root: Database connection successful

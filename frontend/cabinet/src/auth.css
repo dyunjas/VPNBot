@@ -1,0 +1,68 @@
+.auth-page { display: grid; grid-template-rows: auto 1fr; place-items: center; min-height: 100dvh; padding: 0 32px calc(48px + var(--cookie-notice-space,0px)); background: #fff; }
+.auth-panel { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap: 56px; width: min(1060px,100%); min-height: 630px; padding: 48px; border-radius: 54px; background: #fff; }
+.auth-main { min-width: 0; }
+.auth-topline { display: none; align-items: center; gap: 22px; min-height: 32px; margin-bottom: 34px; font-size: 12px; color: var(--muted); }
+.auth-topline a { display: inline-flex; gap: 6px; align-items: center; }
+.auth-topline a:hover { color: var(--brand); }
+.auth-desktop-support { margin-left: auto; }
+.auth-form { max-width: 360px; margin-inline: auto; }
+.auth-form h1 { margin: 0 0 18px; font-size: 48px; font-weight: 600; letter-spacing: -.045em; text-align: center; line-height: 1.15; }
+.auth-description { font-size: 13px; line-height: 1.55; text-align: center; margin-bottom: 26px; }
+.auth-form .field { margin: 20px 0; }
+.auth-form .field>span { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.auth-form .field input { height: 52px; border-radius: 14px; border: 1px solid var(--line); background: #fff; font-size: 14px; padding-inline: 17px; }
+.auth-form .field input::placeholder { color: var(--muted); }
+.auth-form .auth-code-input { text-align: center; letter-spacing: .24em; font-size: 25px; font-variant-numeric: tabular-nums; }
+.auth-form>.button { width: 100%; min-height: 50px; border-radius: 14px; font-size: 13px; }
+.auth-code-note { font-size: 11px; text-align: center; margin-top: 16px; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin-block: 22px; color: var(--muted); font-size: 11px; }
+.auth-divider::before,.auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.auth-telegram-button { background: color-mix(in srgb,var(--brand) 78%,#20b6bc); }
+.auth-text-link { display: block; margin: 20px auto 0; padding: 2px; background: none; border: 0; color: var(--muted); font-size: 12px; line-height: 1.6; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+.auth-text-link:hover { color: var(--brand); }
+.auth-showcase { position: relative; overflow: hidden; min-height: 540px; border-radius: 30px; background: linear-gradient(175deg,#000 0%,#00294c 42%,var(--brand) 100%); padding: 32px 22px 0; text-align: center; }
+.auth-showcase .brand { justify-content: center; color: #fff; gap: 12px; }
+.auth-showcase .brand img { width: 42px; height: 42px; background: #fff; border-radius: 12px; padding: 5px; }
+.auth-showcase .brand b { font-weight: 550; font-size: 26px; }
+.auth-showcase>p { margin-top: 24px; color: #d4eaff; font-size: 21px; line-height: 1.3; letter-spacing: -.025em; }
+.auth-phone { position: absolute; top: 215px; left: 50%; transform: translateX(-50%); width: 222px; height: 475px; border: 8px solid #000; border-radius: 35px; background: #fff; overflow: hidden; box-shadow: 0 20px 50px #0004; }
+.auth-phone img { display: block; width: 100%; height: auto; padding-top: 20px; }
+.auth-phone-camera { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); width: 65px; height: 13px; border-radius: 20px; background: #000; }
+.auth-preview-note { position: absolute; bottom: 0; left: 0; width: 100%; padding: 9px; background: #000c; color: #e4e4e7; font-size: 9px; }
+.auth-page .cookie-notice { position: fixed; z-index: 80; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; width: min(1060px,calc(100% - 32px)); padding: 15px 18px; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 5px 24px #18181b15; }
+.auth-page .cookie-notice p { flex: 1; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.auth-page .cookie-notice a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+.auth-page .cookie-notice .button { min-width: 100px; min-height: 40px; color: #fff; background: var(--brand); }
+@media(max-width:1000px) {
+  .auth-panel { gap: 30px; padding: 36px; border-radius: 38px; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); }
+  .auth-showcase .brand b { font-size: 21px; }
+}
+@media(max-width:760px) {
+  .auth-page { display: block; padding: 22px 22px calc(var(--cookie-notice-space,0px) + 84px); background: #fff; }
+  .auth-panel { display: block; width: 100%; min-height: 0; padding: 0; border-radius: 0; }
+  .auth-showcase { display: none; }
+  .auth-topline { display: flex; margin-top: 28px; margin-bottom: 38px; gap: 14px; }
+  .auth-desktop-support { display: none!important; }
+  .auth-form { max-width: 430px; }
+  .auth-form h1 { font-size: 38px; margin-bottom: 22px; }
+  .auth-description { font-size: 14px; margin-bottom: 24px; }
+  .auth-form .field input { height: 54px; border-radius: 28px; }
+  .auth-form>.button { min-height: 50px; border-radius: 14px; font-size: 14px; }
+  .auth-text-link { font-size: 13px; }
+  .auth-page .cookie-notice { bottom: calc(12px + env(safe-area-inset-bottom,0px)); flex-direction: column; align-items: stretch; gap: 12px; padding: 14px; width: calc(100% - 24px); }
+  .auth-page .cookie-notice p { font-size: 10px; }
+  .auth-page .cookie-notice .button { min-height: 40px; }
+}
+
+.auth-site-header { display: flex; align-items: center; gap: 24px; width: min(1200px,100%); min-height: 90px; margin-bottom: 24px; }
+.auth-site-header .brand { flex-shrink: 0; }
+.auth-site-header .brand b { font-size: 25px; }
+.auth-site-header .brand b span { margin-left: 6px; color: var(--muted); font-size: 10px; letter-spacing: .09em; vertical-align: middle; }
+.auth-site-nav { display: flex; gap: 8px; margin-inline: auto; }
+.auth-site-nav a { padding: 12px; border-radius: 12px; font-size: 14px; white-space: nowrap; }
+.auth-site-nav a:hover { background: var(--brand-soft); color: var(--brand); }
+@media(max-width:760px) {
+  .auth-site-header { min-height: 52px; margin-bottom: 0; }
+  .auth-site-header .brand b { font-size: 21px; }
+  .auth-site-nav { display: none; }
+}

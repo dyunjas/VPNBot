@@ -73,7 +73,7 @@ class PallyPaymentAPI:
                 ("description", description),
                 ("type", "normal"),
                 ("currency_in", "RUB"),
-                ("name", "Lunet VPN"),
+                ("name", "Lunet VPS"),
                 ("ttl", int(ttl)),
             ]
         )

@@ -1,5 +1,4 @@
-﻿from aiogram.types import InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+﻿from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 def back_keys_kb(url: str | None, auto_renew: bool = False):

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 
@@ -11,26 +13,47 @@ from api.cabinet.common import (
     DeleteDevicePayload,
     GiftSubscriptionPayload,
     InitPayload,
-    PromoService,
     ReferralService,
     RemnaWaveService,
     SetAutoRenewPayload,
     SubscriptionNotFound,
     SubscriptionService,
     TransactionService,
-    UserService,
-    WithdrawalService,
     _get_user,
     _map_service_error,
     _resolve_request_user_id,
     async_session,
     require_optional_cabinet_auth,
-    settings,
 )
 from backend.services.exceptions import InsufficientBalance
+from backend.core.business_config import get_business_decimal, get_business_int
+from backend.services.payment_method_service import get_payment_method_config
 from backend.database.models import User
 
 router = APIRouter()
+
+
+@router.post("/ui-config")
+async def cabinet_ui_config(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
+    async with async_session() as session:
+        await _get_user(session, user_id)
+        methods = []
+        for provider in ("platega", "pally", "cryptobot"):
+            config = await get_payment_method_config(session, provider)
+            if provider == "platega" and config.get("merchant_id") and config.get("secret"):
+                methods.extend(["platega-card", "platega-sbp"])
+            elif provider == "pally" and config.get("api_token") and config.get("shop_id"):
+                methods.append("pally")
+            elif provider == "cryptobot" and config.get("api_token"):
+                methods.append("crypto")
+        return {
+            "renewal_window_days": get_business_int("SUBSCRIPTION_RENEWAL_WINDOW_DAYS"),
+            "traffic_price_per_gb": str(get_business_decimal("TRAFFIC_PRICE_PER_GB_RUB")),
+            "min_traffic_purchase_gb": get_business_int("MIN_TRAFFIC_PURCHASE_GB"),
+            "device_slot_price": str(get_business_decimal("DEVICE_SLOT_PRICE_RUB")),
+            "payment_methods": methods,
+        }
 
 
 async def _find_gift_recipient(session, raw: str) -> User:
@@ -55,7 +78,7 @@ async def _find_gift_recipient(session, raw: str) -> User:
 
 @router.post("/profile")
 async def cabinet_profile(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         tx_service = TransactionService(session)
@@ -85,7 +108,7 @@ async def cabinet_profile(payload: InitPayload, user_id: int | None = Depends(re
 
 @router.post("/status")
 async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         sub_service = SubscriptionService(session)
@@ -109,6 +132,10 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
         except Exception:
             devices_limit = 0
         user_traffic = remote.get("userTraffic") if isinstance(remote.get("userTraffic"), dict) else {}
+        renewal_end = active_sub.current_period_end
+        if renewal_end and renewal_end.tzinfo is None:
+            renewal_end = renewal_end.replace(tzinfo=timezone.utc)
+        renewal_at = renewal_end - timedelta(days=get_business_int("SUBSCRIPTION_RENEWAL_WINDOW_DAYS")) if renewal_end else None
         return {
             "ok": True,
             "has_subscription": status in {"ACTIVE", "LIMITED"},
@@ -116,6 +143,8 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
             "active_keys": 0,
             "subscription_url": sub_url,
             "plan": None,
+            "can_renew": renewal_at is None or datetime.now(timezone.utc) >= renewal_at,
+            "renewal_available_at": renewal_at.isoformat() if renewal_at else None,
             "subscription": {
                 "current_period_start": None,
                 "current_period_end": expire_at,
@@ -145,7 +174,7 @@ async def cabinet_subscription_auto_renew(
     payload: SetAutoRenewPayload,
     user_id: int | None = Depends(require_optional_cabinet_auth),
 ):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         try:
@@ -167,7 +196,7 @@ async def cabinet_subscription_auto_renew(
 
 @router.post("/plans")
 async def cabinet_plans(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         _ = await _get_user(session, user_id)
         plans = await SubscriptionService(session).list_plans()
@@ -176,7 +205,7 @@ async def cabinet_plans(payload: InitPayload, user_id: int | None = Depends(requ
 
 @router.post("/subscription/buy")
 async def cabinet_subscription_buy(payload: BuySubscriptionPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         try:
@@ -198,7 +227,7 @@ async def cabinet_subscription_buy(payload: BuySubscriptionPayload, user_id: int
 
 @router.post("/subscription/traffic/buy")
 async def cabinet_subscription_traffic_buy(payload: BuyTrafficPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     if payload.gb <= 0:
         raise HTTPException(status_code=400, detail="Введите количество ГБ больше 0")
     async with async_session() as session:
@@ -215,7 +244,7 @@ async def cabinet_subscription_traffic_buy(payload: BuyTrafficPayload, user_id: 
 
 @router.post("/subscription/devices/buy")
 async def cabinet_subscription_devices_buy(payload: BuyDeviceSlotsPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         billing = BillingService(session)
@@ -236,7 +265,7 @@ async def cabinet_subscription_devices_buy(payload: BuyDeviceSlotsPayload, user_
 
 @router.post("/subscription/gift")
 async def cabinet_subscription_gift(payload: GiftSubscriptionPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    buyer_user_id = _resolve_request_user_id(payload.initData, user_id)
+    buyer_user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         buyer = await _get_user(session, buyer_user_id)
         recipient = await _find_gift_recipient(session, payload.recipient)
@@ -270,7 +299,7 @@ async def cabinet_subscription_gift(payload: GiftSubscriptionPayload, user_id: i
 
 @router.post("/devices")
 async def cabinet_devices(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         devices = await RemnaWaveService(session).get_user_hwid_devices(user=user)
@@ -279,7 +308,7 @@ async def cabinet_devices(payload: InitPayload, user_id: int | None = Depends(re
 
 @router.post("/device/delete")
 async def cabinet_device_delete(payload: DeleteDevicePayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         remn = RemnaWaveService(session)

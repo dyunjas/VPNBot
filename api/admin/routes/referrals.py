@@ -51,7 +51,7 @@ async def admin_referrals(
     }
 
 
-@router.patch("/referrals/{account_id}", dependencies=[Depends(require_support_auth)])
+@router.patch("/referrals/{account_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_referral_update(
     account_id: int,
     referral_percent: int | None = Query(default=None, ge=0, le=100),

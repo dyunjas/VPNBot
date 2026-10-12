@@ -21,7 +21,7 @@ class PromoService:
     async def activate_promocode(self, user_id: int, code: str) -> Promocode:
         logger.info("[biz][promo] activate_requested user_id=%s code=%s", user_id, code)
 
-        user = await self.user_repo.get_by_id(user_id)
+        user = await self.user_repo.get_by_id_for_update(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
 

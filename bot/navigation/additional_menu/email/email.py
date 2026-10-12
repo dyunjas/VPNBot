@@ -89,15 +89,13 @@ def _smtp_send_code(email: str, code: str, purpose: str = "bind") -> None:
 @router.callback_query(F.data == "email_bind")
 async def email_bind_start(callback: CallbackQuery, state: FSMContext, bot_api):
     try:
-        resp = await bot_api.get_user_by_tg_id(callback.from_user.id)
-        user = resp.get("user") if isinstance(resp, dict) else resp
+        await bot_api.get_user_by_tg_id(callback.from_user.id)
     except UserNotFound:
         await callback.message.answer(
             "<tg-emoji emoji-id='5879813604068298387'>❗️</tg-emoji> Пользователь не найден. Попробуйте перезапустить бота."
         )
         return
 
-    current_email = html_escape(user.get("email") or "-")
     text = (
         "<b><tg-emoji emoji-id='5967280668885913944'>✉️</tg-emoji> Привязка почты</b>\n\n"
         "Укадите email — он понадобится, если возникнут проблемы с Telegram или вашим аккаунтом.\n\n"

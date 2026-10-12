@@ -1,6 +1,9 @@
 ﻿from __future__ import annotations
 
 import os
+import hmac
+import hashlib
+import time
 from datetime import datetime, timezone
 from html import escape
 from typing import Any, AsyncGenerator
@@ -10,13 +13,15 @@ from aiogram.exceptions import TelegramForbiddenError
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, delete, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.logger_config import logger
 from backend.core.config import settings
 from backend.core.telegram import create_telegram_session
-from backend.database.models import User, Subscription, SubStatus
+from backend.database.models import User, Subscription, SubStatus, SecurityRecord
 from backend.database.session import async_session
 from backend.images import MAIN_MENU_IMG
 from backend.services.activity_service import ActivityService
@@ -26,6 +31,44 @@ from backend.core.loader import bot as runtime_bot
 from backend.services.exceptions import InsufficientBalance, PlanNotFound, PurchaseInProgress, TooEarlyToRenew
 
 router = APIRouter(tags=["subscription"])
+
+
+async def require_remnawave_webhook_auth(request: Request, x_webhook_token: str | None = Header(default=None, alias="X-Webhook-Token")):
+    expected = _webhook_secret()
+    if not expected:
+        raise HTTPException(503, "Webhook authentication is not configured")
+    # Keep the existing query-token contract for rollout compatibility;
+    # prefer X-Webhook-Token and redact legacy tokens from logs.
+    provided = (x_webhook_token or request.query_params.get("token") or "").strip()
+    if not provided or not hmac.compare_digest(provided, expected):
+        raise HTTPException(401, "Unauthorized")
+
+
+async def remnawave_webhook_guard(request: Request):
+    await require_remnawave_webhook_auth(request, request.headers.get("X-Webhook-Token"))
+    key = "remnawave-event:" + hashlib.sha256(await request.body()).hexdigest()
+    lease = {"state": "processing", "lease": os.urandom(16).hex()}
+    async with async_session() as db:
+        insert = sqlite_insert if db.bind.dialect.name == "sqlite" else pg_insert
+        claimed = await db.scalar(insert(SecurityRecord).values(key=key, kind="webhook_event", data=lease, expires_at=int(time.time()) + 120)
+            .on_conflict_do_update(index_elements=[SecurityRecord.key], set_={"data": lease, "expires_at": int(time.time()) + 120}, where=SecurityRecord.expires_at <= int(time.time()))
+            .returning(SecurityRecord.key))
+        await db.commit()
+        if not claimed:
+            record = await db.get(SecurityRecord, key)
+            # Completed duplicate gets an ACK; a concurrent request is retried.
+            raise HTTPException(200 if record and record.data.get("state") == "done" else 409, "Duplicate webhook")
+    try:
+        yield
+    except Exception:
+        async with async_session() as db:
+            await db.execute(delete(SecurityRecord).where(SecurityRecord.key == key, SecurityRecord.data == lease))
+            await db.commit()
+        raise
+    else:
+        async with async_session() as db:
+            await db.execute(update(SecurityRecord).where(SecurityRecord.key == key, SecurityRecord.data == lease).values(data={"state": "done"}, expires_at=int(time.time()) + 7 * 86400))
+            await db.commit()
 
 
 def _webhook_secret() -> str:
@@ -284,18 +327,14 @@ def _device_title(device_model: str | None, device_os: str | None, hwid: str | N
     return device_model or device_os or hwid or "Устройство"
 
 
-@router.post("/remnawave-webhook")
+@router.post("/remnawave-webhook", dependencies=[Depends(remnawave_webhook_guard)])
 async def remnawave_webhook(
     request: Request,
     payload: RemnawaveWebhookPayload,
     x_webhook_token: str | None = Header(default=None, alias="X-Webhook-Token"),
     user_service: UserService = Depends(get_user_service),
 ):
-    expected_secret = _webhook_secret()
-    if expected_secret:
-        provided_secret = (x_webhook_token or request.query_params.get("token") or "").strip()
-        if provided_secret != expected_secret:
-            raise HTTPException(status_code=401, detail="Unauthorized")
+    await require_remnawave_webhook_auth(request, x_webhook_token)
 
     scope = str(payload.scope or "").strip()
     event = str(payload.event or "").strip()

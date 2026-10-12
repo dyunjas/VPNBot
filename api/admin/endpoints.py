@@ -1,4 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Request
+from api.admin.common import require_admin_auth
+
+
+async def admin_route_guard(request: Request):
+    if request.url.path not in {"/api/admin/auth/login", "/api/admin/auth/verify-2fa"}:
+        await require_admin_auth(request, authorization=None, x_admin_token=None, admin_access_token=None)
 
 from api.admin.routes import (
     admins_router,
@@ -19,7 +25,7 @@ from api.admin.routes import (
     exports_router,
 )
 
-router = APIRouter(prefix="/api/admin", tags=["admin-web"])
+router = APIRouter(prefix="/api/admin", tags=["admin-web"], dependencies=[Depends(admin_route_guard)])
 router.include_router(auth_router)
 router.include_router(admins_router)
 router.include_router(users_router)

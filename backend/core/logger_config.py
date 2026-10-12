@@ -1,17 +1,32 @@
 import logging
 import os
+import re
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 from backend.core.error_reporter import TelegramErrorReportHandler
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
-LOG_DIR = str(PROJECT_DIR / "logs")
+LOG_DIR = os.getenv("LUNET_LOG_DIR") or str(PROJECT_DIR / "logs")
 MAX_BYTES = 10_000_000
 BACKUP_COUNT = 5
 
 LOG_FORMAT = "[%(asctime)s] [%(levelname)s] %(name)s: %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+
+def redact_security_data(value: str) -> str:
+    value = re.sub(r"(?i)(bearer\s+)[A-Za-z0-9._~-]+", r"\1[REDACTED]", value)
+    value = re.sub(r"(?i)([\"']?(?:password|secret|token|access_token|refresh_token|api_token|bot_token|authorization|cookie|initData)[\"']?\s*[:=]\s*)[^\s,;}]+", r"\1[REDACTED]", value)
+    value = re.sub(r"(/auth/deeplink/)[A-Za-z0-9_-]+", r"\1[REDACTED]", value)
+    value = re.sub(r"\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", "[REDACTED JWT]", value)
+    value = re.sub(r"(/bot)\d+:[A-Za-z0-9_-]+", r"\1[REDACTED]", value)
+    return value
+
+
+class SecurityFormatter(logging.Formatter):
+    def format(self, record):
+        return redact_security_data(super().format(record))
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -74,7 +89,7 @@ def _file_handler(filename: str, level: int = logging.DEBUG) -> RotatingFileHand
         encoding="utf-8",
     )
     handler.setLevel(level)
-    handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
+    handler.setFormatter(SecurityFormatter(LOG_FORMAT, datefmt=DATE_FORMAT))
     return handler
 
 
@@ -145,15 +160,18 @@ logger.addHandler(system_handler)
 
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
-console_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
+console_handler.setFormatter(SecurityFormatter(LOG_FORMAT, datefmt=DATE_FORMAT))
 logger.addHandler(console_handler)
 
-telegram_error_handler = TelegramErrorReportHandler()
-telegram_error_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
-logger.addHandler(telegram_error_handler)
+if os.getenv("LUNET_TESTING") != "1":
+    telegram_error_handler = TelegramErrorReportHandler()
+    telegram_error_handler.setFormatter(SecurityFormatter(LOG_FORMAT, datefmt=DATE_FORMAT))
+    logger.addHandler(telegram_error_handler)
 
 benign_network_noise_filter = BenignNetworkNoiseFilter()
 for handler in logger.handlers:
     handler.addFilter(benign_network_noise_filter)
 
 logging.getLogger("aiogram").setLevel(logging.INFO)
+
+logging.getLogger("aiosqlite").setLevel(logging.WARNING)

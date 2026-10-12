@@ -112,7 +112,7 @@ async def admin_subscriptions(
     }
 
 
-@router.post("/subscriptions", dependencies=[Depends(require_support_auth)])
+@router.post("/subscriptions", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_create(payload: SubscriptionCreatePayload):
     async with async_session() as session:
         user = _http_404_if_none(await session.get(User, payload.user_id), "user not found")
@@ -275,14 +275,13 @@ async def admin_subscription_details(subscription_id: int):
     }
 
 
-@router.patch("/subscriptions/{subscription_id}", dependencies=[Depends(require_support_auth)])
+@router.patch("/subscriptions/{subscription_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_update(subscription_id: int, payload: SubscriptionUpdatePayload):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
         user = _http_404_if_none(await session.get(User, sub.user_id), "user not found")
         activity_service = ActivityService(session)
         now = datetime.now(timezone.utc)
-        period_end_changed = False
         requires_remote_sync = False
         changes: list[str] = []
 
@@ -319,7 +318,6 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
                 base_end = now
             sub.current_period_end = base_end + timedelta(days=max(payload.extend_days, 0))
             sub.next_renewal_at = sub.current_period_end
-            period_end_changed = True
             requires_remote_sync = True
             changes.append(f"extend_days={payload.extend_days}")
 
@@ -329,14 +327,12 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
             sub.next_renewal_at = sub.current_period_end
             if sub.current_period_end <= now:
                 sub.status = SubStatus.expired
-            period_end_changed = True
             requires_remote_sync = True
             changes.append(f"reduce_days={payload.reduce_days}")
 
         if payload.current_period_end is not None:
             sub.current_period_end = _as_aware_utc(payload.current_period_end)
             sub.next_renewal_at = sub.current_period_end
-            period_end_changed = True
             requires_remote_sync = True
             changes.append("current_period_end_set")
 
@@ -366,7 +362,7 @@ async def admin_subscription_update(subscription_id: int, payload: SubscriptionU
         return {"ok": True}
 
 
-@router.post("/subscriptions/{subscription_id}/sync", dependencies=[Depends(require_support_auth)])
+@router.post("/subscriptions/{subscription_id}/sync", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_sync(subscription_id: int):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
@@ -385,7 +381,7 @@ async def admin_subscription_sync(subscription_id: int):
         return {"ok": True, "status": status, "message": "Подписка синхронизирована с панелью"}
 
 
-@router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_support_auth)])
+@router.post("/subscriptions/{subscription_id}/traffic", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_add_traffic(subscription_id: int, payload: SubscriptionTrafficPayload):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")
@@ -430,7 +426,7 @@ async def admin_subscription_add_traffic(subscription_id: int, payload: Subscrip
         }
 
 
-@router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_support_auth)])
+@router.post("/subscriptions/bulk-extend", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload):
     async with async_session() as session:
         now = datetime.now(timezone.utc)
@@ -513,7 +509,7 @@ async def admin_subscription_bulk_extend(payload: SubscriptionBulkExtendPayload)
         }
 
 
-@router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_support_auth)])
+@router.delete("/subscriptions/{subscription_id}", dependencies=[Depends(require_superadmin_auth)])
 async def admin_subscription_delete(subscription_id: int):
     async with async_session() as session:
         sub = _http_404_if_none(await session.get(Subscription, subscription_id), "subscription not found")

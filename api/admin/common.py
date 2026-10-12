@@ -9,12 +9,10 @@ from typing import Literal
 
 from aiogram.types.input_file import BufferedInputFile
 from fastapi import APIRouter, Cookie, Depends, File, Form, Header, HTTPException, Query, UploadFile, Request
-from jose import JWTError, jwt
 from pydantic import BaseModel, Field
 from sqlalchemy import String, cast, delete, desc, func, literal, or_, select, update
 
 from backend.core.config import settings
-from backend.core.business_config import get_business_bool, get_business_value
 from backend.database.models import (
     BroadcastHistory,
     BroadcastJobStatus,
@@ -32,7 +30,6 @@ from backend.database.models import (
     UserActivity,
     User,
     WithdrawalStatus,
-    Admin,
 )
 from backend.database.session import async_session
 from backend.services.exceptions import (
@@ -122,60 +119,32 @@ def _jwt_secret() -> str:
     return (settings.SECRET_KEY or "").strip()
 
 
-def _create_admin_access_token(login: str, role: str = "superadmin", admin_id: int | None = None) -> str:
-    secret = _jwt_secret()
-    if not secret:
-        raise HTTPException(status_code=503, detail="SECRET_KEY is not configured")
-    hours = int(settings.ADMIN_WEB_JWT_EXPIRE_HOURS or 12)
-    expire_at = datetime.now(timezone.utc) + timedelta(hours=max(hours, 1))
-    payload = {
-        "sub": login,
-        "scope": "admin:web",
-        "role": role,
-        "admin_id": admin_id,
-        "exp": int(expire_at.timestamp()),
-        "iat": int(datetime.now(timezone.utc).timestamp()),
-    }
-    return jwt.encode(payload, secret, algorithm=JWT_ALG)
-
-
-def _decode_admin_access_token(token: str) -> dict:
-    secret = _jwt_secret()
-    if not secret:
-        raise HTTPException(status_code=503, detail="SECRET_KEY is not configured")
-    try:
-        return jwt.decode(token, secret, algorithms=[JWT_ALG])
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
 async def require_admin_auth(
     request: Request,
     authorization: str | None = Header(default=None, alias="Authorization"),
     x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
     admin_access_token: str | None = Cookie(default=None, alias="admin_access_token"),
 ) -> dict:
-    token = _extract_token(authorization, x_admin_token) or (admin_access_token or "").strip() or None
-    if not token:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    payload = _decode_admin_access_token(token)
-    if payload.get("scope") != "admin:web":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    from .audit import record_admin_action
-    await record_admin_action(request, payload)
+    from backend.services.admin_security import validate_session, require_fresh
+    payload = await validate_session(request)
+    if "/export/" in request.url.path or request.url.path.endswith("/download"):
+        require_fresh(payload)
+        from backend.services.admin_security import rate_limit
+        await rate_limit(request, "admin-export", payload["owner"], maximum=5, window=60)
+    if request.method not in {"GET", "HEAD", "OPTIONS"} and not request.url.path.startswith("/api/admin/auth/"):
+        require_fresh(payload)
     return payload
 
 
 async def require_superadmin_auth(auth=Depends(require_admin_auth)) -> dict:
-    role = auth.get("role") or "superadmin"
+    role = auth.get("role")
     if role != "superadmin":
         raise HTTPException(status_code=403, detail="Forbidden")
     return auth
 
 
 async def require_support_auth(auth=Depends(require_admin_auth)) -> dict:
-    role = auth.get("role") or "superadmin"
+    role = auth.get("role")
     if role not in {"superadmin", "support"}:
         raise HTTPException(status_code=403, detail="Forbidden")
     return auth
@@ -289,8 +258,6 @@ __all__ = [
     "HTTPException",
     "Query",
     "UploadFile",
-    "JWTError",
-    "jwt",
     "BaseModel",
     "Field",
     "String",
@@ -339,8 +306,6 @@ __all__ = [
     "_as_aware_utc",
     "_http_404_if_none",
     "_jwt_secret",
-    "_create_admin_access_token",
-    "_decode_admin_access_token",
     "require_admin_auth",
     "require_superadmin_auth",
     "require_support_auth",

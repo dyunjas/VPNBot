@@ -1507,3 +1507,22 @@ AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
 [2026-09-13 21:12:27] [INFO] root: [biz][subscription] activate_completed user_id=103 subscription_id=90
 [2026-09-13 21:21:24] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=True
 [2026-09-13 21:21:28] [INFO] root: [biz][subscription] auto_renew_changed user_id=103 subscription_id=90 auto_renew=False
+[2026-10-11 17:40:32] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 17:40:33] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 17:40:34] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 17:40:34] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 18:51:41] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 18:51:44] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 19:12:56] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 19:13:01] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 19:28:06] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 19:28:10] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 19:28:22] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 19:28:26] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 22:14:07] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 22:14:11] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 23:20:27] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-11 23:20:32] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-11 23:20:36] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True
+[2026-10-12 21:42:57] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=False
+[2026-10-12 21:43:01] [INFO] vpn.subscriptions: [biz][subscription] auto_renew_changed user_id=100 subscription_id=83 auto_renew=True

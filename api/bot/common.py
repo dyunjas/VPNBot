@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import AsyncIterator
-from decimal import Decimal
+import hmac
 from typing import Any
 
 from fastapi import Depends, Header, HTTPException
@@ -52,7 +52,7 @@ async def require_bot_auth(
     if not token and authorization:
         raw = authorization.strip()
         token = raw[7:].strip() if raw.lower().startswith("bearer ") else raw
-    if not token or token != _bot_token():
+    if not token or not hmac.compare_digest(token, _bot_token()):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 

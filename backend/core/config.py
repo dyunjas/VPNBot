@@ -1,4 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
+from urllib.parse import urlsplit, urlunsplit
 
 from backend.core.logger_config import logger
 
@@ -54,6 +56,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str | None = None
     SMTP_FROM_EMAIL: str | None = None
     API_CORS_ORIGINS: str = (
+        "https://lunet.pro,https://www.lunet.pro,https://app.lunet.pro,"
         "http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003,"
         "http://127.0.0.1:8011,http://localhost:8001,http://localhost:8002,"
         "http://localhost:8003,http://localhost:8011"
@@ -106,11 +109,27 @@ class Settings(BaseSettings):
 
     @property
     def API_CORS_ORIGINS_LIST(self) -> list[str]:
-        return [origin.strip() for origin in self.API_CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip().rstrip("/") for origin in self.API_CORS_ORIGINS.split(",") if origin.strip()]
+        public = urlsplit(self.PUBLIC_BASE_URL)
+        origins.append(f"{public.scheme}://{public.netloc}")
+        return list(dict.fromkeys(origins))
+
+    @field_validator("PUBLIC_BASE_URL", mode="before")
+    @classmethod
+    def normalize_public_base_url(cls, value: str) -> str:
+        raw = str(value or "").strip()
+        if raw.startswith("//"):
+            raw = "https:" + raw
+        elif "://" not in raw:
+            raw = "https://" + raw
+        parsed = urlsplit(raw)
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
+            raise ValueError("PUBLIC_BASE_URL must be a public HTTP(S) address")
+        return urlunsplit((parsed.scheme, parsed.netloc.lower(), parsed.path.rstrip("/"), "", ""))
 
 try:
     settings = Settings()
     logger.info("Settings successfully loaded from .env")
-except Exception as e:
+except Exception:
     logger.error("Error loading settings from .env")
     raise

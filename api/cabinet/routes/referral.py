@@ -25,7 +25,7 @@ router = APIRouter()
 
 @router.post("/referral/info")
 async def cabinet_referral_info(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         service = ReferralService(session)
@@ -50,7 +50,7 @@ async def cabinet_referral_info(payload: InitPayload, user_id: int | None = Depe
 
 @router.post("/referral/withdrawals")
 async def cabinet_referral_withdrawals(payload: InitPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     async with async_session() as session:
         user = await _get_user(session, user_id)
         rows = await WithdrawalService(session).list_by_user(user_id=user.id, limit=20)
@@ -71,7 +71,7 @@ async def cabinet_referral_withdrawals(payload: InitPayload, user_id: int | None
 
 @router.post("/referral/withdraw")
 async def cabinet_referral_withdraw(payload: CreateWithdrawalPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     amount = int(payload.amount or 0)
     method = (payload.method or "").strip()
     min_amount = get_business_int("MIN_WITHDRAW_AMOUNT_RUB")
@@ -100,7 +100,7 @@ async def cabinet_referral_withdraw(payload: CreateWithdrawalPayload, user_id: i
 
 @router.post("/referral/transfer")
 async def cabinet_referral_transfer(payload: ReferralTransferPayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     amount = int(payload.amount or 0)
     min_amount = get_business_int("MIN_REFERRAL_TRANSFER_AMOUNT_RUB")
     if amount < min_amount:
@@ -116,7 +116,7 @@ async def cabinet_referral_transfer(payload: ReferralTransferPayload, user_id: i
 
 @router.post("/promocode/apply")
 async def cabinet_promocode_apply(payload: ApplyPromocodePayload, user_id: int | None = Depends(require_optional_cabinet_auth)):
-    user_id = _resolve_request_user_id(payload.initData, user_id)
+    user_id = await _resolve_request_user_id(payload.initData, user_id)
     code = (payload.code or "").strip()
     if not code:
         raise HTTPException(400, "Введите промокод")

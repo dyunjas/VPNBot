@@ -4,10 +4,9 @@ from fastapi import Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from backend.apps.common import FRONTEND_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
+from backend.apps.common import FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR, create_fastapi_app, mount_frontend_assets, no_cache_html, proxy_api_request, register_legal_routes
 
-MINIAPP_BUILD = "20260830-react-miniapp"
-MINIAPP_REACT_DIST = FRONTEND_DIR / "miniapp_dist"
+MINIAPP_REACT_DIST = FRONTEND_BUILD_DIR / "miniapp"
 
 
 def create_app():
@@ -31,7 +30,7 @@ def create_app():
 
     @app.get("/favicon.ico")
     async def favicon():
-        return FileResponse(FRONTEND_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
+        return FileResponse(FRONTEND_STATIC_DIR / "assets" / "lunet-favicon.png", media_type="image/png")
 
     @app.get("/health")
     async def health():

@@ -1,0 +1,69 @@
+/* Shared geometry and motion only. Existing application palettes/fonts are retained. */
+:root {
+  --lunet-radius: 14px;
+  --lunet-control-radius: 10px;
+  --lunet-gap: 16px;
+  --lunet-fast: 140ms;
+  --lunet-motion: 220ms;
+  --lunet-ease: cubic-bezier(.16, 1, .3, 1);
+  --lunet-ring: #71717a;
+  --lunet-skeleton: #e4e4e7;
+}
+.dark { --lunet-ring: #a1a1aa; --lunet-skeleton: #3f3f46; }
+body { -webkit-font-smoothing: antialiased; }
+:where(button, a, input, select, textarea) { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, select, textarea):focus-visible { outline: 2px solid var(--lunet-ring); outline-offset: 3px; }
+:where(button, a.button, .ui-button, input, select, textarea) { transition: background-color var(--lunet-fast), border-color var(--lunet-fast), color var(--lunet-fast), box-shadow var(--lunet-fast), transform var(--lunet-fast); }
+:where(.button, .ui-button) { border-radius: var(--lunet-control-radius); min-height: 42px; }
+:where(.button, .ui-button):not(:disabled):active { transform: scale(.98); }
+:where(.button, .ui-button):disabled { cursor: not-allowed; transform: none; }
+:where(.button, .ui-button)[aria-busy="true"] { cursor: progress; }
+:where(.card, .ui-card) { border-radius: var(--lunet-radius); }
+:where(input, select, textarea) { scroll-margin-block: 100px; min-width: 0; }
+:where(input, select, textarea)[aria-invalid="true"] { border-color: #b91c1c; }
+:where(h1, h2, h3) { text-wrap: balance; }
+:where(.card-head, .plan-top, .card-header)>div { min-width: 0; }
+:where(.profile-summary, .detail-value, .detail-item b, .plan-main, .device-info b) { overflow-wrap: anywhere; }
+:where(.price, .plan-price, .balance-value, .stat-card strong, .balance-card strong) { font-variant-numeric: tabular-nums; }
+.lunet-loader { display: inline-flex; position: relative; flex: 0 0 auto; vertical-align: middle; }
+.lunet-loader-stage { position: absolute; inset: 0; }
+.lunet-loader-bar { position: absolute; top: 0; left: 50%; width: 7.8125%; height: 21.875%; border-radius: 999px; transform-origin: center calc(var(--lunet-loader-size, 16px) / 2); background: currentColor; animation: lunet-bar-fade .8s linear infinite; }
+@keyframes lunet-bar-fade { from { opacity: 1; } to { opacity: .15; } }
+.lunet-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.lunet-skeleton { display: grid; gap: var(--lunet-gap); width: 100%; }
+.lunet-skeleton-card { display: flex; gap: 14px; padding: 22px; border: 1px solid var(--lunet-skeleton); border-radius: var(--lunet-radius); min-height: 116px; }
+.lunet-skeleton-card>div { display: grid; gap: 12px; flex: 1; align-content: center; }
+.lunet-skeleton-overview .lunet-skeleton-card:nth-child(1) { min-height: 174px; }
+.lunet-skeleton-overview .lunet-skeleton-card:nth-child(2) { min-height: 230px; }
+.lunet-skeleton-overview .lunet-skeleton-card:nth-child(3) { min-height: 170px; }
+.lunet-skeleton-circle { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; }
+.lunet-skeleton-line { display: block; height: 9px; border-radius: 99px; }
+.lunet-skeleton-line:first-child { height: 12px; width: 55%; }
+.lunet-skeleton-line:last-child { width: 80%; }
+:where(.lunet-skeleton-circle, .lunet-skeleton-line) { background: var(--lunet-skeleton); animation: lunet-skeleton-pulse 1.5s ease-in-out infinite; }
+.lunet-skeleton-line { animation-delay: .2s; }
+.lunet-skeleton-line:nth-child(2) { animation-delay: .4s; }
+.lunet-skeleton-line:nth-child(3) { animation-delay: .6s; }
+@keyframes lunet-skeleton-pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes lunet-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes lunet-fade { from { opacity: 0; } to { opacity: 1; } }
+.lunet-view { animation: lunet-enter var(--lunet-motion) var(--lunet-ease); min-width: 0; }
+.dialog-backdrop { animation: lunet-fade var(--lunet-fast) ease-out; }
+.dialog { animation: lunet-enter var(--lunet-motion) var(--lunet-ease); max-height: calc(100dvh - 32px); }
+.lunet-dialog-closing { opacity: 0; transition: opacity var(--lunet-fast) ease-out; pointer-events: none; }
+.lunet-copy { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lunet-copy-button { border: 1px solid #d4d4d8; border-radius: 7px; background: transparent; color: inherit; padding: 7px 9px; font: inherit; font-size: 11px; cursor: pointer; }
+.lunet-copy small { display: block; flex-basis: 100%; font-size: 11px; }
+.lunet-expiry { padding: 12px 14px; border: 1px solid #e4e4e7; border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.lunet-connection { padding: 18px; border: 1px solid #e4e4e7; border-radius: var(--lunet-radius); background: #fff; }
+.lunet-connection h3 { font-size: 15px; margin: 0; }
+.lunet-connection p { font-size: 13px; line-height: 1.6; color: #71717a; margin: 8px 0 14px; }
+.lunet-connection-copy { margin-top: 12px; font-size: 12px; overflow-wrap: anywhere; }
+.session-check-page { min-height:100dvh; display:grid; place-items:center; padding:24px; background:#fff; color:#18181b; }
+.session-check-error { max-width:360px; text-align:center; font-size:14px; line-height:1.6; }
+.session-check-error button { margin-top:16px; min-height:44px; padding:0 20px; border:0; border-radius:12px; background:#0184f8; color:#fff; font:inherit; cursor:pointer; }
+.lunet-connection-copy .lunet-copy>span { max-width: 100%; }
+@media (hover: hover) { :where(.button, .ui-button):not(:disabled):hover { transform: none; } }
+@media (pointer: coarse) { :where(.button, .ui-button, .icon-button, .nav-item, .menu-button, .device-remove, .lunet-copy-button) { min-height: 44px; } }
+@media (max-width: 640px) { input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px !important; } .dialog { max-height: calc(100dvh - 16px); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } .lunet-loader-bar { opacity: .65; } }

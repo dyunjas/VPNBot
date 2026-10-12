@@ -5,7 +5,6 @@ from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, InputMediaPhoto
 
-from backend.core.business_config import get_business_decimal
 from backend.core.logger_config import logger
 from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import SubscriptionNotFound, UserNotFound

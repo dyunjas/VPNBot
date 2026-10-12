@@ -1,0 +1,6 @@
+.lunet-select { position: relative; min-width: 0; }
+.lunet-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; width: 100%; padding: 12px 14px; background: #fff; color: var(--text, #18181b); border: 1px solid var(--line, #e4e4e7); border-radius: 12px; font-size: 12px; text-align: left; }
+.lunet-select-trigger>span { min-width: 0; overflow-wrap: anywhere; }
+.lunet-select-options { position: absolute; z-index: 20; left: 0; right: 0; top: calc(100% + 6px); padding: 5px; border: 1px solid var(--line, #e4e4e7); border-radius: 14px; background: #fff; box-shadow: 0 10px 24px #18181b18; max-height: 240px; overflow-y: auto; }
+.lunet-select-option { display: flex; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 9px; color: var(--text, #18181b); font-size: 12px; line-height: 1.5; cursor: pointer; }
+.lunet-select-option.highlighted { background: var(--brand-soft, #f4f4f5); color: var(--brand, #18181b); }

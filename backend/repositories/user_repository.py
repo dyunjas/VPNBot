@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database.models import User, ReferralAccount
+from backend.database.models import User
 
 
 class UserRepository:

@@ -120,7 +120,7 @@ async def expire_checker(bot):
                             sub.user_id,
                             sub.id,
                         )
-                    except Exception as e:
+                    except Exception:
                         logger.exception("[subscription_expiration] mark_expired_failed sub_id=%s", sub.id)
                         continue
 

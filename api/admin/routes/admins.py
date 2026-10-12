@@ -7,10 +7,34 @@ from pydantic import BaseModel
 from sqlalchemy import desc, func, select
 
 from ..common import *
+from .exports import _csv_safe_cell
 from api.admin.audit import audit_item
 from backend.database.models import Admin, AdminActionLog, AdminLoginEvent, AdminRole
 
 router = APIRouter()
+
+
+async def _protected_admin(session, admin_id: int, auth: dict, *, loses_access: bool):
+    # Lock in one order so concurrent removals cannot disable the last administrator.
+    admins = (await session.execute(select(Admin).order_by(Admin.id).with_for_update())).scalars().all()
+    admin = next((row for row in admins if row.id == admin_id), None)
+    if admin is None:
+        raise HTTPException(404, "Администратор не найден")
+    if loses_access:
+        if auth.get("admin_id") == admin_id:
+            raise HTTPException(409, "Нельзя отключить или удалить свою учётную запись")
+        if admin.is_active and admin.role == AdminRole.superadmin and not any(
+            row.id != admin_id and row.is_active and row.role == AdminRole.superadmin for row in admins
+        ):
+            raise HTTPException(409, "Нельзя отключить или удалить последнего активного суперадминистратора")
+    return admin
+
+
+async def _revoke_admin_sessions(session, admin_id: int):
+    from backend.database.models import SecurityRecord
+    await session.execute(delete(SecurityRecord).where(
+        SecurityRecord.kind == "admin_session", SecurityRecord.data["owner"].as_string() == f"admin:{admin_id}"
+    ))
 
 
 class AdminAccessCreatePayload(BaseModel):
@@ -96,9 +120,9 @@ async def admin_audit_download(admin_id: int):
     writer = csv.writer(stream)
     writer.writerow(["Тип", "Дата", "Администратор", "Результат", "Действие", "Метод", "Путь", "IP", "Причина"])
     for row in logins:
-        writer.writerow(["Вход", row.created_at.isoformat() if row.created_at else "", row.username or "", "Успешно" if row.success else "Неуспешно", "", "", "", row.ip_address or "", row.reason or ""])
+        writer.writerow([_csv_safe_cell(value) for value in ["Вход", row.created_at.isoformat() if row.created_at else "", row.username or "", "Успешно" if row.success else "Неуспешно", "", "", "", row.ip_address or "", row.reason or ""]])
     for row in actions:
-        writer.writerow(["Действие", row.created_at.isoformat() if row.created_at else "", row.username or "", "", row.action, row.method, row.path, row.ip_address or "", row.details or ""])
+        writer.writerow([_csv_safe_cell(value) for value in ["Действие", row.created_at.isoformat() if row.created_at else "", row.username or "", "", row.action, row.method, row.path, row.ip_address or "", row.details or ""]])
     return Response(
         content="\ufeff" + stream.getvalue(),
         media_type="text/csv; charset=utf-8",
@@ -108,8 +132,10 @@ async def admin_audit_download(admin_id: int):
 
 @router.post("/admins", dependencies=[Depends(require_superadmin_auth)])
 async def admin_access_create(payload: AdminAccessCreatePayload):
-    from .auth import hash_admin_password
-    username, email, password = payload.username.strip(), payload.email.strip().lower(), payload.password.strip()
+    from backend.services.admin_security import hash_password as hash_admin_password
+    from backend.services.admin_security import check_compromised_password
+    username, email, password = payload.username.strip(), payload.email.strip().lower(), payload.password
+    await check_compromised_password(password)
     if len(username) < 3 or len(password) < 8 or "@" not in email:
         raise HTTPException(status_code=400, detail="username, valid email and password (8+ chars) are required")
     async with async_session() as session:
@@ -125,12 +151,11 @@ async def admin_access_create(payload: AdminAccessCreatePayload):
 
 
 @router.patch("/admins/{admin_id}", dependencies=[Depends(require_superadmin_auth)])
-async def admin_access_update(admin_id: int, payload: AdminAccessUpdatePayload):
-    from .auth import hash_admin_password
+async def admin_access_update(admin_id: int, payload: AdminAccessUpdatePayload, auth=Depends(require_superadmin_auth)):
+    from backend.services.admin_security import hash_password as hash_admin_password
     async with async_session() as session:
-        admin = await session.get(Admin, admin_id)
-        if not admin:
-            raise HTTPException(status_code=404, detail="admin access not found")
+        admin = await _protected_admin(session, admin_id, auth, loses_access=payload.is_active is False or payload.role == AdminRole.support)
+        revoke = payload.is_active is False or bool(payload.password) or (payload.role is not None and payload.role != admin.role)
         if payload.username is not None:
             username = payload.username.strip()
             if len(username) < 1:
@@ -144,24 +169,25 @@ async def admin_access_update(admin_id: int, payload: AdminAccessUpdatePayload):
                 raise HTTPException(status_code=409, detail="admin email already exists or is invalid")
             admin.email = email
         if payload.password:
-            if len(payload.password.strip()) < 8:
-                raise HTTPException(status_code=400, detail="password must be at least 8 characters")
-            admin.password_hash = hash_admin_password(payload.password.strip())
+            from backend.services.admin_security import check_compromised_password
+            await check_compromised_password(payload.password)
+            admin.password_hash = hash_admin_password(payload.password)
         if payload.role is not None:
             admin.role = payload.role
         if payload.is_active is not None:
             admin.is_active = bool(payload.is_active)
+        if revoke:
+            await _revoke_admin_sessions(session, admin_id)
         await session.commit()
         await session.refresh(admin)
         return {"ok": True, "item": _admin_access_public(admin)}
 
 
 @router.delete("/admins/{admin_id}", dependencies=[Depends(require_superadmin_auth)])
-async def admin_access_delete(admin_id: int):
+async def admin_access_delete(admin_id: int, auth=Depends(require_superadmin_auth)):
     async with async_session() as session:
-        admin = await session.get(Admin, admin_id)
-        if not admin:
-            raise HTTPException(status_code=404, detail="admin access not found")
+        admin = await _protected_admin(session, admin_id, auth, loses_access=True)
+        await _revoke_admin_sessions(session, admin_id)
         await session.delete(admin)
         await session.commit()
     return {"ok": True}

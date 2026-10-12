@@ -1,0 +1,60 @@
+/* Final presentation layer; no theme colors are replaced. */
+.ui-card { border-radius: var(--lunet-radius); }
+.ui-button { min-height: 40px; border-radius: var(--lunet-control-radius); }
+.ui-button-icon { width: 40px; }
+.ui-button-sm { min-height: 36px; }
+.ui-button:focus-visible { outline: 2px solid var(--lunet-ring); outline-offset: 3px; }
+.ui-button:not(:disabled):hover { transform: none; }
+.ui-button:not(:disabled):active { transform: scale(.98); }
+.page { min-width: 0; max-width: 1600px; margin-inline: auto; width: 100%; }
+.page-heading h1 { letter-spacing: -.035em; line-height: 1.2; font-weight: 650; }
+.card-header h2 { font-weight: 650; }
+.stack { gap: var(--lunet-gap); }
+.stat-card { min-height: 108px; }
+.stat-card strong { line-height: 1.2; letter-spacing: -.035em; }
+.nav-group a { min-height: 42px; border-radius: 9px; transition: background-color var(--lunet-fast), color var(--lunet-fast); }
+.table-scroll { max-width: 100%; overflow-x: auto; }
+table th { white-space: nowrap; }
+.table-sort { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.table-filter { min-width: 170px; max-width: 100%; }
+table td { line-height: 1.45; }
+tbody tr:focus-visible { outline: 2px solid var(--lunet-ring); outline-offset: -2px; }
+.table-card, .dashboard-grid>* { min-width: 0; }
+.toolbar-card { flex-wrap: wrap; }
+.toolbar-card input { min-width: 0; }
+.dialog { border-radius: 16px; }
+.dialog-head h2 { line-height: 1.25; }
+.dialog-head .ui-button { flex: 0 0 auto; }
+.detail-item b { white-space: normal; font-size: 13px; }
+.action-row { flex-wrap: wrap; }
+.action-row input { max-width: 100%; }
+.login-form { min-height: 470px; justify-content: center; }
+.login-form .ui-field input { min-height: 46px; }
+.login-form .full { min-height: 46px; }
+.form-error { min-height: 42px; line-height: 1.5; }
+.lunet-chart { --chart-1: #18181b; --chart-2: #71717a; --chart-grid: #e4e4e7; --chart-muted: #71717a; --chart-hover: #f4f4f5; min-width: 0; }
+.lunet-chart-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.lunet-chart-tabs button { padding: 8px 12px; border: 1px solid var(--chart-grid); border-radius: 9px; background: transparent; color: inherit; font: inherit; font-size: 12px; cursor: pointer; }
+.lunet-chart-tabs button[aria-pressed="true"] { color: var(--chart-hover); background: var(--chart-1); border-color: var(--chart-1); }
+.lunet-chart-stage { width: 100%; height: 240px; min-width: 0; background: var(--chart-hover); border-radius: 14px; padding: 10px 4px 0; }
+.lunet-chart-summary { font-size: 12px; margin: 10px 0; color: var(--chart-muted); }
+.lunet-chart-data { margin-top: 12px; font-size: 12px; }
+.lunet-chart-data summary { cursor: pointer; padding-block: 8px; }
+.lunet-chart-data table { width: 100%; min-width: 0; }
+@media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 640px) {
+  .page { padding: 20px 12px; }
+  .stat-card { padding: 14px; min-height: 100px; }
+  .stat-card strong { font-size: 23px; }
+  .stat-card .muted { font-size: 12px; }
+  .dialog-backdrop { padding: 8px; }
+  .dialog { padding: 18px 14px; border-radius: 16px 16px 8px 8px; }
+  .detail-item span { font-size: 11px; }
+  .detail-item b { font-size: 13px; }
+  .action-row .ui-button { min-height: 44px; font-size: 13px; white-space: normal; }
+  .toolbar-card .ui-button { font-size: 13px; }
+  .pagination-controls { flex-wrap: wrap; gap: 8px; }
+  .login-form { min-height: 450px; padding: 26px 20px; }
+  .lunet-chart-stage { height: 220px; }
+  .plan-main strong { white-space: normal; }
+}

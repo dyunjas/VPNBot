@@ -7,6 +7,8 @@ from backend.core.loader import bot as runtime_bot
 from backend.core.logger_config import logger
 from backend.core.telegram import create_telegram_session
 from backend.services.email_notification_service import EmailNotificationService
+from backend.database.models import SecurityRecord
+from sqlalchemy import delete
 
 router = APIRouter()
 
@@ -307,11 +309,13 @@ async def admin_user_details(user_id: int):
 
 
 @router.post("/users/{user_id}/action", dependencies=[Depends(require_support_auth)])
-async def admin_user_action(user_id: int, payload: UserActionPayload):
+async def admin_user_action(user_id: int, payload: UserActionPayload, auth=Depends(require_support_auth)):
+    if auth["role"] != "superadmin" and payload.action not in {"ban", "unban"}:
+        raise HTTPException(403, "Insufficient permissions for financial action")
     if payload.action == "ban" and not (payload.reason and payload.reason.strip()):
         raise HTTPException(status_code=400, detail="Причина блокировки обязательна")
     async with async_session() as session:
-        user = _http_404_if_none(await session.get(User, user_id), "user not found")
+        user = _http_404_if_none(await session.scalar(select(User).where(User.id == user_id).with_for_update()), "user not found")
         user_service = UserService(session)
         subscription_service = SubscriptionService(session)
         activity_service = ActivityService(session)
@@ -320,6 +324,7 @@ async def admin_user_action(user_id: int, payload: UserActionPayload):
         try:
             if payload.action == "ban":
                 user.banned = True
+                await session.execute(delete(SecurityRecord).where(SecurityRecord.kind == "cabinet_session", SecurityRecord.data["user_id"].as_integer() == user.id))
                 await activity_service.log_user_event(
                     user_id=user_id,
                     category="admin",

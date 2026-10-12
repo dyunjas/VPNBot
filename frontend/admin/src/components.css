@@ -1,0 +1,115 @@
+/* Shared UI polish for compact shadcn-inspired surfaces. */
+.brand-mark.logo-mark{background:transparent;color:inherit;padding:0;overflow:hidden}
+.brand-mark.logo-mark img{display:block;width:32px;height:32px;object-fit:contain}
+@media(max-width:900px){.sidebar{height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px}.sidebar nav{min-height:0;overflow:visible}.sidebar-user{flex-shrink:0}}
+
+.admin-audit-dialog{max-width:860px;width:min(860px,calc(100vw - 32px));max-height:min(90vh,920px);overflow:auto}
+.sidebar{overflow:hidden}
+.sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px}
+.sidebar-user{flex:0 0 auto}
+@media(max-width:640px){.user-menu{position:absolute;top:42px;right:0;bottom:auto;left:auto;width:190px;max-height:calc(100vh - 60px);overflow:auto}.sidebar{overflow:hidden}.sidebar nav{overflow-y:auto}}
+.admin-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.audit-section{margin-top:20px;border-top:1px solid var(--border,#e5e7eb);padding-top:16px}
+.audit-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.audit-section h3{margin:0;font-size:15px}
+.audit-list{display:grid;gap:7px;max-height:220px;overflow:auto}
+.audit-row{display:grid;grid-template-columns:170px minmax(150px,1fr) minmax(120px,1fr);gap:12px;padding:10px 12px;border:1px solid var(--border,#e5e7eb);border-radius:10px;font-size:12px;align-items:center}
+.audit-row span,.audit-row b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:640px){.admin-edit-grid{grid-template-columns:1fr}.audit-row{grid-template-columns:1fr;gap:4px}.audit-section-head{align-items:flex-start;flex-direction:column}}
+.ui-badge{font-weight:500;line-height:1.2;white-space:nowrap}
+.ui-badge-muted{background:#f4f4f5;color:#52525b;border-color:#e4e4e7}
+.ui-badge-warn{background:#fffbeb;color:#a16207;border-color:#fde68a}
+.ui-badge-danger{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+
+/* Native select follows the same compact field language as shadcn Select. */
+.ui-field select,.page-size-label select{min-height:38px;border-color:#d4d4d8;border-radius:7px;background-color:#fff;color:#18181b;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.ui-field select:hover,.page-size-label select:hover{border-color:#a1a1aa}
+.ui-field select:focus,.page-size-label select:focus{border-color:#71717a;outline:0;box-shadow:0 0 0 3px #18181b14}
+.plan-edit-dialog{width:min(560px,100%)}
+.plan-row{grid-template-columns:28px 36px minmax(180px,1fr) 90px minmax(96px,auto) minmax(188px,auto);min-width:0}
+.plan-actions{align-items:center;flex-wrap:nowrap;min-width:0}
+.plan-actions .ui-button-sm{flex:0 0 auto}
+
+/* Consistent detail popups for every admin section. */
+.dialog{width:min(820px,100%);border-radius:14px;padding:24px;background:#fff;box-shadow:0 24px 70px #00000026}
+.dialog-head{align-items:center;padding-bottom:18px;margin-bottom:18px}
+.dialog-head h2{font-size:21px;letter-spacing:-.025em}
+.dialog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin-top:0;border-radius:10px;background:#e4e4e7}
+.detail-item{min-width:0;min-height:70px;padding:14px 15px;background:#fff;transition:background .15s}
+.detail-item:hover{background:#fafafa}
+.detail-item span{font-size:10px;font-weight:600;letter-spacing:.07em;color:#71717a}
+.detail-item b{font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis}
+.user-actions{gap:14px;margin-top:18px}
+.action-section{padding:16px;border-radius:10px;background:#fafafa}
+.action-section h3{font-size:14px}.action-section p{line-height:1.45}
+.action-row input,.action-fields input{height:40px;border-radius:8px}
+.dialog-actions{gap:10px;margin-top:20px}
+@media(max-width:900px){.plan-row{grid-template-columns:28px 30px minmax(0,1fr) 82px minmax(96px,auto) minmax(176px,auto)}}
+@media(max-width:640px){.plan-row{grid-template-columns:28px 1fr auto}.plan-actions{flex-wrap:wrap}.dialog{padding:18px 16px;border-radius:12px}.dialog-grid{grid-template-columns:1fr}.detail-item{min-height:60px}.dialog-head h2{font-size:18px}}
+
+/* Detail values are independent cards, not a rigid spreadsheet grid. */
+.dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:2px;border:0;background:transparent}
+.detail-item{display:grid;align-content:center;gap:7px;min-height:68px;padding:13px 15px;border:1px solid #e4e4e7;border-radius:10px;background:#fafafa!important}
+.detail-item:hover{background:#fafafa!important;border-color:#d4d4d8}
+.detail-item span{font-size:10px;line-height:1.2;font-weight:600;letter-spacing:.065em;color:#71717a}
+.detail-item b{min-width:0;color:#18181b;font-size:13px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.detail-item b a{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+@media(max-width:640px){.dialog-grid{grid-template-columns:1fr;gap:8px}.detail-item{min-height:58px;padding:11px 13px}}
+
+/* Custom dropdown instead of the browser's rigid native select popup. */.page-size-label{position:relative}
+@keyframes dropdown-in{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+
+/* Keep long broadcast text inside a predictable table width. Full text is
+   available on hover and in the row dialog. */
+.resource-broadcast table{table-layout:fixed}
+.resource-broadcast th,.resource-broadcast td{overflow:hidden;text-overflow:ellipsis}
+.resource-broadcast th:nth-child(1),.resource-broadcast td:nth-child(1){width:84px}
+.resource-broadcast th:nth-child(2),.resource-broadcast td:nth-child(2){width:42%}
+.resource-broadcast th:nth-child(3),.resource-broadcast td:nth-child(3){width:120px}
+.resource-broadcast th:nth-child(4),.resource-broadcast td:nth-child(4){width:150px}
+.table-cell-text{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* The theme class is placed on html; cover every application surface. */
+html.dark,html.dark body,html.dark #root{background:#09090b;color:#fafafa}
+
+/* Dark mode applies to every form control, including action panels. */
+html.dark .ui-field input,html.dark .ui-field textarea,html.dark .ui-field select,html.dark .action-row input,html.dark .action-fields input,html.dark input[type="file"]{background:#18181b!important;color:#fafafa!important;border-color:#3f3f46!important}
+html.dark .ui-field input::placeholder,html.dark .ui-field textarea::placeholder{color:#71717a}
+html.dark .ui-button-outline{background:#18181b!important;color:#fafafa!important;border-color:#3f3f46!important}
+html.dark .ui-button-ghost{color:#d4d4d8;background:transparent}
+html.dark .dialog-actions,html.dark .dialog-head{background:#18181b}
+
+/* Broadcast dialog: readable width, no horizontal stretching. */
+.broadcast-dialog{width:min(580px,100%)}
+.broadcast-dialog .ui-field textarea{min-height:150px;max-height:42vh}
+.broadcast-dialog .ui-field{margin-top:14px}
+.broadcast-dialog .check-field{padding:10px 12px;border:1px solid #e4e4e7;border-radius:7px;background:#fafafa}
+
+/* Login keeps only the form and centers it on every viewport. */
+.login-page{display:flex!important;align-items:center;justify-content:center;min-height:100vh;background:#fafafa}
+.login-panel{display:none!important}
+.login-form{width:min(100% - 32px,380px);margin:0;padding:32px 0}
+
+@media(max-width:640px){
+  .login-form{width:min(100% - 28px,380px);padding:24px 0}
+  .broadcast-dialog{width:100%}
+  .broadcast-dialog .dialog-actions{display:grid;grid-template-columns:1fr 1fr}
+  .broadcast-dialog .dialog-actions .ui-button{width:100%}
+}
+
+/* Keep the account menu below its trigger on narrow screens. */
+@media(max-width:640px){.user-menu{position:absolute;top:42px;right:0;bottom:auto;left:auto;width:190px;max-height:calc(100vh - 60px);overflow:auto}}
+.sidebar{overflow:hidden}.sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:12px}.sidebar-user{flex:0 0 auto}
+.resource-table{min-width:0;overflow:hidden}.resource-table .table-scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x}.resource-table table{min-width:760px}body{overflow-x:hidden}
+.button-spinner{display:inline-block;vertical-align:-3px;margin-right:7px;animation:admin-spin .8s linear infinite}
+@keyframes admin-spin{to{transform:rotate(360deg)}}
+
+/* Scroll Area styling from shadcn: a slim rounded thumb with a quiet track. */
+.dialog,.audit-list,.user-menu{scrollbar-width:thin;scrollbar-color:#a1a1aa transparent;scrollbar-gutter:stable}
+.dialog::-webkit-scrollbar,.audit-list::-webkit-scrollbar,.user-menu::-webkit-scrollbar{width:10px;height:10px}
+.dialog::-webkit-scrollbar-track,.audit-list::-webkit-scrollbar-track,.user-menu::-webkit-scrollbar-track{background:transparent}
+.dialog::-webkit-scrollbar-thumb,.audit-list::-webkit-scrollbar-thumb,.user-menu::-webkit-scrollbar-thumb{background:#a1a1aa;border:3px solid transparent;border-radius:999px;background-clip:content-box}
+.dialog::-webkit-scrollbar-thumb:hover,.audit-list::-webkit-scrollbar-thumb:hover,.user-menu::-webkit-scrollbar-thumb:hover{background:#71717a;border-width:2px;background-clip:content-box}
+html.dark .dialog,html.dark .audit-list,html.dark .user-menu{scrollbar-color:#52525b transparent}
+html.dark .dialog::-webkit-scrollbar-thumb,html.dark .audit-list::-webkit-scrollbar-thumb,html.dark .user-menu::-webkit-scrollbar-thumb{background:#52525b;border-color:transparent;background-clip:content-box}
+html.dark .dialog::-webkit-scrollbar-thumb:hover,html.dark .audit-list::-webkit-scrollbar-thumb:hover,html.dark .user-menu::-webkit-scrollbar-thumb:hover{background:#71717a;background-clip:content-box}

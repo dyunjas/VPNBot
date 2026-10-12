@@ -1,0 +1,16 @@
+/* Shared palette and typography for the public site and web cabinet. */
+:root {
+  --brand: #0184f8;
+  --brand-2: #0184f8;
+  --text: #18181b;
+  --muted: #71717a;
+  --surface: #fff;
+  --surface-soft: #f4f4f5;
+  --line: #e4e4e7;
+  --footer: #000;
+  --brand-soft: rgb(1 132 248 / 8%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  color: var(--text);
+  background: var(--surface);
+}

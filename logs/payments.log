@@ -1875,3 +1875,37 @@ AttributeError: 'Settings' object has no attribute 'CRYPTOBOT_SECRET'
 [2026-09-13 21:12:27] [INFO] root: [biz][billing] gift_subscription_requested buyer_user_id=100 recipient_user_id=103 plan_id=1
 [2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_requested user_id=100 amount=95
 [2026-09-13 21:12:27] [INFO] root: [biz][billing] charge_balance_completed user_id=100 amount=95
+[2026-10-11 19:28:32] [INFO] vpn.payments: [biz][billing] crypto_confirm_requested invoice_id=61962011
+[2026-10-11 19:28:33] [WARNING] vpn.payments: [biz][billing] crypto_not_paid invoice_id=61962011 status=expired
+[2026-10-11 19:28:33] [INFO] vpn.payments: [biz][billing] crypto_confirm_requested invoice_id=61958667
+[2026-10-11 19:28:33] [WARNING] vpn.payments: [biz][billing] crypto_not_paid invoice_id=61958667 status=expired
+[2026-10-11 19:28:33] [INFO] vpn.payments: [biz][billing] platega_confirm_requested provider_id=755cc78d-2e15-43ad-a423-5b345cb104ca
+[2026-10-11 19:28:34] [WARNING] vpn.payments: [biz][billing] platega_not_confirmed provider_id=755cc78d-2e15-43ad-a423-5b345cb104ca status=CANCELED
+[2026-10-11 19:29:44] [INFO] vpn.payments: [biz][billing] pally_create_requested user_id=100 amount=100.0 ttl=600
+[2026-10-11 22:00:50] [INFO] vpn.payments: [biz][billing] platega_create_requested user_id=100 amount=100.0 payment_method=11
+[2026-10-11 22:00:52] [INFO] vpn.payments: [biz][billing] platega_created user_id=100 provider_id=f7c3ac59-7e07-4ebc-aa1e-08bef9ca8281 amount=100.0
+[2026-10-11 22:01:17] [INFO] vpn.payments: [biz][billing] buy_subscription_requested user_id=100 plan_id=1 auto_renew=True
+[2026-10-11 22:01:17] [WARNING] vpn.payments: [biz][billing] buy_subscription_too_early user_id=100 plan_id=1 seconds_left=23582503
+[2026-10-12 00:03:39] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=99 currency=RUB payment_method=None
+[2026-10-12 00:03:39] [WARNING] vpn.payments: [biz][billing] platega_webhook_underpaid provider_id=100 user_id=1 paid=99 expected=100
+[2026-10-12 00:03:39] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=100 currency=USD payment_method=None
+[2026-10-12 00:03:39] [WARNING] vpn.payments: [biz][billing] platega_webhook_bad_currency provider_id=100 user_id=1 currency=USD
+[2026-10-12 00:03:39] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=NaN currency=RUB payment_method=None
+[2026-10-12 00:03:39] [WARNING] vpn.payments: [biz][billing] platega_webhook_underpaid provider_id=100 user_id=1 paid=NaN expected=100
+[2026-10-12 00:03:39] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=Infinity currency=RUB payment_method=None
+[2026-10-12 00:03:39] [WARNING] vpn.payments: [biz][billing] platega_webhook_underpaid provider_id=100 user_id=1 paid=Infinity expected=100
+[2026-10-12 00:03:39] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=200 status=CONFIRMED amount=200 currency=RUB payment_method=None
+[2026-10-12 00:03:40] [WARNING] vpn.payments: [payments][platega] invalid_headers merchant_id=None
+[2026-10-12 00:03:40] [WARNING] vpn.payments: [payments][cryptobot] invalid_signature
+[2026-10-12 00:03:40] [WARNING] vpn.payments: [payments][pal24] invalid_signature inv_id=x trs_id=200
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] pally_postback_received inv_id=signed-order trs_id=200 status=SUCCESS out_sum=200
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] pally_postback_received inv_id=signed-order trs_id=200 status=SUCCESS out_sum=200
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] pally_postback_confirmed inv_id=signed-order trs_id=200 user_id=2 amount=200
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] pally_postback_received inv_id=signed-order trs_id=200 status=SUCCESS out_sum=200
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] pally_postback_already_paid inv_id=signed-order user_id=2
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=100 currency=RUB payment_method=None
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] platega_webhook_confirmed provider_id=100 user_id=1 amount=100
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] platega_webhook_received provider_id=100 status=CONFIRMED amount=100 currency=RUB payment_method=None
+[2026-10-12 00:03:41] [INFO] vpn.payments: [biz][billing] platega_webhook_already_paid provider_id=100 user_id=1
+[2026-10-12 21:43:47] [INFO] vpn.payments: [biz][billing] platega_create_requested user_id=100 amount=100.0 payment_method=2
+[2026-10-12 21:43:48] [INFO] vpn.payments: [biz][billing] platega_created user_id=100 provider_id=513c0d7d-1bb3-4f5e-972c-96a18e5b35bb amount=100.0

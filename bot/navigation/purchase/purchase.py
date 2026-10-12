@@ -4,7 +4,6 @@ from aiogram.types import CallbackQuery, InputMediaPhoto
 from backend.images import SUBSCRIPTION_IMG
 from backend.services.exceptions import BannedUser, InsufficientBalance, PlanNotFound, TooEarlyToRenew, UserNotFound
 from bot.navigation.purchase.keyboards import fail_purchase_kb, success_purchase_kb
-from bot.utils.maintenance import answer_maintenance_callback, is_maintenance_error
 
 router = Router()
 
@@ -28,7 +27,7 @@ async def purchase_plan_clb(
     plan_id = int(plan_id_str)
 
     try:
-        sub = await bot_api.buy_subscription(tg_id=tg_id, plan_id=plan_id, auto_renew=True)
+        await bot_api.buy_subscription(tg_id=tg_id, plan_id=plan_id, auto_renew=True)
     except UserNotFound:
         await callback.answer("Пользователь не найден", show_alert=True)
         return
