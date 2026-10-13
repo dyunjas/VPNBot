@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.apps.common import FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR, create_fastapi_app, mount_frontend_assets, register_legal_routes, proxy_api_request
 from api.public.endpoints import router as public_router
+from api.public.endpoints import public_catalog
 
 LANDING_REACT_DIST = FRONTEND_BUILD_DIR / "landing"
 
@@ -31,6 +32,9 @@ def create_app():
     register_legal_routes(app)
 
     app.include_router(public_router)
+
+    # Also works when a reverse proxy reserves /api for a separate upstream.
+    app.add_api_route("/catalog.json", public_catalog, methods=["GET"])
 
     @app.get("/api/auth/session")
     async def landing_session(request: Request):

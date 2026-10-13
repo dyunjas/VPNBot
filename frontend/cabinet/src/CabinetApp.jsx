@@ -1,3 +1,4 @@
+import { DocumentLinks } from "../../shared/DocumentLinks.jsx";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Menu, CreditCard, Gift, History as HistoryIcon, LogOut, Headphones, Plus, ShieldCheck, Smartphone, Wallet } from "lucide-react";
 import { LunetSkeleton, useActionLock } from "../../shared/controls.jsx";
@@ -12,7 +13,7 @@ const initialView=()=>{const view=new URLSearchParams(location.search).get("view
 const support="https://t.me/LunetVpnSupport";
 
 function Avatar({user,small=false}) {return <span className={`account-avatar ${small?"small":""}`} aria-hidden="true"><img src="/miniapp/assets/profile.png" alt=""/></span>;}
-function Footer(){return <footer className="cabinet-footer"><div className="cabinet-container footer-main"><div><a className="brand" href="https://lunet.pro/"><img src="/miniapp/assets/lunet-logo.png" alt="" width="34" height="34"/><b>Lunet<span>VPS</span></b></a><p>Твой интернет. Твои правила.<br/>Подписка и устройства в одном кабинете.</p></div><nav aria-label="Помощь"><a href={support} target="_blank" rel="noopener noreferrer">Поддержка</a><a href="https://lunet.pro/#how">Как подключиться</a><a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Telegram-бот</a></nav><nav aria-label="Документы"><a href="/terms/privacy/">Политика конфиденциальности</a><a href="/terms/">Пользовательское соглашение</a><a href="/terms/offer/">Публичная оферта</a></nav></div><div className="cabinet-container footer-bottom"><span>© {new Date().getFullYear()} Lunet</span><span>На связи. С любого устройства.</span></div></footer>;}
+function Footer(){return <footer className="cabinet-footer"><div className="cabinet-container footer-main"><div><a className="brand" href="https://lunet.pro/"><img src="/miniapp/assets/lunet-logo.png" alt="" width="34" height="34"/><b>Lunet<span>VPS</span></b></a><p>Твой интернет. Твои правила.<br/>Подписка и устройства в одном кабинете.</p></div><nav aria-label="Помощь"><a href={support} target="_blank" rel="noopener noreferrer">Поддержка</a><a href="https://lunet.pro/#how">Как подключиться</a><a href="https://lunet.pro/#faq">Частые вопросы</a><a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Telegram-бот</a></nav><nav aria-label="Документы"><DocumentLinks/></nav></div><div className="cabinet-container footer-bottom"><span>© {new Date().getFullYear()} Lunet</span><span>На связи. С любого устройства.</span></div></footer>;}
 
 export default function Cabinet(){
   const [view,setView]=useState(initialView),[menuMode,setMenuMode]=useState("");

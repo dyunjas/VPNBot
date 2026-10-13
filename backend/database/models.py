@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 import enum
 from sqlalchemy import (
     String,
+    Text,
     BigInteger,
     Integer,
     Boolean,
@@ -23,6 +24,14 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 class Base(DeclarativeBase):
     pass
+
+
+class LegalDocument(Base):
+    __tablename__ = "vpn_legal_documents"
+    key: Mapped[str] = mapped_column(String(32), primary_key=True)
+    html: Mapped[str] = mapped_column(Text, nullable=False)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
 
 
 class SecurityRecord(Base):

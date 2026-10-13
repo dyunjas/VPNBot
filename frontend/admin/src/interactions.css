@@ -1,4 +1,8 @@
 /* Final presentation layer; no theme colors are replaced. */
+.sidebar-brand { gap:9px; }
+.sidebar-brand .logo-mark,.sidebar-brand .logo-mark img { width:34px; height:34px; padding:0; }
+.sidebar-brand .sidebar-brand-name { font-size:25px; font-weight:650; letter-spacing:-.035em; white-space:nowrap; }
+.sidebar-brand-name span { margin-left:6px; font-size:10px; letter-spacing:.09em; vertical-align:middle; color:var(--muted); }
 .ui-card { border-radius: var(--lunet-radius); }
 .ui-button { min-height: 40px; border-radius: var(--lunet-control-radius); }
 .ui-button-icon { width: 40px; }
@@ -6,6 +10,8 @@
 .ui-button:focus-visible { outline: 2px solid var(--lunet-ring); outline-offset: 3px; }
 .ui-button:not(:disabled):hover { transform: none; }
 .ui-button:not(:disabled):active { transform: scale(.98); }
+.ui-refresh-button { min-height:40px; transition:background-color .15s,border-color .15s,transform .1s; }
+.ui-refresh-icon { display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; flex:0 0 14px; }
 .page { min-width: 0; max-width: 1600px; margin-inline: auto; width: 100%; }
 .page-heading h1 { letter-spacing: -.035em; line-height: 1.2; font-weight: 650; }
 .card-header h2 { font-weight: 650; }
@@ -58,3 +64,4 @@ tbody tr:focus-visible { outline: 2px solid var(--lunet-ring); outline-offset: -
   .lunet-chart-stage { height: 220px; }
   .plan-main strong { white-space: normal; }
 }
+.admin-value-skeleton{display:inline-block;width:92px;height:1em;vertical-align:middle;border-radius:5px;background:var(--lunet-skeleton,#e4e4e7);animation:admin-value-pulse 1.4s ease-in-out infinite}.health-row .admin-value-skeleton{width:70px}@keyframes admin-value-pulse{0%,100%{opacity:.4}50%{opacity:1}}@media(prefers-reduced-motion:reduce){.admin-value-skeleton{animation:none}}

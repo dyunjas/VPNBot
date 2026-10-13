@@ -36,6 +36,23 @@ async def _safe_action_details(request: Request) -> tuple[str | None, str | None
     if not isinstance(data, dict):
         return None, None
     action = str(data.get("action") or "").strip()
+    if request.url.path.startswith("/api/admin/servers"):
+        path = request.url.path
+        if path.endswith("/actions/restart-all"):
+            return "Перезапуск всех серверов Remnawave", f"Принудительно: {bool(data.get('forceRestart'))}"
+        if path.endswith("/actions/bulk"):
+            ids = data.get("uuids") or []
+            return "Массовая команда Remnawave", f"Команда: {action}; серверы: {', '.join(str(value) for value in ids[:100])}"
+        if request.method == "PATCH":
+            return "Изменение сервера Remnawave", f"Сервер {path.split('/')[-1]}; поля: {', '.join(data.keys())}"
+        if path.rstrip("/") == "/api/admin/servers" and request.method == "POST":
+            return "Создание сервера Remnawave", None
+        node_actions = {"enable":"Включение ноды Remnawave", "disable":"Отключение ноды Remnawave", "restart":"Перезапуск ноды Remnawave", "force_restart":"Принудительный перезапуск ноды Remnawave", "reset_traffic":"Сброс трафика ноды Remnawave"}
+        node_actions["delete"] = "Удаление сервера Remnawave"
+        if action in node_actions:
+            node_uuid = request.url.path.split("/")[-2]
+            return node_actions[action], f"Нода {node_uuid}"
+        return None, None
     labels = {
         "add_balance": "Начисление баланса",
         "sub_balance": "Списание баланса",

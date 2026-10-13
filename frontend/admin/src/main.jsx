@@ -1,3 +1,4 @@
+import RefreshButton from "./RefreshButton.jsx";
 import { NotFound } from "../../shared/NotFound.jsx";
 import { LunetLoader, LunetSkeleton, useDialogFocus, ModalFrame as SharedModalFrame } from "../../shared/controls.jsx";
 import { Notice, CabinetToast } from "../../shared/account/components.jsx";
@@ -5,6 +6,7 @@ import { LunetSelect } from "../../shared/Select.jsx";
 import lunetLogo from "../../static/assets/lunet-logo.png";
 import profileAvatar from "../../static/assets/profile.png";
 import { SessionGate } from "../../shared/SessionGate.jsx";
+import ServersPage from "./ServersPage.jsx";
 import { Children, cloneElement, lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { fieldLabels, translateValue, translateError } from "./translations.js";
 import { createRoot } from "react-dom/client";
@@ -110,6 +112,7 @@ const nav = [
     group: "Система",
     items: [
       { key: "maintenance", label: "Обслуживание", icon: Server },
+      { key: "servers", label: "Серверы", icon: Server },
       { key: "broadcast", label: "Рассылки", icon: Megaphone },
       { key: "legal", label: "Документы", icon: FileText },
       { key: "admins", label: "Администраторы", icon: UserCog },
@@ -237,11 +240,8 @@ function Shell({ page, children, initialAdmin, onNavigate }) {
       {notice && <CabinetToast message={notice} kind="error" onClose={()=>setNotice("")}/>}
       <aside ref={sidebarRef} role={open?"dialog":undefined} aria-modal={open||undefined} aria-label="Меню администратора" className={`sidebar ${open ? "open" : ""}`}>
         <div className="sidebar-brand">
-          <span className="brand-mark logo-mark"><img src={lunetLogo} alt="" width="38" height="38" /></span>
-          <span>
-            <b>Lunet</b>
-            <small>VPS · Панель управления</small>
-          </span>
+          <span className="brand-mark logo-mark"><img src={lunetLogo} alt="" width="34" height="34" /></span>
+          <b className="sidebar-brand-name">Lunet<span>VPS</span></b>
         </div>
         <nav>
           {visibleNav.map((group) => (
@@ -337,7 +337,7 @@ function Shell({ page, children, initialAdmin, onNavigate }) {
               <p className="muted">
                 {page === "dashboard"
                   ? "Обзор состояния сервиса и ключевых показателей"
-                  : "Управление разделом и данными системы"}
+                  : page === "servers" ? "Состояние и управление серверами" : "Управление разделом и данными системы"}
               </p>
             </div>
           </div>}
@@ -348,19 +348,28 @@ function Shell({ page, children, initialAdmin, onNavigate }) {
   );
 }
 
+function AdminValue({loading,children}) {
+  return loading?<span className="admin-value-skeleton" role="status" aria-label="Загрузка значения"><span className="lunet-sr-only">Загрузка значения</span></span>:children;
+}
+
 function Dashboard() {
   const [data, setData] = useState(null),
     [error, setError] = useState(""),
     [chartFrom, setChartFrom] = useState(""),
-    [chartTo, setChartTo] = useState("");
+    [chartTo, setChartTo] = useState(""),
+    [loading, setLoading] = useState(true);
+  const requestSequence=useRef(0);
   const load = () => {
+    const attempt=++requestSequence.current;
+    setLoading(true);setError("");
     const params =
       chartFrom || chartTo
         ? `?chart_from=${chartFrom || chartTo}&chart_to=${chartTo || chartFrom}`
         : "";
     return api(`/stats${params}`)
-      .then(setData)
-      .catch((e) => setError(e.message));
+      .then(value=>{if(attempt===requestSequence.current)setData(value)})
+      .catch(e=>{if(attempt===requestSequence.current)setError(e.message)})
+      .finally(()=>{if(attempt===requestSequence.current)setLoading(false)});
   };
   useEffect(() => {
     load();
@@ -393,7 +402,7 @@ function Dashboard() {
               </div>
               <div>
                 <span className="muted">{label}</span>
-                <strong>{value ?? "—"}</strong>
+                <strong><AdminValue loading={loading}>{value ?? "Нет данных"}</AdminValue></strong>
               </div>
             </Card>
           ))}
@@ -431,14 +440,12 @@ function Dashboard() {
           <CardHeader
             title="Сводка"
             action={
-              <Button variant="outline" size="sm" onClick={load}>
-                <RefreshCw size={14} /> Обновить
-              </Button>
+              <RefreshButton onClick={load} loading={loading}/>
             }
           />
           {error ? (
             <Notice kind="error" role="alert" onClose={()=>setError("")}>{error}</Notice>
-          ) : data ? (
+          ) : !loading && data ? (
             <div className="chart-summary">
               <div>
                 <strong>{Number(stats.month_revenue ?? 0).toLocaleString("ru-RU")} ₽</strong>
@@ -453,9 +460,9 @@ function Dashboard() {
         <Card>
           <CardHeader title="Подписки и платежи" />
           <div className="health-list">
-            <div className="health-row"><span>Доля пользователей с подпиской</span><b>{data && stats.subscribed_users != null ? `${stats.total_users ? Math.round(stats.subscribed_users / stats.total_users * 100) : 0}%` : "—"}</b></div>
-            <div className="health-row"><span>Средняя оплаченная операция</span><b>{data ? `${stats.paid_transactions ? Math.round(stats.total_revenue / stats.paid_transactions).toLocaleString("ru-RU") : 0} ₽` : "—"}</b></div>
-            <div className="health-row"><span>Выручка за месяц</span><b>{data ? `${Number(stats.month_revenue || 0).toLocaleString("ru-RU")} ₽` : "—"}</b></div>
+            <div className="health-row"><span>Доля пользователей с подпиской</span><b><AdminValue loading={loading}>{data && stats.subscribed_users != null ? `${stats.total_users ? Math.round(stats.subscribed_users / stats.total_users * 100) : 0}%` : "Нет данных"}</AdminValue></b></div>
+            <div className="health-row"><span>Средняя оплаченная операция</span><b><AdminValue loading={loading}>{data ? `${stats.paid_transactions ? Math.round(stats.total_revenue / stats.paid_transactions).toLocaleString("ru-RU") : 0} ₽` : "Нет данных"}</AdminValue></b></div>
+            <div className="health-row"><span>Выручка за месяц</span><b><AdminValue loading={loading}>{data ? `${Number(stats.month_revenue || 0).toLocaleString("ru-RU")} ₽` : "Нет данных"}</AdminValue></b></div>
           </div>
         </Card>
       </div>
@@ -1060,17 +1067,30 @@ function MaintenancePage() {
       <Card className={`maintenance-control-card ${maintenance?.enabled ? "is-enabled" : ""}`}>
         <div className="card-header"><div><h2>Технические работы</h2><p className="muted">При включении пользователи увидят сообщение о временной недоступности сервиса.</p></div><Badge tone={maintenance?.enabled ? "danger" : "success"}>{maintenance?.enabled ? "Включены" : "Сервис работает"}</Badge></div>
         <label className="ui-field"><span>Сообщение для пользователей</span><textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="3" /></label>
-        <div className="maintenance-actions"><Button variant={maintenance?.enabled ? "danger" : "default"} loading={busy} disabled={busy} onClick={toggle}>{busy ? "Сохраняем…" : maintenance?.enabled ? "Завершить техработы" : "Включить техработы"}</Button><Button variant="outline" disabled={busy} onClick={load}><RefreshCw size={14}/> Обновить данные</Button></div>
+        <div className="maintenance-actions"><Button variant={maintenance?.enabled ? "danger" : "default"} loading={busy} disabled={busy} onClick={toggle}>{busy ? "Сохраняем…" : maintenance?.enabled ? "Завершить техработы" : "Включить техработы"}</Button><RefreshButton disabled={busy} loading={loading} onClick={load}>Обновить данные</RefreshButton></div>
       </Card>
       <div className="maintenance-grid"><Card><CardHeader title="Сервисы"/><div className="health-list">{(health?.items || []).map((item) => <div className="health-row" key={item.key}><span>{item.label}</span><Badge tone={item.status === "ok" ? "success" : item.status === "warn" ? "warn" : "danger"}>{item.status === "ok" ? "Работает" : item.status === "warn" ? "Проверьте" : "Ошибка"}</Badge></div>)}</div></Card><Card><CardHeader title="Нагрузка сервера" action={<span className="muted">{loadState?.hostname || "—"}</span>}/><div className="server-metrics">{(loadState?.metrics || []).map((metric) => <div className="server-metric" key={metric.key}><div><span>{metric.label}</span><b>{metric.value || "—"}</b></div><div className="metric-bar"><i className={`metric-${metric.status || "ok"}`} style={{ width: `${Math.min(100, Math.max(0, Number(metric.percent) || 0))}%` }}/></div></div>)}</div><p className="muted">Аптайм: {loadState?.summary?.uptime || "—"} · Проверено: {friendlyValue("checked_at", loadState?.checked_at)}</p></Card></div>
     </>}
   </div>;
 }
-function LegalDialog({ row, onClose, onUpdated }) {
-  const [html, setHtml] = useState(row?.details?.content || ""), [busy, setBusy] = useState(false), [error, setError] = useState("");
-  if (!row) return null;
-  const save = async () => { setBusy(true); setError(""); try { await api(`/legal/${row.key}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ html }) }); await onUpdated(); onClose(); } catch (e) { setError(e.message); } finally { setBusy(false); } };
-  return <ModalFrame onClose={onClose} busy={busy}><section className="dialog" role="dialog" aria-modal="true"><div className="dialog-head"><div><div className="eyebrow">Документ</div><h2>{row.title || row.key}</h2><p className="muted">Поддерживаются HTML-теги форматирования. Скрипты и опасные атрибуты запрещены.</p></div><Button variant="ghost" size="icon" onClick={onClose} data-dialog-close="true" aria-label="Закрыть"><X size={17}/></Button></div><label className="ui-field"><span>Содержимое документа</span><textarea className="legal-editor" rows="18" value={html} onChange={(e) => setHtml(e.target.value)} /></label>{error && <Notice kind="error" role="alert" onClose={()=>setError("")}>{error}</Notice>}<div className="dialog-actions"><Button variant="outline" onClick={onClose} data-dialog-close="true" aria-label="Закрыть">Отмена</Button><Button loading={busy} disabled={busy} onClick={save}>{busy ? "Сохраняем…" : "Сохранить документ"}</Button></div></section></ModalFrame>;
+function LegalDialog({row,onClose,onUpdated}) {
+  const [html,setHtml]=useState(""),[revision,setRevision]=useState(null),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[attempt,setAttempt]=useState(0);
+  useEffect(()=>{
+    let current=true;setLoading(true);setError("");setRevision(null);
+    api(`/legal/${row.key}`).then(document=>{if(current){setHtml(document.content??document.html??"");setRevision(document.revision)}}).catch(e=>{if(current)setError(e.message)}).finally(()=>{if(current)setLoading(false)});
+    return()=>{current=false};
+  },[row.key,attempt]);
+  const save=async()=>{
+    if(loading||busy||revision===null||!html.trim())return;
+    setBusy(true);setError("");
+    try{await api(`/legal/${row.key}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({html,revision})});await onUpdated();onClose()}
+    catch(e){setError(e.message)}finally{setBusy(false)}
+  };
+  return <ModalFrame onClose={onClose} busy={busy}><section className="dialog" role="dialog" aria-modal="true"><div className="dialog-head"><div><div className="eyebrow">Документ</div><h2>{row.title||row.key}</h2><p className="muted">Изменения публикуются для лендинга, кабинета и мини-приложения. Поддерживаются безопасные HTML-теги форматирования.</p></div><Button variant="ghost" size="icon" data-dialog-close="true" aria-label="Закрыть"><X size={17}/></Button></div>
+    {loading?<LunetSkeleton rows={3} label="Загружаем текст документа…"/>:<><label className="ui-field"><span>Текст документа</span><textarea className="legal-editor" rows="18" value={html} disabled={busy||revision===null} onChange={e=>setHtml(e.target.value)}/></label><a href={`https://lunet.pro/terms/${row.key==="terms"?"":row.key+"/"}`} target="_blank" rel="noopener noreferrer">Открыть опубликованный документ</a></>}
+    {error&&<Notice kind="error" role="alert"><span>{error}</span><Button variant="outline" disabled={busy} onClick={()=>setAttempt(value=>value+1)}>Загрузить актуальный текст</Button></Notice>}
+    <div className="dialog-actions"><Button variant="outline" data-dialog-close="true" disabled={busy}>Отмена</Button><Button loading={busy} disabled={loading||revision===null||!html.trim()} onClick={save}>Сохранить документ</Button></div>
+  </section></ModalFrame>;
 }
 function AdminLoginJournalDialog({ onClose }) {
   const [items, setItems] = useState([]);
@@ -1252,7 +1272,7 @@ function ResourcePage({ page }) {
     if (page === "users") setSelectedUserId(Number(row.id));
     if (page === "admins" && row.id) {
       try { const details = await api(`/admins/${row.id}/audit`); if (requestId === selectionRequest.current) setSelected({ ...row, audit: details }); } catch (e) { if (requestId === selectionRequest.current) setError(e.message); }
-    } else if ((page === "users" || page === "subscriptions" || page === "partners" || page === "legal") && (row.id || row.key)) {
+    } else if ((page === "users" || page === "subscriptions" || page === "partners") && (row.id || row.key)) {
       try {
         const details = page === "users" ? await api(`/users/${row.id}`) : page === "subscriptions" ? await api(`/subscriptions/${row.id}/details`) : page === "partners" ? await api(`/partners/${row.id}/details`) : await api(`/legal/${row.key}`);
         if (requestId === selectionRequest.current) setSelected({ ...(details.user || {}), ...(details.subscription || {}), ...(details.link || {}), ...row, details });
@@ -1293,9 +1313,7 @@ function ResourcePage({ page }) {
           />
         </div>
         {filterConfig && <div className="table-filter"><Dropdown value={filter} onChange={value => { setFilter(value); setTablePage(1); }} options={filterConfig.options} ariaLabel={filterConfig.label}/></div>}
-        <Button variant="outline" onClick={load}>
-          <RefreshCw size={14} /> Обновить
-        </Button>
+        <RefreshButton onClick={load} loading={loading}/>
         {["subscriptions", "promocodes", "partners", "admins", "broadcast"].includes(page) && <Button onClick={() => setCreateOpen(true)}>Добавить</Button>}
       </Card>
       {page === "admins" && <Button variant="outline" onClick={() => setLoginJournalOpen(true)}>Журнал входов</Button>}
@@ -1384,7 +1402,7 @@ function ResourcePage({ page }) {
       {page === "admins" && selected && <AdminAuditDialog admin={selected} onClose={closeSelection} onSaved={load} />}
       {page === "admins" && loginJournalOpen && <AdminLoginJournalDialog onClose={() => setLoginJournalOpen(false)} />}
       {page === "subscriptions" && <SubscriptionDialog row={selected?.details?.subscription || selected} onClose={closeSelection} onUpdated={async () => { await load(); const details = await api(`/subscriptions/${selected.id}/details`); setSelected({ ...selected, ...(details.subscription || {}), details }); }} />}
-      {page === "legal" && <LegalDialog row={selected} onClose={closeSelection} onUpdated={load} />}
+      {page === "legal" && selected && <LegalDialog key={selected.key} row={selected} onClose={closeSelection} onUpdated={load} />}
       {createOpen && (
         <CreateDialog
           page={page}
@@ -1458,15 +1476,7 @@ function PlansPage() {
   return (
     <div className="stack">
       <Card className="toolbar-card">
-        <div className="toolbar-copy">
-          <strong>Порядок тарифов</strong>
-          <span className="muted">
-            Перетащите строку вверх или вниз — порядок сохранится в API.
-          </span>
-        </div>
-        <Button variant="outline" onClick={load}>
-          <RefreshCw size={14} /> Обновить
-        </Button>
+        <RefreshButton onClick={load} loading={loading}/>
         <Button onClick={() => setCreateOpen(true)}>Добавить тариф</Button>
       </Card>
       <Card className="table-card">
@@ -1699,7 +1709,7 @@ function AdminWorkspace({ admin, page, navigate }) {
   const allowedPage = admin.role === "support" && !new Set(["users","subscriptions","transactions","referrals"]).has(page) ? "users" : page;
   useEffect(() => { if (allowedPage !== page) navigate(allowedPage, true); }, [allowedPage, page]);
   return <Shell page={allowedPage} initialAdmin={admin} onNavigate={navigate}>
-    {allowedPage === "dashboard" ? <Dashboard key={allowedPage}/> : allowedPage === "plans" ? <PlansPage key={allowedPage}/> : allowedPage === "maintenance" ? <MaintenancePage key={allowedPage}/> : <ResourcePage key={allowedPage} page={allowedPage}/>}
+    {allowedPage === "dashboard" ? <Dashboard key={allowedPage}/> : allowedPage === "plans" ? <PlansPage key={allowedPage}/> : allowedPage === "maintenance" ? <MaintenancePage key={allowedPage}/> : allowedPage === "servers" ? <ServersPage api={api}/> : <ResourcePage key={allowedPage} page={allowedPage}/>}
   </Shell>;
 }
 
@@ -1717,7 +1727,7 @@ function AdminApp() {
     setPage(next);
   };
   if (page === "login") return <AdminLogin />;
-  if (page !== "dashboard" && page !== "plans" && page !== "maintenance" && !resourceConfig[page]) {
+  if (page !== "dashboard" && page !== "plans" && page !== "maintenance" && page !== "servers" && !resourceConfig[page]) {
     return <AdminNotFound />;
   }
   return (

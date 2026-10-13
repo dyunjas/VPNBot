@@ -153,20 +153,21 @@ def create_fastapi_app(*, title: str, with_db: bool = False) -> FastAPI:
 
 
 def register_legal_routes(app: FastAPI) -> None:
+    from backend.services.legal_documents import render_legal_document
     @app.get("/terms")
     @app.get("/terms/")
     async def terms():
-        return FileResponse(LEGAL_DIR / "terms.html")
+        return no_cache_html(await render_legal_document("terms"))
 
     @app.get("/terms/privacy")
     @app.get("/terms/privacy/")
     async def terms_privacy():
-        return FileResponse(LEGAL_DIR / "privacy.html")
+        return no_cache_html(await render_legal_document("privacy"))
 
     @app.get("/terms/offer")
     @app.get("/terms/offer/")
     async def terms_offer():
-        return FileResponse(LEGAL_DIR / "offer.html")
+        return no_cache_html(await render_legal_document("offer"))
 
 
 async def proxy_api_request(request: Request, path: str, *, source_name: str) -> Response:

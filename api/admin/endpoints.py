@@ -23,6 +23,7 @@ from api.admin.routes import (
     system_router,
     diagnostics_router,
     exports_router,
+    servers_router,
 )
 
 router = APIRouter(prefix="/api/admin", tags=["admin-web"], dependencies=[Depends(admin_route_guard)])
@@ -42,3 +43,4 @@ router.include_router(partners_router)
 router.include_router(system_router)
 router.include_router(diagnostics_router)
 router.include_router(exports_router)
+router.include_router(servers_router)

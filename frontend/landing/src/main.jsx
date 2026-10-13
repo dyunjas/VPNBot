@@ -1,3 +1,4 @@
+import { DocumentLinks } from "../../shared/DocumentLinks.jsx";
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ArrowRight, Check, CreditCard, Menu, MessageCircle, Monitor, Plus, ShieldCheck, Smartphone, Wallet, X, Zap } from "lucide-react";
@@ -60,13 +61,21 @@ function useCatalog() {
     const timeout = setTimeout(()=>controller.abort(), 12000);
     let disposed = false;
     setState(s=>({...s, loading:true, error:false}));
-    fetch("/api/public/catalog", { signal: controller.signal, headers:{Accept:"application/json"} }).then(async response=>{
-      if (!response.ok) throw new Error("catalog");
-      const data = await response.json();
-      if (!Array.isArray(data.plans)) throw new Error("catalog");
-      const plans = data.plans.filter(p=>!p.is_hidden && Number.isFinite(Number(p.price)) && Number(p.price)>=0);
-      if (!disposed) setState({loading:false, plans, traffic: Number(data.traffic_price_per_gb)>0 ? Number(data.traffic_price_per_gb) : null, trafficMinimum:Math.max(1, Number(data.min_traffic_purchase_gb)||1), error:false});
-    }).catch(()=>{if(!disposed)setState({loading:false,plans:[],traffic:null,error:true});}).finally(()=>clearTimeout(timeout));
+    (async()=>{
+      let failure;
+      for(const url of ["/api/public/catalog","/catalog.json"]){
+        try{
+          const response=await fetch(url,{signal:controller.signal,cache:"no-store",headers:{Accept:"application/json"}});
+          if(!response.ok || !/application\/json/i.test(response.headers.get("content-type")||""))throw new Error("catalog");
+          const data=await response.json();
+          if(!Array.isArray(data.plans))throw new Error("catalog");
+          const plans=data.plans.filter(p=>!p.is_hidden&&Number.isFinite(Number(p.price))&&Number(p.price)>=0);
+          if(!disposed)setState({loading:false,plans,traffic:Number(data.traffic_price_per_gb)>0?Number(data.traffic_price_per_gb):null,trafficMinimum:Math.max(1,Number(data.min_traffic_purchase_gb)||1),error:false});
+          return;
+        }catch(error){failure=error;if(controller.signal.aborted)throw error}
+      }
+      throw failure;
+    })().catch(()=>{if(!disposed)setState({loading:false,plans:[],traffic:null,error:true})}).finally(()=>clearTimeout(timeout));
     return ()=>{disposed=true;clearTimeout(timeout);controller.abort();};
   },[attempt]);
   return {...state, retry:()=>setAttempt(n=>n+1)};
@@ -138,7 +147,7 @@ function App() {
       <section className="section faq-section container" id="faq" data-reveal><div className="section-heading"><span className="eyebrow">ОТВЕТЫ РЯДОМ</span><h2>Есть вопросы?</h2><p>Всё, что нужно знать перед подключением.</p></div><div className="faq-list">{questions.map(([question,answer],index)=><Faq key={question} question={question} answer={answer} index={index}/>)}</div></section>
       <section className="cta container" id="support" data-reveal><span className="badge dark-badge">ТВОЙ СЛЕДУЮЩИЙ ШАГ</span><h2>Готов попробовать Lunet?</h2><p>Выбери подходящий тариф и настрой VPN за несколько простых шагов.</p><div className="hero-actions"><Button>Подключить Lunet</Button><a className="text-link" href={supportUrl} target="_blank" rel="noopener noreferrer"><MessageCircle size={18}/> Написать в поддержку</a></div></section>
     </main>
-    <footer><div className="footer-main container"><div className="footer-brand"><a className="brand" href="#top"><img src="/miniapp/assets/lunet-logo.png" alt="" width="34" height="34"/><b>Lunet<span>VPS</span></b></a><p>Твой интернет. Твои правила.<br/>Подписка и устройства в одном кабинете.</p></div><nav className="footer-links" aria-label="Сервис"><a href={cabinetUrl}>Личный кабинет</a><a href="#plans">Тарифы</a><a href="#how">Как подключиться</a><a href={botUrl} target="_blank" rel="noopener noreferrer">Telegram-бот</a></nav><nav className="footer-links" aria-label="Помощь и документы"><a href={supportUrl} target="_blank" rel="noopener noreferrer">Поддержка</a><a href="#faq">Частые вопросы</a><a href="/terms/privacy/">Политика конфиденциальности</a><a href="/terms/">Пользовательское соглашение</a><a href="/terms/offer/">Публичная оферта</a></nav></div><div className="footer-bottom container"><span>© {new Date().getFullYear()} Lunet</span><span>На связи. С любого устройства.</span></div></footer>
+    <footer><div className="footer-main container"><div className="footer-brand"><a className="brand" href="#top"><img src="/miniapp/assets/lunet-logo.png" alt="" width="34" height="34"/><b>Lunet<span>VPS</span></b></a><p>Твой интернет. Твои правила.<br/>Подписка и устройства в одном кабинете.</p></div><nav className="footer-links" aria-label="Сервис"><a href={cabinetUrl}>Личный кабинет</a><a href="#plans">Тарифы</a><a href="#how">Как подключиться</a><a href={botUrl} target="_blank" rel="noopener noreferrer">Telegram-бот</a></nav><nav className="footer-links" aria-label="Помощь и документы"><a href={supportUrl} target="_blank" rel="noopener noreferrer">Поддержка</a><a href="#faq">Частые вопросы</a><DocumentLinks/></nav></div><div className="footer-bottom container"><span>© {new Date().getFullYear()} Lunet</span><span>На связи. С любого устройства.</span></div></footer>
     <CookieNotice/>
   </div>;
 }

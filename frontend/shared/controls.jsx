@@ -1,4 +1,19 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
+export function useCopyFeedback() {
+  const [notice, setNotice] = useState(null);
+  const timer = useRef(null);
+  useEffect(()=>()=>clearTimeout(timer.current),[]);
+  const copy = async value => {
+    clearTimeout(timer.current);
+    try { await navigator.clipboard.writeText(String(value)); setNotice({message:"Ссылка скопирована",kind:"success"}); }
+    catch { setNotice({message:"Не удалось скопировать. Выделите ссылку и скопируйте вручную.",kind:"error"}); }
+    timer.current=setTimeout(()=>setNotice(null),4000);
+  };
+  const notification=notice?createPortal(<div className={`lunet-copy-toast ${notice.kind}`} role={notice.kind==="error"?"alert":"status"}><span>{notice.message}</span><button type="button" aria-label="Закрыть уведомление" onClick={()=>setNotice(null)}>×</button></div>,document.body):null;
+  return {copy,notification};
+}
 
 // Amicro AppleRadialSpinner: same eight bars, geometry and staggered fade.
 // See AMICRO-NOTICE.md. CSS is scoped and uses the surrounding Lunet color.
@@ -94,15 +109,8 @@ export function ModalFrame({ children, onClose, busy = false }) {
 }
 
 export function CopyValue({ value, label = "Копировать" }) {
-  const [result, setResult] = useState("");
-  const timer = useRef(null);
-  useEffect(() => () => clearTimeout(timer.current), []);
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(String(value)); setResult("Скопировано"); }
-    catch { setResult("Не удалось скопировать"); }
-    clearTimeout(timer.current); timer.current = setTimeout(() => setResult(""), 2500);
-  };
-  return <span className="lunet-copy"><span>{value || "—"}</span>{value && <button type="button" className="lunet-copy-button" onClick={copy} aria-label={`${label}: ${value}`}>Копировать</button>}<span className="lunet-sr-only" role="status">{result}</span>{result && <small>{result}</small>}</span>;
+  const {copy,notification}=useCopyFeedback();
+  return <span className="lunet-copy"><span>{value || "—"}</span>{value && <button type="button" className="lunet-copy-button" onClick={()=>copy(value)} aria-label={label}>Копировать</button>}{notification}</span>;
 }
 
 export function SubscriptionNotice({ end }) {

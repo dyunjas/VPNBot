@@ -11,6 +11,7 @@ ADMIN_PAGES = (
     "login",
     "dashboard",
     "maintenance",
+    "servers",
     "diagnostics",
     "admins",
     "legal",

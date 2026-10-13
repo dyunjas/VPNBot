@@ -13,8 +13,8 @@ import { Addons, Billing, Extras, History, Plans } from "../../shared/account/Co
 import { Devices, SubscriptionDetails, SubscriptionSummary } from "../../shared/account/SubscriptionViews.jsx";
 import { Profile } from "./ProfileView.jsx";
 
-const init=()=>window.Telegram?.WebApp?.initData||new URLSearchParams(location.search).get("initData")||"";
-async function api(path,body={}){const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({initData:init(),...body})});const d=await r.json().catch(()=>({}));if(!r.ok){const error=Error(d.detail||d.error||`Error ${r.status}`);if(r.status===403&&d.detail==="banned")error.code="banned";throw error}return d}
+import { api } from "./telegram.js";
+import { DocumentLinks } from "../../shared/DocumentLinks.jsx";
 function App(){
   const [view,setView]=useState("subscription"),[data,setData]=useState({});
   const [busy,setBusy]=useState(false),[amount,setAmount]=useState(500),[promo,setPromo]=useState("");
@@ -57,7 +57,7 @@ function App(){
       else notify("Счёт создан. Статус оплаты появится в истории платежей.","success");
     }catch(e){notify(e.message,"error");}finally{setBusy(false);}
   });
-  useEffect(()=>{if(!data.profile)return;const refresh=()=>load();window.addEventListener("focus",refresh);const tg=window.Telegram?.WebApp;const activated=event=>{if(event.isActive)refresh();};tg?.onEvent?.("activated",activated);return()=>{window.removeEventListener("focus",refresh);tg?.offEvent?.("activated",activated);};},[Boolean(data.profile)]);
+  useEffect(()=>{const refresh=()=>load();window.addEventListener("focus",refresh);const tg=window.Telegram?.WebApp;const activated=event=>{if(event.isActive)refresh();};tg?.onEvent?.("activated",activated);return()=>{window.removeEventListener("focus",refresh);tg?.offEvent?.("activated",activated);};},[Boolean(data.profile)]);
   const links=[["subscription","Моя подписка",ShieldCheck],["plans","Купить",CreditCard],["billing","Платежи",Wallet],["history","История",HistoryIcon],["devices","Устройства",Smartphone],["extras","Бонусы",Gift]];
   const activeView=view==="details"?"subscription":view;
   const titles={subscription:["Моя подписка","Всё о твоём подключении Lunet"],details:["Моя подписка","Подключение, LTE-трафик и управление доступом"],plans:["Выбери тариф Lunet","Твой срок, твой LTE-трафик, твои устройства"],billing:["Пополнение баланса","Выбери сумму и удобный способ оплаты"],history:["История платежей","Твои операции и их актуальный статус"],devices:["Мои устройства","Управляй устройствами своей подписки"],extras:["Бонусы и подарки","Промокоды и доступ для близких"]};
@@ -86,7 +86,7 @@ function App(){
       <div className="footer-main">
         <div className="footer-brand"><a className="brand" href="https://lunet.pro/" target="_blank" rel="noopener noreferrer"><img src="/miniapp/assets/lunet-logo.png" alt="" width="34" height="34"/><b>Lunet<span>VPS</span></b></a><p>Твой интернет. Твои правила.<br/>Подписка и устройства в одном кабинете.</p></div>
         <nav aria-label="Сервис"><button onClick={()=>go("subscription")}>Моя подписка</button><button onClick={()=>go("plans")}>Тарифы</button><a href="https://lunet.pro/#how" target="_blank" rel="noopener noreferrer">Как подключиться</a><a href="https://t.me/LunetVpnBot" target="_blank" rel="noopener noreferrer">Telegram-бот</a></nav>
-        <nav aria-label="Помощь и документы"><a href="https://t.me/LunetVpnSupport" target="_blank" rel="noopener noreferrer">Поддержка</a><a href="https://lunet.pro/#faq" target="_blank" rel="noopener noreferrer">Частые вопросы</a><a href="/terms/privacy/" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a><a href="/terms/" target="_blank" rel="noopener noreferrer">Пользовательское соглашение</a><a href="/terms/offer/" target="_blank" rel="noopener noreferrer">Публичная оферта</a></nav>
+        <nav aria-label="Помощь и документы"><a href="https://t.me/LunetVpnSupport" target="_blank" rel="noopener noreferrer">Поддержка</a><a href="https://lunet.pro/#faq" target="_blank" rel="noopener noreferrer">Частые вопросы</a><DocumentLinks external/></nav>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} Lunet VPS</span><span>На связи. С любого устройства.</span></div>
     </footer>

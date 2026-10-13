@@ -14,6 +14,7 @@ from .system import router as system_router
 from .legal import router as legal_router
 from .diagnostics import router as diagnostics_router
 from .exports import router as exports_router
+from .servers import router as servers_router
 
 __all__ = [
     "auth_router",
@@ -32,4 +33,5 @@ __all__ = [
     "legal_router",
     "diagnostics_router",
     "exports_router",
+    "servers_router",
 ]
