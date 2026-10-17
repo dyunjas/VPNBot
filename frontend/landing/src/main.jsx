@@ -8,6 +8,7 @@ import "../../shared/brand.css";
 import "./landing.css";
 import CookieNotice from "../../shared/CookieNotice.jsx";
 import AccountLink, { useLandingAccount } from "./AccountLink.jsx";
+import {catalogEndpoints} from "./catalogEndpoint.js";
 
 const cabinetUrl = "/cabinet/";
 const supportUrl = "https://t.me/LunetVPNSupport";
@@ -63,9 +64,9 @@ function useCatalog() {
     setState(s=>({...s, loading:true, error:false}));
     (async()=>{
       let failure;
-      for(const url of ["/api/public/catalog","/catalog.json"]){
+      for(const url of catalogEndpoints(location.hostname,import.meta.env.VITE_PUBLIC_API_BASE_URL)){
         try{
-          const response=await fetch(url,{signal:controller.signal,cache:"no-store",headers:{Accept:"application/json"}});
+          const response=await fetch(url,{signal:controller.signal,cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});
           if(!response.ok || !/application\/json/i.test(response.headers.get("content-type")||""))throw new Error("catalog");
           const data=await response.json();
           if(!Array.isArray(data.plans))throw new Error("catalog");
