@@ -29,11 +29,11 @@ class TransactionService:
             raise TransactionNotFound("Transaction not found")
         return tx
 
-    async def list_by_user(self, user_id: int):
+    async def list_by_user(self, user_id: int, *, limit: int | None = None):
         user = await self.user_repo.get_by_id(user_id)
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
-        return await self.tx_repo.list_by_user_id(user_id)
+        return await self.tx_repo.list_by_user_id(user_id,limit=limit)
 
     async def mark_paid(self, provider_transaction_id: str):
         logger.info(

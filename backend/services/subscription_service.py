@@ -63,8 +63,11 @@ class SubscriptionService:
 
         visible_plans = []
         hidden_changed = False
+        limited_ids = [int(plan.id) for plan in plans if int(getattr(plan,"purchase_limit",0) or 0)>0]
+        counts = await self.sub_repo.count_plans_subscriptions(limited_ids)
         for plan in plans:
-            if await self._is_plan_exhausted(plan):
+            limit = max(0,int(getattr(plan,"purchase_limit",0) or 0))
+            if limit and counts.get(int(plan.id),0)>=limit:
                 await self._hide_exhausted_plan(plan)
                 hidden_changed = True
                 continue
@@ -112,8 +115,8 @@ class SubscriptionService:
         plan.is_hidden = True
         await self.session.flush()
 
-    async def get_active_subscription(self, user_id: int):
-        user = await self.user_repo.get_by_id_for_update(user_id)
+    async def get_active_subscription(self, user_id: int, *, for_update: bool = True):
+        user = await (self.user_repo.get_by_id_for_update(user_id) if for_update else self.user_repo.get_by_id(user_id))
         if not user:
             raise UserNotFound(f"User with id:{user_id} not found")
 

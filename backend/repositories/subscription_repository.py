@@ -42,6 +42,12 @@ class SubscriptionRepository:
         )
         return int(res.scalar() or 0)
 
+    async def count_plans_subscriptions(self, plan_ids: list[int]) -> dict[int,int]:
+        if not plan_ids: return {}
+        rows = await self.session.execute(select(Subscription.plan_id,func.count(Subscription.id))
+            .where(Subscription.plan_id.in_(plan_ids)).group_by(Subscription.plan_id))
+        return {int(plan_id):int(count) for plan_id,count in rows}
+
     async def list_plans_ordered(self) -> Sequence[SubscriptionPlan]:
         res = await self.session.execute(
             select(SubscriptionPlan).order_by(SubscriptionPlan.display_order.asc(), SubscriptionPlan.id.asc())

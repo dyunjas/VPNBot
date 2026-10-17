@@ -1,7 +1,8 @@
+import {useAccountResources} from "../../shared/account/useAccountResources.js";
 import { DocumentLinks } from "../../shared/DocumentLinks.jsx";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Menu, CreditCard, Gift, History as HistoryIcon, LogOut, Headphones, Plus, ShieldCheck, Smartphone, Wallet } from "lucide-react";
-import { LunetSkeleton, useActionLock } from "../../shared/controls.jsx";
+import { LunetLoader,LunetSkeleton, useActionLock } from "../../shared/controls.jsx";
 import { api, tokenKey } from "./api.js";
 import { AccountIdentitySkeleton, Button, CabinetToast, Notice, Card, date, Empty, money } from "../../shared/account/components.jsx";
 import { CopyField, Devices, SubscriptionDetails, SubscriptionSummary } from "../../shared/account/SubscriptionViews.jsx";
@@ -18,7 +19,7 @@ function Footer(){return <footer className="cabinet-footer"><div className="cabi
 export default function Cabinet(){
   const [view,setView]=useState(initialView),[menuMode,setMenuMode]=useState("");
   const [profile,setProfile]=useState(null),[status,setStatus]=useState(null),[config,setConfig]=useState(null),[configError,setConfigError]=useState(false);
-  const [loading,setLoading]=useState(true),[resourceLoading,setResourceLoading]=useState(false),[resourceError,setResourceError]=useState("");
+  const [loading,setLoading]=useState(true),[refreshing,setRefreshing]=useState(false);
   const [plans,setPlans]=useState([]),[devices,setDevices]=useState([]),[resourceVersion,setResourceVersion]=useState(0);
   const [notice,setNotice]=useState(null),[initialError,setInitialError]=useState(""),[busy,setBusy]=useState(false),[amount,setAmount]=useState(500),[promo,setPromo]=useState("");
   const panel=useRef(null), profileTrigger=useRef(null), sequence=useRef(0), mounted=useRef(true), currentProfile=useRef(null);
@@ -44,26 +45,20 @@ export default function Cabinet(){
   const notify=(message,kind="success")=>setNotice({message,kind});
   const load=async()=>{
     const attempt=++sequence.current;
-    if(!currentProfile.current)setLoading(true);
+    if(!currentProfile.current)setLoading(true);else setRefreshing(true);
     setInitialError("");
     try{const [p,s]=await Promise.all([api("/api/profile"),api("/api/status")]);
       if(mounted.current&&attempt===sequence.current){currentProfile.current=p;setProfile(p);setStatus(s);}
     }catch(error){if(mounted.current&&attempt===sequence.current){if(!currentProfile.current)setInitialError(error.message);else notify(error.message,"error");}}
-    finally{if(mounted.current&&attempt===sequence.current){setLoading(false);}}
+    finally{if(mounted.current&&attempt===sequence.current){setLoading(false);setRefreshing(false);}}
   };
   const loadConfig=async()=>{setConfigError(false);try{const data=await api("/api/ui-config");if(mounted.current)setConfig(data);}catch{if(mounted.current)setConfigError(true);}};
   useEffect(()=>{mounted.current=true;load();loadConfig();return()=>{mounted.current=false;sequence.current++;};},[]);
-  useEffect(()=>{
-    const path=["plans","extras"].includes(view)?"/api/plans":view==="devices"?"/api/devices":null;
-    if(!path){setResourceLoading(false);setResourceError("");return;}
-    let current=true;setResourceLoading(true);setResourceError("");
-    api(path).then(data=>{if(current){if(path==="/api/plans")setPlans(data.plans||[]);else setDevices(data.items||[]);}}).catch(error=>{if(current)setResourceError(error.message);}).finally(()=>{if(current)setResourceLoading(false);});
-    return()=>{current=false;};
-  },[view,resourceVersion]);
+  const {resourceLoading,resourceError}=useAccountResources({view,version:resourceVersion,api,setPlans,setDevices});
   const navigate=next=>{setView(next);setMenuMode("");const url=new URL(location.href);url.searchParams.set("view",next);history.replaceState(null,"",url);};
   const action=(path,body,message)=>mutation(async()=>{
     setBusy(true);setNotice(null);
-    try{await api(path,{body:JSON.stringify(body)});notify(message);await load();if(path==="/api/device/delete")setResourceVersion(n=>n+1);return true;}
+    try{await api(path,{body:JSON.stringify(body)});notify(message);await load();setResourceVersion(n=>n+1);return true;}
     catch(error){notify(error.message,"error");return false;}finally{if(mounted.current)setBusy(false);}
   });
   const topup=(method,type)=>mutation(async()=>{
@@ -86,6 +81,7 @@ export default function Cabinet(){
 
     <div className="cabinet-container account-strip">{loading?<AccountIdentitySkeleton/>:profile?<div className="account-identity"><Avatar user={user}/><div><button className="account-name" onClick={()=>navigate("profile")} title={user.email||user.username||"Аккаунт"}>{user.email||(user.username?`@${user.username}`:"Аккаунт Lunet")}</button><div className="balance-pill"><span>Баланс: <b>{`${money(user.balance)} ₽`}</b></span><button aria-label="Пополнить баланс" onClick={()=>navigate("billing")}><Plus size={17}/></button></div></div></div>:null}<nav className="account-nav" aria-label="Разделы кабинета">{nav.map(([key,label,Icon])=><button key={key} aria-current={(view==="details"?"subscription":view)===key?"page":undefined} className={(view==="details"?"subscription":view)===key?"active":""} onClick={()=>navigate(key)}><Icon size={17}/><span>{label}</span></button>)}</nav><Button variant="secondary" className="strip-logout" disabled={busy} onClick={logout}><LogOut size={15}/>Выйти</Button></div>
     <main className="cabinet-content cabinet-container" id="cabinet-content"><header className={`page-head ${["billing","plans","extras","history"].includes(view)?"centered":""}`}><div>{view==="details"&&<button className="text-button back-link" onClick={()=>navigate("subscription")}><ArrowLeft size={15}/>К подписке</button>}<h1>{titles[view][0]}</h1><p>{titles[view][1]}</p></div></header>
+      {refreshing&&<p className="account-refresh-status" role="status"><LunetLoader size={14}/>Обновление данных…</p>}
       {notice&&<CabinetToast message={notice.message} kind={notice.kind} onClose={()=>setNotice(null)}/>}
       {configError&&<Notice className="config-warning" role="status" kind="error"><span>Не удалось загрузить условия покупки и способы оплаты.</span><Button variant="secondary" onClick={loadConfig}>Повторить загрузку условий</Button></Notice>}
       <div key={view} className="lunet-view" aria-busy={loading||resourceLoading||undefined}>{loading?<LunetSkeleton variant="overview"/>:!profile?<Empty Icon={ShieldCheck} title="Не удалось загрузить кабинет" action={<Button onClick={load}>Повторить</Button>}>{initialError}</Empty>:resourceError?<Empty title="Не удалось загрузить раздел" action={<Button onClick={()=>setResourceVersion(n=>n+1)}>Повторить</Button>}>{resourceError}</Empty>:resourceLoading?<LunetSkeleton/>:

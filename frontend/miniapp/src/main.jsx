@@ -1,3 +1,4 @@
+import {useAccountResources} from "../../shared/account/useAccountResources.js";
 import { useTelegramViewport, selectionHaptic } from "./useTelegramViewport.js";
 import { LunetLoader, LunetSkeleton, useActionLock } from "../../shared/controls.jsx";
 import {useEffect,useRef,useState} from "react";
@@ -19,7 +20,7 @@ function App(){
   const [view,setView]=useState("subscription"),[data,setData]=useState({});
   const [busy,setBusy]=useState(false),[amount,setAmount]=useState(500),[promo,setPromo]=useState("");
   const [plans,setPlans]=useState([]),[devices,setDevices]=useState([]),[error,setError]=useState("");
-  const [loading,setLoading]=useState(true),[resourceLoading,setResourceLoading]=useState(false),[resourceError,setResourceError]=useState("");
+  const [loading,setLoading]=useState(true);
   const [resourceVersion,setResourceVersion]=useState(0),[refreshing,setRefreshing]=useState(false);
   const [noticeKind,setNoticeKind]=useState("error");
   const notify=(message,kind="info")=>{setNoticeKind(kind);setError(message);};
@@ -37,17 +38,10 @@ function App(){
     finally{if(mounted.current&&attempt===loadSequence.current){setLoading(false);setRefreshing(false);}}
   };
   useEffect(()=>{mounted.current=true;load();return()=>{mounted.current=false;loadSequence.current++;};},[]);
-  useEffect(()=>{
-    const path=["plans","extras"].includes(view)?"/api/plans":view==="devices"?"/api/devices":null;
-    if(!path){setResourceLoading(false);setResourceError("");return;}
-    let current=true;setResourceLoading(true);setResourceError("");
-    api(path).then(x=>{if(current){if(path==="/api/plans")setPlans(x.plans||[]);else setDevices(x.items||[]);}})
-      .catch(e=>{if(current)setResourceError(e.message);}).finally(()=>{if(current)setResourceLoading(false);});
-    return()=>{current=false;};
-  },[view,resourceVersion]);
+  const {resourceLoading,resourceError}=useAccountResources({view,version:resourceVersion,api,setPlans,setDevices});
   const action=(path,body,message)=>mutation(async()=>{
     setBusy(true);setError("");
-    try{await api(path,body);await load();if(path==="/api/device/delete")setResourceVersion(n=>n+1);notify(message,"success");return true;}
+    try{await api(path,body);await load();setResourceVersion(n=>n+1);notify(message,"success");return true;}
     catch(e){notify(e.message,"error");return false;}finally{setBusy(false);}
   });
   const topup=(method,type)=>mutation(async()=>{

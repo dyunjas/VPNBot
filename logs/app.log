@@ -1104,3 +1104,15 @@ aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host 127.0.0.1
 [2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
 [2026-10-17 21:38:39] [INFO] httpx: HTTP Request: POST https://test/api/admin/users/123 "HTTP/1.1 413 Request Entity Too Large"
 [2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:48:45] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:48:51] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:48:51] [WARNING] asyncio: Executing <Task pending name='Task-1' coro=<ApiPerformanceTests.asyncSetUp() running at C:\Users\dyunj\VPNBot\tests\test_api_performance.py:16> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py:459> cb=[_run_until_complete_cb() at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py:181] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py:101> took 0.177 seconds
+[2026-10-17 21:48:52] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:48:52] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:48:53] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:48:53] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:48:54] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:48:54] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:48:54] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:48:54] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:48:55] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>

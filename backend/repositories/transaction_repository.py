@@ -53,12 +53,15 @@ class TransactionRepository:
         )
         return res.scalar_one_or_none()
 
-    async def list_by_user_id(self, user_id: int) -> List[Transaction]:
-        res = await self.session.execute(
+    async def list_by_user_id(self, user_id: int, *, limit: int | None = None) -> List[Transaction]:
+        stmt = (
             select(Transaction)
             .where(Transaction.user_id == user_id)
-            .order_by(Transaction.created_at.desc())
+            .order_by(Transaction.created_at.desc(),Transaction.id.desc())
         )
+        if limit is not None:
+            stmt = stmt.limit(max(1,int(limit)))
+        res = await self.session.execute(stmt)
         return res.scalars().all()
 
     async def get_last_by_user_id(self, user_id: int) -> Optional[Transaction]:

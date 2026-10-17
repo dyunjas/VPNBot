@@ -83,7 +83,7 @@ async def cabinet_profile(payload: InitPayload, user_id: int | None = Depends(re
         user = await _get_user(session, user_id)
         tx_service = TransactionService(session)
         referral_service = ReferralService(session)
-        txs = (await tx_service.list_by_user(user.id))[:50]
+        txs = await tx_service.list_by_user(user.id,limit=50)
         referral_account = await referral_service.get_account(user.id) or await referral_service.create_account(user.id)
         await session.commit()
         return {
@@ -114,7 +114,7 @@ async def cabinet_status(payload: InitPayload, user_id: int | None = Depends(req
         sub_service = SubscriptionService(session)
         remnawave_service = RemnaWaveService(session)
         try:
-            active_sub = await sub_service.get_active_subscription(user_id=user.id)
+            active_sub = await sub_service.get_active_subscription(user_id=user.id,for_update=False)
         except SubscriptionNotFound:
             return {"ok": True, "has_subscription": False, "statusText": "Нет активной подписки.", "active_keys": 0, "subscription_url": None}
 

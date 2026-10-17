@@ -37,7 +37,7 @@ async def mini_status(payload: InitPayload):
         sub_service = SubscriptionService(session)
         remnawave_service = RemnaWaveService(session)
         try:
-            active_sub = await sub_service.get_active_subscription(user_id=user.id)
+            active_sub = await sub_service.get_active_subscription(user_id=user.id,for_update=False)
         except SubscriptionNotFound:
             return {
                 "ok": True,
@@ -118,8 +118,7 @@ async def mini_profile(payload: InitPayload):
         user = await _get_user_or_404(session, tg_id)
 
         tx_service = TransactionService(session)
-        txs = await tx_service.list_by_user(user.id)
-        txs = txs[:50]
+        txs = await tx_service.list_by_user(user.id,limit=50)
 
         referral_service = ReferralService(session)
         referral_account = await referral_service.get_account(user.id)

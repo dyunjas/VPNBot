@@ -1,4 +1,5 @@
 from ..common import *
+from backend.services.dashboard_stats import dashboard_totals
 from api.admin.authentication import router
 
 def _shift_month_start(dt: datetime, months_delta: int) -> datetime:
@@ -99,54 +100,7 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
         bucket_count = 14
     chart_end = locals().get("chart_end", now + timedelta(seconds=1))
     async with async_session() as session:
-        total_users = int(await session.scalar(select(func.count(User.id))) or 0)
-        banned_users = int(await session.scalar(select(func.count(User.id)).where(User.banned.is_(True))) or 0)
-        day_start = now - timedelta(days=1)
-        new_users_today = int(await session.scalar(select(func.count(User.id)).where(User.created_at >= day_start)) or 0)
-        total_balance = int(await session.scalar(select(func.coalesce(func.sum(User.balance), 0))) or 0)
-        unpaid_transactions = int(await session.scalar(select(func.count(Transaction.id)).where(Transaction.paid.is_(False))) or 0)
-        today_revenue = int(await session.scalar(select(func.coalesce(func.sum(Transaction.amount), 0)).where(
-            Transaction.paid.is_(True), Transaction.paid_at >= day_start
-        )) or 0)
-        expiring_subscriptions = int(await session.scalar(select(func.count(Subscription.id)).where(
-            Subscription.status == SubStatus.active, Subscription.current_period_end > now,
-            Subscription.current_period_end <= now + timedelta(days=7)
-        )) or 0)
-        active_subscriptions = int(
-            await session.scalar(
-                select(func.count(Subscription.id)).where(
-                    Subscription.status == SubStatus.active,
-                    Subscription.current_period_end > now,
-                )
-            )
-            or 0
-        )
-        active_keys = 0
-        subscribed_users = int(await session.scalar(select(func.count(func.distinct(Subscription.user_id))).where(
-            Subscription.status == SubStatus.active, Subscription.current_period_end > now
-        )) or 0)
-        total_servers = 0
-        total_devices = 0
-        paid_tx = int(
-            await session.scalar(select(func.count(Transaction.id)).where(Transaction.paid.is_(True)))
-            or 0
-        )
-        total_revenue = int(
-            await session.scalar(
-                select(func.coalesce(func.sum(Transaction.amount), 0)).where(Transaction.paid.is_(True))
-            )
-            or 0
-        )
-        month_revenue = int(
-            await session.scalar(
-                select(func.coalesce(func.sum(Transaction.amount), 0)).where(
-                    Transaction.paid.is_(True),
-                    Transaction.paid_at.is_not(None),
-                    Transaction.paid_at >= month_start,
-                )
-            )
-            or 0
-        )
+        totals = await dashboard_totals(session,now)
         user_rows = (await session.execute(select(User.created_at).where(User.created_at >= chart_start, User.created_at < chart_end))).scalars().all()
         subscription_rows = (
             await session.execute(select(Subscription.created_at).where(Subscription.created_at >= chart_start, Subscription.created_at < chart_end))
@@ -219,21 +173,21 @@ async def admin_stats(chart_period: Literal["14d", "30d", "12m"] = Query(default
     return {
         "ok": True,
         "stats": {
-            "total_users": total_users,
-            "banned_users": banned_users,
-            "new_users_today": new_users_today,
-            "today_revenue": today_revenue,
-            "expiring_subscriptions": expiring_subscriptions,
-            "unpaid_transactions": unpaid_transactions,
-            "total_balance": total_balance,
-            "active_subscriptions": active_subscriptions,
-            "subscribed_users": subscribed_users,
-            "active_keys": active_keys,
-            "total_servers": total_servers,
-            "total_devices": total_devices,
-            "paid_transactions": paid_tx,
-            "total_revenue": total_revenue,
-            "month_revenue": month_revenue,
+            "total_users": totals["total_users"],
+            "banned_users": totals["banned_users"],
+            "new_users_today": totals["new_users_today"],
+            "today_revenue": totals["today_revenue"],
+            "expiring_subscriptions": totals["expiring_subscriptions"],
+            "unpaid_transactions": totals["unpaid_transactions"],
+            "total_balance": totals["total_balance"],
+            "active_subscriptions": totals["active_subscriptions"],
+            "subscribed_users": totals["subscribed_users"],
+            "active_keys": 0,
+            "total_servers": 0,
+            "total_devices": 0,
+            "paid_transactions": totals["paid_transactions"],
+            "total_revenue": totals["total_revenue"],
+            "month_revenue": totals["month_revenue"],
             "month_start": month_start.isoformat(),
             "users_chart": users_chart,
             "subscriptions_chart": subscriptions_chart,
