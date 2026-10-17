@@ -1037,3 +1037,70 @@ Traceback (most recent call last):
     raise client_error(req.connection_key, exc) from exc
 aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host 127.0.0.1:8004 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
 [2026-10-13 17:45:20] [DEBUG] asyncio: Using selector: SelectSelector
+[2026-10-17 21:37:05] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:37:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:07] [WARNING] asyncio: Executing <Task pending name='Task-2' coro=<SecurityMiddlewareTests.test_denied_access_has_route_status_and_peer_without_secrets() running at C:\Users\dyunj\VPNBot\tests\test_incident_reporting.py:134> cb=[_run_until_complete_cb() at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py:181] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py:101> took 0.114 seconds
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: GET https://test/api/admin/users/123?token=[REDACTED] "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:07] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: POST https://test/api/admin/auth/login "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: POST https://test/api/payments/platega-webhook "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: GET https://test/.env "HTTP/1.1 404 Not Found"
+[2026-10-17 21:37:07] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: GET https://test/api/admin/auth/me "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: GET https://test/api/admin/allowed "HTTP/1.1 200 OK"
+[2026-10-17 21:37:07] [DEBUG] asyncio: Get address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1>
+[2026-10-17 21:37:07] [WARNING] asyncio: Executing <Task pending name='Task-14' coro=<SecurityMiddlewareTests.test_normal_session_checks_success_reauth_and_proxy_are_quiet() running at C:\Users\dyunj\VPNBot\tests\test_incident_reporting.py:154> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\futures.py:384, Task.task_wakeup()] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py:459> cb=[_run_until_complete_cb() at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py:181] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\runners.py:101> took 0.103 seconds
+[2026-10-17 21:37:07] [DEBUG] asyncio: Getting address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1> took 19.072ms: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5432, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5432))]
+[2026-10-17 21:37:07] [DEBUG] asyncio: <asyncio.TransportSocket fd=1132, family=2, type=1, proto=0, laddr=('127.0.0.1', 61101), raddr=('127.0.0.1', 5432)> connected to localhost:5432: (<_ProactorSocketTransport fd=1132 read=<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py:507>>, <asyncpg.connect_utils.TLSUpgradeProto object at 0x0000029079B82E40>)
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: POST https://test/api/admin/expected-reauth "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:07] [INFO] httpx: HTTP Request: GET https://test/api/admin/proxy "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:07] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:07] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:08] [INFO] httpx: HTTP Request: POST https://test/api/admin/users/123 "HTTP/1.1 413 Request Entity Too Large"
+[2026-10-17 21:37:08] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:45] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:37:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: GET https://test/api/admin/users/123?token=[REDACTED] "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:46] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: POST https://test/api/admin/auth/login "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: POST https://test/api/payments/platega-webhook "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: GET https://test/.env "HTTP/1.1 404 Not Found"
+[2026-10-17 21:37:46] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: GET https://test/api/admin/auth/me "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: GET https://test/api/admin/allowed "HTTP/1.1 200 OK"
+[2026-10-17 21:37:46] [DEBUG] asyncio: Get address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1>
+[2026-10-17 21:37:46] [DEBUG] asyncio: Getting address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1> took 5.074ms: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5432, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5432))]
+[2026-10-17 21:37:46] [DEBUG] asyncio: <asyncio.TransportSocket fd=1256, family=2, type=1, proto=0, laddr=('127.0.0.1', 64958), raddr=('127.0.0.1', 5432)> connected to localhost:5432: (<_ProactorSocketTransport fd=1256 read=<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py:507>>, <asyncpg.connect_utils.TLSUpgradeProto object at 0x000001E11B492900>)
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: POST https://test/api/admin/expected-reauth "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: GET https://test/api/admin/proxy "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:37:46] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:37:46] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:37:46] [INFO] httpx: HTTP Request: POST https://test/api/admin/users/123 "HTTP/1.1 413 Request Entity Too Large"
+[2026-10-17 21:37:46] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:38:39] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: GET https://test/api/admin/users/123?token=[REDACTED] "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: POST https://test/api/admin/auth/login "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: POST https://test/api/payments/platega-webhook "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: GET https://test/.env "HTTP/1.1 404 Not Found"
+[2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: GET https://test/api/admin/auth/me "HTTP/1.1 401 Unauthorized"
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: GET https://test/api/admin/allowed "HTTP/1.1 200 OK"
+[2026-10-17 21:38:39] [DEBUG] asyncio: Get address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1>
+[2026-10-17 21:38:39] [DEBUG] asyncio: Getting address info localhost:5432, type=<SocketKind.SOCK_STREAM: 1> took 4.547ms: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5432, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5432))]
+[2026-10-17 21:38:39] [DEBUG] asyncio: <asyncio.TransportSocket fd=1344, family=2, type=1, proto=0, laddr=('127.0.0.1', 65057), raddr=('127.0.0.1', 5432)> connected to localhost:5432: (<_ProactorSocketTransport fd=1344 read=<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()] created at C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\asyncio\windows_events.py:507>>, <asyncpg.connect_utils.TLSUpgradeProto object at 0x00000134A7E9AE40>)
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: POST https://test/api/admin/expected-reauth "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: GET https://test/api/admin/proxy "HTTP/1.1 403 Forbidden"
+[2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>
+[2026-10-17 21:38:39] [DEBUG] asyncio: Using proactor: IocpProactor
+[2026-10-17 21:38:39] [INFO] httpx: HTTP Request: POST https://test/api/admin/users/123 "HTTP/1.1 413 Request Entity Too Large"
+[2026-10-17 21:38:39] [DEBUG] asyncio: Close <ProactorEventLoop running=False closed=False debug=True>

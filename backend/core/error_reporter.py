@@ -7,6 +7,9 @@ import queue
 import re
 import threading
 import traceback
+import time
+
+from backend.core.incidents import Event, IncidentBuffer, category, fingerprint, redact, render
 from datetime import datetime
 from pathlib import Path
 
@@ -50,7 +53,7 @@ def _trim_report(text: str, max_bytes: int) -> bytes:
     if len(data) <= max_bytes:
         return data
     suffix = "\n\n--- report truncated ---\n".encode("utf-8")
-    return data[: max_bytes - len(suffix)] + suffix
+    return data[: max_bytes - len(suffix)].decode("utf-8",errors="ignore").encode("utf-8") + suffix
 
 
 def _relative_source(pathname: str) -> str:
@@ -112,92 +115,97 @@ def _telegram_user_id(record: logging.LogRecord, message: str) -> str:
 
 
 class TelegramErrorReportHandler(logging.Handler):
-    def __init__(self, *, level: int = logging.ERROR) -> None:
+    def __init__(self, *, level=logging.WARNING, start_worker=True):
         super().__init__(level=level)
-        self._queue: queue.Queue[logging.LogRecord | None] = queue.Queue(maxsize=100)
-        self._worker = threading.Thread(target=self._run, name="telegram-error-reporter", daemon=True)
-        self._worker.start()
+        self._queue = queue.Queue(maxsize=500)
+        self._dropped = 0
+        self._drop_lock = threading.Lock()
+        self._stopped = False
+        self._worker = None
+        if start_worker:
+            self._worker = threading.Thread(target=self._run,name="telegram-error-reporter",daemon=True)
+            self._worker.start()
 
-    def emit(self, record: logging.LogRecord) -> None:
-        if getattr(record, "telegram_error_report_skip", False):
-            return
+    def emit(self, record):
+        if self._stopped or getattr(record,"telegram_error_report_skip",False): return
+        if record.levelno < logging.ERROR and not getattr(record,"security_event",False): return
         try:
-            self._queue.put_nowait(record)
+            source = _relative_source(record.pathname)
+            raw_message = record.getMessage()
+            message = redact(raw_message)[:2500]
+            user_id = _telegram_user_id(record,raw_message)
+            if user_id != "-": message += f"\nTelegram user: {user_id}"
+            context = redact(_record_context(record,source))[:300]
+            kind = category(record,message)
+            # Freeze strings, not LogRecord/traceback objects retaining entire request bodies.
+            event = Event(kind,fingerprint(kind,context,source,message),context,
+                          f"{source}:{record.lineno}",message,redact(_format_exception(record))[:8000],
+                          str(getattr(record,"security_peer",""))[:64],record.created)
+            self._queue.put_nowait(event)
         except queue.Full:
-            _write_reporter_failure("queue is full; error report skipped")
-
-    def _run(self) -> None:
-        while True:
-            record = self._queue.get()
-            if record is None:
-                return
-            try:
-                asyncio.run(self._send_record(record))
-            except Exception as exc:
-                _write_reporter_failure(f"unexpected reporter failure: {type(exc).__name__}: {exc}")
-
-    async def _send_record(self, record: logging.LogRecord) -> None:
-        token, chat_id, topic_id, max_bytes, proxy = _error_report_settings()
-        if not token:
-            _write_reporter_failure("ERROR_REPORT_BOT_TOKEN is empty; error report skipped")
-            return
-
-        now = datetime.now()
-        filename = f"error_report_{now:%Y%m%d_%H%M%S}.txt"
-        exc_type = record.exc_info[0].__name__ if record.exc_info and record.exc_info[0] else record.levelname
-        exception_text = _format_exception(record)
-        message = record.getMessage()
-        source = _relative_source(record.pathname)
-        context = _record_context(record, source)
-        telegram_user_id = _telegram_user_id(record, message)
-
-        report = (
-            "⚠️ Ошибка во время работы\n\n"
-            f"Тип: {exc_type}\n"
-            "Ошибок в отчёте: 1\n"
-            f"Контекст: {context}\n"
-            f"Пользователь: {telegram_user_id}\n"
-            f"Logger: {record.name}\n"
-            f"Источник: {source}:{record.lineno}\n"
-            f"Сообщение: {message}\n"
-            f"Время: {now:%d.%m.%Y %H:%M:%S}\n"
-        )
-        if exception_text:
-            report += f"\nTraceback:\n{exception_text}\n"
-
-        caption = (
-            "⚠️ Ошибка во время работы\n\n"
-            f"<b>Тип:</b> <code>{html.escape(exc_type)}</code>\n"
-            "<b>Ошибок в отчёте:</b> 1\n"
-            f"<b>Контекст:</b> <code>{html.escape(context)}</code>\n"
-            f"<b>Пользователь:</b> <code>{html.escape(telegram_user_id)}</code>\n\n"
-            f"<i>{now:%d.%m.%Y %H:%M:%S}</i>"
-        )
-
-        form = aiohttp.FormData()
-        form.add_field("chat_id", str(chat_id))
-        if topic_id:
-            form.add_field("message_thread_id", str(topic_id))
-        form.add_field("caption", caption)
-        form.add_field("parse_mode", "HTML")
-        form.add_field(
-            "document",
-            _trim_report(report, max_bytes),
-            filename=filename,
-            content_type="text/plain; charset=utf-8",
-        )
-
-        url = f"https://api.telegram.org/bot{token}/sendDocument"
-        timeout = aiohttp.ClientTimeout(total=30)
-        connector = ProxyConnector.from_url(proxy) if proxy and proxy.lower().startswith(("socks4://", "socks5://")) else None
-        try:
-            async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
-                request_proxy = None if connector else proxy
-                async with session.post(url, data=form, proxy=request_proxy) as response:
-                    body = await response.text()
-                    if response.status >= 400:
-                        _write_reporter_failure(
-                            f"telegram sendDocument failed status={response.status} response={body[:1000]}"
-                        )
+            with self._drop_lock: self._dropped += 1
         except Exception as exc:
-            _write_reporter_failure(f"telegram sendDocument request failed: {type(exc).__name__}: {exc}")
+            _write_reporter_failure(f"cannot prepare report: {type(exc).__name__}")
+
+    def _run(self):
+        from backend.core.config import settings
+        buffer = IncidentBuffer(window=settings.ERROR_REPORT_BATCH_SECONDS,
+                                critical_repeat=settings.ERROR_REPORT_CRITICAL_REPEAT_SECONDS,
+                                max_groups=settings.ERROR_REPORT_MAX_GROUPS,now=time.monotonic())
+        while True:
+            try:
+                event = self._queue.get(timeout=1)
+            except queue.Empty:
+                event = None if self._stopped else False
+            try:
+                if event is None:
+                    pending,overflow = buffer.flush(float("inf"))
+                    if pending or overflow: asyncio.run(self._send_report(pending,overflow))
+                    return
+                if event:
+                    immediate = buffer.add(event,time.monotonic())
+                    if immediate: asyncio.run(self._send_report(immediate))
+                now = time.monotonic()
+                due = now >= buffer.next_flush
+                pending,overflow = buffer.flush(now)
+                if due:
+                    with self._drop_lock:
+                        overflow += self._dropped
+                        self._dropped = 0
+                if pending or overflow:
+                    asyncio.run(self._send_report(pending,overflow))
+            except Exception as exc:
+                _write_reporter_failure(f"reporter failure: {type(exc).__name__}")
+
+    async def _send_report(self, incidents, overflow=0):
+        token,chat_id,topic_id,max_bytes,proxy = _error_report_settings()
+        if not token: return
+        summary,report = render(incidents,overflow)
+        critical = any(item.event.kind=="critical" for item in incidents)
+        form = aiohttp.FormData()
+        form.add_field("chat_id",str(chat_id))
+        if topic_id: form.add_field("message_thread_id",str(topic_id))
+        # Network/security digests are silent; critical alerts use the normal sound.
+        form.add_field("disable_notification","false" if critical else "true")
+        title,_,body = summary[:900].partition("\n")
+        form.add_field("caption",f"<b>{html.escape(title)}</b>\n{html.escape(body)}")
+        form.add_field("parse_mode","HTML")
+        form.add_field("document",_trim_report(report,max(1024,max_bytes)),
+                       filename=f"incidents_{datetime.now():%Y%m%d_%H%M%S}.txt",content_type="text/plain; charset=utf-8")
+        connector = ProxyConnector.from_url(proxy) if proxy and proxy.lower().startswith(("socks4://","socks5://")) else None
+        try:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10),connector=connector) as session:
+                async with session.post(f"https://api.telegram.org/bot{token}/sendDocument",data=form,proxy=None if connector else proxy) as response:
+                    result = await response.json(content_type=None)
+                    if response.status>=400 or not result.get("ok"):
+                        _write_reporter_failure(f"Telegram delivery failed: HTTP {response.status}")
+        except Exception as exc:
+            # Never log transport exception text: it can contain the bot token URL.
+            _write_reporter_failure(f"Telegram delivery failed: {type(exc).__name__}")
+
+    def close(self):
+        if not self._stopped:
+            self._stopped = True
+            try: self._queue.put_nowait(None)
+            except queue.Full: pass
+        super().close()

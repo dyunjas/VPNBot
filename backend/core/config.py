@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import field_validator
+from pydantic import Field, field_validator
 from urllib.parse import urlsplit, urlunsplit
 
 from backend.core.logger_config import logger
@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     ERROR_REPORT_CHAT_ID: int = -1003921556376
     ERROR_REPORT_TOPIC_ID: int = 960
     ERROR_REPORT_MAX_BYTES: int = 32_000
+    ERROR_REPORT_BATCH_SECONDS: int = Field(default=120,ge=10,le=3600)
+    ERROR_REPORT_CRITICAL_REPEAT_SECONDS: int = Field(default=300,ge=60,le=86400)
+    ERROR_REPORT_MAX_GROUPS: int = Field(default=200,ge=10,le=2000)
     BOT_API_TOKEN: str | None = None
     API_BASE_URL: str | None = None
     POSTGRES_USER: str

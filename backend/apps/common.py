@@ -12,6 +12,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.core.logger_config import logger
+from backend.core.security_events import observe_security_response
 from backend.core.config import settings
 from backend.core.maintenance import MAINTENANCE_MESSAGE, get_maintenance_state
 from backend.database.session import check_connection, init_db
@@ -94,13 +95,16 @@ def apply_common_hardening(app: FastAPI) -> None:
             limit = 10 * 1024 * 1024 if request.url.path.endswith("/broadcast/upload") else 1024 * 1024
             raw_length = request.headers.get("content-length")
             if raw_length is not None and (not raw_length.isascii() or not raw_length.isdecimal()):
+                observe_security_response(request,400)
                 return JSONResponse({"detail": "Invalid request size"}, status_code=400)
             if raw_length is not None and int(raw_length) > limit:
+                observe_security_response(request,413)
                 return JSONResponse({"detail": "Request is too large"}, status_code=413)
             chunks, size = [], 0
             async for chunk in request.stream():
                 size += len(chunk)
                 if size > limit:
+                    observe_security_response(request,413)
                     return JSONResponse({"detail": "Request is too large"}, status_code=413)
                 chunks.append(chunk)
             # Preserve bounded bytes for the handler and post-action audit.
@@ -118,6 +122,7 @@ def apply_common_hardening(app: FastAPI) -> None:
                 },
             )
             raise
+        observe_security_response(request,response.status_code)
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -171,6 +176,7 @@ def register_legal_routes(app: FastAPI) -> None:
 
 
 async def proxy_api_request(request: Request, path: str, *, source_name: str) -> Response:
+    request.state.is_api_proxy = True
     maintenance = get_maintenance_state()
     if maintenance.get("enabled") and not (source_name == "admin-frontend" and path.startswith("admin/")):
         return JSONResponse(

@@ -223,6 +223,7 @@ async def validate_session(request: Request) -> dict:
 
 def require_fresh(identity: dict) -> None:
     if now() - int(identity.get("verified_at", 0)) >= FRESH_TTL:
+        identity["_reauthentication_required"] = True
         raise HTTPException(403, {"code": "admin_reauthentication_required", "message": "Confirm your authenticator code to continue"})
 
 

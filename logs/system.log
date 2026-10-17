@@ -14917,3 +14917,6 @@ ConnectionResetError: [WinError 10054] Удаленный хост принуд�
 [2026-10-13 16:36:07] [INFO] aiohttp.access: 127.0.0.1 [13/Oct/2026:16:36:07 +0500] "GET /api/config-profiles/7f8cbf02-cad3-4bd9-9c12-97c95b4991d4/inbounds HTTP/1.1" 200 364 "-" "Python/3.13 aiohttp/3.12.15"
 [2026-10-13 16:36:07] [INFO] aiohttp.access: 127.0.0.1 [13/Oct/2026:16:36:07 +0500] "POST /api/nodes/7f8cbf02-cad3-4bd9-9c12-97c95b4991d4/actions/restart HTTP/1.1" 200 194 "-" "Python/3.13 aiohttp/3.12.15"
 [2026-10-13 16:36:07] [INFO] aiohttp.access: 127.0.0.1 [13/Oct/2026:16:36:07 +0500] "POST /api/nodes/7f8cbf02-cad3-4bd9-9c12-97c95b4991d4/actions/disable HTTP/1.1" 403 203 "-" "Python/3.13 aiohttp/3.12.15"
+[2026-10-17 21:37:05] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:37:45] [INFO] root: Settings successfully loaded from .env
+[2026-10-17 21:38:39] [INFO] root: Settings successfully loaded from .env
